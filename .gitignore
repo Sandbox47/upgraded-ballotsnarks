@@ -1,0 +1,12 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.gz
+*.out
+.DS_Store
+*.drawio.bkp
+*.drawio.dtmp
+*.bbl
+*.blg
+*.synctex(busy)
