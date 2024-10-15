@@ -89,28 +89,32 @@ In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the
 One class of ZKPs that can be used to prove (essentially) arbitrary valid statements is the class of General Purpose Zero Knowledge proofs (GPZKPs). 
 For efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice in order to create such (GP)ZKPs.
 
-The feasability of GPZKPs for showing validity \nh{added: $\to$} of ballots encrypted as (vectors of) Exponential ElGamal ciphertexts \nh{$\leftarrow$} in voting systems with arbitrary election types and ballot formats using Groth16-SNARKs~\cite{Groth16} has been shown by Huber et al.~\cite{BallotValidity, Kryvos}.
+The feasability of GPZKPs for showing validity of ballots encrypted as (vectors of) Exponential ElGamal ciphertexts in voting systems with arbitrary election types and ballot formats using Groth16-SNARKs~\cite{Groth16} has been shown by Huber et al.~\cite{BallotValidity, Kryvos}.
 As examples, the authors examine the different election types Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, the ranked election types Pointlist-Borda and Borda Tournament Style, and Condorcet methods.
 
-In general, validity of a ballot $b$ for an election type encompasses two statements:\
+\noindent In general, validity of a ballot $b$ for an election type encompasses two statements:\
 \begin{enumerate}[label=(\roman*)]
 \item The ballot $b$ belongs to the set of allowed ballots $C$ for that election type, 
-\item The public encrypted ballot $c$ is \nh{\deleted{the}} an encryption $Enc(b)$ of the ballot $b$. 
+\item The public encrypted ballot $c$ is an encryption $Enc(b)$ of the ballot $b$. 
 \end{enumerate}
 
-The indicator function $f_R(x,w)$ stating the truth value of the conjunction of these two statements is represented as an arithmetic circuit $\mathfrak C$ that, itself, is a composition of a circuit $\mathfrak{C}_{\text{Voting}}$ (corresponding to statement (i) above) and $\mathfrak{C}_{\text{Enc}}$ (corresponding to statement (ii) above). The inputs to $\mathfrak C$ are elements of a finite field $\scalarfield$ that is called the \emph{scalar field} of the Groth16 instantiation.
-In order to be compatible with Groth16, this circuit is transformed into a into a Rank-1 constraint system (R1CS) and from there into a quadratic arithmetic program (QAP) which is used by Groth16 to specify $f_R$~\cite{BallotValidity,lambdaclass}.
-A Groth16 SNARK proof consists of three group elements, each of which is expressed via one or multiple coordinates from a finite field $\basefield$, which is caled the \emph{base field} of the Groth16 instantiation. The base field size $p$ and the scalar field size $r$ are determined by the elliptic curve that is used to instantiate the so-called \emph{pairing groups}, which underly the Groth16-SNARK~\cite{BallotValidity}.
+\noindent The indicator function $f_R(x,w)$ stating the truth value of the conjunction of these two statements is represented as an arithmetic circuit $\mathfrak C$ that, itself, is a composition of a circuit $\mathfrak{C}_{\text{Voting}}$ (corresponding to statement (i) above) and $\mathfrak{C}_{\text{Enc}}$ (corresponding to statement (ii) above). 
+The inputs to $\mathfrak C$ are elements of a finite field $\scalarfield$ that is called the \emph{scalar field} of the Groth16 instantiation.
+In order to be compatible with Groth16, this circuit is transformed into a Rank-1 constraint system (R1CS) and from there into a quadratic arithmetic program (QAP) which is used by Groth16 to specify $f_R$~\cite{BallotValidity,lambdaclass}.
+A Groth16 SNARK proof consists of three group elements, each of which is expressed via one or multiple coordinates from a finite field $\basefield$, which is caled the \emph{base field} of the Groth16 instantiation. 
+The base field size $p$ and the scalar field size $r$ are determined by the elliptic curve that is used to instantiate the so-called \emph{pairing groups}, which underly the Groth16-SNARK~\cite{BallotValidity}.
 
-Huber et al. use libsnark as an implementation of Groth16 SNARKs, which uses the elliptic curve BN254 that is defined over a base field of size $\approx 2^{254}$ and allows for a scalar field of similar size. However, other implementations for Groth16, such as Circom~\cite{circom} and gnark~\cite{gnark}, exist that allow for using other elliptic curve and, hence, other base fields and/or scalar fields.
+Huber et al. use libsnark as an implementation of Groth16 SNARKs, which uses the elliptic curve BN254 that is defined over a base field of size $\approx 2^{254}$ and allows for a scalar field of similar size. 
+However, other implementations for Groth16, such as Circom~\cite{circom} and gnark~\cite{gnark}, exist that allow for using other elliptic curves and, hence, other base fields and/or scalar fields.
 
-This thesis will focus on implementing the ballot validity proofs from~\cite{BallotValidity} for the different election types covered in~\cite{BallotValidity} in Circom~\cite{circom}. Building on this, the thesis will compare the performance of the construction of ballot validity proofs in Circom using the elliptic curve BN254 for the different election types.
+This thesis will focus on implementing the ballot validity proofs from~\cite{BallotValidity} for the different election types covered in~\cite{BallotValidity} in Circom~\cite{circom}. 
+Building on this, the thesis will compare the performance of the construction of ballot validity proofs in Circom using the elliptic curve BN254 for the different election types.
 Furthermore, the performance will be compared to that of libsnark under the same circumstances.
 
 Circom is advantageous when compared to libsnark, since it provides a high-level language to define circuits making circuit construction simpler and faster.
 Moreover, Circom supports two different elliptic curves, namely BN254 which is also supported by libsnark and BLS12-381~\cite{circom}.
 
-Therefore, as far as time permits, this thesis should also include an implementation of the ballot validity proofs from~\cite{BallotValidity} using the BLS12-381 elliptic curve, \nh{added:}making all adaptations that are potentially required due to the algebraic groups derived from BLS12-381 having another scalar field than BN254. 
+Therefore, as far as time permits, this thesis should also include an implementation of the ballot validity proofs from~\cite{BallotValidity} using the BLS12-381 elliptic curve, making all adaptations that are potentially required due to the algebraic groups derived from BLS12-381 having another scalar field than BN254. 
 Then, the comparative analysis of libsnark and circom using the BN254 curve could be extended to include a comparison with the BLS12-381 curve.
 
 Additionally, the work for this thesis can include an implementation of the ballot validity proofs for the aformentioned election types in another Groth16-SNARK backend that supports BN254 such as gnark~\cite{gnark}.
@@ -126,7 +130,7 @@ This thesis includes:
         \item Translating arithmetic circuits into a format understandable by Circom~\cite{lambdaclass, circom, MoonMath}
         \item Groth16-SNARKs~\cite{MoonMath}
         \item Voting systems, election types and ballot validity
-        \item \nh{added:} (Exponential) ElGamal Encryption
+        \item (Exponential) ElGamal Encryption
         \item Circom~\cite{circom}
         \item The BN254 curve
     \end{itemize} 
@@ -142,7 +146,7 @@ This thesis can include:
         \item BLS12-381 elliptic curve
         \item gnark~\cite{gnark}
     \end{itemize}
-    \item \nh{added:} Adapting the arithmetic circuits representing ballot validity to be compatible with the BLS12-381 curve (in formats suitable for circom). 
+    \item Adapting the arithmetic circuits representing ballot validity to be compatible with the BLS12-381 curve (in formats suitable for circom).
     \item Transcribing the arithmetic circuits representing ballot validity for the different election types~\cite{BallotSnarks} mentioned above into formats suitable for gnark
     \item Performance comparison for the construction of proofs for ballot validity for the different election types in gnark and between gnark and the other SNARK-backends libsnark and circom (using the BN254 curve)
     \item Performance comparison for the construction of proofs for ballot validity for the different election types in circom and ganrk using the BLS12-381 curve

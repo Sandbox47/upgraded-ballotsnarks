@@ -10,3 +10,5 @@
 *.bbl
 *.blg
 *.synctex(busy)
+*-loc
+*.soc
