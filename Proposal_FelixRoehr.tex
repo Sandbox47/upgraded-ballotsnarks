@@ -101,7 +101,7 @@ As examples, the authors examine the different election types Single-Vote, Multi
 \noindent The indicator function $f_R(x,w)$ stating the truth value of the conjunction of these two statements is represented as an arithmetic circuit $\mathfrak C$ that, itself, is a composition of a circuit $\mathfrak{C}_{\text{Voting}}$ (corresponding to statement (i) above) and $\mathfrak{C}_{\text{Enc}}$ (corresponding to statement (ii) above). 
 The inputs to $\mathfrak C$ are elements of a finite field $\scalarfield$ that is called the \emph{scalar field} of the Groth16 instantiation.
 In order to be compatible with Groth16, this circuit is transformed into a Rank-1 constraint system (R1CS) and from there into a quadratic arithmetic program (QAP) which is used by Groth16 to specify $f_R$~\cite{BallotValidity,lambdaclass}.
-A Groth16 SNARK proof consists of three group elements, each of which is expressed via one or multiple coordinates from a finite field $\basefield$, which is caled the \emph{base field} of the Groth16 instantiation. 
+A Groth16 SNARK proof consists of three group elements, each of which is expressed via one or multiple coordinates from a finite field $\basefield$, which is called the \emph{base field} of the Groth16 instantiation. 
 The base field size $p$ and the scalar field size $r$ are determined by the elliptic curve that is used to instantiate the so-called \emph{pairing groups}, which underly the Groth16-SNARK~\cite{BallotValidity}.
 
 Huber et al. use libsnark as an implementation of Groth16 SNARKs, which uses the elliptic curve BN254 that is defined over a base field of size $\approx 2^{254}$ and allows for a scalar field of similar size. 
