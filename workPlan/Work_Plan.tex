@@ -1,0 +1,97 @@
+
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{pgfgantt}
+\geometry{a4paper, margin=1in}
+\title{6-Month Work Plan for Comparative Analysis of zk-SNARK
+Instantiations for Ensuring Ballot Validity}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This document outlines the work plan for the project on \textit{Comparative Analysis of zk-SNARK
+Instantiations for Ensuring Ballot Validity}. 
+The plan spans 6 months and includes time for both research tasks and writing the thesis. 
+Each major set of tasks is divided into Work Packages (WP) with specific subtasks. 
+Additionally, 2-3 months are allocated for writing the thesis itself. 
+The diagram in section \ref{gantt} provides a visual overview of the plan.
+
+\section{Work Packages and Tasks}
+
+\subsection*{WP1: Research and Familiarization (10 weeks)}
+\begin{itemize}
+    \item \textbf{Task 1.1}: Review literature on Zero-Knowledge Proofs, (Groth16-)SNARKs and representing statements in arithmetic circuits.
+    \item \textbf{Task 1.2}: Review literature on Voting systems, election types and ballot validity (especially in connection with zk-SNARKs).
+    \item \textbf{Task 1.3}: Research the BN254 elliptic curve.
+    \item \textbf{Task 1.4}: Get used to working with Circom.
+    \item \textbf{Task 1.5}: Analyze and understand the existing implementation of ballot validity proofs by Huber et. al. in libsnark.
+    \item \textbf{Task 1.6 (optional)}: Get used to working with gnark.
+    \item \textbf{Task 1.7 (optional)}: Research the BLS12-381 elliptic curve.
+\end{itemize}
+
+\subsection*{WP2: Design and Development (12 weeks)}
+\begin{itemize}
+    \item \textbf{Task 2.1}: Implement the ballot validity proofs from Huber et. al. in Circom using the BN254 curve.
+    \item \textbf{Task 2.2 (optional)}: Adapt the ballot validity proofs from Huber et. al. to the BLS12-381 curve and implement those circuits in Circom.
+    \item \textbf{Task 2.3 (optional)}: Implement ballot validity proofs from Huber et. al. in gnark using the BLS12-381 and the BN254 curve.
+\end{itemize}
+
+\subsection*{WP3: Evaluation (6 weeks)}
+\begin{itemize}
+    \item \textbf{Task 3.1}: Compare the performance of computing the ballot validity proofs from Huber et. al. in Circom and in Libsnark.
+    \item \textbf{Task 3.2 (optional)}: Compare the performance of computing the ballot validity proofs from Huber et. al. in Circom between the two curves BN254 and BLS12-381.
+    \item \textbf{Task 3.3 (optional)}: Compare the performance of computing the ballot validits proofy from Huber et. al. in Gnark to Circom and libsnark.
+    \item \textbf{Task 3.4}: Document findings (partial write-up to feed into the thesis).
+\end{itemize}
+
+\subsection*{WP4: Writing and Presentation (8 weeks)}
+\begin{itemize}
+    \item \textbf{Task 4.1}: Begin writing the thesis (start drafting during development).
+    \item \textbf{Task 4.2}: Complete the thesis write-up, with findings from evaluation.
+    \item \textbf{Task 4.3}: Prepare presentation for the defense.
+\end{itemize}
+
+\section{Gantt Chart}\label{gantt}
+
+Below is a Gantt chart that visually represents the work packages and their time allocation over the course of 6 months.\\
+
+\noindent\begin{ganttchart}[
+    hgrid, 
+    vgrid, 
+    title height=1,
+    bar height=0.6,
+    x unit=0.08cm, % Adjust this value to fit the chart on the page
+    time slot format=isodate,
+    today=2024-11-13
+]{2024-11-08}{2025-05-07}
+    \gantttitlecalendar{year, month=shortname} \\
+    \ganttgroup{WP1}{2024-11-08}{2025-01-17} \\
+    % \ganttbar{Task 1.1}{2024-10-01}{2024-10-05} \\
+    % \ganttbar{Task 1.2}{2024-10-06}{2024-10-10} \\
+    % \ganttbar{Task 1.3}{2024-10-11}{2024-10-15} \\
+    
+    \ganttgroup{WP2}{2024-12-06}{2025-02-28} \\
+    % \ganttbar{Task 2.1}{2024-10-16}{2024-10-30} \\
+    % \ganttbar{Task 2.2}{2024-11-01}{2024-11-15} \\
+    % \ganttbar{Task 2.3}{2024-11-16}{2024-11-30} \\
+    % \ganttbar{Task 2.4}{2024-12-01}{2024-12-15} \\
+    
+    \ganttgroup{WP3}{2025-01-31}{2025-03-14} \\
+    % \ganttbar{Task 3.1}{2024-12-16}{2024-12-31} \\
+    % \ganttbar{Task 3.2}{2025-01-01}{2025-01-15} \\
+    % \ganttbar{Task 3.3}{2025-01-16}{2025-01-31} \\
+    % \ganttbar{Task 3.4}{2025-02-01}{2025-02-15} \\
+    
+    \ganttgroup{WP4}{2024-12-20}{2025-04-25} \\
+    \ganttbar{drafting}{2024-12-20}{2025-02-28} \\
+    \ganttbar{writing}{2025-02-28}{2025-04-25} \\
+    % \ganttbar{Task 4.3}{2025-03-16}{2025-03-31} \\
+    
+\end{ganttchart}
+
+\end{document}
