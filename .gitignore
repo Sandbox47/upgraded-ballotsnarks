@@ -12,3 +12,7 @@
 *.synctex(busy)
 *.loc
 *.soc
+*.sym
+*.r1cs
+*_js
+*.sage.py
