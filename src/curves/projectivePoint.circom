@@ -1,6 +1,6 @@
 pragma circom 2.2.1;
 
-include "branching.circom";
+include "../utilities/branching.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
 
 /**

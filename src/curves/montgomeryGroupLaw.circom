@@ -1,7 +1,7 @@
 pragma circom 2.2.1;
 
-include "branching.circom";
-include "arithmetic.circom";
+include "../utilities/branching.circom";
+include "../utilities/arithmetic.circom";
 include "affinePoint.circom";
 include "projectivePoint.circom";
 include "conversionsPointRepresentations.circom";
@@ -111,8 +111,8 @@ template addAffine(A, B) {
 }
 
 template addProjective(A, B) {
-    input ProjectivePoint() p;
-    input ProjectivePoint() q;
+    input ProjectivePoint() P;
+    input ProjectivePoint() Q;
 
     output ProjectivePoint() out;
 
@@ -121,8 +121,8 @@ template addProjective(A, B) {
     component affineAdder = addAffine(A, B);
     component convertToProjectiveRes = affineToProjective();
 
-    convertToAffineP.in <== p;
-    convertToAffineQ.in <== q;
+    convertToAffineP.in <== P;
+    convertToAffineQ.in <== Q;
 
     affineAdder.p <== convertToAffineP.out;
     affineAdder.q <== convertToAffineQ.out;

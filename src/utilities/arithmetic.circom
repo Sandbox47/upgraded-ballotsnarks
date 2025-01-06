@@ -4,6 +4,29 @@ include "branching.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
 
 /**
+* Computes how many bits are needed to represent x.
+* This is: ceil(log2(x+1))
+*/
+function numBits(x) {
+    // Ensure input is greater than 0
+    if (x <= 0) { 
+        return 0; // Default value for invalid input
+    }
+    x += 1;
+
+    var result = 0;
+    var value = 1;
+
+    // Increment result until 2^result >= x
+    while (value < x) {
+        value *= 2;
+        result++;
+    }
+
+    return result;
+}
+
+/**
 * Computes the inverse of an element. Caution, only works if in is invertible.
 */
 template invert() {

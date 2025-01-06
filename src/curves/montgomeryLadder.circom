@@ -1,7 +1,7 @@
 pragma circom 2.2.1;
 
-include "branching.circom";
-include "arithmetic.circom";
+include "../utilities/branching.circom";
+include "../utilities/arithmetic.circom";
 include "affinePoint.circom";
 include "projectivePoint.circom";
 include "conversionsPointRepresentations.circom";

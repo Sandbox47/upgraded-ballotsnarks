@@ -1,7 +1,7 @@
 pragma circom 2.2.1;
 
-include "branching.circom";
-include "arithmetic.circom";
+include "../utilities/branching.circom";
+include "../utilities/arithmetic.circom";
 include "affinePoint.circom";
 include "projectivePoint.circom";
 include "conversionsPointRepresentations.circom";
@@ -132,4 +132,4 @@ template scalarMulProjective(n, A, B) {
 
 // component main = addAffine(126932,1);
 // component main = ladderProjective(256, 12632);
-component main = scalarMulAffine(256,126932, 1);
+// component main = scalarMulAffine(256, 126932, 1);
