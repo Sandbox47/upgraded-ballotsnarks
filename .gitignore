@@ -16,3 +16,4 @@
 *.r1cs
 *_js
 *.sage.py
+*__pycache__

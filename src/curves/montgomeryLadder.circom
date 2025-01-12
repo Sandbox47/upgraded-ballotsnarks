@@ -122,8 +122,6 @@ template xDblProjective(A) {
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
 *
 * TODO: Optimize to only utilize x-coords.
-*
-* Constraints: 4339 for 256 bits.
 */
 template ladderAffine(n, A) {
     input signal mulBits[n];
@@ -179,12 +177,10 @@ template ladderAffine(n, A) {
 
 /**
 * Computes the XCoordinate of the scalar multiplication mP.
-* The bits are required to be in LSB order. Last bit is assumed to be 1.
+* The bits are required to be in LSB order. Zero bits after the last significant bit assumed to be marked as padding (encoded as 2).
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
 *
 * TODO: Optimize to only utilize X- and Z-coords.
-*
-* Constraints: 5614 for 256 bits.
 */
 template ladderProjective(n, A) {
     input signal mulBits[n];
@@ -199,18 +195,33 @@ template ladderProjective(n, A) {
     component doublersR0[n];
     component doublersR1[n];
     component doublerInitial = xDblProjective(A);
-    component ifThenElseR0[n];
-    component ifThenElseR1[n];
+    // component ifThenElseR0[n];
+    // component ifThenElseR1[n];
+    component muxR0[n];
+    component muxR1[n];
 
     r0[n-1] <== P;
     doublerInitial.P <== P;
     r1[n-1] <== doublerInitial.out;
+
+    log("Initial:");
+    log("R0:");
+    log("X: ", r0[n-1].X);
+    log("Y: ", r0[n-1].Y);
+    log("Z: ", r0[n-1].Z);
+    log("R1:");
+    log("X: ", r1[n-1].X);
+    log("Y: ", r1[n-1].Y);
+    log("Z: ", r1[n-1].Z);
+
     for(var i = n-2; i >= 0; i--) {
         adders[i] = xAddProjective();
         doublersR0[i] = xDblProjective(A);
         doublersR1[i] = xDblProjective(A);
-        ifThenElseR0[i] = ifThenElseMulti(2);
-        ifThenElseR1[i] = ifThenElseMulti(2);
+        // ifThenElseR0[i] = ifThenElseMulti(2);
+        // ifThenElseR1[i] = ifThenElseMulti(2);
+        muxR0[i] = muxMulti2(2);
+        muxR1[i] = muxMulti2(2);
 
         adders[i].P <== r1[i+1];
         adders[i].Q <== r0[i+1];
@@ -218,25 +229,69 @@ template ladderProjective(n, A) {
         doublersR0[i].P <== r0[i+1];
         doublersR1[i].P <== r1[i+1];
         
-        ifThenElseR0[i].ifV[0] <== adders[i].out.X;
-        ifThenElseR0[i].ifV[1] <== adders[i].out.Z;
-        ifThenElseR0[i].elseV[0] <== doublersR0[i].out.X;
-        ifThenElseR0[i].elseV[1] <== doublersR0[i].out.Z;
-        ifThenElseR0[i].cond <== mulBits[i];
-        r0[i].X <== ifThenElseR0[i].out[0];
+        // ifThenElseR0[i].ifV[0] <== adders[i].out.X;
+        // ifThenElseR0[i].ifV[1] <== adders[i].out.Z;
+        // ifThenElseR0[i].elseV[0] <== doublersR0[i].out.X;
+        // ifThenElseR0[i].elseV[1] <== doublersR0[i].out.Z;
+        // ifThenElseR0[i].cond <== mulBits[i];
+        // r0[i].X <== ifThenElseR0[i].out[0];
+        // r0[i].Y <== 0;
+        // r0[i].Z <== ifThenElseR0[i].out[1];
+        muxR0[i].in[0][0] <== doublersR0[i].out.X;
+        muxR0[i].in[0][1] <== doublersR0[i].out.Z;
+        muxR0[i].in[1][0] <== adders[i].out.X;
+        muxR0[i].in[1][1] <== adders[i].out.Z;
+        muxR0[i].in[2][0] <== r0[i+1].X;
+        muxR0[i].in[2][1] <== r0[i+1].Z;
+        muxR0[i].in[3][0] <== 0;
+        muxR0[i].in[3][1] <== 0;
+        muxR0[i].selector <== mulBits[i];
+        r0[i].X <== muxR0[i].out[0];
         r0[i].Y <== 0;
-        r0[i].Z <== ifThenElseR0[i].out[1];
+        r0[i].Z <== muxR0[i].out[1];
 
-        ifThenElseR1[i].ifV[0] <== doublersR1[i].out.X;
-        ifThenElseR1[i].ifV[1] <== doublersR1[i].out.Z;
-        ifThenElseR1[i].elseV[0] <== adders[i].out.X;
-        ifThenElseR1[i].elseV[1] <== adders[i].out.Z;
-        ifThenElseR1[i].cond <== mulBits[i];
-        r1[i].X <== ifThenElseR1[i].out[0];
+        // ifThenElseR1[i].ifV[0] <== doublersR1[i].out.X;
+        // ifThenElseR1[i].ifV[1] <== doublersR1[i].out.Z;
+        // ifThenElseR1[i].elseV[0] <== adders[i].out.X;
+        // ifThenElseR1[i].elseV[1] <== adders[i].out.Z;
+        // ifThenElseR1[i].cond <== mulBits[i];
+        // r1[i].X <== ifThenElseR1[i].out[0];
+        // r1[i].Y <== 0;
+        // r1[i].Z <== ifThenElseR1[i].out[1];
+        muxR1[i].in[0][0] <== adders[i].out.X;
+        muxR1[i].in[0][1] <== adders[i].out.Z;
+        muxR1[i].in[1][0] <== doublersR1[i].out.X;
+        muxR1[i].in[1][1] <== doublersR1[i].out.Z;
+        muxR1[i].in[2][0] <== r1[i+1].X;
+        muxR1[i].in[2][1] <== r1[i+1].Z;
+        muxR1[i].in[3][0] <== 0;
+        muxR1[i].in[3][1] <== 0;
+        muxR1[i].selector <== mulBits[i];
+        r1[i].X <== muxR1[i].out[0];
         r1[i].Y <== 0;
-        r1[i].Z <== ifThenElseR1[i].out[1];
+        r1[i].Z <== muxR1[i].out[1];
+
+        // log("\nRound ", i, ":");
+        // log("R0:");
+        // log("X: ", r0[i].X);
+        // log("Y: ", r0[i].Y);
+        // log("Z: ", r0[i].Z);
+        // log("R1:");
+        // log("X: ", r1[i].X);
+        // log("Y: ", r1[i].Y);
+        // log("Z: ", r1[i].Z);
     }
 
     r0Final <== r0[0];
     r1Final <== r1[0];
+
+    log("\nResult:");
+    log("X: ", r0Final.X);
+    log("Y: ", r0Final.Y);
+    log("Z: ", r0Final.Z);
+
+    // input ProjectivePoint() test;
+    // test === r0Final;
 }
+
+// component main = ladderProjective(2, 126932);

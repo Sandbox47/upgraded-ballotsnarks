@@ -2,6 +2,7 @@ pragma circom 2.2.1;
 
 include "../utilities/branching.circom";
 include "../utilities/arithmetic.circom";
+include "../utilities/bitify.circom";
 include "affinePoint.circom";
 include "projectivePoint.circom";
 include "conversionsPointRepresentations.circom";
@@ -35,6 +36,11 @@ template scalarMulAffine(n, A, B) {
     convertToAffine.in <== scalarMulProjective.out;
     out <== convertToAffine.out;
 
+    log("\nFinal result:");
+    log("x: ", out.x);
+    log("y: ", out.y);
+    log("notInfty: ", out.notInfty);
+
     // Test:
     input AffinePoint() test;
     test === out;
@@ -42,6 +48,9 @@ template scalarMulAffine(n, A, B) {
 
 /**
 * Computes mP. (Where m is later represented as a bit string of length n.)
+*
+* TODO: Change so that n does not need to be the exact number of bits needed for m but rather it is enough if this is an upper bound 
+* (e.g., fill other places with values that are not 0 or 1 (for example 2) and skip those in the montgomery ladder.)
 */
 template scalarMulProjective(n, A, B) {
     input signal m;
@@ -49,9 +58,15 @@ template scalarMulProjective(n, A, B) {
 
     output ProjectivePoint() out;
 
-    component toBits = Num2Bits(n);
+    component toBits = num2BitsPadded(n);
     toBits.in <== m;
     signal mBits[n] <== toBits.out;
+    log("Multiplier:");
+    log(m);
+    // log("Individual Bits (Least significant Bit first):");
+    // for(var i = 0; i < n; i++) {
+    //     log(mBits[i]);
+    // }
 
     component ladder = ladderProjective(n, A);
     ladder.mulBits <== mBits;
@@ -96,40 +111,17 @@ template scalarMulProjective(n, A, B) {
     selectEnabled.s[3] <== case3;
     selectEnabled.in[3] <== mPReconstructed;
 
+    log("\nChosen case:");
+    log(case0, case1, case2, case3);
+
     out <== selectEnabled.out;
+
+    // Test:
+    // input ProjectivePoint() test;
+    // test === out;
 }
-
-
-// ========================================================================================================================
-// TESTS:
-/* Add affine chord rule test:
-    Input points:
-    p = (20350112980332495410491806106641912032405807740206955641061065374486698796317, 14802660259816080277511375667429496994814855765153723011254359800269211103660, 1)
-    q = (6436550625859115314273341999431281045921882911473785275445591016670213976054, 4911560927196046703381769182402726179096272710280490153721015398415972676297, 1)
-    Expected Output:
-    out = (7306455872859196908558943217263429454398369715445672625861646916000069222142, 5168193925279556701056169608834112308914330031216789481129608101247302645921, 1)
-*/
-/* Add affine tangent rule test:
-    Input points:
-    p = q = (4118539398467926584682657566310407557795734099513828559961124542414074202229, 13695552684664363390493079180907196421930367647106528160692950450717086983669, 1)
-    Expected Output:
-    out = (13191020427819135497375733108775087671420687347105010986864076588002895255680, 14872857448681080766454952069697763630820526668319493378835763128018307235081, 1)
-*/
-/* Add affine infty test:
-    Input points:
-    p = (4118539398467926584682657566310407557795734099513828559961124542414074202229, 13695552684664363390493079180907196421930367647106528160692950450717086983669, 1)
-    q = (0, 0, 0)
-    Expected Output:
-    out = p
-*/
-/* Add affine points with negated y coords test:
-    Input points:
-    p = (9869126941026947411437539396088279291493067976498332851790420256883651976887, 12375405827046910722190572009046646300838204184475632032483724651981872733461, 1)
-    q = (9869126941026947411437539396088279291493067976498332851790420256883651976887, 9512837044792364500055833736210628787710160215940402311214479534593935762156, 1)
-    Expected Output:
-    out = (0, 0, 0)
-*/
 
 // component main = addAffine(126932,1);
 // component main = ladderProjective(256, 12632);
-// component main = scalarMulAffine(256, 126932, 1);
+// component main = scalarMulProjective(23, 126932, 1);
+component main = scalarMulAffine(32, 126932, 1);

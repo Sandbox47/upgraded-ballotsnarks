@@ -33,7 +33,7 @@ template getOccurences(n) {
 */
 template assertPointlistBorda(n, m) {
     input signal ballot[n];
-    input signal orderedPoints[m];
+    input signal orderedPoints[m]; // TODO make this as parameter, not input
 
     signal expectedZeros <== n - m;
     component getOccurencesZero = getOccurences(n);

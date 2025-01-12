@@ -26,6 +26,8 @@ template assertMajorityJudgement(nCand, nGrades) {
 * Checks that a given ballot conforms to the Majority Judgement Election type.
 * nCand is the number of Candidates and nGrades is the number of grades.
 * For each candidate the number in the ballot should be in {0, nGrades - 1}
+*
+* Problem: Has some problems in the later evaluation of the ballots (for example for computing the median of aggregated ballots)
 */
 template assertMajorityJudgementWithRangeChecks(nCand, nGrades) {
     input signal ballot[nCand];

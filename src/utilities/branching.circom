@@ -1,4 +1,7 @@
 pragma circom 2.2.1;
+include "arithmetic.circom";
+include "../../libs/node_modules/circomlib/circuits/mux2.circom";
+include "../../libs/node_modules/circomlib/circuits/bitify.circom";
 
 /**
 * If "cond" is 1, the output will be "ifV", otherwise the result will be "elseV"
@@ -100,6 +103,49 @@ template selectEnabledMulti(n, m) {
         }
     }
     out <== sums;
+}
+
+/**
+* Selects the input based on the selector signal (the selector signal can be 0, 1, 2 or 3 (2 Bits)).
+* (Uses the selector signal as index for the input array.)
+*/
+template mux2() {
+    input signal selector;
+    input signal in[4];
+
+    output signal out;
+
+    component toBits = Num2Bits(2);
+    toBits.in <== selector;
+    component mux2 = Mux2();
+    mux2.c <== in;
+    mux2.s <== toBits.out;
+    
+    out <== mux2.out;
+}
+
+/**
+* Selects the inputs based on the selector signal (the selector signal can be 0, 1, 2 or 3 (2 Bits)).
+* (Uses the selector signal as index for each of the input array.)
+*/
+template muxMulti2(n) {
+    input signal selector;
+    input signal in[4][n];
+
+    output signal out[n];
+
+    component toBits = Num2Bits(2);
+    toBits.in <== selector;
+
+    component mux2 = MultiMux2(n);
+    for(var i = 0; i < n; i++) {
+        for(var j = 0; j < 4; j++){
+            mux2.c[i][j] <== in[j][i];
+        }
+    }
+    mux2.s <== toBits.out;
+    
+    out <== mux2.out;
 }
 
 // component main = selectEnabled(16);

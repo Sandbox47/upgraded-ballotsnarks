@@ -42,13 +42,13 @@ def computeShortWeierstrassToMontgomeryParameters():
     if not roots:
         raise ValueError("The cubic equation z^3 + az + b = 0 has no roots in F.")
 
-    # Pick the first root α (or choose based on your application)
+    # Pick the first root alpha (or choose based on your application)
     alpha = roots[0][0]
 
     # Check if 3α^2 + a is a quadratic residue
     quad_residue = 3*alpha^2 + a
     if not quad_residue.is_square():
-        raise ValueError("3α^2 + a is not a quadratic residue in F.")
+        raise ValueError("3*alpha^2 + a is not a quadratic residue in F.")
 
     # Compute s = 1 / sqrt(3α^2 + a)
     s = 1 / quad_residue.sqrt()
@@ -150,7 +150,8 @@ def testAddNegation():
     print(f"(x_add, y_add) = ({x_add}, {y_add})")
 
 def testScalarMul():
-    m = 42
+    # m = 42
+    m = 2
     point_SW_mul = m * point_SW_1
     t_mul, v_mul = point_SW_mul[0], point_SW_mul[1]
     x_mul, y_mul = shortWeierstrassToMontgomery(t_mul, v_mul)
