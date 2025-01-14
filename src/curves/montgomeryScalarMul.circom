@@ -58,7 +58,7 @@ template scalarMulProjective(n, A, B) {
 
     output ProjectivePoint() out;
 
-    component toBits = num2BitsPadded(n);
+    component toBits = Num2Bits(n);
     toBits.in <== m;
     signal mBits[n] <== toBits.out;
     log("Multiplier:");
@@ -68,7 +68,9 @@ template scalarMulProjective(n, A, B) {
     //     log(mBits[i]);
     // }
 
-    component ladder = ladderProjective(n, A);
+    // component ladder = ladderProjective(n, A);
+    // component ladder = ladderProjectivePaddedNaive(n, A);
+    component ladder = ladderProjectivePaddedConstraintReduced(n, A);
     ladder.mulBits <== mBits;
     ladder.P <== P;
     ProjectivePoint() mP <== ladder.r0Final;
@@ -82,6 +84,7 @@ template scalarMulProjective(n, A, B) {
     ProjectivePoint() mPReconstructed <== yRecovery.out;
 
     component selectEnabled = selectEnabledProjective(4);
+    // component switchCase = switchCaseProjective(4);
     component getInfty = inftyProjective();
     component getZero = zeroProjective();
 
@@ -91,6 +94,8 @@ template scalarMulProjective(n, A, B) {
     signal case0 <== isPInfty.out;
     selectEnabled.s[0] <== case0;
     selectEnabled.in[0] <== getInfty.out;
+    // switchCase.cond[0] <== case0;
+    // switchCase.in[0] <== getInfty.out;
 
     // Case 2: If P is zero and the exponent is odd, then the output is zero.
     component isPZero = isZeroProjective();
@@ -99,22 +104,28 @@ template scalarMulProjective(n, A, B) {
     signal case1 <== isPZero.out * ismOdd;
     selectEnabled.s[1] <== case1;
     selectEnabled.in[1] <== getZero.out;
+    // switchCase.cond[1] <== case1;
+    // switchCase.in[1] <== getZero.out;
 
     // Case 3: If P is zero and the exponent is even, then the output is infty.
     signal case2 <== isPZero.out * (1-ismOdd);
     selectEnabled.s[2] <== case2;
     selectEnabled.in[2] <== getInfty.out;
+    // switchCase.cond[2] <== case2;
+    // switchCase.in[2] <== getInfty.out;
 
     // Case 4: Otherwise, the result mPReconstructed is correct.
     signal tmp <== (1-case1) * (1-case2);
     signal case3 <== tmp * (1-case0);
     selectEnabled.s[3] <== case3;
     selectEnabled.in[3] <== mPReconstructed;
+    // switchCase.in[3] <== mPReconstructed;
 
     log("\nChosen case:");
-    log(case0, case1, case2, case3);
+    log(case0, case1, case2);
 
     out <== selectEnabled.out;
+    // out <== switchCase.out;
 
     // Test:
     // input ProjectivePoint() test;
@@ -124,4 +135,4 @@ template scalarMulProjective(n, A, B) {
 // component main = addAffine(126932,1);
 // component main = ladderProjective(256, 12632);
 // component main = scalarMulProjective(23, 126932, 1);
-component main = scalarMulAffine(32, 126932, 1);
+component main = scalarMulAffine(255, 126932, 1);

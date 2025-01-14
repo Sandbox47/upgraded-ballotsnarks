@@ -58,13 +58,13 @@ template addAffine(A, B) {
 
     output AffinePoint() out;
 
-    component groupLawCases = selectEnabledAffine(4);
+    component groupLawCases = switchCaseAffine(4);
     component serializep = serializeAffine();
     component serializeq = serializeAffine();
     serializep.in <== p;
     serializeq.in <== q;
 
-    signal selector[4]; // Selects which of the cases of the group law to take.
+    signal selector[3]; // Selects which of the cases of the group law to take.
     AffinePoint() cases[4]; //The result of the group law in the different cases.
 
     selector[0] <== 1 - p.notInfty*q.notInfty; // If one of the points is infty, we need to output the other as the result
@@ -93,21 +93,19 @@ template addAffine(A, B) {
     tangentRule.p <== p;
     cases[2] <== tangentRule.out;
 
-    signal selectorNot012 <== selectorNot01 * (1-selector[2]);
-    selector[3] <== selectorNot012; // In the rest of cases (p not equal q), we need to apply the chord rule;
     component chordRule = chordRuleAffine(A, B);
     chordRule.p <== p;
     chordRule.q <== q;
     cases[3] <== chordRule.out;
 
     groupLawCases.in <== cases;
-    groupLawCases.s <== selector;
+    groupLawCases.cond <== selector;
 
     out <== groupLawCases.out;
 
     // Test:
-    input AffinePoint() test;
-    out === test;
+    // input AffinePoint() test;
+    // out === test;
 }
 
 template addProjective(A, B) {
@@ -131,8 +129,8 @@ template addProjective(A, B) {
     out <== convertToProjectiveRes.out;
 
     // Test:
-    // input ProjectivePoint() test;
-    // out === test;
+    input ProjectivePoint() test;
+    out === test;
 }
 
 // ========================================================================================================================
@@ -166,4 +164,4 @@ template addProjective(A, B) {
 */
 
 // component main = addAffine(126932, 1);
-component main = addAffine(126932, 1);
+component main = addProjective(126932, 1);

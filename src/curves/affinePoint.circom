@@ -105,3 +105,22 @@ template ifThenElseAffine() {
     deserializer.in <== ifThenElse.out;
     out <== deserializer.out;
 }
+
+template switchCaseAffine(n) {
+    input AffinePoint() in[n];
+    input signal cond[n-1];
+
+    output AffinePoint() out;
+
+    component switchCase = switchCaseMulti(n, 3);
+    component serializers[n];
+    component deserializer = deserializeAffine();
+    switchCase.cond <== cond;
+    for(var i = 0; i < n; i++) {
+        serializers[i] = serializeAffine();
+        serializers[i].in <== in[i];
+        switchCase.in[i] <== serializers[i].out;
+    }
+    deserializer.in <== switchCase.out;
+    out <== deserializer.out;
+}

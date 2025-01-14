@@ -11,6 +11,10 @@ include "../curves/montgomeryGroupLaw.circom";
 * 
 * For given generator g, public key pk, plaintext v and randomness r, the ciphertext is (g^r, g^v*pk^r)
 * NOTE: We are now switching from additive to multiplicative notation for the application of the Montgomery group law.
+* 
+* n is the number of bits r and v can have at most.
+*
+* TODO: Can I limit the numer of bits in r?
 */
 template expElGamalMontgomeryProjective(n, A, B) {
     input ProjectivePoint() g; // Generator
@@ -47,6 +51,10 @@ template expElGamalMontgomeryProjective(n, A, B) {
 * 
 * For given generator g, public key pk, plaintext v and randomness r, the ciphertext is (g^r, g^v*pk^r)
 * NOTE: We are now switching from additive to multiplicative notation for the application of the Montgomery group law.
+* 
+* n is the number of bits r and v can have at most.
+*
+* TODO: Can I limit the numer of bits in r?
 */
 template expElGamalMontgomeryAffine(n, A, B) {
     input AffinePoint() g; // Generator
@@ -77,4 +85,59 @@ template expElGamalMontgomeryAffine(n, A, B) {
     gv_pkr <== convertToAffine_gv_pkr.out;
 }
 
-component main = expElGamalMontgomeryProjective(32, 126932, 1);
+/**
+* Computes an exponential ElGamal ciphertext over a Montgomery curve for each of the given inputs v with corresponding randomnesses r.
+* 
+* entires is the number of entries in the vector to be encrypted.
+*/
+template expElGamalVector(n, A, B, entries) {
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input signal v[entries]; // Signal
+    input signal r[entries]; // Randomness
+
+    output ProjectivePoint() gr[entries];
+    output ProjectivePoint() gv_pkr[entries];
+
+    component expElGamal[entries];
+
+    for(var i = 0; i < entries; i++) {
+        expElGamal[i] = expElGamalMontgomeryProjective(n, A, B);
+        expElGamal[i].g <== g;
+        expElGamal[i].pk <== pk;
+        expElGamal[i].v <== v[i];
+        expElGamal[i].r <== r[i];
+        gr[i] <== expElGamal[i].gr;
+        gv_pkr[i] <== expElGamal[i].gv_pkr;
+    }
+}
+
+/**
+* Computes an exponential ElGamal ciphertext over a Montgomery curve for each of the given inputs v with corresponding randomnesses r.
+* 
+* rows and columns are the number of rows and columns in the matrix of entries to be encrypted.
+*/
+template expElGamalMatrix(n, A, B, rows, columns) {
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input signal v[rows][columns]; // Signal
+    input signal r[rows][columns]; // Randomness
+
+    output ProjectivePoint() gr[rows][columns];
+    output ProjectivePoint() gv_pkr[rows][columns];
+
+    component expElGamal[rows];
+
+    for(var i = 0; i < rows; i++) {
+        expElGamal[i] = expElGamalVector(n, A, B, columns);
+        expElGamal[i].g <== g;
+        expElGamal[i].pk <== pk;
+        expElGamal[i].v <== v[i];
+        expElGamal[i].r <== r[i];
+        gr[i] <== expElGamal[i].gr;
+        gv_pkr[i] <== expElGamal[i].gv_pkr;
+    }
+}
+
+// component main = expElGamalMontgomeryProjective(32, 126932, 1);
+// component main = expElGamalMatrix(32, 126932, 1, 10, 10);

@@ -1,5 +1,6 @@
 pragma circom 2.2.1;
 
+include "../utilities/arithmetic.circom";
 include "../utilities/branching.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
 
@@ -159,3 +160,25 @@ template ifThenElseProjective() {
     deserializer.in <== ifThenElse.out;
     out <== deserializer.out;
 }
+
+template switchCaseProjective(n) {
+    input ProjectivePoint() in[n];
+    input signal cond[n-1];
+
+    output ProjectivePoint() out;
+
+    component switchCase = switchCaseMulti(n, 3);
+    component serializers[n];
+    component deserializer = deserializeProjective();
+    switchCase.cond <== cond;
+    for(var i = 0; i < n; i++) {
+        serializers[i] = serializeProjective();
+        serializers[i].in <== in[i];
+        switchCase.in[i] <== serializers[i].out;
+    }
+    deserializer.in <== switchCase.out;
+    out <== deserializer.out;
+}
+
+// component main = switchCaseProjective(4);
+// component main = selectEnabledProjective(4);

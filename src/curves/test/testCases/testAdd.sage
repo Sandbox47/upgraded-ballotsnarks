@@ -34,5 +34,5 @@ def testAddProjective():
 
     JSONUtils.combineAndExport([point1, point2, pointSum])
 
-# testAddProjective()
-testAddAffine()
+testAddProjective()
+# testAddAffine()
