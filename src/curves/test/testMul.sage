@@ -1,8 +1,8 @@
 from sageImport import sage_import
 from JSON import JSONUtils
-sage_import('../curveSetup/curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
-sage_import('../curveSetup/affinePoint', fromlist=['AffinePoint'])
-sage_import('../curveSetup/projectivePoint', fromlist=['ProjectivePoint'])
+sage_import('../../sage/curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
+sage_import('../../sage/affinePoint', fromlist=['AffinePoint'])
+sage_import('../../sage/projectivePoint', fromlist=['ProjectivePoint'])
 
 def testMulAffine(multiplier):
     curve = MontgomeryCurve()

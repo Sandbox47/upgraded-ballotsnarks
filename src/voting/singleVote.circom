@@ -32,9 +32,9 @@ template assertSingleVoteVoting(nVotes) {
 }
 
 /**
-* nBits is here the number of Bits, 
+* bitsVotes is here the number of Bits used for the individual votes. bitsRand is the randomness to be used for individual randomnesses r.
 */
-template singleVoteEnc(nBits, A, B, nVotes) {
+template singleVoteEnc(bitsVotes, bitsRand, A, B, nVotes) {
     input signal ballot[nVotes];
 
     input ProjectivePoint() g; // Generator
@@ -43,7 +43,7 @@ template singleVoteEnc(nBits, A, B, nVotes) {
 
     output ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
 
-    component expElGamal = expElGamalVector(nBits, A, B, nVotes);
+    component expElGamal = expElGamalVector(bitsVotes, bitsRand, A, B, nVotes);
     expElGamal.g <== g;
     expElGamal.pk <== pk;
     expElGamal.v <== ballot;
@@ -56,7 +56,7 @@ template singleVoteEnc(nBits, A, B, nVotes) {
 /**
 * Asserts that a given ballot belongs to the given encrypted ballot
 */
-template assertSingleVoteEnc(nBits, A, B, nVotes) {
+template assertSingleVoteEnc(bitsVotes, bitsRand, A, B, nVotes) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
@@ -66,7 +66,7 @@ template assertSingleVoteEnc(nBits, A, B, nVotes) {
     input signal ballot[nVotes];
     input signal r[nVotes]; // Randomness
 
-    component enc = singleVoteEnc(nBits, A, B, nVotes);
+    component enc = singleVoteEnc(bitsVotes, bitsRand, A, B, nVotes);
     enc.ballot <== ballot;
     enc.g <== g;
     enc.pk <== pk;
@@ -78,7 +78,7 @@ template assertSingleVoteEnc(nBits, A, B, nVotes) {
 /**
 * Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
 */
-template assertSingleVote(nBits, A, B, nVotes) {
+template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
@@ -88,7 +88,7 @@ template assertSingleVote(nBits, A, B, nVotes) {
     input signal ballot[nVotes];
     input signal r[nVotes]; // Randomness
 
-    component assertEnc = assertSingleVoteEnc(nBits, A, B, nVotes);
+    component assertEnc = assertSingleVoteEnc(bitsVotes, bitsRand, A, B, nVotes);
     assertEnc.ballot <== ballot;
     assertEnc.g <== g;
     assertEnc.pk <== pk;
@@ -100,5 +100,5 @@ template assertSingleVote(nBits, A, B, nVotes) {
 }
 
 // component main = assertSingleVoteVoting(100);
-// component main = assertSingleVoteEnc(32, 126932, 1, 100);
-component main = assertSingleVote(32, 126932, 1, 100);
+// component main = assertSingleVoteEnc(32, 255, 126932, 1, 100);
+component main = assertSingleVote(32, 255, 126932, 1, 100);

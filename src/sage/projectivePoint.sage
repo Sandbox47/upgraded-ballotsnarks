@@ -29,7 +29,7 @@ class ProjectivePoint(CurvePoint):
                 self.name: innerData
             }
         
-        return json.dumps(data)
+        return data
 
     def toMontgomery(self):
         if self.Z != 0:

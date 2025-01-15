@@ -32,7 +32,7 @@ class AffinePoint(CurvePoint):
                 self.name: innerData
             }
         
-        return json.dumps(data)
+        return data
 
     def toMontgomery(self):
         return MontgomeryCurvePoint(self.x, self.y, self.notInfty, self.name)

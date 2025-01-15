@@ -200,7 +200,7 @@ template ladderAffine(n, A) {
 
 /**
 * Computes the XCoordinate of the scalar multiplication mP.
-* The bits are required to be in LSB order. Zero bits after the last significant bit assumed to be marked as padding (encoded as 2).
+* The bits are required to be in LSB order. Last bit is assumed to be 1.
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
 *
 * TODO: Optimize to only utilize X- and Z-coords.
@@ -291,10 +291,8 @@ template ladderProjective(n, A) {
 
 /**
 * Computes the XCoordinate of the scalar multiplication mP.
-* The bits are required to be in LSB order. Zero bits after the last significant bit assumed to be marked as padding (encoded as 2).
+* The bits are required to be in LSB order.
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
-*
-* TODO: Optimize to only utilize X- and Z-coords.
 */
 template ladderProjectivePaddedNaive(n, A) {
     input signal mulBits[n];
@@ -348,7 +346,7 @@ template ladderProjectivePaddedNaive(n, A) {
         muxR0[i].in[0][1] <== doublersR0[i].out.Z;
         muxR0[i].in[1][0] <== adders[i].out.X;
         muxR0[i].in[1][1] <== adders[i].out.Z;
-        muxR0[i].in[2][0] <== r0[i+1].X;
+        muxR0[i].in[2][0] <== r0[i+1].X;Zero bits after the last significant bit assumed to be marked as padding (encoded as 2).
         muxR0[i].in[2][1] <== r0[i+1].Z;
         muxR0[i].in[3][0] <== 0;
         muxR0[i].in[3][1] <== 0;
@@ -385,7 +383,7 @@ template ladderProjectivePaddedNaive(n, A) {
 
 /**
 * Computes the XCoordinate of the scalar multiplication mP.
-* The bits are required to be in LSB order. Zero bits after the last significant bit assumed to be marked as padding (encoded as 2).
+* The bits are required to be in LSB order.
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
 */
 template ladderProjectivePaddedConstraintReduced(n, A) {

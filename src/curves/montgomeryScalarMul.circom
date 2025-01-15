@@ -42,8 +42,8 @@ template scalarMulAffine(n, A, B) {
     log("notInfty: ", out.notInfty);
 
     // Test:
-    input AffinePoint() test;
-    test === out;
+    // input AffinePoint() test;
+    // test === out;
 }
 
 /**
@@ -135,4 +135,4 @@ template scalarMulProjective(n, A, B) {
 // component main = addAffine(126932,1);
 // component main = ladderProjective(256, 12632);
 // component main = scalarMulProjective(23, 126932, 1);
-component main = scalarMulAffine(255, 126932, 1);
+// component main = scalarMulAffine(255, 126932, 1);

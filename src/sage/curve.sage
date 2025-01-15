@@ -1,5 +1,5 @@
 from sageImport import sage_import
-sage_import('constants', fromlist=['BASE_FIELD'])
+sage_import('constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT'])
 
 class MontgomeryCurvePoint():
     def __init__(self, x: BASE_FIELD, y: BASE_FIELD, notInfty: bool, name=None):
@@ -90,15 +90,35 @@ class MontgomeryCurve():
         return pointM
 
     def scalarMul(self, point: MontgomeryCurvePoint, multiplier: BASE_FIELD):
-        if (not self.isPointOnCurve(point)):
+        if not self.isPointOnCurve(point):
             raise ValueError("The given points is not on the curve.")
         pointSW = self.montgomeryToShortWeierstrass(point)
         result = multiplier * pointSW
         pointM = self.shortWeierstrassToMontgomery(result)
         return pointM
 
+    def invert(self, point: MontgomeryCurvePoint):
+        if not self.isPointOnCurve(point):
+            raise ValueError("The given points is not on the curve.")
+        pointSW = self.montgomeryToShortWeierstrass(point)
+        result = -pointSW
+        pointM = self.shortWeierstrassToMontgomery(result)
+        return pointM
+
+    def discreteLog(self, point: MontgomeryCurvePoint, basePoint: MontgomeryCurvePoint):
+        if not self.isPointOnCurve(point) or not self.isPointOnCurve(basePoint):
+            raise ValueError("One of the given points is not on the curve.")
+        pointSW = self.montgomeryToShortWeierstrass(point)
+        basePointSW = self.montgomeryToShortWeierstrass(basePoint)
+        multiplier = 0
+        while multiplier*basePointSW != pointSW and multiplier <= PLAINTEXT_LIMIT:
+            multiplier += 1
+        if multiplier*basePointSW == pointSW:
+            return multiplier
+        raise ArithmeticError(f"The given point is not a multiple within the allowed range [0, {PLAINTEXT_LIMIT}] of the given basePoint.")
+
     def isPointOnCurve(self, point: MontgomeryCurvePoint):
-        if (not point.notInfty) or self.B*point.y^2 == point.x^3 + self.A*point.x^2 + point.x:
+        if not point.notInfty or self.B*point.y^2 == point.x^3 + self.A*point.x^2 + point.x:
             return True
         else:
             return False

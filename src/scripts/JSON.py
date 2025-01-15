@@ -10,7 +10,8 @@ class JSONUtils():
                 jsonData = data
             elif hasattr(data, 'toJSON') and callable(getattr(data, 'toJSON')):
                 try:
-                    jsonData = json.loads(data.toJSON())
+                    # jsonData = json.loads(data.toJSON())
+                    jsonData = data.toJSON()
                 except Exception as e:
                     print(f"Error serializing {data}: {e}")
                     continue
@@ -18,7 +19,6 @@ class JSONUtils():
                 print(f"Skipping unsupported type: {type(data)}")
                 continue
             combinedData = combinedData | jsonData
-        # print(json.dumps(combinedData, indent=4))
         return combinedData
 
     def exportToJSON(jsonData, filepath=None):
