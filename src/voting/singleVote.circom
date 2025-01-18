@@ -3,17 +3,13 @@ pragma circom 2.2.1;
 include "../utilities/asserts.circom";
 include "../curves/projectivePoint.circom";
 include "../expElGamal/expElGamal.circom";
-
-bus SingleVoteBallot(nVotes) {
-    signal votes[nVotes];
-}
+include "../expElGamal/assertEEG.circom";
 
 /**
 * Assert that in a ballot with nVotes votes, each vote is 0 or one and that exactly one vote is one.
 */
 template assertSingleVoteVoting(nVotes) {
     input signal ballot[nVotes];
-    // input SingleVoteBallot(nVotes) ballot;
 
     component assertBit[nVotes];
     component assertSumBit = assertBit();
@@ -24,55 +20,9 @@ template assertSingleVoteVoting(nVotes) {
         assertBit[i] = assertBit();
         assertBit[i].in <== ballot[i];
         sum += ballot[i];
-        // assertBit[i].in <== ballot.votes[i];
-        // sum += ballot.votes[i];
     }
 
     assertSumBit.in <== sum;
-}
-
-/**
-* bitsVotes is here the number of Bits used for the individual votes. bitsRand is the randomness to be used for individual randomnesses r.
-*/
-template singleVoteEnc(bitsVotes, bitsRand, A, B, nVotes) {
-    input signal ballot[nVotes];
-
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-    input signal r[nVotes]; // Randomness
-
-    output ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
-
-    component expElGamal = expElGamalVector(bitsVotes, bitsRand, A, B, nVotes);
-    expElGamal.g <== g;
-    expElGamal.pk <== pk;
-    expElGamal.v <== ballot;
-    expElGamal.r <== r;
-
-    encBallot[0] <== expElGamal.gr;
-    encBallot[1] <== expElGamal.gv_pkr;
-}
-
-/**
-* Asserts that a given ballot belongs to the given encrypted ballot
-*/
-template assertSingleVoteEnc(bitsVotes, bitsRand, A, B, nVotes) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-    input ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
-
-    // Private/Witness
-    input signal ballot[nVotes];
-    input signal r[nVotes]; // Randomness
-
-    component enc = singleVoteEnc(bitsVotes, bitsRand, A, B, nVotes);
-    enc.ballot <== ballot;
-    enc.g <== g;
-    enc.pk <== pk;
-    enc.r <== r;
-
-    encBallot === enc.encBallot;
 }
 
 /**
@@ -88,17 +38,17 @@ template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
     input signal ballot[nVotes];
     input signal r[nVotes]; // Randomness
 
-    component assertEnc = assertSingleVoteEnc(bitsVotes, bitsRand, A, B, nVotes);
-    assertEnc.ballot <== ballot;
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
     assertEnc.g <== g;
     assertEnc.pk <== pk;
     assertEnc.r <== r;
-    assertEnc.encBallot <== encBallot;
+    assertEnc.gr <== encBallot[0];
+    assertEnc.gv_pkr <== encBallot[1];
 
     component assertVoting = assertSingleVoteVoting(nVotes);
     assertVoting.ballot <== ballot;
 }
 
 // component main = assertSingleVoteVoting(100);
-// component main = assertSingleVoteEnc(32, 255, 126932, 1, 100);
-component main = assertSingleVote(32, 255, 126932, 1, 100);
+// component main = assertSingleVote(32, 255, 126932, 1, 10);

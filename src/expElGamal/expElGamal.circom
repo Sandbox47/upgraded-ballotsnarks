@@ -146,5 +146,5 @@ template expElGamalMatrix(bitsRand, bitsPlain, A, B, rows, columns) {
 }
 
 // component main = expElGamalMontgomeryProjective(255, 32, 126932, 1);
-component main = expElGamalVector(255, 32, 126932, 1, 100);
+// component main = expElGamalVector(255, 32, 126932, 1, 100);
 // component main = expElGamalMatrix(255, 32, 126932, 1, 10, 10);

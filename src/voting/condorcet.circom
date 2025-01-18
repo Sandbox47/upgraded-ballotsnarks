@@ -4,12 +4,13 @@ include "../utilities/arithmetic.circom";
 include "../utilities/asserts.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
 include "../../libs/node_modules/circomlib/circuits/gates.circom";
+include "../expElGamal/assertEEG.circom";
 
 /**
 * Checks that a given ballot (as a (n x n)-Matrix) confirms to the condorcet election type.
 * Condorcet Election type defined in "zk-SNARKS for Ballot Validity: A Feasibility Study".
 */
-template assertCondorcet(n) {
+template assertCondorcetVoting(n) {
     input signal ballot[n][n];
 
     // Assert that all entries are bits
@@ -86,27 +87,27 @@ template computeCondorcetBallot(n, maxValue) {
             } else{
                 rankedWorse[i][j] = GreaterThan(maxValueBits); //r_i > r_j implies that i is ranked worse than j.
                 rankedTheSame[i][j] = IsEqual(); // r_i = r_j implies that i and ja are ranked the same.
-                computeEntryIJ[i][j] = selectEnabled(3);
-                computeEntryJI[i][j] = selectEnabled(3);
+                computeEntryIJ[i][j] = switchCase(3);
+                computeEntryJI[i][j] = switchCase(3);
 
                 rankedWorse[i][j].in[0] <== ranking[i];
                 rankedWorse[i][j].in[1] <== ranking[j];
                 rankedTheSame[i][j].in[0] <== ranking[i];
                 rankedTheSame[i][j].in[1] <== ranking[j];
 
-                tmp[i][j] <== 1 - rankedWorse[i][j].out;
+                // tmp[i][j] <== 1 - rankedWorse[i][j].out;
 
-                computeEntryIJ[i][j].s[0] <== rankedWorse[i][j].out;
-                computeEntryIJ[i][j].s[1] <== rankedTheSame[i][j].out;
-                computeEntryIJ[i][j].s[2] <== tmp[i][j] * (1-rankedTheSame[i][j].out);
+                computeEntryIJ[i][j].cond[0] <== rankedWorse[i][j].out;
+                computeEntryIJ[i][j].cond[1] <== rankedTheSame[i][j].out;
+                // computeEntryIJ[i][j].s[2] <== tmp[i][j] * (1-rankedTheSame[i][j].out);
                 computeEntryIJ[i][j].in[0] <== 0; // a_ij = 0 if i is ranked worse than j
                 computeEntryIJ[i][j].in[1] <== 0; // a_ij = 0 if i is ranked the same as j
                 computeEntryIJ[i][j].in[2] <== 1; // a_ij = 1 if i is ranked better than j
                 out[i][j] <== computeEntryIJ[i][j].out;
 
-                computeEntryJI[i][j].s[0] <== rankedWorse[i][j].out;
-                computeEntryJI[i][j].s[1] <== rankedTheSame[i][j].out;
-                computeEntryJI[i][j].s[2] <== tmp[i][j] * (1-rankedTheSame[i][j].out);
+                computeEntryJI[i][j].cond[0] <== rankedWorse[i][j].out;
+                computeEntryJI[i][j].cond[1] <== rankedTheSame[i][j].out;
+                // computeEntryJI[i][j].s[2] <== tmp[i][j] * (1-rankedTheSame[i][j].out);
                 computeEntryJI[i][j].in[0] <== 1; // a_ji = 1 if i is ranked worse than j
                 computeEntryJI[i][j].in[1] <== 0; // a_ji = 0 if i is ranked the same as j
                 computeEntryJI[i][j].in[2] <== 0; // a_ji = 0 if i is ranked better than j
@@ -120,7 +121,7 @@ template computeCondorcetBallot(n, maxValue) {
 * Assert that the given ballot corresponds to the given ranking according to the condorcet election type.
 * Parameters n, maxValue are defined the same as in computeCondorcetBallot.
 */
-template assertCondorcetWithRanking(n, maxValue) {
+template assertCondorcetWithRankingVoting(n, maxValue) {
     input signal ranking[n];
     input signal ballot[n][n];
 
@@ -136,5 +137,33 @@ template assertCondorcetWithRanking(n, maxValue) {
     
 }
 
-// component main = assertCondorcet(50);
-component main = assertCondorcetWithRanking(50, 50);
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertCondorcet(bitsVotes, bitsRand, A, B, nCand, maxValue) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input ProjectivePoint() encBallot[2][nCand][nCand]; //g^r and g^v*pk^r values from expElGamal
+
+    // Private/Witness
+    input signal ballot[nCand][nCand];
+    input signal ranking[nCand];
+    input signal r[nCand][nCand]; // Randomness
+
+    component assertEnc = assertEncMatrix(nCand, nCand, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== encBallot[0];
+    assertEnc.gv_pkr <== encBallot[1];
+
+    component assertVoting = assertCondorcetWithRankingVoting(nCand, maxValue);
+    assertVoting.ballot <== ballot;
+    assertVoting.ranking <== ranking;
+}
+
+// component main = assertCondorcetVoting(50);
+// component main = assertCondorcetWithRankingVoting(50, 50);
+component main = assertCondorcet(32, 255, 126932, 1, 10, 10);

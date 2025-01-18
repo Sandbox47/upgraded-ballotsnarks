@@ -1,26 +1,27 @@
 pragma circom 2.2.1;
 
 include "../utilities/asserts.circom";
+include "../expElGamal/assertEEG.circom";
 
 /**
-* Asserts that in a ballot with n entries, each entry is 0 or 1, and all 1-votes are assigned successively.
+* Asserts that in a ballot with nVotes entries, each entry is 0 or 1, and all 1-votes are assigned successively.
 * A ballot consisting of only zeros is considered valid.
 */
-template assertLineVote(n) {
-    input signal ballot[n];
+template assertLineVoteVoting(nVotes) {
+    input signal ballot[nVotes];
 
-    component assertBits[n];
+    component assertBits[nVotes];
     component assertLine = assertBit();
 
     assertBits[0] = assertBit();
     assertBits[0].in <== ballot[0];
 
-    signal indicator[n];
+    signal indicator[nVotes];
     indicator[0] <== ballot[0];
-    signal tmp[n];
+    signal tmp[nVotes];
 
 
-    for(var i = 1; i < n; i++) {
+    for(var i = 1; i < nVotes; i++) {
         assertBits[i] = assertBit();
         assertBits[i].in <== ballot[i];
 
@@ -28,7 +29,32 @@ template assertLineVote(n) {
         indicator[i] <== indicator[i-1] + tmp[i] * ballot[i]; // 1 if there is a change from 0 to 1 from ballot[i-1] to ballot[i], 0 otherwise
     }
 
-    assertLine.in <== indicator[n-1];
+    assertLine.in <== indicator[nVotes-1];
 }
 
-component main = assertLineVote(100);
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertLineVote(bitsVotes, bitsRand, A, B, nVotes) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== encBallot[0];
+    assertEnc.gv_pkr <== encBallot[1];
+
+    component assertVoting = assertLineVoteVoting(nVotes);
+    assertVoting.ballot <== ballot;
+}
+
+component main = assertLineVote(32, 255, 126932, 1, 10);

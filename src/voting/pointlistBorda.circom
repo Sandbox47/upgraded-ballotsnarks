@@ -2,6 +2,7 @@ pragma circom 2.2.1;
 
 include "../utilities/asserts.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
+include "../expElGamal/assertEEG.circom";
 
 /**
 * Computes, how often choice occurs in a list of values valuesList of length n.
@@ -31,21 +32,20 @@ template getOccurences(n) {
 * If nCand > nPoints, we assume, that the pointlist is padded with (Ncand - nPoints) zeros.
 * orderedPoints is the list of points (descending order) and has length m. TODO: Does the ordering matter?
 */
-template assertPointlistBorda(n, m) {
-    input signal ballot[n];
-    input signal orderedPoints[m]; // TODO make this as parameter, not input
+template assertPointlistBordaVoting(nCand, nPoints, orderedPoints) {
+    input signal ballot[nCand];
 
-    signal expectedZeros <== n - m;
-    component getOccurencesZero = getOccurences(n);
+    signal expectedZeros <== nCand - nPoints;
+    component getOccurencesZero = getOccurences(nCand);
     getOccurencesZero.choice <== 0;
     getOccurencesZero.valuesList <== ballot;
     signal numZeros <== getOccurencesZero.out;
     numZeros === expectedZeros;
 
-    component getOccurences[m];
+    component getOccurences[nPoints];
 
-    for(var i = 0; i < m; i++) {
-        getOccurences[i] = getOccurences(n);
+    for(var i = 0; i < nPoints; i++) {
+        getOccurences[i] = getOccurences(nCand);
         getOccurences[i].choice <== orderedPoints[i];
         getOccurences[i].valuesList <== ballot;
 
@@ -53,5 +53,31 @@ template assertPointlistBorda(n, m) {
     }
 }
 
-// component main = assertPointlistBorda(100, 10);
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertPointlistBorda(bitsVotes, bitsRand, A, B, nCand, nPoints, orderedPoints) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input ProjectivePoint() encBallot[2][nCand]; //g^r and g^v*pk^r values from expElGamal
+
+    // Private/Witness
+    input signal ballot[nCand];
+    input signal r[nCand]; // Randomness
+
+    component assertEnc = assertEncVector(nCand, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== encBallot[0];
+    assertEnc.gv_pkr <== encBallot[1];
+
+    component assertVoting = assertPointlistBordaVoting(nCand, nPoints, orderedPoints);
+    assertVoting.ballot <== ballot;
+}
+
 // component main = getOccurences(100);
+// component main = assertPointlistBordaVoting(100, 5, [12, 10, 8, 5, 1]);
+component main = assertPointlistBorda(32, 255, 126932, 1, 10, 5, [12, 10, 8, 5, 1]);

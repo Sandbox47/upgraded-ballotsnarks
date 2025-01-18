@@ -4,22 +4,49 @@ include "../utilities/asserts.circom";
 include "multiVote.circom";
 include "../utilities/branching.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
+include "../expElGamal/assertEEG.circom";
+
 
 /**
-* Assert that in a ballot with n votes, each vote is at most maxVotesCand and that the sum of all votes is at most maxChoices.
+* Assert that in a ballot with nVotes votes, each vote is at most maxVotesCand and that the sum of all votes is at most maxChoices.
 * As an example for an additional rule, we also enforce that the product of the sedond and third entry in the ballot equals the first one.
 */
-template assertMultiVoteWithRules(n, maxVotesCand, maxChoices) {
-    input signal ballot[n];
+template assertMultiVoteWithRulesVoting(nVotes, maxVotesCand, maxChoices) {
+    input signal ballot[nVotes];
 
-    component assertMultiVote = assertMultiVote(n, maxVotesCand, maxChoices);
+    component assertMultiVote = assertMultiVoteVoting(nVotes, maxVotesCand, maxChoices);
     assertMultiVote.ballot <== ballot;
 
     component assertLength = assertGt(2);
-    assertLength.in <== n;
+    assertLength.in <== nVotes;
     assertLength.test <== 2;
 
     ballot[1] * ballot[2] === ballot[0];
 }
 
-component main = assertMultiVoteWithRules(100, 10, 50);
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertMultiVoteWithRules(bitsVotes, bitsRand, A, B, nVotes, maxVotesCand, maxChoices) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== encBallot[0];
+    assertEnc.gv_pkr <== encBallot[1];
+
+    component assertVoting = assertMultiVoteWithRulesVoting(nVotes, maxVotesCand, maxChoices);
+    assertVoting.ballot <== ballot;
+}
+
+component main = assertMultiVoteWithRules(32, 255, 126932, 1, 10, 2, 5);

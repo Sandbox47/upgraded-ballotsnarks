@@ -17,5 +17,6 @@ To run a test case `testCase.sage` for some template `someTemplate` in a file `f
 2. Remove the comments from the line with `component main = someTemplate(...)`.
 3. Navigate to the folder in which the file is located and run:
 ```
-genCircom.sh file.circom test/testCases/testCase.sage
+genCircom.sh [--c] file.circom test/testCases/testCase.sage
 ```
+The --c option is required if the circuit you want to compile has any parallel templates.

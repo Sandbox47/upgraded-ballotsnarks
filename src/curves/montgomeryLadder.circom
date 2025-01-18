@@ -200,10 +200,10 @@ template ladderAffine(n, A) {
 
 /**
 * Computes the XCoordinate of the scalar multiplication mP.
-* The bits are required to be in LSB order. Last bit is assumed to be 1.
-* According to "Montgomery curves and their arithmetic", Algorithm 4.
-*
-* TODO: Optimize to only utilize X- and Z-coords.
+* The bits are required to be in LSB order.
+* According to "Montgomery curves and their arithmetic", Algorithm 4. 
+* To allow for mulBits where the MSB is not 1, r0, r1 are initialized with infty, P as outlined in 5.3.
+* Here, infty is (1:0:0) to work with the pseudooperations xAdd, XDbl
 */
 template ladderProjective(n, A) {
     input signal mulBits[n];
@@ -212,30 +212,33 @@ template ladderProjective(n, A) {
     output ProjectivePoint() r0Final;
     output ProjectivePoint() r1Final;
 
-    ProjectivePoint() r0[n];
-    ProjectivePoint() r1[n];
+    ProjectivePoint() r0[n+1];
+    ProjectivePoint() r1[n+1];
     component adders[n];
     component doublersR0[n];
     component doublersR1[n];
-    component doublerInitial = xDblProjective(A);
+    // Special representation of infty for montgomery ladder (otherwise the pseudooperations don't work)
+    ProjectivePoint() infty;
+    infty.X <== 1;
+    infty.Y <== 0;
+    infty.Z <== 0;
     component ifThenElseR0[n];
     component ifThenElseR1[n];
 
-    r0[n-1] <== P;
-    doublerInitial.P <== P;
-    r1[n-1] <== doublerInitial.out;
+    r0[n] <== infty;
+    r1[n] <== P;
 
     log("Initial:");
     log("R0:");
-    log("X: ", r0[n-1].X);
-    log("Y: ", r0[n-1].Y);
-    log("Z: ", r0[n-1].Z);
+    log("X: ", r0[n].X);
+    log("Y: ", r0[n].Y);
+    log("Z: ", r0[n].Z);
     log("R1:");
-    log("X: ", r1[n-1].X);
-    log("Y: ", r1[n-1].Y);
-    log("Z: ", r1[n-1].Z);
+    log("X: ", r1[n].X);
+    log("Y: ", r1[n].Y);
+    log("Z: ", r1[n].Z);
 
-    for(var i = n-2; i >= 0; i--) {
+    for(var i = n-1; i >= 0; i--) {
         adders[i] = xAddProjective();
         doublersR0[i] = xDblProjective(A);
         doublersR1[i] = xDblProjective(A);
@@ -244,7 +247,7 @@ template ladderProjective(n, A) {
 
         adders[i].P <== r1[i+1];
         adders[i].Q <== r0[i+1];
-        adders[i].PMinusQ <== P; // Since r1 is always (m+1)*P and r0 is m*P for some P.
+        adders[i].PMinusQ <== P; // Since r1 is always (m+1)*P and r0 is m*P for some m.
         doublersR0[i].P <== r0[i+1];
         doublersR1[i].P <== r1[i+1];
         
@@ -266,15 +269,17 @@ template ladderProjective(n, A) {
         r1[i].Y <== 0;
         r1[i].Z <== ifThenElseR1[i].out[1];
 
-        // log("\nRound ", i, ":");
-        // log("R0:");
-        // log("X: ", r0[i].X);
-        // log("Y: ", r0[i].Y);
-        // log("Z: ", r0[i].Z);
-        // log("R1:");
-        // log("X: ", r1[i].X);
-        // log("Y: ", r1[i].Y);
-        // log("Z: ", r1[i].Z);
+        // if(i >= n-10) {
+        //     log("\nRound ", i, ":");
+        //     log("R0:");
+        //     log("X: ", r0[i].X);
+        //     log("Y: ", r0[i].Y);
+        //     log("Z: ", r0[i].Z);
+        //     log("R1:");
+        //     log("X: ", r1[i].X);
+        //     log("Y: ", r1[i].Y);
+        //     log("Z: ", r1[i].Z);   
+        // }
     }
 
     r0Final <== r0[0];
@@ -346,7 +351,7 @@ template ladderProjectivePaddedNaive(n, A) {
         muxR0[i].in[0][1] <== doublersR0[i].out.Z;
         muxR0[i].in[1][0] <== adders[i].out.X;
         muxR0[i].in[1][1] <== adders[i].out.Z;
-        muxR0[i].in[2][0] <== r0[i+1].X;Zero bits after the last significant bit assumed to be marked as padding (encoded as 2).
+        muxR0[i].in[2][0] <== r0[i+1].X;
         muxR0[i].in[2][1] <== r0[i+1].Z;
         muxR0[i].in[3][0] <== 0;
         muxR0[i].in[3][1] <== 0;

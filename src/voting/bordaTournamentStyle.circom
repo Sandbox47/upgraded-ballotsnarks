@@ -2,6 +2,7 @@ pragma circom 2.2.1;
 
 include "../utilities/arithmetic.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
+include "../expElGamal/assertEEG.circom";
 
 /**
 * Counts the elements in the array that are greater than test.
@@ -87,14 +88,42 @@ template computeBordaTournamentStyleBallot(n, maxValue, a, b) {
 * Assert that the given ballot corresponds to the given ranking according to the borda tournament style election type.
 * Parameters a, b, maxValue are defined the same as in computeBordaTournamentStyleBallot.
 */
-template assertBordaTournamentStyle(n, maxValue, a, b) {
-    input signal ranking[n];
-    input signal ballot[n];
+template assertBordaTournamentStyleVoting(nVotes, maxValue, a, b) {
+    input signal ranking[nVotes];
+    input signal ballot[nVotes];
 
-    component computeBallot = computeBordaTournamentStyleBallot(n, maxValue, a, b);
+    component computeBallot = computeBordaTournamentStyleBallot(nVotes, maxValue, a, b);
     computeBallot.ranking <== ranking;
 
     ballot === computeBallot.out;
 }
 
-component main = assertBordaTournamentStyle(100, 100, 2, 1);
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, maxValue, a, b) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+    input ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal ranking[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== encBallot[0];
+    assertEnc.gv_pkr <== encBallot[1];
+
+    component assertVoting = assertBordaTournamentStyleVoting(nVotes, maxValue, a, b);
+    assertVoting.ballot <== ballot;
+    assertVoting.ranking <== ranking;
+}
+
+// component main = assertBordaTournamentStyleVoting(100, 100, 2, 1);
+component main = assertBordaTournamentStyle(32, 255, 126932, 1, 100, 100, 2, 1);
