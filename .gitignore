@@ -15,5 +15,6 @@
 *.sym
 *.r1cs
 *_js
+*_cpp
 *.sage.py
 *__pycache__
