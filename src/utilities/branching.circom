@@ -194,7 +194,7 @@ template muxMulti2(n) {
 
 
 /**
-* Selects the entry which index is selector from the in.
+* Selects the entry from in using selector as an index.
 */
 template mux(n) {
     input signal selector;

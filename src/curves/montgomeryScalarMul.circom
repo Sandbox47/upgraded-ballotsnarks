@@ -48,9 +48,6 @@ template scalarMulAffine(n, A, B) {
 
 /**
 * Computes mP. (Where m is later represented as a bit string of length n.)
-*
-* TODO: Change so that n does not need to be the exact number of bits needed for m but rather it is enough if this is an upper bound 
-* (e.g., fill other places with values that are not 0 or 1 (for example 2) and skip those in the montgomery ladder.)
 */
 template scalarMulProjective(n, A, B) {
     input signal m;
@@ -132,7 +129,5 @@ template scalarMulProjective(n, A, B) {
     // test === out;
 }
 
-// component main = addAffine(126932,1);
-// component main = ladderProjective(256, 12632);
-// component main = scalarMulProjective(23, 126932, 1);
-component main = scalarMulAffine(255, 126932, 1);
+// component main = scalarMulProjective(255, 126932, 1);
+// component main = scalarMulAffine(255, 126932, 1);
