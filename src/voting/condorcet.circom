@@ -138,26 +138,26 @@ template assertCondorcetWithRankingVoting(n, maxValue) {
 }
 
 /**
-* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+* Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
 */
 template assertCondorcet(bitsVotes, bitsRand, A, B, nCand, maxValue) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-    input ProjectivePoint() encBallot[2][nCand][nCand]; //g^r and g^v*pk^r values from expElGamal
+    output ProjectivePoint() encBallot[2][nCand][nCand]; //g^r and g^v*pk^r values from expElGamal
 
     // Private/Witness
     input signal ballot[nCand][nCand];
     input signal ranking[nCand];
     input signal r[nCand][nCand]; // Randomness
 
-    component assertEnc = assertEncMatrix(nCand, nCand, bitsVotes, bitsRand, A, B);
-    assertEnc.v <== ballot;
-    assertEnc.g <== g;
-    assertEnc.pk <== pk;
-    assertEnc.r <== r;
-    assertEnc.gr <== encBallot[0];
-    assertEnc.gv_pkr <== encBallot[1];
+    component enc = expElGamalMatrix(bitsVotes, bitsRand, A, B, nCand, nCand);
+    enc.v <== ballot;
+    enc.g <== g;
+    enc.pk <== pk;
+    enc.r <== r;
+    encBallot[0] <== enc.gr;
+    encBallot[1] <== enc.gv_pkr;
 
     component assertVoting = assertCondorcetWithRankingVoting(nCand, maxValue);
     assertVoting.ballot <== ballot;

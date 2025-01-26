@@ -25,25 +25,25 @@ template assertMultiVoteWithRulesVoting(nVotes, maxVotesCand, maxChoices) {
 }
 
 /**
-* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+* Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
 */
 template assertMultiVoteWithRules(bitsVotes, bitsRand, A, B, nVotes, maxVotesCand, maxChoices) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-    input ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
+    output ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
 
     // Private/Witness
     input signal ballot[nVotes];
     input signal r[nVotes]; // Randomness
 
-    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
-    assertEnc.v <== ballot;
-    assertEnc.g <== g;
-    assertEnc.pk <== pk;
-    assertEnc.r <== r;
-    assertEnc.gr <== encBallot[0];
-    assertEnc.gv_pkr <== encBallot[1];
+    component enc = expElGamalVector(bitsVotes, bitsRand, A, B, nVotes);
+    enc.v <== ballot;
+    enc.g <== g;
+    enc.pk <== pk;
+    enc.r <== r;
+    encBallot[0] <== enc.gr;
+    encBallot[1] <== enc.gv_pkr;
 
     component assertVoting = assertMultiVoteWithRulesVoting(nVotes, maxVotesCand, maxChoices);
     assertVoting.ballot <== ballot;
