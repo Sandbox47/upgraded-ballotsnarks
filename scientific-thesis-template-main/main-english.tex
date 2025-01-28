@@ -50,7 +50,7 @@
   % tell tex4ht to create pictures also for formulas starting with '$'
   % WARNING: a tex4ht run now takes forever!
   \Configure{$}{\PicMath}{\EndPicMath}{}
-  %$ % <- syntax highlighting fix for emacs
+  $ % <- syntax highlighting fix for emacs
   \Css{body {text-align:justify;}}
 
   %conversion of .pdf to .png
@@ -214,12 +214,39 @@ This thesis starts with \cref{chap:k2}.
 We can also typeset \verb|<text>verbatim text</text>|.
 Backticks are also rendered correctly: \verb|`words in backticks`|.
 
-\chapter{Chapter Two}
+\chapter{Preliminaries: GPZKPs, SNARKs, Groth16}
 \label{chap:k2}
 
 LaTeX hints are provided in \cref{chap:latexhints}.
 
 \blinddocument
+
+\chapter{Proving Ballot Validity using Groth16}
+
+\chapter{Elliptic Curve Cryptography in Circom}
+\section{Curve25519}
+\subsection{The Group Law}
+\subsection{Scalar Multiplication}
+\subsubsection{Montgomery Ladder}
+\subsubsection{y-Recovery}
+\section{Exponential ElGamal}
+
+\chapter{Asserting Ballot Validity in Circom}
+\section{Single-Vote}
+\section{Multi-Vote}
+\subsection{Multi-Vote with Rules (MWR)}
+\section{Line-Vote}
+\section{Borda Election types}
+\subsection{Pointlist-Borda}
+\subsection{Borda Tournament Style (BTS)}
+\section{Condorcet Methods}
+
+\chapter{snarkjs}
+\section{Generating the Powers of Tau file}
+\section{Proof generation}
+\section{Proof verification}
+
+\chapter{Overall benchmarks for Proving Ballot Validity}
 
 \chapter{Related Work}
 

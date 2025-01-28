@@ -41,9 +41,9 @@ template projectiveToAffine() {
     component xDivZ = division();
     component yDivZ = division();
     xDivZ.numerator <== in.X;
-    xDivZ.denominator <== in.Z;
+    xDivZ.denominator <== changedZ;
     yDivZ.numerator <== in.Y;
-    yDivZ.denominator <== in.Z;
+    yDivZ.denominator <== changedZ;
 
     out.x <== xDivZ.out;
     out.y <== yDivZ.out;

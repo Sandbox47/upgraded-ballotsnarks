@@ -7,9 +7,9 @@ sage_import('curvePoint', fromlist=['CurvePoint'])
 sage_import('projectivePoint', fromlist=['ProjectivePoint'])
 
 class EEGPrivKey():
-    def __init__(self, curve: MontgomeryCurve, b: BASE_FIELD=None, gen: CurvePoint=None):
+    def __init__(self, curve: MontgomeryCurve, b: BASE_FIELD=None, gen: CurvePoint=None, pointClass=ProjectivePoint):
         self.curve = curve
-        self.gen = ProjectivePoint.getRandomPoint(self.curve) if gen == None else gen # Default: ProjectivePoints
+        self.gen = pointClass.fromMontgomery(self.curve.getGenerator(), self.curve) if gen == None else gen # Default: ProjectivePoints
         self.b = BASE_FIELD.random_element() if b == None else b
 
     def __str__(self):
@@ -25,8 +25,8 @@ class EEGPubKey():
         return f"Public Key (g, g*b) with:\ng ={self.gen}\ng*b ={self.genTimesb}"
 
 class EEGKey():
-    def __init__(self, curve: MontgomeryCurve, privKey: EEGPrivKey=None):
-        self.privKey = EEGPrivKey(curve) if privKey == None else privKey
+    def __init__(self, curve: MontgomeryCurve, privKey: EEGPrivKey=None, pointClass=ProjectivePoint):
+        self.privKey = EEGPrivKey(curve, pointClass=pointClass) if privKey == None else privKey
         self.pubKey = EEGPubKey(self.privKey)
 
     def __str__(self):
@@ -56,6 +56,9 @@ class EEGEncryption():
         self.rand = BASE_FIELD.random_element() if rand == None else rand
 
         self.ciphertext = EEGCiphertext(self.pubKey.gen * self.rand, self.pubKey.gen * self.plaintext.content + self.pubKey.genTimesb * self.rand)
+        # print(f"gv:\n{self.pubKey.gen * self.plaintext.content}")
+        # print(f"pkr:\n{self.pubKey.genTimesb * self.rand}")
+        # print(f"gv_pkr:\n{self.pubKey.gen * self.plaintext.content + self.pubKey.genTimesb * self.rand}")
 
     def __str__(self):
         return f"Encryption:\n{self.plaintext}\n{self.ciphertext}"
@@ -85,14 +88,32 @@ class EEGDecryption():
 
 class EEG():
     @classmethod
-    def encrypt(self, plaintext: BASE_FIELD, pubKey: EEGPubKey, rand: BASE_FIELD=None):
+    def encrypt(cls, plaintext: EEGPlaintext, pubKey: EEGPubKey, rand: BASE_FIELD=None):
         rand = BASE_FIELD.random_element() if rand == None else rand
         return EEGCiphertext(pubKey.gen * rand, pubKey.gen * plaintext.content + pubKey.genTimesb * rand)
 
     @classmethod
-    def decrypt(self, ciphertext: EEGCiphertext, privKey: EEGPrivKey): # Ciphertext has format: (gen*rand, gen*plain + pubKey*rand)
+    def decrypt(cls, ciphertext: EEGCiphertext, privKey: EEGPrivKey): # Ciphertext has format: (gen*rand, gen*plain + pubKey*rand)
         genTimesPlain = (ciphertext.genTimesRand * privKey.b).__inv__() + ciphertext.genTimesPlainPlusGenTimesbTimesRand
         return genTimesPlain.discreteLog(privKey.gen)
+
+    @classmethod
+    def encryptVector(cls, plaintexts, pubKey: EEGPubKey, rands=None):
+        rands = [BASE_FIELD.random_element() for i in range(len(plaintexts))] if rands == None else rands
+        return [EEG.encrypt(plaintexts[i], pubKey, rands[i]) for i in range(len(plaintexts))]
+
+    @classmethod
+    def decryptVector(cls):
+        raise NotImplementedError("Yeah, I'll do it eventually. ;-)")
+
+    @classmethod
+    def encryptMatrix(cls, plaintexts, pubKey: EEGPubKey, rands=None):
+        rands = [[BASE_FIELD.random_element() for j in range(len(plaintexts[0]))] for i in range(len(plaintexts))] if rands == None else rands
+        return [EEG.encryptVector(plaintexts[i], pubKey, rands[i]) for i in range(len(plaintexts))]
+
+    @classmethod
+    def decryptMatrix(cls):
+        raise NotImplementedError("Yeah, I'll do it eventually. ;-)")
 
 # curve = MontgomeryCurve()
 # key = EEGKey(curve)

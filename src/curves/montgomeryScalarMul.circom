@@ -36,10 +36,10 @@ template scalarMulAffine(n, A, B) {
     convertToAffine.in <== scalarMulProjective.out;
     out <== convertToAffine.out;
 
-    log("\nFinal result:");
-    log("x: ", out.x);
-    log("y: ", out.y);
-    log("notInfty: ", out.notInfty);
+    // log("\nFinal result:");
+    // log("x: ", out.x);
+    // log("y: ", out.y);
+    // log("notInfty: ", out.notInfty);
 
     // Test:
     input AffinePoint() test;
@@ -58,8 +58,8 @@ template scalarMulProjective(n, A, B) {
     component toBits = Num2Bits(n);
     toBits.in <== m;
     signal mBits[n] <== toBits.out;
-    log("Multiplier:");
-    log(m);
+    // log("Multiplier:");
+    // log(m);
     // log("Individual Bits (Least significant Bit first):");
     // for(var i = 0; i < n; i++) {
     //     log(mBits[i]);
@@ -118,8 +118,8 @@ template scalarMulProjective(n, A, B) {
     selectEnabled.in[3] <== mPReconstructed;
     // switchCase.in[3] <== mPReconstructed;
 
-    log("\nChosen case:");
-    log(case0, case1, case2);
+    // log("\nChosen case:");
+    // log(case0, case1, case2);
 
     out <== selectEnabled.out;
     // out <== switchCase.out;

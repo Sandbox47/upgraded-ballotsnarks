@@ -35,7 +35,7 @@ class ProjectivePoint(CurvePoint):
         if self.Z != 0:
             return MontgomeryCurvePoint(self.X/self.Z, self.Y/self.Z, 1, self.name)
         else:
-            return MontgomeryCurvePoint(0, 0, 1, self.name)
+            return MontgomeryCurvePoint(0, 0, False, self.name) # Infinity
 
     def montgomeryToCurvePoint(self, point: MontgomeryCurvePoint):
         return ProjectivPoint.fromMontgomery(point, self.name)
@@ -45,11 +45,18 @@ class ProjectivePoint(CurvePoint):
         if point.notInfty:
             return ProjectivePoint(point.x, point.y, 1, curve, point.name)
         else:
-            return ProjectivePoint(0, 1, 0, curve, point.name)
+            return ProjectivePoint(0, 1, 0, curve, point.name) # Infinity
 
     @classmethod
     def getRandomPoint(cls, curve: MontgomeryCurve, name=None):
         pointM = curve.getRandomPoint(name)
+        point = ProjectivePoint.fromMontgomery(pointM, curve)
+        point.curve = curve
+        return point
+
+    @classmethod
+    def getGenerator(cld, curve: MontgomeryCurve, name=None):
+        pointM = curve.getGenerator(name)
         point = ProjectivePoint.fromMontgomery(pointM, curve)
         point.curve = curve
         return point

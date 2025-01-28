@@ -13,8 +13,6 @@ include "../curves/montgomeryGroupLaw.circom";
 * NOTE: We are now switching from additive to multiplicative notation for the application of the Montgomery group law.
 * 
 * bitsRand and bitsPlain are the number of bits r and v can have at most.
-*
-* TODO: Can I limit the numer of bits in r?
 */
 template expElGamalMontgomeryProjective(bitsRand, bitsPlain, A, B) {
     input ProjectivePoint() g; // Generator
@@ -45,6 +43,19 @@ template expElGamalMontgomeryProjective(bitsRand, bitsPlain, A, B) {
     add_gv_pkr.Q <== pkr;
     gv_pkr <== add_gv_pkr.out;
 
+    // log("gv:");
+    // log("X: ", gv.X);
+    // log("Y: ", gv.Y);
+    // log("Z: ", gv.Z);
+    // log("pkr:");
+    // log("X: ", pkr.X);
+    // log("Y: ", pkr.Y);
+    // log("Z: ", pkr.Z);
+    // log("gv_pkr:");
+    // log("X: ", gv_pkr.X);
+    // log("Y: ", gv_pkr.Y);
+    // log("Z: ", gv_pkr.Z);
+
     // Test:
     // input ProjectivePoint() test_gr;
     // input ProjectivePoint() test_gv_pkr;
@@ -59,8 +70,6 @@ template expElGamalMontgomeryProjective(bitsRand, bitsPlain, A, B) {
 * NOTE: We are now switching from additive to multiplicative notation for the application of the Montgomery group law.
 * 
 * bitsRand and bitsPlain are the number of bits r and v can have at most.
-*
-* TODO: Can I limit the numer of bits in r?
 */
 template expElGamalMontgomeryAffine(bitsRand, bitsPlain, A, B) {
     input AffinePoint() g; // Generator

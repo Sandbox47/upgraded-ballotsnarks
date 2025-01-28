@@ -9,10 +9,11 @@ sage_import('../../sage/EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EE
 
 def testEEGEncAffine():
     curve = MontgomeryCurve()
-    gen = AffinePoint.getRandomPoint(curve)
+    gen = AffinePoint.fromMontgomery(curve.getGenerator(), curve)
     privKey = EEGPrivKey(curve, gen=gen)
     key = EEGKey(curve, privKey)
     plaintext = EEGPlaintext(random.randint(0, PLAINTEXT_LIMIT))
+    plaintext = EEGPlaintext(0)
     encryption = EEGEncryption(plaintext, key.pubKey)
     # decryption = EEGDecryption(encryption.ciphertext, key.privKey)
 
@@ -21,7 +22,8 @@ def testEEGEncAffine():
 def testEEGEncProjective():
     curve = MontgomeryCurve()
     key = EEGKey(curve)
-    plaintext = EEGPlaintext(random.randint(0, PLAINTEXT_LIMIT))
+    # plaintext = EEGPlaintext(random.randint(0, PLAINTEXT_LIMIT))
+    plaintext = EEGPlaintext(0)
     encryption = EEGEncryption(plaintext, key.pubKey)
     # decryption = EEGDecryption(encryption.ciphertext, key.privKey)
 

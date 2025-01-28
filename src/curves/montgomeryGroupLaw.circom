@@ -119,6 +119,15 @@ template addProjective(A, B) {
     component affineAdder = addAffine(A, B);
     component convertToProjectiveRes = affineToProjective();
 
+    // log("P:");
+    // log("X: ", P.X);
+    // log("Y: ", P.Y);
+    // log("Z: ", P.Z);
+    // log("Q:");
+    // log("X: ", Q.X);
+    // log("Y: ", Q.Y);
+    // log("Z: ", Q.Z);
+
     convertToAffineP.in <== P;
     convertToAffineQ.in <== Q;
 

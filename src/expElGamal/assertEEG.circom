@@ -4,11 +4,16 @@ include "../curves/affinePoint.circom";
 include "../curves/projectivePoint.circom";
 include "expElGamal.circom";
 
-template parallel assertEnc(bitsPlain, bitsRand, A, B) {
+template assertEnc(bitsPlain, bitsRand, A, B) {
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
     input signal v; // Signal
     input signal r; // Randomness
+
+    // log("pk:");
+    // log("X:", pk.X);
+    // log("Y:", pk.Y);
+    // log("Z:", pk.Z);
 
     // Test
     input ProjectivePoint() gr;
@@ -16,11 +21,31 @@ template parallel assertEnc(bitsPlain, bitsRand, A, B) {
 
     component expElGamal;
 
-    expElGamal = expElGamalMontgomeryProjective(bitsPlain, bitsRand, A, B);
+    expElGamal = expElGamalMontgomeryProjective(bitsRand, bitsPlain, A, B);
     expElGamal.g <== g;
     expElGamal.pk <== pk;
     expElGamal.v <== v;
     expElGamal.r <== r;
+
+    // log("test_gr:");
+    // log("X:", gr.X);
+    // log("Y:", gr.Y);
+    // log("Z:", gr.Z);
+    // log("test_gv_pkr:");
+    // log("X:", gv_pkr.X);
+    // log("Y:", gv_pkr.Y);
+    // log("Z:", gv_pkr.Z);
+
+    // log("enc_gr:");
+    // log("X:", expElGamal.gr.X);
+    // log("Y:", expElGamal.gr.Y);
+    // log("Z:", expElGamal.gr.Z);
+    // log("enc_gv_pkr:");
+    // log("X:", expElGamal.gv_pkr.X);
+    // log("Y:", expElGamal.gv_pkr.Y);
+    // log("Z:", expElGamal.gv_pkr.Z);
+    // log();
+
     gr === expElGamal.gr;
     gv_pkr === expElGamal.gv_pkr;
 }

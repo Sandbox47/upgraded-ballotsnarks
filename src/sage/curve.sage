@@ -1,5 +1,5 @@
 from sageImport import sage_import
-sage_import('constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT'])
+sage_import('constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT', 'CURVE_CHOSEN_SUBGROUP_ORDER', 'MONTGOMERY_CURVE_A', 'MONTGOMERY_CURVE_B'])
 
 class MontgomeryCurvePoint():
     def __init__(self, x: BASE_FIELD, y: BASE_FIELD, notInfty: bool, name=None):
@@ -10,12 +10,14 @@ class MontgomeryCurvePoint():
 
 class MontgomeryCurve():
     # INITIALIZATION:
-    def __init__(self, A=126932, B=1):
+    def __init__(self, A=MONTGOMERY_CURVE_A, B=MONTGOMERY_CURVE_B, chosenSubgroupOrder=CURVE_CHOSEN_SUBGROUP_ORDER):
         # Montgomery parameters
         self.A = BASE_FIELD(A)
         self.B = BASE_FIELD(B)
+        self.chosenSubGroupOrder = CURVE_CHOSEN_SUBGROUP_ORDER
         self.computeWeierstrassParameters()
         self.computeShortWeierstrassToMontgomeryParameters()
+        self.groupOrder = self.E.order()
 
     def computeWeierstrassParameters(self):
         # Parameters (calculated from montgomery equation) (according to MoonMathManual, 
@@ -117,14 +119,35 @@ class MontgomeryCurve():
             return multiplier
         raise ArithmeticError(f"The given point is not a multiple within the allowed range [0, {PLAINTEXT_LIMIT}] of the given basePoint.")
 
+    # TODO: Check subgroup membership (maybe via cofactor clearing?)
     def isPointOnCurve(self, point: MontgomeryCurvePoint):
         if not point.notInfty or self.B*point.y^2 == point.x^3 + self.A*point.x^2 + point.x:
             return True
         else:
-            return False
+            return False   
+
+    def getGenerator(self, name=None):
+        """
+        Generates a random generator of the elliptic curve subgroup (If this subgroup has prime order.)
+        """
+        pointM = None
+        while pointM == None or not pointM.notInfty:
+            pointM = self.getRandomPoint(name)
+        return pointM
 
     def getRandomPoint(self, name=None):
+        """
+        Generates a random point in the elliptic curve subgroup (not infty)
+        """
         pointSW = self.E.random_point()
         pointM = self.shortWeierstrassToMontgomery(pointSW)
+        pointM = self.cofactorClearing(pointM)
         pointM.name = name
         return pointM
+
+    def cofactorClearing(self, point: MontgomeryCurvePoint):
+        """
+        Computes point * (curveOrder // chosenSubgroupOrder)
+        If this is not infty (neutral element), the point is a generator of the subgroup. Otherwise, it is not a generator of the subgroup.
+        """
+        return self.scalarMul(point, self.groupOrder // self.chosenSubGroupOrder)

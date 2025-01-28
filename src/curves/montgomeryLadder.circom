@@ -189,15 +189,15 @@ template ladderProjective(n, A) {
     component ifThenElseR1[n];
     r0[n] <== infty;
     r1[n] <== P;
-    log("Initial:");
-    log("R0:");
-    log("X: ", r0[n].X);
-    log("Y: ", r0[n].Y);
-    log("Z: ", r0[n].Z);
-    log("R1:");
-    log("X: ", r1[n].X);
-    log("Y: ", r1[n].Y);
-    log("Z: ", r1[n].Z);
+    // log("Initial:");
+    // log("R0:");
+    // log("X: ", r0[n].X);
+    // log("Y: ", r0[n].Y);
+    // log("Z: ", r0[n].Z);
+    // log("R1:");
+    // log("X: ", r1[n].X);
+    // log("Y: ", r1[n].Y);
+    // log("Z: ", r1[n].Z);
     for(var i = n-1; i >= 0; i--) {
         adders[i] = xAddProjective();
         doublersR0[i] = xDblProjective(A);
@@ -240,10 +240,10 @@ template ladderProjective(n, A) {
     }
     r0Final <== r0[0];
     r1Final <== r1[0];
-    log("\nResult:");
-    log("X: ", r0Final.X);
-    log("Y: ", r0Final.Y);
-    log("Z: ", r0Final.Z);
+    // log("\nResult:");
+    // log("X: ", r0Final.X);
+    // log("Y: ", r0Final.Y);
+    // log("Z: ", r0Final.Z);
     // input ProjectivePoint() test;
     // test === r0Final;
 }

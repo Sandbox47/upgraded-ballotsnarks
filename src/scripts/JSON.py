@@ -2,6 +2,17 @@ import json
 import os
 
 class JSONUtils():
+    def arrayToJSON(data):
+        if isinstance(data, list):
+            return [JSONUtils.arrayToJSON(subdata) for subdata in data]
+        elif hasattr(data, 'toJSON') and callable(getattr(data, 'toJSON')):
+            try:
+                return data.toJSON()
+            except Exception as e:
+                print(f"Error serializing {data}: {e}")
+        else:
+            # print(str(data))
+            return str(data)
 
     def combine(dataArray):
         combinedData = {}

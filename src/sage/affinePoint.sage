@@ -51,4 +51,11 @@ class AffinePoint(CurvePoint):
         point.curve = curve
         return point
 
+    @classmethod
+    def getGenerator(cld, curve: MontgomeryCurve, name=None):
+        pointM = curve.getGenerator(name)
+        point = AffinePoint.fromMontgomery(pointM, curve)
+        point.curve = curve
+        return point
+
 

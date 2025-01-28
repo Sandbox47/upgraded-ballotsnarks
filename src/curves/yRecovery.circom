@@ -117,10 +117,10 @@ template yRecoveryProjective(A, B) {
     normP <== normalizeP.out;
     normQ <== normalizeQ.out;
 
-    log("\nQ:");
-    log("X: ", normQ.X);
-    log("Y: ", normQ.Y);
-    log("Z: ", normQ.Z);
+    // log("\nQ:");
+    // log("X: ", normQ.X);
+    // log("Y: ", normQ.Y);
+    // log("Z: ", normQ.Z);
 
     component okeyaSakurai = okeyaSakuraiYRecoveryProjective(A, B);
     okeyaSakurai.P <== P;
@@ -131,10 +131,10 @@ template yRecoveryProjective(A, B) {
     normalizeRecovered.in <== recoveredQ;
     ProjectivePoint() normRecoveredQ <== normalizeRecovered.out;
 
-    log("\nRecovered point:");
-    log("X: ", recoveredQ.X);
-    log("Y: ", recoveredQ.Y);
-    log("Z: ", recoveredQ.Z);
+    // log("\nRecovered point:");
+    // log("X: ", recoveredQ.X);
+    // log("Y: ", recoveredQ.Y);
+    // log("Z: ", recoveredQ.Z);
 
     component ifThenElse = ifThenElseProjective();
 
