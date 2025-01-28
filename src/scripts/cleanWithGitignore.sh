@@ -15,37 +15,49 @@ EXCLUSION_FILE="$GIT_ROOT/.gitkeep"
 # Generate a list of ignored files
 IGNORED_FILES=$(git ls-files --ignored --exclude-standard -o)
 
-# If there is an exclusion file, filter out those files
-# If there is an exclusion file, filter out those files
-if [[ -f "$EXCLUSION_FILE" ]]; then
-    echo "Using $EXCLUSION_FILE to exclude specific files."
+# Find directories that contain only ignored files or are empty
+IGNORED_DIRS=$(find . -type d -not -path "./.git/*" | while read -r dir; do
+    if [[ -z $(git check-ignore "$dir" 2>/dev/null) ]]; then
+        continue  # Skip directories that are not ignored
+    fi
+    if [[ -z $(find "$dir" -type f 2>/dev/null) ]]; then
+        echo "$dir"  # Only include if directory is empty or contains only ignored files
+    fi
+done)
 
+# Merge files and directories into a single list
+IGNORED_ITEMS="$IGNORED_FILES
+$IGNORED_DIRS"
+
+# If there is an exclusion file, filter out those files and directories
+if [[ -f "$EXCLUSION_FILE" ]]; then
+    echo "Using $EXCLUSION_FILE to exclude specific files and directories."
+    
     # Convert .gitkeep patterns to proper regex
     EXCLUDE_REGEX=$(sed 's/\./\\./g; s/\*/.*/g' "$EXCLUSION_FILE")
-
-    # Filter ignored files using regex
-    IGNORED_FILES=$(echo "$IGNORED_FILES" | grep -vE "$EXCLUDE_REGEX")
+    
+    # Filter ignored items using regex
+    IGNORED_ITEMS=$(echo "$IGNORED_ITEMS" | grep -vE "$EXCLUDE_REGEX")
 fi
 
-
-# Check if there are any remaining files to delete
-if [ -z "$IGNORED_FILES" ]; then
-    echo "No ignored files found to delete."
+# Check if there are any remaining files or directories to delete
+if [ -z "$IGNORED_ITEMS" ]; then
+    echo "No ignored files or directories found to delete."
     exit 0
 fi
 
-# Print files to be deleted
-echo "The following ignored files will be deleted:"
-echo "$IGNORED_FILES"
+# Print files and directories to be deleted
+echo "The following ignored files and directories will be deleted:"
+echo "$IGNORED_ITEMS"
 
 # Ask for confirmation
-read -p "Are you sure you want to delete these files? (y/N) " CONFIRM
+read -p "Are you sure you want to delete these files and directories? (y/N) " CONFIRM
 if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
     echo "Aborting."
     exit 0
 fi
 
-# Delete the ignored files
-echo "$IGNORED_FILES" | xargs rm -rf
+# Delete the ignored files and directories
+echo "$IGNORED_ITEMS" | xargs rm -rf
 
-echo "Ignored files deleted successfully."
+echo "Ignored files and directories deleted successfully."
