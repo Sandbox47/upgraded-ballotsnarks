@@ -2,10 +2,10 @@ from sageImport import sage_import
 import json
 from JSON import JSONUtils
 import random
-sage_import('constants', fromlist=['BASE_FIELD', 'BASE_FIELD_P', 'CURVE_CHOSEN_SUBGROUP_ORDER'])
-sage_import('projectivePoint', fromlist=['ProjectivePoint'])
-sage_import('curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
-sage_import('EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
+sage_import('../constants', fromlist=['BASE_FIELD', 'BASE_FIELD_P', 'CURVE_CHOSEN_SUBGROUP_ORDER'])
+sage_import('../projectivePoint', fromlist=['ProjectivePoint'])
+sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
+sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 
 class Ballot():
     def __init__(self, votes, eegPubKey: EEGPubKey, pointClass=ProjectivePoint):
@@ -31,10 +31,11 @@ class Ballot():
             return random.randint(0, self.eegPubKey.curve.chosenSubGroupOrder - 1)
 
     def checkIntegrity(self):
-        raise NotImplementedError("This methods behaviour is specific to the ballot.")
+        raise NotImplementedError("This methods behaviour is specific to the ballot type.")
 
-    def generateRandomBallot(self):
-        raise NotImplementedError("This methods behaviour is specific to the ballot.")
+    @classmethod
+    def generateRandomBallot(cls):
+        raise NotImplementedError("This methods behaviour is specific to the ballot type.")
 
     def encrypt(self, votes, rands, onlyFirst=False, onlySecond=False):
         """
@@ -61,34 +62,32 @@ class Ballot():
                 "enc_gr": JSONUtils.arrayToJSON(self.gr),
                 "enc_gv_pkr": JSONUtils.arrayToJSON(self.gv_pkr)
         }
-        print(self.ballot)
+        # print(self.ballot)
         return data
 
-class SingleVoteBallot(Ballot):
-    def __init__(self, votes, eegPubKey: EEGPubKey):
-        super().__init__(votes, eegPubKey)
-
-    def checkIntegrity(self):
-        sumVotes = 0
-        for vote in self.ballot:
-            sumVotes += vote
-            if vote != 0 and vote != 1:
-                raise ValueError(f"Vote must be binary but is {vote}.")
-        if sumVotes != 0 and sumVotes != 1:
-            raise ValueError(f"Sum of all votes must be binary but is {sumVotes}.")
-
     @classmethod
-    def generateRandomBallot(cls, nVotes: int, eegPubKey: EEGPubKey):
-        votes = [0 for i in range(nVotes)]
-        posOneVote = random.randint(0, (nVotes * 6) // 5) # 0.2 Probability of abstention
-        if posOneVote < nVotes:
-            votes[posOneVote] = 1
-        # print(str(votes))
-        return SingleVoteBallot(votes, eegPubKey)
+    def test(cls, ballotType, eegKey=None, **kwargs):
+        """
+        Sets up Montgomery curve and a corresponding EEGKey. 
+        Then calls the generateRandomBallot Method of the specified ballotType and outputs the ballot in JSON format.
 
-curve = MontgomeryCurve()
-eegKey = EEGKey(curve)
+        :param ballotType: Reference to Ballot subclass
+        :param EEGKey eegKey: Exponential ElGamal key to be used (randomly chosen if none is provided)
+        :param **kwargs: Specification of charactersitics of the generated ballot (e.g., size)
+        """
+        if eegKey==None:
+            curve = MontgomeryCurve()
+            eegKey = EEGKey(curve)
+        else:
+            curve = eegKey.pubKey.curve
 
-singleVoteBallot = SingleVoteBallot.generateRandomBallot(10, eegKey.pubKey)
+        if hasattr(ballotType, 'generateRandomBallot'):
+            method = getattr(ballotType, 'generateRandomBallot')
+            if callable(method):
+                ballot = method(**kwargs, eegPubKey=eegKey.pubKey)
+            else:
+                raise TypeError(f"'{method}' is not callable on {ballotType.__name__}.")
+        else:
+            raise AttributeError(f"'{ballotType.__name__}' does not have a method named '{method}'.")
 
-print(json.dumps(singleVoteBallot.toJSON(), indent=4))
+        print(json.dumps(ballot.toJSON(), indent=4))

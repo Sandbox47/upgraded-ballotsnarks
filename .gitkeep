@@ -1,2 +1,4 @@
 *.ptau
 scientific-thesis-template-main*
+libs*
+.vscode*

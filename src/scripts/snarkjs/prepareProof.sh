@@ -42,15 +42,21 @@ if [ "$DO_RANDOMIZED_PHASE2" = true ]; then
   randomness=$(echo "$response" | jq -r '.pulse.outputValue')
 fi
 
-snarkjs zkey contribute circuit_0000.zkey circuit_final.zkey --name="$randomness" -v
+# Extract base name of the R1CS file (without extension)
+BASE_NAME=$(basename "$R1CS_FILE" .r1cs)
+# Use the base name for the final zkey file
+FINAL_ZKEY_FILE="${BASE_NAME}.zkey"
+
+snarkjs zkey contribute circuit_0000.zkey "$FINAL_ZKEY_FILE" --name="First contribution" -v -e="$randomness"
 echo "Contributed to zkey."
 
 # 21. Verify the final zkey
-snarkjs zkey verify "$R1CS_FILE" "$POWERS_OF_TAU_FILE" circuit_final.zkey
+snarkjs zkey verify "$R1CS_FILE" "$POWERS_OF_TAU_FILE" "$FINAL_ZKEY_FILE"
 echo "Verified zkey."
 
 # 22. Export the verification key
-snarkjs zkey export verificationkey circuit_final.zkey verification_key.json
+snarkjs zkey export verificationkey "$FINAL_ZKEY_FILE" "${BASE_NAME}_verification_key.json"
 echo "Exported zkey."
+
 
 # Next step would be to generate the proof

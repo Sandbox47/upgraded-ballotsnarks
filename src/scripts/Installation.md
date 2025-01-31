@@ -6,6 +6,10 @@ if [[ ":$PATH:" != *":<path-to-project>/roehr/src/scripts:"* ]]; then
     export PATH="<path-to-project>/roehr/src/scripts:$PATH"
 fi
 
+if [[ ":$PATH:" != *":/home/felix-roehr/Documents/BScInformatik/WS20242025/BA/roehr/src/scripts/snarkjs:"* ]]; then
+    export PATH="/home/felix-roehr/Documents/BScInformatik/WS20242025/BA/roehr/src/scripts/snarkjs:$PATH"
+fi
+
 if [[ ":$PYTHONPATH:" != *":<path-to-project>/roehr/src/scripts:"* ]]; then
     export PYTHONPATH="<path-to-project>/roehr/src/scripts:$PYTHONPATH"
 fi

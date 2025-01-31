@@ -81,4 +81,4 @@ template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
 }
 
 // component main = assertSingleVoteVoting(100);
-component main = assertSingleVote(32, 255, 126932, 1, 10);
+// component main = assertSingleVote(32, 255, 126932, 1, 10);
