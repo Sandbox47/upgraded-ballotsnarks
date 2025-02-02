@@ -2,3 +2,5 @@
 scientific-thesis-template-main*
 libs*
 .vscode*
+*.drawio.bkp
+*.drawio.dtmp
