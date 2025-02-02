@@ -8,6 +8,7 @@ sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 class SingleVoteBallot(Ballot):
     def __init__(self, votes, eegPubKey: EEGPubKey):
         super().__init__(votes, eegPubKey)
+        self.checkIntegrity()
 
     def checkIntegrity(self):
         sumVotes = 0
@@ -26,12 +27,3 @@ class SingleVoteBallot(Ballot):
             votes[posOneVote] = 1
         # print(str(votes))
         return SingleVoteBallot(votes, eegPubKey)
-
-"""
-curve = MontgomeryCurve()
-eegKey = EEGKey(curve)
-
-singleVoteBallot = SingleVoteBallot.generateRandomBallot(10, eegKey.pubKey)
-
-print(json.dumps(singleVoteBallot.toJSON(), indent=4))
-"""

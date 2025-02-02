@@ -111,7 +111,7 @@ template computeCondorcetBallot(n, maxValue) {
                 computeEntryJI[i][j].in[0] <== 1; // a_ji = 1 if i is ranked worse than j
                 computeEntryJI[i][j].in[1] <== 0; // a_ji = 0 if i is ranked the same as j
                 computeEntryJI[i][j].in[2] <== 0; // a_ji = 0 if i is ranked better than j
-                out[j][i] <== computeEntryIJ[i][j].out;
+                out[j][i] <== computeEntryJI[i][j].out;
             }
         }
     }
@@ -129,8 +129,21 @@ template assertCondorcetWithRankingVoting(n, maxValue) {
     computeBallot.ranking <== ranking;
     signal computedBallot[n][n] <== computeBallot.out;
 
+    /*
+    log("Computed Ballot = (");
+    for(var i = 0; i < n; i++) {
+        log("\t(");
+        for(var j = 0; j < n; j++) {
+            log(computedBallot[i][j], ", ");
+        }
+        log("),");
+    }
+    log(")");
+    */
+
     for(var i = 0; i < n; i++) {
         for(var j = 0; j < n; j++) {
+            // log("(", i, ",", j, "):\nProvided: ", ballot[i][j], "\nComputed: ", computedBallot[i][j]);
             ballot[i][j] === computedBallot[i][j];
         }
     }
@@ -140,6 +153,7 @@ template assertCondorcetWithRankingVoting(n, maxValue) {
 /**
 * Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
 */
+/*
 template assertCondorcet(bitsVotes, bitsRand, A, B, nCand, maxValue) {
     // Public
     input ProjectivePoint() g; // Generator
@@ -163,7 +177,39 @@ template assertCondorcet(bitsVotes, bitsRand, A, B, nCand, maxValue) {
     assertVoting.ballot <== ballot;
     assertVoting.ranking <== ranking;
 }
+*/
+
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertCondorcet(bitsVotes, bitsRand, A, B, nCand) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nCand][nCand];
+    input ProjectivePoint() enc_gv_pkr[nCand][nCand];
+
+    // Private/Witness
+    input signal ballot[nCand][nCand];
+    input signal ranking[nCand];
+    input signal r[nCand][nCand]; // Randomness
+
+    component assertEnc = assertEncMatrix(nCand, nCand, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+
+    var maxValue = 2**bitsVotes;
+    component assertVoting = assertCondorcetWithRankingVoting(nCand, maxValue);
+    assertVoting.ballot <== ballot;
+    assertVoting.ranking <== ranking;
+}
 
 // component main = assertCondorcetVoting(50);
 // component main = assertCondorcetWithRankingVoting(50, 50);
-component main = assertCondorcet(32, 255, 126932, 1, 10, 10);
+// component main = assertCondorcet(32, 255, 126932, 1, 10, 10);

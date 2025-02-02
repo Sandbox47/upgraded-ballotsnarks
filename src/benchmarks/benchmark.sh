@@ -39,6 +39,8 @@ echo "Arguments valid."
 # Convert the first letter of electionType to uppercase
 capitalizedElectionType="$(echo "${electionType:0:1}" | tr '[:lower:]' '[:upper:]')${electionType:1}"
 
+mkdir -p circomTestFiles # Ensure circom test file directory exists
+
 # Define output file name (lowercase electionType)
 testCircom="circomTestFiles/${electionType}.circom"
 
@@ -55,6 +57,8 @@ echo "Circom test file '${testCircom}' created successfully."
 
 # ========================================================================================================================
 # 3. Create sage test file
+
+mkdir -p sageTestFiles # Ensure sage test file directory exists
 
 # Define output file name (lowercase electionType)
 testSage="sageTestFiles/${electionType}.sage"
@@ -75,8 +79,15 @@ echo "Sage test file '${testCircom}' created successfully."
 # 4. Compile circuit and generate witness
 
 cd circomTestFiles
-genCircom.sh ${electionType}.circom ../sageTestFiles/${electionType}.sage
+# Capture the output to extract the number of linear and non-linear contraints
+compileOutput=$(genCircom.sh ${electionType}.circom ../sageTestFiles/${electionType}.sage 2>&1 | tee /dev/tty)
 cd ..
+
+# Extract non-linear constraints (ensures only exact match)
+nonLinearConstraints=$(echo "$compileOutput" | grep -E "^non-linear constraints:" | awk '{print $3}')
+
+# Extract linear constraints (ensures it doesn’t match non-linear)
+linearConstraints=$(echo "$compileOutput" | grep -E "^linear constraints:" | awk '{print $3}')
 
 # Check if the witness file was created successfully
 if [ ! -f "circomTestFiles/${electionType}_js/witness.wtns" ]; then
@@ -89,7 +100,7 @@ echo "Witness generated successfully."
 # ========================================================================================================================
 # 5. Prepare proof
 
-mkdir -p snarkjsTestFiles
+mkdir -p snarkjsTestFiles # Ensure snarkjs test file directory exists
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
 prepareProof.sh ../circomTestFiles/${electionType}.r1cs ../../scripts/ptau/powersOfTau28_hez_final_22.ptau
@@ -172,12 +183,12 @@ cd ..
 # Store constraint count
 
 # Create header row dynamically
-headerConstraints="$(IFS=';'; echo "${argNames[*]};constraints")"
+headerConstraints="$(IFS=';'; echo "${argNames[*]};non-linear constraints;linear contraints;total constraints")"
 
 csvFileConstraints="constraints/${electionType}.csv"
 mkdir -p constraints  # Ensure results directory exists
 
-lineConstraints="${indicator};${constraints}"
+lineConstraints="${indicator};${nonLinearConstraints};${linearConstraints};${constraints}"
 
 # If the CSV file does not exist, create it with a header
 if [ ! -f "$csvFileConstraints" ]; then
@@ -189,5 +200,4 @@ grep -v "^${indicator};" "$csvFileConstraints" > temp.csv || true
 echo "$lineConstraints" >> temp.csv
 mv temp.csv "$csvFileConstraints"
 
-echo "Exported constraint count ({$constraints})."
-
+echo "Exported constraint count (non-lin, lin, total)=(${nonLinearConstraints}, ${linearConstraints}, ${constraints})."

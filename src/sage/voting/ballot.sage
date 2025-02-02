@@ -10,7 +10,7 @@ sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlainte
 class Ballot():
     def __init__(self, votes, eegPubKey: EEGPubKey, pointClass=ProjectivePoint):
         self.ballot = votes
-        self.checkIntegrity()
+        self.ranking = None
         # print(self.ballot)
 
         self.eegPubKey = eegPubKey
@@ -37,6 +37,15 @@ class Ballot():
     def generateRandomBallot(cls):
         raise NotImplementedError("This methods behaviour is specific to the ballot type.")
 
+    @classmethod
+    def generateRandomRanking(cls, n):
+        """
+        Generates a ranking with potential ties at arbitrary places
+        """
+        ranking = [random.randint(0, n - 1) for i in range(n)]
+        print(ranking)
+        return ranking
+
     def encrypt(self, votes, rands, onlyFirst=False, onlySecond=False):
         """
         Encrypts the entries in the votes object using the randomnesses in rands and the public key eegPubKey.
@@ -62,6 +71,8 @@ class Ballot():
                 "enc_gr": JSONUtils.arrayToJSON(self.gr),
                 "enc_gv_pkr": JSONUtils.arrayToJSON(self.gv_pkr)
         }
+        if self.ranking != None:
+            data["ranking"] = JSONUtils.arrayToJSON(self.ranking)
         # print(self.ballot)
         return data
 
@@ -78,6 +89,7 @@ class Ballot():
         if eegKey==None:
             curve = MontgomeryCurve()
             eegKey = EEGKey(curve)
+            print(f"EEGKey gnerated:\n{eegKey}")
         else:
             curve = eegKey.pubKey.curve
 

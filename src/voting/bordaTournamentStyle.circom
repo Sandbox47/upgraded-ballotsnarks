@@ -101,6 +101,7 @@ template assertBordaTournamentStyleVoting(nVotes, maxValue, a, b) {
 /**
 * Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
 */
+/*
 template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, maxValue, a, b) {
     // Public
     input ProjectivePoint() g; // Generator
@@ -124,6 +125,38 @@ template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, maxValue,
     assertVoting.ballot <== ballot;
     assertVoting.ranking <== ranking;
 }
+*/
+
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, a, b) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal ranking[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+
+    var maxValue = 2**bitsVotes;
+    component assertVoting = assertBordaTournamentStyleVoting(nVotes, maxValue, a, b);
+    assertVoting.ballot <== ballot;
+    assertVoting.ranking <== ranking;
+}
 
 // component main = assertBordaTournamentStyleVoting(100, 100, 2, 1);
-component main = assertBordaTournamentStyle(32, 255, 126932, 1, 100, 100, 2, 1);
+// component main = assertBordaTournamentStyle(32, 255, 126932, 1, 100, 100, 2, 1);

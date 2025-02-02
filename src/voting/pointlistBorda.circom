@@ -56,6 +56,7 @@ template assertPointlistBordaVoting(nCand, nPoints, orderedPoints) {
 /**
 * Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
 */
+/*
 template assertPointlistBorda(bitsVotes, bitsRand, A, B, nCand, nPoints, orderedPoints) {
     // Public
     input ProjectivePoint() g; // Generator
@@ -77,7 +78,36 @@ template assertPointlistBorda(bitsVotes, bitsRand, A, B, nCand, nPoints, ordered
     component assertVoting = assertPointlistBordaVoting(nCand, nPoints, orderedPoints);
     assertVoting.ballot <== ballot;
 }
+*/
+
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertPointlistBorda(bitsVotes, bitsRand, A, B, nCand, nPoints, orderedPoints) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nCand];
+    input ProjectivePoint() enc_gv_pkr[nCand];
+
+    // Private/Witness
+    input signal ballot[nCand];
+    input signal r[nCand]; // Randomness
+
+    component assertEnc = assertEncVector(nCand, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+
+    component assertVoting = assertPointlistBordaVoting(nCand, nPoints, orderedPoints);
+    assertVoting.ballot <== ballot;
+}
 
 // component main = getOccurences(100);
 // component main = assertPointlistBordaVoting(100, 5, [12, 10, 8, 5, 1]);
-component main = assertPointlistBorda(32, 255, 126932, 1, 10, 5, [12, 10, 8, 5, 1]);
+// component main = assertPointlistBorda(32, 255, 126932, 1, 10, 5, [12, 10, 8, 5, 1]);

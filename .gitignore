@@ -35,3 +35,6 @@
 
 # Benchmarks
 *.txt
+sageTestFiles*
+snarkjsTestFiles*
+circomTestFiles*
