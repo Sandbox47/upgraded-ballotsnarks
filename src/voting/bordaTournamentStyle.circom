@@ -52,7 +52,7 @@ template countEqual(n) {
 }
 
 /**
-* Given: A ranking of length n and the points a and b to be given to each candidate ranked worse/ equal than the current one.
+* Given: A ranking of length n and the points a and b to be given to each candidate for every candidate ranked worse/ equal than the current one.
 * The template then computes the according ballot. The maximum value any entry in the ranking can have is maxValue.
 */
 template computeBordaTournamentStyleBallot(n, maxValue, a, b) {
