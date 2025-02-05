@@ -76,7 +76,7 @@ EOF
 echo "Sage test file '${testCircom}' created successfully."
 
 # ========================================================================================================================
-# 4. Compile circuit and generate witness
+# 4. Compile circuit, generate witness and extract constraint count
 
 cd circomTestFiles
 # Capture the output to extract the number of linear and non-linear contraints
@@ -100,10 +100,38 @@ echo "Witness generated successfully."
 # ========================================================================================================================
 # 5. Prepare proof
 
+# 5.1. Find smallest ptau file possible:
+
+# Total constraints:
+constraints=$(($nonLinearConstraints + $linearConstraints));
+echo "${constraints} constraints in total."
+
+# Define the range of ptau files available
+min_n=8
+max_n=22
+ptauFile=""
+
+# Iterate through available ptau files to find the smallest valid one
+for ((n=min_n; n<=max_n; n++)); do
+    if (( (1 << n) >= constraints )); then
+        ptauFile="powersOfTau_${n}.ptau"
+        break
+    fi
+done
+
+# Check if a suitable ptau file was found
+if [[ -z "$ptauFile" ]]; then
+    echo "Error: No suitable ptau file found for $constraints constraints." >&2
+    exit 1
+fi
+
+echo "Using ptau file: $ptauFile"
+
+# 5.2. Preparing proof with existing shell script
 mkdir -p snarkjsTestFiles # Ensure snarkjs test file directory exists
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
-prepareProof.sh ../circomTestFiles/${electionType}.r1cs ../../scripts/ptau/powersOfTau28_hez_final_22.ptau
+prepareProof.sh ../circomTestFiles/${electionType}.r1cs ../../scripts/ptau/${ptauFile}
 end_time=$(date +%s%3N)
 t_prep=$((end_time - start_time))
 
@@ -172,15 +200,6 @@ mv temp.csv "$csvFileTimes"
 echo "Exported preparation, proving and verification times."
 
 # 8.2: Constraint count
-# Extract circuit statistics using snarkjs
-cd circomTestFiles
-snarkjs r1cs info ${electionType}.r1cs > ${electionType}_r1cs_info.txt
-
-# Parse and extract the number of constraints
-constraints=$(grep -oP '(?<=# of Constraints: )\d+' ${electionType}_r1cs_info.txt)
-cd ..
-
-# Store constraint count
 
 # Create header row dynamically
 headerConstraints="$(IFS=';'; echo "${argNames[*]};non-linear constraints;linear contraints;total constraints")"

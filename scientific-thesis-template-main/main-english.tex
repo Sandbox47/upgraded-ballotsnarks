@@ -28,15 +28,15 @@
 
 
 \usepackage[
-  title={Is Oil the future?},
-  author={Lars K.},
+  title={Comparative Analysis of zk-SNARK Instantiations for Ensuring Ballot Validity},
+  author={Felix R\"ohr.},
   type=bachelor,
-  institute=iaas, % or other institute names - or just a plain string using {Demo\\Demo...}
-  course={Medieninformatik},
-  examiner={Prof.\ Dr.\ Uwe Fessor},
-  supervisor={Dipl.-Inf.\ Roman Tiker,\\Dipl.-Inf.\ Laura Stern,\\Otto Normalverbraucher,\ M.Sc.},
-  startdate={July 5, 2018},
-  enddate={January 5, 2019}
+  institute=SEC, % or other institute names - or just a plain string using {Demo\\Demo...}
+  course={Informatik},
+  examiner={Prof.\ Dr.\ Ralf K\"usters},
+  supervisor={Nicolas Huber,\ M.Sc.},
+  startdate={November 8, 2024},
+  enddate={May 8, 2025}
 ]{scientific-thesis-cover}
 
 \input{acronyms}
@@ -209,6 +209,12 @@
 
 \chapter{Introduction}
 
+In today's world, the necessity of secure e-voting schemes is undisputed. 
+In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the validity of their (encrypted) votes without revealing them. 
+One class of ZKPs that can be used to prove (essentially) arbitrary valid statements is the class of General Purpose Zero Knowledge proofs (GPZKPs). 
+For efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice in order to create such (GP)ZKPs.
+
+
 This thesis starts with \cref{chap:k2}.
 
 We can also typeset \verb|<text>verbatim text</text>|.
@@ -224,6 +230,17 @@ LaTeX hints are provided in \cref{chap:latexhints}.
 \chapter{Proving Ballot Validity using Groth16}
 
 \chapter{Elliptic Curve Cryptography in Circom}
+All signals in Circom are represented as elements from a field $\mathbb{F}_p$ with the order of a large, configurable prime $p$. By default:
+\begin{align*}
+  p = 21888242871839275222246405745257275088548364400416034343698204186575808495617
+\end{align*}
+This prime field is chosen because it is the scalar field of the BN254 curve. 
+The BN254 curve is the basis for the Groth16 proof system.
+
+To define elliptic curve arithmetic in circom, we need to choose a curve which uses the field $\mathbb{F}_p$ as the base field. 
+Curves that are constructed in this way are also called \textit{embedded curves}.
+One such option is the Curve25519 family. 
+
 \section{Curve25519}
 \subsection{The Group Law}
 \subsection{Scalar Multiplication}
