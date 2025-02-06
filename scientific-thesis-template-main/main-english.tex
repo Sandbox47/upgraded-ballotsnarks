@@ -220,6 +220,20 @@ This thesis starts with \cref{chap:k2}.
 We can also typeset \verb|<text>verbatim text</text>|.
 Backticks are also rendered correctly: \verb|`words in backticks`|.
 
+\chapter{Ballots in Elections}
+\begin{itemize}
+  \item Voters submit a ballot with a specific format (-> Choice space) 
+  \item Ballot gets encrypted (semi-homomorphic encryption scheme) before being passed to the voting authority
+  \item Voting authority does some computations on encrypted ballots and outputs decrypted tally
+\end{itemize}
+
+
+\chapter{Proving Ballot Validity}
+
+\section{Membership of a Choice Space}
+
+\section{}
+
 \chapter{Preliminaries: GPZKPs, SNARKs, Groth16}
 \label{chap:k2}
 
@@ -227,7 +241,11 @@ LaTeX hints are provided in \cref{chap:latexhints}.
 
 \blinddocument
 
-\chapter{Proving Ballot Validity using Groth16}
+\chapter{Formalizing Statements for Groth16}
+
+
+
+% \chapter{Proving Ballot Validity using Groth16}
 
 \chapter{Elliptic Curve Cryptography in Circom}
 All signals in Circom are represented as elements from a field $\mathbb{F}_p$ with the order of a large, configurable prime $p$. By default:
