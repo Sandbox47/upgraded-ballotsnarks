@@ -47,11 +47,11 @@
         },
         "multiVote": {
             "maxChoices": "calculated from nCand",
-            "maxVotesCand": "default"
+            "maxVotesCand": 5
         },
         "multiVoteWithRules": {
             "maxChoices": "calculated from nCand",
-            "maxVotesCand": "default"
+            "maxVotesCand": 5
         },
         "majorityJudgement": {
             "defaultNumberOfGrades": 6,

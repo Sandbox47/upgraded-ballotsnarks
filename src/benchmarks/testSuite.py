@@ -71,8 +71,6 @@ class MultiVoteTest(Test):
         if maxChoices == "calculated from nCand":
             maxChoices = 2*nCand # Default value
         maxVotesCand = electionTypeConfig["maxVotesCand"]
-        if maxVotesCand == "default":
-            maxVotesCand = 5 # Default value
         return [MultiVoteTest(bitsVotes, nCand, [("maxChoices", maxChoices), ("maxVotesCand", maxVotesCand)])]
     
 class MultiVoteWithRulesTest(Test):
@@ -85,8 +83,6 @@ class MultiVoteWithRulesTest(Test):
         if maxChoices == "calculated from nCand":
             maxChoices = 2*nCand # Default value
         maxVotesCand = electionTypeConfig["maxVotesCand"]
-        if maxVotesCand == "default":
-            maxVotesCand = 5 # Default value
         return [MultiVoteWithRulesTest(bitsVotes, nCand, [("maxChoices", maxChoices), ("maxVotesCand", maxVotesCand)])]
     
 class MajorityJudgementTest(Test):

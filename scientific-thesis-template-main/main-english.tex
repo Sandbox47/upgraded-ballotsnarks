@@ -65,6 +65,7 @@
 %\VerbatimFootnotes %verbatim text in Fußnoten erlauben. Geht normalerweise nicht.
 
 \input{commands}
+%\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \pagenumbering{arabic}
 \Titelblatt
 
@@ -214,25 +215,68 @@ In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the
 One class of ZKPs that can be used to prove (essentially) arbitrary valid statements is the class of General Purpose Zero Knowledge proofs (GPZKPs). 
 For efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice in order to create such (GP)ZKPs.
 
-
 This thesis starts with \cref{chap:k2}.
 
 We can also typeset \verb|<text>verbatim text</text>|.
 Backticks are also rendered correctly: \verb|`words in backticks`|.
 
-\chapter{Ballots in Elections}
+\chapter{Voting Systems}
+\label{chap:votingsystems}
+Voting systems are algorithms that conduct elections. In an election, multiple voters can submit ballots and a voting authority computes the result of the election fromn these ballots. 
+To ensure that nobody, including the voting authority, learns anything about the ballots chosen by the voters, the voters only submit the encryption of their ballots.
+
+In a voting system, a voter needs to execute the following steps:
 \begin{itemize}
-  \item Voters submit a ballot with a specific format (-> Choice space) 
-  \item Ballot gets encrypted (semi-homomorphic encryption scheme) before being passed to the voting authority
-  \item Voting authority does some computations on encrypted ballots and outputs decrypted tally
+  \item Choose a ballot $b$ from an allowed range of ballots called choice space $C$.
+  \item Encrypt the ballot using some (semi-)homomorphic encryption scheme.
+  \item Send the encrypted ballot $\tilde{b}$ to the voting authority.
+\end{itemize}
+The voting authority does the following computations:
+\begin{itemize}
+  \item Do some computations on the encrypted ballots $\tilde{b}_1,\tilde{b}_2,\dots,\tilde{b}_n$ submitted by the voters using an aggregation function $agg$.
+  \item Decrypt the aggregated ballot $\tilde{b}_total$.
+  \item Output the final aggregated tally $b_{total}$.
 \end{itemize}
 
+Unfortunately, this approach still has some security issues. Specifically, the following two questions are unanswered by the approach:
+\begin{enumerate}
+  \item How can we convince the voting authority that the submitted encrypted ballots $\tilde{b}_i$ belong to a valid ballots $b_i$ from the choice space $C$ without obtaining any information about the plain ballots $b_i$?
+  \item How can we ensure that the voting authority only decrypts the final tally $\tilde{b}_{total}$ and not any of the individual votes $\tilde{b}_i$?
+\end{enumerate}
 
-\chapter{Proving Ballot Validity}
+This thesis will focus on the first question. 
+We can solve the second question using distributed decryption where multiple trustees choose their own public keys and decryption is only possible by combining all of them. 
+Adida et. al. present this solution for Exponential ElGamal encryption %\cite{helios}.
+
+\section{Proving Ballot Validity}
+A voter $V_i$ can employ a Zero-Knowledge-Proof (ZKP) to convince the voting authority in a voting system that the encrypted ballot $\tilde{b}_i$ they submitted belongs to a plain ballot $b_i$ from the choice space $C$. 
+By using a ZKP, the voter does not disclose any information about the plain ballot $b_i$ to the voting authority.
+
+We can formalize this as follows:
+\begin{definition}[Voter]
+  Let $C$ be a non-empty choice space, let $\mathcal{S}=(C, \text{Gen}(1^\eta), enc:C\to\tilde{C}, dec:\tilde{C}\to C)$ be an encryption scheme (\todo{Explain/cite}) with $C\subseteq X$.
+  Then, a voter $V$ is defined by the following algorithm:
+  
+\end{definition}
+
+\begin{definition}[Voting system]
+  Let $C$ be a non-empty choice space, let $\mathcal{S}=(C, \text{Gen}(1^\eta), enc:C\to\tilde{C}, dec:\tilde{C}\to C)$ be an encryption scheme (\todo{Explain/cite}) with $C\subseteq X$.
+  Let $agg:\tilde{C}^*\to\tilde{C}$ be an aggregation function. Then, the voting system $VS=(\mathcal{S}, agg)$
+\end{definition}
+
+For now, 
+
+On closer inspection we can split this into two seperate problems:
+\begin{enumerate}
+  \item How can we convince the voting authority that the voter $i$ knows a plain ballot $b_i$ that belongs to the encrypted one $\tilde{b}_i$?
+  \item How can we convince the voting authority that this plain ballot $b_i$ is valid?
+\end{enumerate}
+
+To convince the voting authority of the truth of these two statements, we employ Zero-Knowledge-Proofs.
 
 \section{Membership of a Choice Space}
 
-\section{}
+\section{Validity of Encryption}
 
 \chapter{Preliminaries: GPZKPs, SNARKs, Groth16}
 \label{chap:k2}
