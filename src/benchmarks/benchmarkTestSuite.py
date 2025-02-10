@@ -10,5 +10,5 @@ with open(testSuitePath) as testSuiteFile:
         if commandStr != None:
             os.system(commandStr)
         else:
-            raise SyntaxError("Test does not contain a command")
+            raise SyntaxError("Test does not contain a command.")
 

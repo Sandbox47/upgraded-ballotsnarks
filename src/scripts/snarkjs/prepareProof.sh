@@ -13,11 +13,11 @@ fi
 # Check for the optional flags
 CONTRIBUTE=false
 RANDOMIZE_CONTRIBUTION=false
-if [ "$1" == "-contribute" ]; then
+if [ "$1" = "-contribute" ]; then
   CONTRIBUTE=true
   shift # Remove the -contribute option from the arguments
 fi
-if [ "$1" == "-random" ]; then
+if [ "$1" = "-random" ]; then
   RANDOMIZE_CONTRIBUTION=true
   shift # Remove the -random option from the arguments
 fi

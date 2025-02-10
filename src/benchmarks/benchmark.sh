@@ -13,6 +13,10 @@ electionType="$1"
 nBits="$2"
 shift 2 # Shift arguments so $@ now contains only key=value pairs
 
+# Create election type test folder (if it does not exist already)
+mkdir -p "${electionType}"
+cd "${electionType}"
+
 # Separate key-value pairs
 positionalParams=()
 namedParams=()
@@ -31,6 +35,14 @@ done
 positionalParamsString=$(IFS=', '; echo "${positionalParams[*]}")  # Comma-separated values
 namedParamsString=$(IFS=', '; echo "${namedParams[*]}")  # Comma-separated key=value pairs
 
+# Create File prefix
+filePrefix="${electionType}_nBits=${nBits}_${namedParamsString}"
+
+# Remove pointlist if election type is Pointlist-Borda
+if [ "$electionType" = "pointlistBorda" ]; then
+    filePrefix="${filePrefix%",orderedPoints"*}"
+fi
+echo "File prefix: ${filePrefix}"
 echo "Arguments valid."
 
 # ========================================================================================================================
@@ -42,13 +54,13 @@ capitalizedElectionType="$(echo "${electionType:0:1}" | tr '[:lower:]' '[:upper:
 mkdir -p circomTestFiles # Ensure circom test file directory exists
 
 # Define output file name (lowercase electionType)
-testCircom="circomTestFiles/${electionType}.circom"
+testCircom="circomTestFiles/${filePrefix}.circom"
 
 # Generate the test circom file
 cat > "$testCircom" <<EOF
 pragma circom 2.2.1;
 
-include "../../voting/${electionType}.circom";
+include "../../../voting/${electionType}.circom";
 
 component main {public [g, pk, enc_gr, enc_gv_pkr]} = assert${capitalizedElectionType}(${nBits}, 255, 126932, 1, ${positionalParamsString});
 EOF
@@ -61,14 +73,14 @@ echo "Circom test file '${testCircom}' created successfully."
 mkdir -p sageTestFiles # Ensure sage test file directory exists
 
 # Define output file name (lowercase electionType)
-testSage="sageTestFiles/${electionType}.sage"
+testSage="sageTestFiles/${filePrefix}.sage"
 
 # Generate the test sage file
 cat > "$testSage" <<EOF
 from sageImport import sage_import
 
-sage_import('../../sage/voting/ballot', fromlist=['Ballot'])
-sage_import('../../sage/voting/${electionType}', fromlist=['${capitalizedElectionType}Ballot'])
+sage_import('../../../sage/voting/ballot', fromlist=['Ballot'])
+sage_import('../../../sage/voting/${electionType}', fromlist=['${capitalizedElectionType}Ballot'])
 
 Ballot.test(${capitalizedElectionType}Ballot, ${namedParamsString})
 EOF
@@ -80,7 +92,7 @@ echo "Sage test file '${testCircom}' created successfully."
 
 cd circomTestFiles
 # Capture the output to extract the number of linear and non-linear contraints
-compileOutput=$(genCircom.sh ${electionType}.circom ../sageTestFiles/${electionType}.sage 2>&1 | tee /dev/tty)
+compileOutput=$(genCircom.sh ${filePrefix}.circom ../sageTestFiles/${filePrefix}.sage 2>&1 | tee /dev/tty)
 cd ..
 
 # Extract non-linear constraints (ensures only exact match)
@@ -90,7 +102,7 @@ nonLinearConstraints=$(echo "$compileOutput" | grep -E "^non-linear constraints:
 linearConstraints=$(echo "$compileOutput" | grep -E "^linear constraints:" | awk '{print $3}')
 
 # Check if the witness file was created successfully
-if [ ! -f "circomTestFiles/${electionType}_js/witness.wtns" ]; then
+if [ ! -f "circomTestFiles/${filePrefix}_js/witness.wtns" ]; then
     echo "Error: witness.wtns was not generated."
     exit 1
 fi
@@ -131,16 +143,19 @@ echo "Using ptau file: $ptauFile"
 mkdir -p snarkjsTestFiles # Ensure snarkjs test file directory exists
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
-prepareProof.sh ../circomTestFiles/${electionType}.r1cs ../../scripts/ptau/${ptauFile}
+prepareProof.sh ../circomTestFiles/${filePrefix}.r1cs ../../../scripts/ptau/${ptauFile}
 end_time=$(date +%s%3N)
 t_prep=$((end_time - start_time))
 
-if [ ! -f "${electionType}.zkey" ]; then
-    echo "Error: ${electionType}.zkey was not generated."
+if [ ! -f "${filePrefix}.zkey" ]; then
+    echo "Error: ${filePrefix}.zkey was not generated."
     exit 1
 fi
 
-echo "Zkey file generated successfully in ${t_prep} milliseconds."
+crsSize=$(stat -c%s "${filePrefix}.zkey")
+crsSize=$(echo "scale=6; $crsSize / 1024 / 1024" | bc)
+
+echo "Zkey file (${crsSize} mb) generated successfully in ${t_prep} milliseconds."
 cd ..
 
 # ========================================================================================================================
@@ -148,7 +163,7 @@ cd ..
 
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
-createProof.sh ${electionType}.zkey ../circomTestFiles/${electionType}_js/witness.wtns
+createProof.sh ${filePrefix}.zkey ../circomTestFiles/${filePrefix}_js/witness.wtns
 end_time=$(date +%s%3N)
 t_prove=$((end_time - start_time))
 
@@ -160,7 +175,7 @@ cd ..
 
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
-verifyProof.sh ${electionType}_verification_key.json public.json proof.json
+verifyProof.sh ${filePrefix}_verification_key.json public.json proof.json
 end_time=$(date +%s%3N)
 t_ver=$((end_time - start_time))
 
@@ -169,6 +184,11 @@ cd ..
 
 # ========================================================================================================================
 # 8. Export results
+
+# Create results folder if it does not exist already
+cd ..
+mkdir -p "results"
+
 indicator="${nBits},${positionalParamsString}"  # Unique indicator for each run
 
 # Extract argument names from key=value pairs
@@ -177,46 +197,23 @@ for arg in "${namedParams[@]}"; do
     argNames+=("${arg%%=*}")  # Extract key (before '=')
 done
 
-# 8.1: Preparation, proving and verification times
-
 # Create header row dynamically
-headerTimes="$(IFS=';'; echo "${argNames[*]};t_prep;t_prove;t_ver")"
+header="$(IFS=';'; echo "${argNames[*]};non-linear constraints;linear contraints;total constraints; CRS size [MB]; t_prep [ms];t_prove [ms];t_ver [ms]")"
 
-csvFileTimes="times/${electionType}.csv"
-mkdir -p times  # Ensure results directory exists
+csvFile="results/${electionType}.csv"
 
-lineTimes="${indicator};${t_prep};${t_prove};${t_ver}"
+line="${indicator};${nonLinearConstraints};${linearConstraints};${constraints};${crsSize};${t_prep};${t_prove};${t_ver}"
 
 # If the CSV file does not exist, create it with a header
-if [ ! -f "$csvFileTimes" ]; then
-    echo "$headerTimes" > "$csvFileTimes"
+if [ ! -f "$csvFile" ]; then
+    echo "$header" > "$csvFile"
 fi
 
-# Replace the lineTimes if the indicator already exists, otherwise append it
-grep -v "^${indicator};" "$csvFileTimes" > temp.csv || true
-echo "$lineTimes" >> temp.csv
-mv temp.csv "$csvFileTimes"
-
-echo "Exported preparation, proving and verification times."
-
-# 8.2: Constraint count
-
-# Create header row dynamically
-headerConstraints="$(IFS=';'; echo "${argNames[*]};non-linear constraints;linear contraints;total constraints")"
-
-csvFileConstraints="constraints/${electionType}.csv"
-mkdir -p constraints  # Ensure results directory exists
-
-lineConstraints="${indicator};${nonLinearConstraints};${linearConstraints};${constraints}"
-
-# If the CSV file does not exist, create it with a header
-if [ ! -f "$csvFileConstraints" ]; then
-    echo "$headerConstraints" > "$csvFileConstraints"
-fi
-
-# Replace the lineConstraints if the indicator already exists, otherwise append it
-grep -v "^${indicator};" "$csvFileConstraints" > temp.csv || true
-echo "$lineConstraints" >> temp.csv
-mv temp.csv "$csvFileConstraints"
+# Replace the line if the indicator already exists, otherwise append it
+grep -v "^${indicator};" "$csvFile" > temp.csv || true
+echo "$line" >> temp.csv
+mv temp.csv "$csvFile"
 
 echo "Exported constraint count (non-lin, lin, total)=(${nonLinearConstraints}, ${linearConstraints}, ${constraints})."
+echo "Exported CRS size (${crsSize}), proving and verification times."
+echo "Exported times (preparation, proving, verification)=(${t_prep} ms, ${t_prove} ms, ${t_ver} ms)."

@@ -65,7 +65,7 @@
 %\VerbatimFootnotes %verbatim text in Fußnoten erlauben. Geht normalerweise nicht.
 
 \input{commands}
-%\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+\renewcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \pagenumbering{arabic}
 \Titelblatt
 
@@ -215,10 +215,14 @@ In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the
 One class of ZKPs that can be used to prove (essentially) arbitrary valid statements is the class of General Purpose Zero Knowledge proofs (GPZKPs). 
 For efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice in order to create such (GP)ZKPs.
 
-This thesis starts with \cref{chap:k2}.
+% We can also typeset \verb|<text>verbatim text</text>|.
+% Backticks are also rendered correctly: \verb|`words in backticks`|.
 
-We can also typeset \verb|<text>verbatim text</text>|.
-Backticks are also rendered correctly: \verb|`words in backticks`|.
+\chapter{Proof systems}
+
+\section{Definition}
+
+\section{ZKPs, GPZKPs, SNARKs}
 
 \chapter{Voting Systems}
 \label{chap:votingsystems}
@@ -278,16 +282,9 @@ To convince the voting authority of the truth of these two statements, we employ
 
 \section{Validity of Encryption}
 
-\chapter{Preliminaries: GPZKPs, SNARKs, Groth16}
-\label{chap:k2}
+\chapter{SNARKs, Groth16}
 
-LaTeX hints are provided in \cref{chap:latexhints}.
-
-\blinddocument
-
-\chapter{Formalizing Statements for Groth16}
-
-
+\chapter{Elliptic Curve Cryptography}
 
 % \chapter{Proving Ballot Validity using Groth16}
 

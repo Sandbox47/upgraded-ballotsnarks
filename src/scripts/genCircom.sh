@@ -11,7 +11,7 @@ fi
 
 # Check for the optional --c flag
 USE_CPP_WITNESS=false
-if [ "$1" == "--c" ]; then
+if [ "$1" = "--c" ]; then
   USE_CPP_WITNESS=true
   shift # Remove the --c option from the arguments
 fi
