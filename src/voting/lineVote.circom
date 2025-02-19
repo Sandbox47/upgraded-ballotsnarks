@@ -87,5 +87,44 @@ template assertLineVote(bitsVotes, bitsRand, A, B, nVotes) {
     assertVoting.ballot <== ballot;
 }
 
+// ========================================================================================================================
+// BENCHMARKS
 
-// component main = assertLineVote(32, 255, 126932, 1, 10);
+template assertLineVoteEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+}
+
+template assertLineVoteVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertVoting = assertLineVoteVoting(nVotes);
+    assertVoting.ballot <== ballot;
+}

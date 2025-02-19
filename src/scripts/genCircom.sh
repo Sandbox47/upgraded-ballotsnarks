@@ -31,8 +31,8 @@ if [[ "$INPUT_FILE" == *.sage ]]; then
   
   # Run the Sage script and extract only the JSON part using a tool like jq or sed
   # sage "$INPUT_FILE"
-  # sage "$INPUT_FILE" | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
-  sage "$INPUT_FILE" | tee /dev/tty | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
+  sage "$INPUT_FILE" | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
+  # sage "$INPUT_FILE" | tee /dev/tty | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
   # cat $SAGE_OUTPUT
   
   # Update INPUT_FILE to point to the generated JSON file

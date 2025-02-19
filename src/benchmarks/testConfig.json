@@ -1,5 +1,10 @@
 {
     "testSuite": {
+        "testCircuits": [
+            "voting",
+            "encryption",
+            "combined"
+        ],
         "bitsVotes": [
             32
         ],
@@ -30,6 +35,9 @@
             300
         ],
         "electionTypes": [
+            "multiVoteWithRules"
+        ],
+        "electionTypes_TEST": [
             "singleVote", 
             "pointlistBorda", 
             "multiVoteWithRules", 

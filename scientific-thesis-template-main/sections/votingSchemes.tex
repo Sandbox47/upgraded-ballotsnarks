@@ -1,0 +1,260 @@
+\chapter{Voting Schemes}
+\label{chap:votingschemes}
+Voting schemes are used to conduct elections. 
+Here, several voters submit ballots which are then aggregated by a voting authority. 
+After that, the voting authority publishes the final tally of the election.
+
+\todo{Include diagram}
+
+We will now formalize this approach and iteratively extend it to fullfill several security considerations.
+
+To motivate the different steps, we introduce a simple example: Electing a new president of the Computer Science Club at a university.
+The club has the five members Alice (A), Bob (B), Charlie (C), Derpy (D) and Eve (E). 
+Three of these members are running for the position, namely Alice, Bob and Eve.
+In the election, each of the five clubs' members can vote for one candidate. 
+It is possible to abstain from the vote.
+% The votes will be counted by the voting authority ($VA$) Fred (F) who does not participate in the election.
+In the end, the candidate that receives the most votes overall wins the election and becomes the next president.
+
+In a first attempt at implementing this election, each of the members will write their chosen candidate on a piece of paper. 
+The ballots will then be collected by Fred who counts how often each candidate was choosen and posts the result to a public bulletin board ($PBB$).
+Fred does not participate in the election.
+
+\todo{Naive diagram (Without standardized ballot format and with abstention by not casting a vote at all)}
+
+One obvious problem with this approach is the lack of consistency of the ballots submitted by the members.
+For example, it is not clear what to do if a voter misspells the name of a candidate on their ballot. 
+We can combat this problem by standardizing the ballot format.
+
+\section{Ballot Format}
+In every voting scheme, the ballots submitted by the voters need to be chosen from specific choice space $C$. 
+In our example, every voter now has to submit a ballot from $C:=\{(1,0,0), (0,1,0), (0,0,1), (0,0,0)\}$. 
+Here a ballot $(a, b, e)$ signifies that the member gave $a$ votes to Alice, $b$ votes to Bob and $e$ Votes to Eve.
+
+\todo{Example Voting Scheme with standardized Ballot format.}
+
+Another benefit of standardized ballots is that the votes can now be counted automatically.
+The new voting authority $VA$ (\todo{Robo-Fred} would be a little to infantile, right?) can aggregate the ballots by adding them component-wise via a function $agg$.
+Then, they can publish the result of this computation.
+The winner of the election can be determined by anyone based on this aggregated ballot.
+
+In the current version of the voting scheme, votes are transmitted to the voting authority in plain.
+This means that any party eavedropping this connection can see who the individual members voted for.
+To prevent this, we need to add encryption.
+
+\section{Confidentiality of Ballots}
+To ensure that ballots are secret and nobody but the voters themself know what they voted for, ballots are encrypted by an encryption function $enc$ before being submitted.
+We use an asymmetric encryption scheme for the encryption and decryption process as this allows users to encrypt ballots using a public key $k$ and without having to exchange a private key $\hat{k}$ beforehand.
+Moreover, it is important to choose an additively homomorphic encryption scheme. 
+With additive homomorphism, the voting authority can still aggregate the ballots by performing some computation $agg'$ on the encrypted ballots.
+The result of the election can then be obtained by decrypting the output of $agg'$ using the corresponding decryption function $dec$ of the encryption scheme.
+Since the encrypted ballots don't reveal any information about the plain ballots, it doesn't matter who obtains them. 
+Therefore, the voters can submit their ballots to the public bulletin board and the voting authority can take them from there.
+
+\todo{Ex. Voting Scheme with enc, dec}
+
+A popular choice for an additively homomorphic encrytion scheme is Exponential ElGamal encryption. 
+This will be covered in detail later on.
+
+%If the voting authority is honest, confidentiality of the individual ballots is ensured in this new scheme.
+
+Unfortunately, confidentiality is still not ensured in this new scheme.
+The voting authority needs to have access to the private key of the used encrytion scheme to be able to decrypt the final tally of the election.
+However, this means that a misbehaving voting authority can also decrypt individual votes. 
+One approach to combat this problem is Threshhold encryption \todo{cite cryptographicVoting section 4.1}.
+% Here, the public and private key of the encryption scheme are split into $n$ shares and distributed accross multiple authorities. 
+% In our example, the members of the club could also be the authorities.
+% Users can obtain the public key needed for encryption by combining the publicly available shares of this key using a combination function. %$comb$.
+% However, decryption is only possible if at least $t$ of the authorities participate in the decryption process with their share of the private key $\hat{k}$.
+% Additionally, confidentiality of individual ballots is only broken if at least $t$ authorities behave malicously and work together.
+
+Exponential ElGamal is an encryption scheme that allows Threshold encryption.
+Therefore it is still a good choice in this new setting.
+% We will show how this is possible when introducing Exponential ElGamal.
+
+Since the voting authority is not the focus of this thesis, we will asumme that it is honest. 
+In that case there is no need for threshold encryption.
+Note that an honest voting authority also eliminates the need for ensuring correct decryption of the tally.
+If the voting authority was dishonest, they might just publish an invented tally that is favorable to them.
+We can combat this problem using ZKPs \todo{cite cryptographicVoting section 4.3}.
+
+% \todo{Ex. Voting Scheme with MPC encryption and decryption}
+
+% Despite confidentiality of the ballots being ensured there remains another problem. 
+% Currently, there is no guarantee of the integrity of the computed tally.
+% A misbehaving authority might just publish an invented tally that is favorable to them.
+% In the current version of the election scheme, we have no way of ensuring that the published tally is actually correct.
+% This is what we change next.
+
+% \section{Ensuring correct Decryption of the Tally}
+% To ensure that the authorities decrypt the tally of the election correctly, we employ Zero Knowledge Proofs (ZKPs) \todo{Make acronym}. 
+% The goal of ZKPs is to convince some party $X$ of the truth of a statement without revealing any confidential information to them.
+% In our example this would mean convincing the general public that the final tally the authorities decrypted actually belongs to the aggregated encrypted tally.
+% 
+% For now we will look at ZKPs as Black-Box-Protocols $ZKP=(P,V)$. 
+% Here, the proving algorithm $P$ takes some public inputs $I$ (also called instance) and some private inputs $W$ (also called witness) and produces a ZKP $\pi$.
+% $\pi$ proves that the party who executed $P$ knows a corresponding witness $W$ for the instance $I$, even if only the instance is published.
+% Anyone can verify the proof $\pi$ by running the verifying algorithm $V$ on $\pi$ and the instance $I$.
+
+Even with an honest voting authority two problems that are directly connected remain.
+In the current version of the election scheme, voters can submit ballots that are not in the choice space to gain an unfair advantage. 
+In our example Eve could submit a vote $(0,0,100)$ to win the election. 
+
+\todo{Ex. with Eve submitting $(0,0,100)$.}
+
+Therefore, we need mechanisms to ensure the following:
+\begin{enumerate}
+  \item The encrypted ballot submitted by the voter actually belongs to the plain ballot they chose.
+  \item The plain ballot chosen by the voter is actually part of the choice space.
+\end{enumerate}
+
+\section{Ensuring correct Ballot Format and Correct Encryption of Ballots}
+In order to make sure that voters can only choose ballots from the choice space and then also encrypt exactly these ballots, we employ ZKPs \todo{Make acronym}. 
+
+The goal of ZKPs is to convince some party of the truth of a statement without revealing any confidential information to them.
+In our example, this would mean convincing the general public that the ballot a voter chose is part of the choice space and belongs to the encrypted ballot they submitted.
+ 
+For now we will look at ZKPs as Black-Box-Protocols $zkp=(pro,ver)$. 
+Here, the proving algorithm $pro$ takes some public inputs $I$ (also called instance) and some private inputs $W$ (also called witness) and produces a ZKP $\pi$.
+$\pi$ proves that the party who executed $P$ knows a corresponding witness $W$ for the instance $I$, even though only the instance is published.
+Anyone can verify the proof $\pi$ by running the verifying algorithm $ver$ on $\pi$ and the instance $I$.
+
+In an election scheme this would mean that each voter $V$ runs the proving algorithm $pro$ to obtain a ZKP $\pi_V$.
+Here, the witness is the plain ballot $b_V$ they chose and the instance is the corresponding encrypted ballot $b'_V$.
+The member then publishes the encrypted ballot $b'_V$ along with the ZKP $\pi_V$ to the PBB.
+
+Before aggregating the ballots, the voting authority runs $ver$ for each pair $(\pi_V, b'_V)$. 
+The voting authority only accepts ballots with a valid ZKP $\pi_V$.
+
+\todo{Ex. with ZKPs for ballot validity and correctness of encryption}
+
+With this, we have reached the election scheme we will use throughout the rest of this thesis.
+
+\todo{What is stopping voters from submitting multiple ballots to the public bulletin board?}
+
+\section{Defining election schemes}
+
+We can now define what an election scheme is formally. 
+Here, we use asymmetric encryption schemes as presented in \todo{cite Katz and lindell, Section 12}.
+
+\begin{definition}[Public Bulletin Board]
+  \todo{Publish and Obtain functionality}
+\end{definition}
+
+\begin{definition}[Voter]
+  Let $C$ be a non-empty choice space. Let $\mathcal{S}=(\text{Gen}(1^\eta), enc, dec)$ be a public-key (asymmetric) encryption scheme with:
+  For any public key $pk$ generated by $\text{Gen}(1^\eta)$ and the corresponding message space $\mathcal{M}_{pk}$: $C\subseteq\mathcal{M}_{pk}$.
+  Let $(pk, sk)$ be a fixed key pair generated by $\text{Gen}(1^\eta)$.
+  Let $zkp=(pro,ver)$ be the Zero-Knowledge protocol allowing a voter to proof ballot validity.
+  Let $PBB=(pub, obt)$ be a public bulleting board.
+  Then, a voter $V$ is defined by algorithm \ref{alg:voter}.
+  \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Voter}
+    \label{alg:voter}
+    \begin{algorithmic}
+    \Procedure{$V$}{$C$,$\mathcal{S}$, $pk$, $zkp$, $PBB$}
+      \State $b_V \gets C$
+      \State $b'_V \gets enc_{pk}(b_V)$
+      \State $\pi_V \gets pro(b_V, b'_V, pk, C)$
+      \State $pub(b'_V, \pi_v)$
+
+      \State \Comment $(a',c'a) \in \mathsf{HR}$ denotes that $a'$ is the parent of $a$
+      \If{$\mathsf{parentHandled}\,\land(\mathcal{L}_\mathit{in}(a)=\emptyset\,\lor\,\forall l \in \mathcal{L}_\mathit{in}(a): \mathsf{visited}(l))$}
+      \State $\mathsf{visited}(a) \gets \text{true}$
+      \State $\mathsf{writes}_\circ(a,v_e) \gets
+      \begin{cases}
+      \mathsf{joinLinks}(a,v_e) & \abs{\mathcal{L}_\mathit{in}(a)} > 0\\
+      \mathsf{writes}_\circ(p,v_e)
+      & \exists p: (p,c,a) \in \mathsf{HR}\\
+      (\emptyset, \emptyset, \emptyset, false) & \text{otherwise}
+      \end{cases}
+      $
+      \If{$a\in\mathcal{A}_\mathit{basic}$}
+        \State \Call{HandleBasicActivity}{$a$,$v_e$}
+      \ElsIf{$a\in\mathcal{A}_\mathit{flow}$}
+        \State \Call{HandleFlow}{$a$,$v_e$}
+      \ElsIf{$a = \mathsf{process}$} \Comment Directly handle the contained activity
+        \State \Call{HandleActivity}{$a'$,$v_e$}, $(a,\bot,a') \in \mathsf{HR}$
+        \State $\mathsf{writes}_\bullet(a) \gets \mathsf{writes}_\bullet(a')$
+      \EndIf
+      \ForAll{$l \in \mathcal{L}_\mathit{out}(a)$}
+        \State \Call{HandleLink}{$l$,$v_e$}
+      \EndFor
+      \EndIf
+    \EndProcedure
+    \end{algorithmic}
+  \end{Algorithmus}
+\end{definition}
+
+\begin{definition}[Honest Voting Authority]
+  
+\end{definition}
+
+\begin{definition}[Election Scheme]
+  Let $C$ be a non-empty choice space, let $\mathcal{S}=(C, \text{Gen}(1^\eta), enc:C\to\tilde{C}, dec:\tilde{C}\to C)$ be an encryption scheme (\todo{Explain/cite}) with $C\subseteq X$.
+  
+\end{definition}
+
+\begin{definition}[Voting system]
+  Let $C$ be a non-empty choice space, let $\mathcal{S}=(C, \text{Gen}(1^\eta), enc:C\to\tilde{C}, dec:\tilde{C}\to C)$ be an encryption scheme (\todo{Explain/cite}) with $C\subseteq X$.
+  Let $agg:\tilde{C}^*\to\tilde{C}$ be an aggregation function. Then, the voting system $VS=(\mathcal{S}, agg)$
+\end{definition}
+
+
+
+
+
+
+\section{Voting schemes}
+
+In an election, multiple voters can submit ballots and a voting authority computes the result of the election from these ballots. 
+To ensure that nobody, including the voting authority, learns anything about the ballots chosen by the voters, the voters only submit the encrypted ballots.
+
+In a voting scheme, a voter needs to execute the following steps:
+\begin{itemize}
+  \item Choose a ballot $b$ from an allowed range of ballots called choice space $C$.
+  \item Encrypt the ballot using some (semi-)homomorphic encryption scheme.
+  \item Publish their ballot to a public bulletin board.
+\end{itemize}
+The voting authority does the following computations:
+\begin{itemize}
+  \item Do some computations on the encrypted ballots $\tilde{b}_1,\tilde{b}_2,\dots,\tilde{b}_n$ submitted by the voters using an aggregation function $agg$.
+  \item Decrypt the aggregated ballot $\tilde{b}_total$.
+  \item Output the final aggregated tally $b_{total}$.
+\end{itemize}
+
+Unfortunately, this approach still has some security issues. Specifically, the following two questions are unanswered by the approach:
+\begin{enumerate}
+  \item How can we convince the voting authority that the submitted encrypted ballots $\tilde{b}_i$ belong to a valid ballots $b_i$ from the choice space $C$ without obtaining any information about the plain ballots $b_i$?
+  \item How can we ensure that the voting authority only decrypts the final tally $\tilde{b}_{total}$ and not any of the individual votes $\tilde{b}_i$?
+\end{enumerate}
+
+This thesis will focus on the first question. 
+We can solve the second question using distributed decryption where multiple trustees choose their own public keys and decryption is only possible by combining all of them. 
+Adida et. al. present this solution for Exponential ElGamal encryption %\cite{helios}.
+
+\section{Proving Ballot Validity}
+A voter $V_i$ can employ a Zero-Knowledge-Proof (ZKP) to convince the voting authority in a voting system that the encrypted ballot $\tilde{b}_i$ they submitted belongs to a plain ballot $b_i$ from the choice space $C$. 
+By using a ZKP, the voter does not disclose any information about the plain ballot $b_i$ to the voting authority.
+
+We can formalize this as follows:
+\begin{definition}[Voter]
+  Let $C$ be a non-empty choice space, let $\mathcal{S}=(C, \text{Gen}(1^\eta), enc:C\to\tilde{C}, dec:\tilde{C}\to C)$ be an encryption scheme (\todo{Explain/cite}) with $C\subseteq X$.
+  Then, a voter $V$ is defined by the following algorithm:
+  
+\end{definition}
+
+\begin{definition}[Voting system]
+  Let $C$ be a non-empty choice space, let $\mathcal{S}=(C, \text{Gen}(1^\eta), enc:C\to\tilde{C}, dec:\tilde{C}\to C)$ be an encryption scheme (\todo{Explain/cite}) with $C\subseteq X$.
+  Let $agg:\tilde{C}^*\to\tilde{C}$ be an aggregation function. Then, the voting system $VS=(\mathcal{S}, agg)$
+\end{definition}
+
+For now, 
+
+On closer inspection we can split this into two seperate problems:
+\begin{enumerate}
+  \item How can we convince the voting authority that the voter $i$ knows a plain ballot $b_i$ that belongs to the encrypted one $\tilde{b}_i$?
+  \item How can we convince the voting authority that this plain ballot $b_i$ is valid?
+\end{enumerate}
+
+To convince the voting authority of the truth of these two statements, we employ Zero-Knowledge-Proofs.

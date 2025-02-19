@@ -101,6 +101,44 @@ template assertMajorityJudgement(bitsVotes, bitsRand, A, B, nCand, nGrades) {
     assertVoting.ballot <== ballot;
 }
 
-// component main = assertMajorityJudgementVoting(100, 100);
-// component main = assertMajorityJudgementWithRangeChecksVoting(100, 100);
-// component main = assertMajorityJudgement(32, 255, 126932, 1, 10, 6);
+// ========================================================================================================================
+// BENCHMARKS
+
+template assertMajorityJudgementEncryptionBenchmark(bitsVotes, bitsRand, A, B, nCand, nGrades) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nCand][nGrades];
+    input ProjectivePoint() enc_gv_pkr[nCand][nGrades];
+
+    // Private/Witness
+    input signal ballot[nCand][nGrades];
+    input signal r[nCand][nGrades]; // Randomness
+
+    component assertEnc = assertEncMatrix(nCand, nGrades, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+}
+
+template assertMajorityJudgementVotingBenchmark(bitsVotes, bitsRand, A, B, nCand, nGrades) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nCand][nGrades];
+    input ProjectivePoint() enc_gv_pkr[nCand][nGrades];
+
+    // Private/Witness
+    input signal ballot[nCand][nGrades];
+    input signal r[nCand][nGrades]; // Randomness
+    
+    component assertVoting = assertMajorityJudgementVoting(nCand, nGrades);
+    assertVoting.ballot <== ballot;
+}

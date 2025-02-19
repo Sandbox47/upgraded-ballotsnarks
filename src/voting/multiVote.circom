@@ -16,6 +16,7 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
     // var maxVotesCandBits = numBits(maxVotesCand);
     // var maxChoicesBits = numBits(maxChoices);
     var totalBits = bitsVotes + numBits(nVotes); // Number of bits required for the sum of all entries at most
+    log("Total Bits: ", totalBits);
 
     component assertLtEq[nVotes];
     component assertSumLtEq = assertLtEq(totalBits);
@@ -28,6 +29,8 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
         assertLtEq[i].test <== maxVotesCand;
         sum += ballot[i];
     }
+    log("Sum: ", sum);
+    log("Max choices:", maxChoices);
 
     assertSumLtEq.in <== sum;
     assertSumLtEq.test <== maxChoices;
@@ -88,4 +91,44 @@ template assertMultiVote(bitsVotes, bitsRand, A, B, nVotes, maxVotesCand, maxCho
     assertVoting.ballot <== ballot;
 }
 
-// component main = assertMultiVote(32, 255, 126932, 1, 10, 2, 5);
+// ========================================================================================================================
+// BENCHMARKS
+
+template assertMultiVoteEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes, maxVotesCand, maxChoices) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+}
+
+template assertMultiVoteVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes, maxVotesCand, maxChoices) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertVoting = assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices);
+    assertVoting.ballot <== ballot;
+}

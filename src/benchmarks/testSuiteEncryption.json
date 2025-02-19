@@ -1,0 +1,50 @@
+[
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "maxVotesCand": 5,
+        "maxChoices": 10,
+        "command": "./benchmark.sh encryption multiVoteWithRules 32 nVotes=5 maxVotesCand=5 maxChoices=10"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "maxVotesCand": 5,
+        "maxChoices": 20,
+        "command": "./benchmark.sh encryption multiVoteWithRules 32 nVotes=10 maxVotesCand=5 maxChoices=20"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "maxVotesCand": 5,
+        "maxChoices": 50,
+        "command": "./benchmark.sh encryption multiVoteWithRules 32 nVotes=25 maxVotesCand=5 maxChoices=50"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "maxVotesCand": 5,
+        "maxChoices": 100,
+        "command": "./benchmark.sh encryption multiVoteWithRules 32 nVotes=50 maxVotesCand=5 maxChoices=100"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "maxVotesCand": 5,
+        "maxChoices": 150,
+        "command": "./benchmark.sh encryption multiVoteWithRules 32 nVotes=75 maxVotesCand=5 maxChoices=150"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "maxVotesCand": 5,
+        "maxChoices": 200,
+        "command": "./benchmark.sh encryption multiVoteWithRules 32 nVotes=100 maxVotesCand=5 maxChoices=200"
+    }
+]

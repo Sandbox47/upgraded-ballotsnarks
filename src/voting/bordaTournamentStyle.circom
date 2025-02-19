@@ -158,5 +158,49 @@ template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, a, b) {
     assertVoting.ranking <== ranking;
 }
 
-// component main = assertBordaTournamentStyleVoting(100, 100, 2, 1);
-// component main = assertBordaTournamentStyle(32, 255, 126932, 1, 100, 100, 2, 1);
+
+// ========================================================================================================================
+// BENCHMARKS
+
+template assertBordaTournamentStyleEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes, a, b) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal ranking[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    assertEnc.v <== ballot;
+    assertEnc.g <== g;
+    assertEnc.pk <== pk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+}
+
+template assertBordaTournamentStyleVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes, a, b) {
+    // Public
+    input ProjectivePoint() g; // Generator
+    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input ProjectivePoint() enc_gr[nVotes];
+    input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal ranking[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    var maxValue = 2**bitsVotes;
+    component assertVoting = assertBordaTournamentStyleVoting(nVotes, maxValue, a, b);
+    assertVoting.ballot <== ballot;
+    assertVoting.ranking <== ranking;
+}

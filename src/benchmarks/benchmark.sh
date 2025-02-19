@@ -3,15 +3,23 @@
 # ========================================================================================================================
 # 1. Check argument validity
 # Check for the required arguments
-if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 <electionType> <nBits> key1=value1 key2=value2 ..."
+if [ "$#" -lt 3 ]; then
+    echo "Usage: $0 <mode> <electionType> <nBits> key1=value1 key2=value2 ..."
+    echo "Allowed values for <mode>: voting, encryption, combined"
     exit 1
 fi
 
 # Assign input arguments to variables
-electionType="$1"
-nBits="$2"
-shift 2 # Shift arguments so $@ now contains only key=value pairs
+mode="$1"
+electionType="$2"
+nBits="$3"
+shift 3 # Shift arguments so $@ now contains only key=value pairs
+
+# Validate mode
+if [[ "$mode" != "voting" && "$mode" != "encryption" && "$mode" != "combined" ]]; then
+    echo "Error: Invalid mode '$mode'. Allowed values: voting, encryption, combined."
+    exit 1
+fi
 
 # Create election type test folder (if it does not exist already)
 mkdir -p "${electionType}"
@@ -56,16 +64,25 @@ mkdir -p circomTestFiles # Ensure circom test file directory exists
 # Define output file name (lowercase electionType)
 testCircom="circomTestFiles/${filePrefix}.circom"
 
+# Determine the correct component name
+if [ "$mode" == "combined" ]; then
+    circomComponent="assert${capitalizedElectionType}"
+elif [ "$mode" == "encryption" ]; then
+    circomComponent="assert${capitalizedElectionType}EncryptionBenchmark"
+elif [ "$mode" == "voting" ]; then
+    circomComponent="assert${capitalizedElectionType}VotingBenchmark"
+fi
+
 # Generate the test circom file
 cat > "$testCircom" <<EOF
 pragma circom 2.2.1;
 
 include "../../../voting/${electionType}.circom";
 
-component main {public [g, pk, enc_gr, enc_gv_pkr]} = assert${capitalizedElectionType}(${nBits}, 255, 126932, 1, ${positionalParamsString});
+component main {public [g, pk, enc_gr, enc_gv_pkr]} = ${circomComponent}(${nBits}, 255, 126932, 1, ${positionalParamsString});
 EOF
 
-echo "Circom test file '${testCircom}' created successfully."
+echo "Circom test file '${testCircom}' created successfully with component ${circomComponent}."
 
 # ========================================================================================================================
 # 3. Create sage test file
@@ -112,20 +129,21 @@ echo "Witness generated successfully."
 # ========================================================================================================================
 # 5. Prepare proof
 
-# 5.1. Find smallest ptau file possible:
+# 5.1. Find smallest ptau file possible for this test circuit:
 
 # Total constraints:
 constraints=$(($nonLinearConstraints + $linearConstraints));
 echo "${constraints} constraints in total."
 
 # Define the range of ptau files available
-min_n=8
+# min_n=8
+min_n=12 # For some of the smaller ptau files there is a weird bug where snarkjs claims that the file is too small even though it should be big enpugh for more than twice the constraints of the tested circuit. That's why we start with n=12.
 max_n=22
 ptauFile=""
 
 # Iterate through available ptau files to find the smallest valid one
 for ((n=min_n; n<=max_n; n++)); do
-    if (( (1 << n) >= constraints )); then
+    if (( (1 << n) >= 8*constraints )); then # For some reason I need this factor 8 here (otherwise snarkjs sometimes complains that the powers of tau file is too small)
         ptauFile="powersOfTau_${n}.ptau"
         break
     fi
@@ -136,6 +154,8 @@ if [[ -z "$ptauFile" ]]; then
     echo "Error: No suitable ptau file found for $constraints constraints." >&2
     exit 1
 fi
+
+ptauFile="powersOfTau_22.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
 
 echo "Using ptau file: $ptauFile"
 
@@ -189,6 +209,12 @@ cd ..
 cd ..
 mkdir -p "results"
 
+# Create subfolder if it does not exist
+mkdir -p "results/${mode}"
+
+# Define the results CSV file path
+csvFile="results/${mode}/${electionType}.csv"
+
 indicator="${nBits},${positionalParamsString}"  # Unique indicator for each run
 
 # Extract argument names from key=value pairs
@@ -199,8 +225,6 @@ done
 
 # Create header row dynamically
 header="$(IFS=';'; echo "${argNames[*]};non-linear constraints;linear contraints;total constraints; CRS size [MB]; t_prep [ms];t_prove [ms];t_ver [ms]")"
-
-csvFile="results/${electionType}.csv"
 
 line="${indicator};${nonLinearConstraints};${linearConstraints};${constraints};${crsSize};${t_prep};${t_prove};${t_ver}"
 
@@ -214,6 +238,7 @@ grep -v "^${indicator};" "$csvFile" > temp.csv || true
 echo "$line" >> temp.csv
 mv temp.csv "$csvFile"
 
+echo "Results saved in 'results/${mode}/${electionType}.csv'."
 echo "Exported constraint count (non-lin, lin, total)=(${nonLinearConstraints}, ${linearConstraints}, ${constraints})."
-echo "Exported CRS size (${crsSize}), proving and verification times."
-echo "Exported times (preparation, proving, verification)=(${t_prep} ms, ${t_prove} ms, ${t_ver} ms)."
+echo "Exported CRS size (${crsSize}MB)."
+echo "Exported times (preparation, proving, verification)=(${t_prep}ms, ${t_prove}ms, ${t_ver}ms)."
