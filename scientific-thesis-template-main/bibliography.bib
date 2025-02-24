@@ -1,5 +1,8 @@
 % Encoding: UTF-8
 
+% ========================================================================================================================
+% TEST SOURCES
+
 %%%
 %
 %Beim Erstellen der Bibtex-Datei wird empfohlen darauf zu achten, dass die DOI aufgeführt wird.
@@ -50,3 +53,403 @@
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}
+
+% ========================================================================================================================
+% ACTUAL SOURCES
+
+@article{miyaji_new_2001,
+	title = {New {Explicit} {Conditions} of {Elliptic} {Curve} {Traces} for {FR}-{Reduction}},
+	abstract = {Elliptic curve cryptosystems [19], [25] are based on the elliptic curve discrete logarithm problem (ECDLP). If elliptic curve cryptosystems avoid FR-reduction [11], [17] and anomalous elliptic curve over Fq [3], [33], [35], then with current knowledge we can construct elliptic curve cryptosystems over a smaller deﬁnition ﬁeld. ECDLP has an interesting property that the security deeply depends on elliptic curve traces rather than deﬁnition ﬁelds, which does not occur in the case of the discrete logarithm problem (DLP). Therefore it is important to characterize elliptic curve traces explicitly from the security point of view. As for FR-reduction, supersingular elliptic curves or elliptic curve E/Fq with trace 2 have been reported to be vulnerable. However unfortunately these have been only results that characterize elliptic curve traces explicitly for FR- and MOV-reductions. More importantly, the secure trace against FR-reduction has not been reported at all. Elliptic curves with the secure trace means that the reduced extension degree is always higher than a certain level. In this paper, we aim at characterizing elliptic curve traces by FR-reduction and investigate explicit conditions of traces vulnerable or secure against FR-reduction. We show new explicit conditions of elliptic curve traces for FR-reduction. We also present algorithms to construct such elliptic curves, which have relation to famous number theory problems.},
+	language = {en},
+	author = {Miyaji, Atsuko and Takano, Shunzou},
+	year = {2001},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/3KGPRCYN/Miyaji und Takano - 2001 - New Explicit Conditions of Elliptic Curve Traces for FR-Reduction.pdf:application/pdf},
+}
+
+@misc{barreto_constructing_2002,
+	title = {Constructing {Elliptic} {Curves} with {Prescribed} {Embedding} {Degrees}},
+	url = {https://eprint.iacr.org/2002/088},
+	abstract = {Pairing-based cryptosystems depend on the existence of groups where
+the Decision Diffie-Hellman problem is easy to solve, but the
+Computational Diffie-Hellman problem is hard. Such is the case of
+elliptic curve groups whose embedding degree is large enough to
+maintain a good security level, but small enough for arithmetic
+operations to be feasible. However, the embedding degree is usually
+enormous, and the scarce previously known suitable elliptic groups
+had embedding degree \$k {\textbackslash}leqslant 6\$. In this note, we examine
+criteria for curves with larger \$k\$ that generalize prior work by
+Miyaji et al. based on the properties of cyclotomic
+polynomials, and propose efficient representations for the
+underlying algebraic structures.},
+	urldate = {2024-10-31},
+	author = {Barreto, Paulo S. L. M. and Lynn, Ben and Scott, Michael},
+	year = {2002},
+	note = {Publication info: Published elsewhere. Accepted for presentation at SCN'02 (to be published in LNCS)},
+	keywords = {elliptic curve cryptosystem},
+	annote = {Fixed the last example in appendix B and updated the references.},
+}
+
+@article{adida_electing_nodate,
+	title = {Electing a {University} {President} using {Open}-{Audit} {Voting}: {Analysis} of real-world use of {Helios}},
+	abstract = {In March 2009, the Universit´e catholique de Louvain elected its President using a custom deployment of the Helios web-based open-audit voting system. Out of 25,000 potential voters, 5000 registered, and almost 4000 voted in each round of the election. The precision of the voting system turned out to be crucial: in the ﬁrst round, the leader came short of winning the election by only 2 votes.},
+	language = {en},
+	author = {Adida, Ben and de Marneffe, Olivier and Pereira, Olivier and Quisquater, Jean-Jacques},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/W56X5UAC/Adida et al. - Electing a University President using Open-Audit Voting Analysis of real-world use of Helios.pdf:application/pdf},
+}
+
+@inproceedings{huber_zk-snarks_2025,
+	address = {Cham},
+	title = {{ZK}-{SNARKs} for {Ballot} {Validity}: {A} {Feasibility} {Study}},
+	isbn = {978-3-031-72244-8},
+	shorttitle = {{ZK}-{SNARKs} for {Ballot} {Validity}},
+	doi = {10.1007/978-3-031-72244-8_7},
+	abstract = {Electronic voting (e-voting) systems have become more prevalent in recent years, but security concerns have also increased, especially regarding the privacy and verifiability of votes. As an essential ingredient for constructing secure e-voting systems, designers often employ zero-knowledge proofs (ZKPs), allowing voters to prove their votes are valid without revealing them. Invalid votes can then be discarded to protect verifiability without compromising the privacy of valid votes. General purpose zero-knowledge proofs (GPZKPs) such as ZK-SNARKs can be used to prove arbitrary statements, including ballot validity. While a specialized ZKP that is constructed only for a specific election type/voting method, ballot format, and encryption/commitment scheme can be more efficient than a GPZKP, the flexibility offered by GPZKPs would allow for quickly constructing e-voting systems for new voting methods and new ballot formats. So far, however, the viability of GPZKPs for showing ballot validity for various ballot formats, in particular, whether and in how far they are practical for voters to compute, has only recently been investigated for ballots that are computed as Pedersen vector commitments in an ACM CCS 2022 paper by Huber et al. Here, we continue this line of research by performing a feasibility study of GPZKPs for the more common case of ballots encrypted via Exponential ElGamal encryption. Specifically, building on the work by Huber et al., we describe how the Groth16 ZK-SNARK can be instantiated to show ballot validity for arbitrary election types and ballot formats encrypted via Exponential ElGamal. As our main contribution, we implement, benchmark, and compare several such instances for a wide range of voting methods and ballot formats. Our benchmarks not only establish a basis for protocol designers to make an educated choice for or against such a GPZKP, but also show that GPZKPs are actually viable for showing ballot validity in voting systems using Exponential ElGamal.},
+	language = {en},
+	booktitle = {Electronic {Voting}},
+	publisher = {Springer Nature Switzerland},
+	author = {Huber, Nicolas and Küsters, Ralf and Liedtke, Julian and Rausch, Daniel},
+	editor = {Duenas-Cid, David and Roenne, Peter and Volkamer, Melanie and Budurushi, Jurlind and Blom, Michelle and Rodríguez-Pérez, Adrià and Spycher-Krivonosova, Iuliia and Castellà Roca, Jordi and Barrat Esteve, Jordi},
+	year = {2025},
+	pages = {107--123},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/QLYNUSGD/Huber et al. - 2025 - ZK-SNARKs for Ballot Validity A Feasibility Study.pdf:application/pdf},
+}
+
+@article{belles-munoz_twisted_2021,
+	title = {Twisted {Edwards} {Elliptic} {Curves} for {Zero}-{Knowledge} {Circuits}},
+	volume = {9},
+	copyright = {http://creativecommons.org/licenses/by/3.0/},
+	issn = {2227-7390},
+	url = {https://www.mdpi.com/2227-7390/9/23/3022},
+	doi = {10.3390/math9233022},
+	abstract = {Circuit-based zero-knowledge proofs have arose as a solution to the implementation of privacy in blockchain applications, and to current scalability problems that blockchains suffer from. The most efficient circuit-based zero-knowledge proofs use a pairing-friendly elliptic curve to generate and validate proofs. In particular, the circuits are built connecting wires that carry elements from a large prime field, whose order is determined by the number of elements of the pairing-friendly elliptic curve. In this context, it is important to generate an inner curve using this field, because it allows to create circuits that can verify public-key cryptography primitives, such as digital signatures and encryption schemes. To this purpose, in this article, we present a deterministic algorithm for generating twisted Edwards elliptic curves defined over a given prime field. We also provide an algorithm for checking the resilience of this type of curve against most common security attacks. Additionally, we use our algorithms to generate Baby Jubjub, a curve that can be used to implement elliptic-curve cryptography in circuits that can be validated in the Ethereum blockchain.},
+	language = {en},
+	number = {23},
+	urldate = {2025-02-07},
+	journal = {Mathematics},
+	author = {Bellés-Muñoz, Marta and Whitehat, Barry and Baylina, Jordi and Daza, Vanesa and Muñoz-Tapia, Jose Luis},
+	month = jan,
+	year = {2021},
+	note = {Number: 23
+Publisher: Multidisciplinary Digital Publishing Institute},
+	keywords = {blockchain, elliptic curve, privacy, zero-knowledge proof},
+	pages = {3022},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/QXH9U7YE/Bellés-Muñoz et al. - 2021 - Twisted Edwards Elliptic Curves for Zero-Knowledge Circuits.pdf:application/pdf},
+}
+
+@incollection{goos_efficient_2001,
+	address = {Berlin, Heidelberg},
+	title = {Efficient {Elliptic} {Curve} {Cryptosystems} from a {Scalar} {Multiplication} {Algorithm} with {Recovery} of the y-{Coordinate} on a {Montgomery}-{Form} {Elliptic} {Curve}},
+	volume = {2162},
+	isbn = {978-3-540-42521-2 978-3-540-44709-2},
+	url = {http://link.springer.com/10.1007/3-540-44709-1_12},
+	abstract = {We present a scalar multiplication algorithm with recovery of the y-coordinate on a Montgomery form elliptic curve over any nonbinary ﬁeld.},
+	language = {en},
+	urldate = {2025-02-07},
+	booktitle = {Cryptographic {Hardware} and {Embedded} {Systems} — {CHES} 2001},
+	publisher = {Springer Berlin Heidelberg},
+	author = {Okeya, Katsuyuki and Sakurai, Kouichi},
+	editor = {Goos, Gerhard and Hartmanis, Juris and Van Leeuwen, Jan and Koç, Çetin K. and Naccache, David and Paar, Christof},
+	year = {2001},
+	doi = {10.1007/3-540-44709-1_12},
+	note = {Series Title: Lecture Notes in Computer Science},
+	pages = {126--141},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/WE5NS433/Okeya and Sakurai - 2001 - Efficient Elliptic Curve Cryptosystems from a Scalar Multiplication Algorithm with Recovery of the y.pdf:application/pdf},
+}
+
+@article{montgomery_speeding_nodate,
+	title = {Speeding the {Pollard} and {Elliptic} {Curve} {Methods} of {Factorization}},
+	abstract = {Since 1974, several algorithms have been developed that attempt to factor a large number N by doing extensive computations modulo N and occasionally taking GCDs with N. These began with Pollard's p - 1 and Monte Carlo methods. More recently, Williams published a p + 1 method, and Lenstra discovered an elliptic curve method (ECM). We present ways to speed all of these. One improvement uses two tables during the second phases of p ± 1 and ECM, looking for a match. Polynomial preconditioning lets us search a fixed table of size n with n/2 + o(n) multiplications. A parametrization of elliptic curves lets Step 1 of ECM compute the x-coordinate of nP from that of P in about 9.3 log2 n multiplications for arbitrary P.},
+	language = {en},
+	author = {Montgomery, Peter L},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/XLNMZQZE/Montgomery - Speeding the Pollard and Elliptic Curve Methods of Factorization.pdf:application/pdf},
+}
+
+@article{costello_montgomery_2018,
+	title = {Montgomery curves and their arithmetic},
+	volume = {8},
+	issn = {2190-8516},
+	url = {https://doi.org/10.1007/s13389-017-0157-6},
+	doi = {10.1007/s13389-017-0157-6},
+	abstract = {Three decades ago, Montgomery introduced a new elliptic curve model for use in Lenstra’s ECM factorization algorithm. Since then, his curves and the algorithms associated with them have become foundational in the implementation of elliptic curve cryptosystems. This article surveys the theory and cryptographic applications of Montgomery curves over non-binary finite fields, including Montgomery’s x-only arithmetic and Ladder algorithm, x-only Diffie–Hellman, y-coordinate recovery, and two-dimensional and Euclidean differential addition chains such as Montgomery’s PRAC algorithm.},
+	language = {en},
+	number = {3},
+	urldate = {2025-02-07},
+	journal = {Journal of Cryptographic Engineering},
+	author = {Costello, Craig and Smith, Benjamin},
+	month = sep,
+	year = {2018},
+	keywords = {Elliptic curve cryptography, Montgomery curve, Montgomery ladder, Scalar multiplication},
+	pages = {227--240},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/TID3HKJ6/Costello and Smith - 2018 - Montgomery curves and their arithmetic.pdf:application/pdf},
+}
+
+@misc{bernstein_montgomery_2017,
+	title = {Montgomery curves and the {Montgomery} ladder},
+	url = {https://eprint.iacr.org/2017/293},
+	abstract = {The Montgomery ladder is a remarkably simple method of computing scalar multiples of points on a broad class of elliptic curves. This article surveys a wide range of topics related to the Montgomery ladder, both from the historical perspective of Weierstrass curves and from the modern perspective of Edwards curves. New material includes a full proof of a complete constant-time ladder algorithm suitable for cryptographic applications.},
+	urldate = {2025-02-07},
+	author = {Bernstein, Daniel J. and Lange, Tanja},
+	year = {2017},
+	note = {Publication info: Published elsewhere. Minor revision. "Topics in Computational Number Theory inspired by Peter L. Montgomery", edited by Joppe W. Bos and Arjen K. Lenstra, to appear},
+	keywords = {Montgomery ladder, Edwards curves, Montgomery curves},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/95TQKF26/Bernstein and Lange - 2017 - Montgomery curves and the Montgomery ladder.pdf:application/pdf},
+}
+
+@inproceedings{huber_kryvos_2022,
+	address = {New York, NY, USA},
+	series = {{CCS} '22},
+	title = {Kryvos: {Publicly} {Tally}-{Hiding} {Verifiable} {E}-{Voting}},
+	isbn = {978-1-4503-9450-5},
+	shorttitle = {Kryvos},
+	url = {https://dl.acm.org/doi/10.1145/3548606.3560701},
+	doi = {10.1145/3548606.3560701},
+	abstract = {Elections are an important corner stone of democratic processes. In addition to publishing the final result (e.g., the overall winner), elections typically publish the full tally consisting of all (aggregated) individual votes. This causes several issues, including loss of privacy for both voters and election candidates as well as so-called Italian attacks that allow for easily coercing voters.  Several e-voting systems have been proposed to address these issues by hiding (parts of) the tally. This property is called tally-hiding. Existing tally-hiding e-voting systems in the literature aim at hiding (part of) the tally from everyone, including voting authorities, while at the same time offering verifiability, an important and standard feature of modern e-voting systems which allows voters and external observers to check that the published election result indeed corresponds to how voters actually voted. In contrast, real elections often follow a different common practice for hiding the tally: the voting authorities internally compute (and learn) the full tally but publish only the final result (e.g., the winner). This practice, which we coin publicly tally-hiding, indeed solves the aforementioned issues for the public, but currently has to sacrifice verifiability due to a lack of practical systems.  In this paper, we close this gap. We formalize the common notion of publicly tally-hiding and propose the first provably secure verifiable e-voting system, called Kryvos, which directly targets publicly tally-hiding elections. We instantiate our system for a wide range of both simple and complex voting methods and various result functions. We provide an extensive evaluation which shows that Kryvos is practical and able to handle a large number of candidates, complex voting methods and result functions. Altogether, Kryvos shows that the concept of publicly tally-hiding offers a new trade-off between privacy and efficiency that is different from all previous tally-hiding systems and which allows for a radically new protocol design resulting in a practical e-voting system.},
+	urldate = {2025-02-07},
+	booktitle = {Proceedings of the 2022 {ACM} {SIGSAC} {Conference} on {Computer} and {Communications} {Security}},
+	publisher = {Association for Computing Machinery},
+	author = {Huber, Nicolas and Küsters, Ralf and Krips, Toomas and Liedtke, Julian and Müller, Johannes and Rausch, Daniel and Reisert, Pascal and Vogt, Andreas},
+	month = nov,
+	year = {2022},
+	pages = {1443--1457},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/NHNFEXNK/Huber et al. - 2022 - Kryvos Publicly Tally-Hiding Verifiable E-Voting.pdf:application/pdf},
+}
+
+@incollection{pieprzyk_twisted_2008,
+	address = {Berlin, Heidelberg},
+	title = {Twisted {Edwards} {Curves} {Revisited}},
+	volume = {5350},
+	isbn = {978-3-540-89254-0 978-3-540-89255-7},
+	url = {http://link.springer.com/10.1007/978-3-540-89255-7_20},
+	abstract = {This paper introduces fast algorithms for performing group operations on twisted Edwards curves, pushing the recent speed limits of Elliptic Curve Cryptography (ECC) forward in a wide range of applications. Notably, the new addition algorithm uses1 8M for suitably selected curve constants. In comparison, the fastest point addition algorithms for (twisted) Edwards curves stated in the literature use 9M + 1S. It is also shown that the new addition algorithm can be implemented with four processors dropping the eﬀective cost to 2M. This implies an eﬀective speed increase by the full factor of 4 over the sequential case. Our results allow faster implementation of elliptic curve scalar multiplication. In addition, the new point addition algorithm can be used to provide a natural protection from side channel attacks based on simple power analysis (SPA).},
+	language = {en},
+	urldate = {2025-02-07},
+	booktitle = {Advances in {Cryptology} - {ASIACRYPT} 2008},
+	publisher = {Springer Berlin Heidelberg},
+	author = {Hisil, Huseyin and Wong, Kenneth Koon-Ho and Carter, Gary and Dawson, Ed},
+	editor = {Pieprzyk, Josef},
+	year = {2008},
+	doi = {10.1007/978-3-540-89255-7_20},
+	note = {Series Title: Lecture Notes in Computer Science},
+	pages = {326--343},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/KNF6SHRL/Hisil et al. - 2008 - Twisted Edwards Curves Revisited.pdf:application/pdf},
+}
+
+@inproceedings{cleve_limits_1986,
+	address = {Berkeley, California, United States},
+	title = {Limits on the security of coin flips when half the processors are faulty},
+	isbn = {978-0-89791-193-1},
+	url = {http://portal.acm.org/citation.cfm?doid=12130.12168},
+	doi = {10.1145/12130.12168},
+	language = {en},
+	urldate = {2025-02-07},
+	booktitle = {Proceedings of the eighteenth annual {ACM} symposium on {Theory} of computing  - {STOC} '86},
+	publisher = {ACM Press},
+	author = {Cleve, R},
+	year = {1986},
+	pages = {364--369},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/Q2J9AJKY/Cleve - 1986 - Limits on the security of coin flips when half the processors are faulty.pdf:application/pdf},
+}
+
+@misc{hertel_extending_2021,
+	title = {Extending the {Tally}-{Hiding} {Ordinos} {System}: {Implementations} for {Borda}, {Hare}-{Niemeyer}, {Condorcet}, and {Instant}-{Runoff} {Voting}},
+	shorttitle = {Extending the {Tally}-{Hiding} {Ordinos} {System}},
+	url = {https://eprint.iacr.org/2021/1420},
+	abstract = {Modern electronic voting systems (e-voting systems) are designed to achieve a variety of security properties, such as verifiability, accountability, and vote privacy. Some of these systems aim at so-called tally-hiding: they compute the election result, according to some result function, like the winner of the election, without revealing any other information to any party. In particular, if desired, they neither reveal the full tally consisting of all (aggregated or even individual) votes nor parts of it, except for the election result, according to the result function. Tally-hiding systems offer many attractive features, such as strong privacy guarantees both for voters and for candidates, and protection against Italian attacks. The Ordinos system is a recent provably secure framework for accountable tally-hiding e-voting that extends Helios and can be instantiated for various election methods and election result functions. So far, practical instantiations and implementations for only rather simple result functions (e.g., computing the k best candidates) and single/multi-vote elections have been developed for Ordinos.
+
+In this paper, we propose and implement several new Ordinos instantiations in order to support Borda voting, the Hare-Niemeyer method for proportional representation, multiple Condorcet methods, and Instant-Runoff Voting. Our instantiations, which are based on suitable secure multi-party computation (MPC) components, offer the first tally-hiding implementations for these voting methods. To evaluate the practicality of our MPC components and the resulting e-voting systems, we provide extensive benchmarks for all our implementations.},
+	urldate = {2025-02-07},
+	author = {Hertel, Fabian and Huber, Nicolas and Kittelberger, Jonas and Kuesters, Ralf and Liedtke, Julian and Rausch, Daniel},
+	year = {2021},
+	note = {Publication info: Published elsewhere. Sixth International Joint Conference on Electronic Voting (E-Vote-ID 2021)},
+	keywords = {privacy, accountability, electronic voting, multi-party computation, verifiability},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/FFG4AU6H/Hertel et al. - 2021 - Extending the Tally-Hiding Ordinos System Implementations for Borda, Hare-Niemeyer, Condorcet, and.pdf:application/pdf},
+}
+
+@book{noauthor_moonmath_nodate,
+	edition = {v1.1.5},
+	title = {The {MoonMath} {Manual} to {ZK}-{SNARKs}},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/CVHV8BAC/The MoonMath Manual to ZK-SNARKs.pdf:application/pdf},
+}
+
+@misc{huber_hicolasnuberballotsnarks_2024,
+	title = {{HicolasNuber}/ballotsnarks},
+	url = {https://github.com/HicolasNuber/ballotsnarks},
+	abstract = {This repository contains arithmetic circuits for proving validity of encrypted ballots of various formats. The encryption can be either Exponential ElGamal (EEG) or Pedersen Vector Commitments (PVC). For details, see our paper "ZK-SNARKs for Ballot Validity: A Feasibility Study".},
+	urldate = {2025-02-07},
+	author = {Huber, Nicolas},
+	month = dec,
+	year = {2024},
+	note = {original-date: 2024-07-19T09:03:53Z},
+}
+
+@misc{noauthor_circom_nodate,
+	title = {Circom 2 {Documentation}},
+	url = {https://docs.circom.io/},
+	urldate = {2025-02-07},
+	file = {Circom 2 Documentation:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/4969FTUY/docs.circom.io.html:text/html},
+}
+
+@misc{noauthor_bls12-381_nodate,
+	title = {{BLS12}-381 {For} {The} {Rest} {Of} {Us}},
+	url = {https://hackmd.io/@benjaminion/bls12-381},
+	abstract = {Everything you always wanted to know about BLS12-381 (but were afraid to ask).},
+	language = {en-US},
+	urldate = {2025-02-07},
+	journal = {HackMD},
+	file = {Snapshot:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/96X772LS/bls12-381.html:text/html},
+}
+
+@misc{noauthor_iden3snarkjs_2025,
+	title = {iden3/snarkjs},
+	copyright = {GPL-3.0},
+	url = {https://github.com/iden3/snarkjs},
+	abstract = {zkSNARK implementation in JavaScript \& WASM},
+	urldate = {2025-02-07},
+	publisher = {iden3},
+	month = feb,
+	year = {2025},
+	note = {original-date: 2018-08-09T06:16:06Z},
+}
+
+@misc{noauthor_reference_nodate,
+	title = {Reference {Manual}},
+	url = {https://doc.sagemath.org/html/en/reference/index.html},
+	urldate = {2025-02-07},
+}
+
+@misc{noauthor_iden3circomlib_2025,
+	title = {iden3/circomlib},
+	copyright = {LGPL-3.0},
+	url = {https://github.com/iden3/circomlib},
+	abstract = {Library of basic circuits for circom},
+	urldate = {2025-02-07},
+	publisher = {iden3},
+	month = feb,
+	year = {2025},
+	note = {original-date: 2018-10-21T17:47:32Z},
+}
+
+@misc{noauthor_circom_2023,
+	title = {Circom language tutorial with circomlib walkthrough - {RareSkills}},
+	url = {https://www.rareskills.io/post/circom-tutorial},
+	abstract = {This tutorial introduces the Circom language and how to use it, along with common pitfalls. We will also explain a significant portion of the circomlib},
+	language = {en-US},
+	urldate = {2025-02-07},
+	month = sep,
+	year = {2023},
+	note = {Section: Zero Knowledge Proofs},
+	file = {Snapshot:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/4D5SEAWH/circom-tutorial.html:text/html},
+}
+
+@misc{computer_security_division_nist_2019,
+	title = {{NIST} {Randomness} {Beacon} ({Version} 2.0 {Beta}) - {Interoperable} {Randomness} {Beacons} {\textbar} {CSRC} {\textbar} {CSRC}},
+	url = {https://csrc.nist.gov/Projects/interoperable-randomness-beacons/beacon-20},
+	abstract = {NOTICES   	This is a beta release of the 2.0 Version of the Beacon Service. The first release and data is available at: NIST Randomness Beacon (Version 1.0) 	 	May 17, 2024, between 6:30-10:00PM ET new pulses from the Beacon Service may be unavailable. Any pulses generated during any interruption will be available as soon as all services are restored. 	    NIST Randomness Beacon (Version 2.0 Beta) -- work in progress  WARNING: DO NOT USE BEACON GENERATED VALUES AS SECRET CRYPTOGRAPHIC KEYS.  This prototype implementation generates full-entropy bit-strings and posts them in blocks of 512 bits every 60 seconds. Each such value is sequence-numbered, time-stamped and signed, and includes the hash of the previous value to chain the sequence of values together and prevent even the source to retroactively change an output package without being detected.  A selection of currently implemented calls are listed below. Users submitting a request need to provide the pulse generation time in POSIX format (number of...},
+	language = {EN-US},
+	urldate = {2025-02-07},
+	journal = {CSRC {\textbar} NIST},
+	author = {Computer Security Division, Information Technology Laboratory},
+	month = jun,
+	year = {2019},
+	file = {Snapshot:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/96L8ILAP/beacon-20.html:text/html},
+}
+
+@book{buchmann_einfuhrung_2016,
+	address = {Berlin, Heidelberg},
+	series = {Springer-{Lehrbuch}},
+	title = {Einführung in die {Kryptographie}},
+	copyright = {https://www.springernature.com/gp/researchers/text-and-data-mining},
+	isbn = {978-3-642-39774-5 978-3-642-39775-2},
+	url = {https://link.springer.com/10.1007/978-3-642-39775-2},
+	language = {de},
+	urldate = {2025-02-08},
+	publisher = {Springer},
+	author = {Buchmann, Johannes},
+	year = {2016},
+	doi = {10.1007/978-3-642-39775-2},
+	keywords = {Algorithmen, combinatorics, Digitale Signaturen, Kryptographie, Verschlüsselung, Zahlentheorie},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/29EM53WT/Buchmann - 2016 - Einführung in die Kryptographie.pdf:application/pdf},
+}
+
+@book{buchmann_introduction_2004,
+	address = {New York, NY},
+	series = {Undergraduate {Texts} in {Mathematics}},
+	title = {Introduction to {Cryptography}},
+	copyright = {http://www.springer.com/tdm},
+	isbn = {978-0-387-20756-8 978-1-4419-9003-7},
+	url = {http://link.springer.com/10.1007/978-1-4419-9003-7},
+	urldate = {2025-02-08},
+	publisher = {Springer},
+	author = {Buchmann, Johannes A.},
+	editor = {Axler, S. and Gehring, F. W. and Ribet, K. A.},
+	year = {2004},
+	doi = {10.1007/978-1-4419-9003-7},
+	keywords = {access control, AES, computer science, cryptography, cryptology, DES, digital signature, encryption, hash function, prime number, secret sharing},
+	file = {Full Text:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/Z2BVJIBT/Buchmann - 2004 - Introduction to Cryptography.pdf:application/pdf},
+}
+
+@incollection{aldini_cryptographic_2014,
+	address = {Cham},
+	title = {Cryptographic {Voting} — {A} {Gentle} {Introduction}},
+	volume = {8604},
+	copyright = {http://www.springer.com/tdm},
+	isbn = {978-3-319-10081-4 978-3-319-10082-1},
+	url = {http://link.springer.com/10.1007/978-3-319-10082-1_7},
+	abstract = {These lecture notes survey some of the main ideas and techniques used in cryptographic voting systems. The write-up is geared towards readers with little knowledge of cryptography and it focuses on the broad principles that guide the design and analysis of cryptographic systems, especially the need for properly designed security models.},
+	language = {en},
+	urldate = {2025-02-10},
+	booktitle = {Foundations of {Security} {Analysis} and {Design} {VII}},
+	publisher = {Springer International Publishing},
+	author = {Bernhard, David and Warinschi, Bogdan},
+	editor = {Aldini, Alessandro and Lopez, Javier and Martinelli, Fabio},
+	year = {2014},
+	doi = {10.1007/978-3-319-10082-1_7},
+	note = {Series Title: Lecture Notes in Computer Science},
+	pages = {167--211},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/VX2VYLTV/Bernhard and Warinschi - 2014 - Cryptographic Voting — A Gentle Introduction.pdf:application/pdf},
+}
+
+@book{katz_introduction_2021,
+	address = {Boca Raton, FL},
+	edition = {Third edition},
+	series = {Chapman \& {Hall}/{CRC} cryptography and network security series},
+	title = {Introduction to modern cryptography},
+	isbn = {978-1-351-13303-6 978-0-8153-5436-9 978-1-351-13301-2 978-1-351-13302-9 978-1-351-13300-5},
+	language = {en},
+	publisher = {CRC Press},
+	author = {Katz, Jonathan and Lindell, Yehuda},
+	year = {2021},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/R8D8GCFC/Katz and Lindell - 2021 - Introduction to modern cryptography.pdf:application/pdf},
+}
+
+@misc{cortier_fifty_2020,
+	title = {Fifty {Shades} of {Ballot} {Privacy}: {Privacy} against a {Malicious} {Board}},
+	shorttitle = {Fifty {Shades} of {Ballot} {Privacy}},
+	url = {https://eprint.iacr.org/2020/127},
+	abstract = {We propose a framework for the analysis of electronic voting schemes in the presence of malicious bulletin boards. We identify a spectrum of notions where the adversary is allowed to tamper with the bulletin board in ways that reflect practical deployment and usage considerations. To clarify the security guarantees provided by the different notions we establish a relation with simulation-based security with respect to a family of ideal functionalities. The ideal functionalities make clear the set of authorised attacker capabilities which makes it easier to understand and compare the associated levels of security. We then leverage this relation to show that each distinct level of ballot privacy entails some distinct form of individual verifiability. As an application, we study three protocols of the literature (Helios, Belenios, and Civitas) and identify the different levels of privacy they offer.},
+	urldate = {2025-02-17},
+	author = {Cortier, Véronique and Lallemand, Joseph and Warinschi, Bogdan},
+	year = {2020},
+	note = {Publication info: Preprint. MINOR revision.},
+	keywords = {privacy, e-voting, protocols},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/H68ZA3UR/Cortier et al. - 2020 - Fifty Shades of Ballot Privacy Privacy against a Malicious Board.pdf:application/pdf},
+}
+
+@inproceedings{cortier_sok_2016,
+	address = {San Jose, CA},
+	title = {{SoK}: {Verifiability} {Notions} for {E}-{Voting} {Protocols}},
+	isbn = {978-1-5090-0824-7},
+	shorttitle = {{SoK}},
+	url = {http://ieeexplore.ieee.org/document/7546535/},
+	doi = {10.1109/SP.2016.52},
+	abstract = {There have been intensive research efforts in the last two decades or so to design and deploy electronic voting (e-voting) protocols/systems which allow voters and/or external auditors to check that the votes were counted correctly. This security property, which not least was motivated by numerous problems in even national elections, is called veriﬁability. It is meant to defend against voting devices and servers that have programming errors or are outright malicious. In order to properly evaluate and analyze e-voting protocols w.r.t. veriﬁability, one fundamental challenge has been to formally capture the meaning of this security property. While the ﬁrst formal deﬁnitions of veriﬁability were devised in the late 1980s already, new veriﬁability deﬁnitions are still being proposed. The deﬁnitions differ in various aspects, including the classes of protocols they capture and even their formulations of the very core of the meaning of veriﬁability. This is an unsatisfying state of affairs, leaving the research on the veriﬁability of e-voting protocols in a fuzzy state.},
+	language = {en},
+	urldate = {2025-02-17},
+	booktitle = {2016 {IEEE} {Symposium} on {Security} and {Privacy} ({SP})},
+	publisher = {IEEE},
+	author = {Cortier, Veronique and Galindo, David and Kusters, Ralf and Muller, Johannes and Truderung, Tomasz},
+	month = may,
+	year = {2016},
+	pages = {779--798},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/2Q5BQ2LQ/Cortier et al. - 2016 - SoK Verifiability Notions for E-Voting Protocols.pdf:application/pdf},
+}

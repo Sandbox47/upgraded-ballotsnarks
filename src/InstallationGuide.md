@@ -16,9 +16,7 @@ We are following the [installation guide](https://docs.circom.io/getting-started
 1. First, we need to install some dependencies:
 ```bash
 curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
-sudo apt install npm
-sudo apt install nodejs
-sudo apt install cargo
+sudo apt install npm nodejs cargo
 ```
 
 2. Then, we can install Circom by cloning the repository and then building with cargo.
@@ -40,10 +38,15 @@ sudo apt install nlohmann-json3-dev libgmp-dev nasm
 ```
 
 # snarkjs
-To install snarkjs, simply run the following:
+1. To install snarkjs, simply run the following:
 ```bash
 sudo npm install -g snarkjs
 ```
+
+2. The benchmarks in the Ballot Validity repository requires some predefined powers-of-tau file for zk proof generation.
+Please download the file `powersOfTau28_hez_final_22.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file). 
+Then rename this file to `powersOfTau_22.ptau` and move it to a new folder `src/scripts/ptau` in the Ballot Validity repository.
+(The file is not included in the repository as it is very large (4.5 GB!).)
 
 # SageMath
 Some Linux distributions have current versions of SageMath available (E.g., ArchLinux). I have found the option presented [here](https://sagemanifolds.obspm.fr/install_ubuntu.html) to be the most convenient:
