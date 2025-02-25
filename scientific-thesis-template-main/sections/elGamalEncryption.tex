@@ -1,0 +1,23 @@
+\chapter{ElGamal Encryption}
+\label{chap:elGamalEncryption}
+
+We use \gls{eeg} as the semi-homomorphic encrpytion scheme in our voting schemes. 
+To understand \gls{eeg} we will first introduce ElGamal Encryption.
+
+\section{ElGamal Encryption}
+ElGamal Encryption is an asymmetric encryption scheme. 
+Its security is based on the discrete logarithm problem. 
+Let $G$ be a cyclic group of order $|n|$ and $g$ be a generator of $G$. 
+Then, the discrete logarithm problem states that it is difficult to compute the function $dlog_{(G,g)}:G\to\mathbb{Z}_n, dlog_{(G,g)}(g^{a})=a\:\forall a\in\mathbb{Z}_n$.
+
+Formally, the ElGamal Encryption scheme is defined as follows.
+We mostly follow the definition in construction 12.6 of \cite{katz_introduction_2021}.
+
+\begin{definition}
+    The ElGamal asymmetric encryption scheme is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$
+\end{definition}
+
+
+\section{Semi-Homomorphic Encryption Schemes}
+
+\section{Exponential ElGamal Encryption}
