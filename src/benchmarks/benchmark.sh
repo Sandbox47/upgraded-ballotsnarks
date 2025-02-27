@@ -143,7 +143,7 @@ ptauFile=""
 
 # Iterate through available ptau files to find the smallest valid one
 for ((n=min_n; n<=max_n; n++)); do
-    if (( (1 << n) >= 8*constraints )); then # For some reason I need this factor 8 here (otherwise snarkjs sometimes complains that the powers of tau file is too small)
+    if (( (1 << n) >= 2*constraints )); then # For some reason I need this factor 2 here (otherwise snarkjs sometimes complains that the powers of tau file is too small)
         ptauFile="powersOfTau_${n}.ptau"
         break
     fi

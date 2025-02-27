@@ -16,7 +16,13 @@
             25, 
             50, 
             75, 
-            100
+            100,
+            125,
+            150,
+            175,
+            200,
+            250,
+            300
         ],
         "nCand_TEST": [
             1, 
@@ -35,7 +41,14 @@
             300
         ],
         "electionTypes": [
-            "multiVoteWithRules"
+            "singleVote", 
+            "pointlistBorda", 
+            "multiVoteWithRules", 
+            "multiVote", 
+            "majorityJudgement", 
+            "lineVote", 
+            "condorcet", 
+            "bordaTournamentStyle"
         ],
         "electionTypes_TEST": [
             "singleVote", 

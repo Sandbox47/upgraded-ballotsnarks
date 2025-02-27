@@ -18,10 +18,10 @@ template assertMultiVoteWithRulesVoting(bitsVotes, nVotes, maxVotesCand, maxChoi
     component assertMultiVote = assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices);
     assertMultiVote.ballot <== ballot;
 
-    var nVotesBits = numBits(nVotes);
-    component assertLength = assertGt(nVotesBits);
-    assertLength.in <== nVotes;
-    assertLength.test <== 2;
+    // var nVotesBits = numBits(nVotes);
+    // component assertLength = assertGt(nVotesBits);
+    // assertLength.in <== nVotes;
+    // assertLength.test <== 2;
 
     ballot[1] * ballot[2] === ballot[0];
 }
