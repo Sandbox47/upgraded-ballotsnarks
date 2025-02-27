@@ -1,50 +1,42 @@
 [
     {
-        "name": "multiVoteWithRules",
+        "name": "bordaTournamentStyle",
         "bitsVotes": 32,
-        "nVotes": 5,
-        "maxVotesCand": 5,
-        "maxChoices": 10,
-        "command": "./benchmark.sh voting multiVoteWithRules 32 nVotes=5 maxVotesCand=5 maxChoices=10"
+        "nVotes": 150,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh voting bordaTournamentStyle 32 nVotes=150 a=2 b=1"
     },
     {
-        "name": "multiVoteWithRules",
+        "name": "bordaTournamentStyle",
         "bitsVotes": 32,
-        "nVotes": 10,
-        "maxVotesCand": 5,
-        "maxChoices": 20,
-        "command": "./benchmark.sh voting multiVoteWithRules 32 nVotes=10 maxVotesCand=5 maxChoices=20"
+        "nVotes": 175,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh voting bordaTournamentStyle 32 nVotes=175 a=2 b=1"
     },
     {
-        "name": "multiVoteWithRules",
+        "name": "bordaTournamentStyle",
         "bitsVotes": 32,
-        "nVotes": 25,
-        "maxVotesCand": 5,
-        "maxChoices": 50,
-        "command": "./benchmark.sh voting multiVoteWithRules 32 nVotes=25 maxVotesCand=5 maxChoices=50"
+        "nVotes": 200,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh voting bordaTournamentStyle 32 nVotes=200 a=2 b=1"
     },
     {
-        "name": "multiVoteWithRules",
+        "name": "bordaTournamentStyle",
         "bitsVotes": 32,
-        "nVotes": 50,
-        "maxVotesCand": 5,
-        "maxChoices": 100,
-        "command": "./benchmark.sh voting multiVoteWithRules 32 nVotes=50 maxVotesCand=5 maxChoices=100"
+        "nVotes": 250,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh voting bordaTournamentStyle 32 nVotes=250 a=2 b=1"
     },
     {
-        "name": "multiVoteWithRules",
+        "name": "bordaTournamentStyle",
         "bitsVotes": 32,
-        "nVotes": 75,
-        "maxVotesCand": 5,
-        "maxChoices": 150,
-        "command": "./benchmark.sh voting multiVoteWithRules 32 nVotes=75 maxVotesCand=5 maxChoices=150"
-    },
-    {
-        "name": "multiVoteWithRules",
-        "bitsVotes": 32,
-        "nVotes": 100,
-        "maxVotesCand": 5,
-        "maxChoices": 200,
-        "command": "./benchmark.sh voting multiVoteWithRules 32 nVotes=100 maxVotesCand=5 maxChoices=200"
+        "nVotes": 300,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh voting bordaTournamentStyle 32 nVotes=300 a=2 b=1"
     }
 ]
