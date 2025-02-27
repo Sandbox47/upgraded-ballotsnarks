@@ -42,3 +42,6 @@ class CondorcetBallot(Ballot):
         ranking = Ballot.generateRandomRanking(nCand)
         votes = CondorcetBallot.computeVotesFromRanking(ranking, nCand)
         return CondorcetBallot(votes, nCand, ranking, eegPubKey)
+
+# Test
+# Ballot.test(CondorcetBallot, nCand=10)
