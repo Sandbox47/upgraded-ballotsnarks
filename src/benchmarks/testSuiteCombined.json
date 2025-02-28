@@ -1,0 +1,875 @@
+[
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 1,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 2,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 125,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 150,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 175,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 200,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 250,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 32,
+        "nVotes": 300,
+        "command": "./benchmark.sh combined singleVote 32 nVotes=300"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 1,
+        "nPoints": 1,
+        "orderedPoints": [1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=1 nPoints=1 orderedPoints=[1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 2,
+        "nPoints": 2,
+        "orderedPoints": [2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=2 nPoints=2 orderedPoints=[2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 3,
+        "nPoints": 3,
+        "orderedPoints": [3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=3 nPoints=3 orderedPoints=[3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 5,
+        "nPoints": 5,
+        "orderedPoints": [5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=5 nPoints=5 orderedPoints=[5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 10,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=10 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 10,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=10 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 25,
+        "nPoints": 25,
+        "orderedPoints": [25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=25 nPoints=25 orderedPoints=[25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 25,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=25 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 50,
+        "nPoints": 50,
+        "orderedPoints": [50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=50 nPoints=50 orderedPoints=[50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 50,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=50 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 75,
+        "nPoints": 75,
+        "orderedPoints": [75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=75 nPoints=75 orderedPoints=[75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 75,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=75 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 100,
+        "nPoints": 100,
+        "orderedPoints": [100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=100 nPoints=100 orderedPoints=[100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 100,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=100 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 125,
+        "nPoints": 125,
+        "orderedPoints": [125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=125 nPoints=125 orderedPoints=[125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 125,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=125 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 150,
+        "nPoints": 150,
+        "orderedPoints": [150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=150 nPoints=150 orderedPoints=[150,149,148,147,146,145,144,143,142,141,140,139,138,137,136,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 150,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=150 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 175,
+        "nPoints": 175,
+        "orderedPoints": [175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160, 159, 158, 157, 156, 155, 154, 153, 152, 151, 150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=175 nPoints=175 orderedPoints=[175,174,173,172,171,170,169,168,167,166,165,164,163,162,161,160,159,158,157,156,155,154,153,152,151,150,149,148,147,146,145,144,143,142,141,140,139,138,137,136,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 175,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=175 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 200,
+        "nPoints": 200,
+        "orderedPoints": [200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188, 187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160, 159, 158, 157, 156, 155, 154, 153, 152, 151, 150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=200 nPoints=200 orderedPoints=[200,199,198,197,196,195,194,193,192,191,190,189,188,187,186,185,184,183,182,181,180,179,178,177,176,175,174,173,172,171,170,169,168,167,166,165,164,163,162,161,160,159,158,157,156,155,154,153,152,151,150,149,148,147,146,145,144,143,142,141,140,139,138,137,136,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 200,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=200 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 250,
+        "nPoints": 250,
+        "orderedPoints": [250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188, 187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160, 159, 158, 157, 156, 155, 154, 153, 152, 151, 150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=250 nPoints=250 orderedPoints=[250,249,248,247,246,245,244,243,242,241,240,239,238,237,236,235,234,233,232,231,230,229,228,227,226,225,224,223,222,221,220,219,218,217,216,215,214,213,212,211,210,209,208,207,206,205,204,203,202,201,200,199,198,197,196,195,194,193,192,191,190,189,188,187,186,185,184,183,182,181,180,179,178,177,176,175,174,173,172,171,170,169,168,167,166,165,164,163,162,161,160,159,158,157,156,155,154,153,152,151,150,149,148,147,146,145,144,143,142,141,140,139,138,137,136,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 250,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=250 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 300,
+        "nPoints": 300,
+        "orderedPoints": [300, 299, 298, 297, 296, 295, 294, 293, 292, 291, 290, 289, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273, 272, 271, 270, 269, 268, 267, 266, 265, 264, 263, 262, 261, 260, 259, 258, 257, 256, 255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188, 187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160, 159, 158, 157, 156, 155, 154, 153, 152, 151, 150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=300 nPoints=300 orderedPoints=[300,299,298,297,296,295,294,293,292,291,290,289,288,287,286,285,284,283,282,281,280,279,278,277,276,275,274,273,272,271,270,269,268,267,266,265,264,263,262,261,260,259,258,257,256,255,254,253,252,251,250,249,248,247,246,245,244,243,242,241,240,239,238,237,236,235,234,233,232,231,230,229,228,227,226,225,224,223,222,221,220,219,218,217,216,215,214,213,212,211,210,209,208,207,206,205,204,203,202,201,200,199,198,197,196,195,194,193,192,191,190,189,188,187,186,185,184,183,182,181,180,179,178,177,176,175,174,173,172,171,170,169,168,167,166,165,164,163,162,161,160,159,158,157,156,155,154,153,152,151,150,149,148,147,146,145,144,143,142,141,140,139,138,137,136,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "bitsVotes": 32,
+        "nCand": 300,
+        "nPoints": 10,
+        "orderedPoints": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+        "command": "./benchmark.sh combined pointlistBorda 32 nCand=300 nPoints=10 orderedPoints=[10,9,8,7,6,5,4,3,2,1]"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "maxVotesCand": 5,
+        "maxChoices": 6,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=3 maxVotesCand=5 maxChoices=6"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "maxVotesCand": 5,
+        "maxChoices": 10,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=5 maxVotesCand=5 maxChoices=10"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "maxVotesCand": 5,
+        "maxChoices": 20,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=10 maxVotesCand=5 maxChoices=20"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "maxVotesCand": 5,
+        "maxChoices": 50,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=25 maxVotesCand=5 maxChoices=50"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "maxVotesCand": 5,
+        "maxChoices": 100,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=50 maxVotesCand=5 maxChoices=100"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "maxVotesCand": 5,
+        "maxChoices": 150,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=75 maxVotesCand=5 maxChoices=150"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "maxVotesCand": 5,
+        "maxChoices": 200,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=100 maxVotesCand=5 maxChoices=200"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 125,
+        "maxVotesCand": 5,
+        "maxChoices": 250,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=125 maxVotesCand=5 maxChoices=250"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 150,
+        "maxVotesCand": 5,
+        "maxChoices": 300,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=150 maxVotesCand=5 maxChoices=300"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 175,
+        "maxVotesCand": 5,
+        "maxChoices": 350,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=175 maxVotesCand=5 maxChoices=350"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 200,
+        "maxVotesCand": 5,
+        "maxChoices": 400,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=200 maxVotesCand=5 maxChoices=400"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 250,
+        "maxVotesCand": 5,
+        "maxChoices": 500,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=250 maxVotesCand=5 maxChoices=500"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "bitsVotes": 32,
+        "nVotes": 300,
+        "maxVotesCand": 5,
+        "maxChoices": 600,
+        "command": "./benchmark.sh combined multiVoteWithRules 32 nVotes=300 maxVotesCand=5 maxChoices=600"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 1,
+        "maxVotesCand": 5,
+        "maxChoices": 2,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=1 maxVotesCand=5 maxChoices=2"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 2,
+        "maxVotesCand": 5,
+        "maxChoices": 4,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=2 maxVotesCand=5 maxChoices=4"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "maxVotesCand": 5,
+        "maxChoices": 6,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=3 maxVotesCand=5 maxChoices=6"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "maxVotesCand": 5,
+        "maxChoices": 10,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=5 maxVotesCand=5 maxChoices=10"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "maxVotesCand": 5,
+        "maxChoices": 20,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=10 maxVotesCand=5 maxChoices=20"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "maxVotesCand": 5,
+        "maxChoices": 50,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=25 maxVotesCand=5 maxChoices=50"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "maxVotesCand": 5,
+        "maxChoices": 100,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=50 maxVotesCand=5 maxChoices=100"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "maxVotesCand": 5,
+        "maxChoices": 150,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=75 maxVotesCand=5 maxChoices=150"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "maxVotesCand": 5,
+        "maxChoices": 200,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=100 maxVotesCand=5 maxChoices=200"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 125,
+        "maxVotesCand": 5,
+        "maxChoices": 250,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=125 maxVotesCand=5 maxChoices=250"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 150,
+        "maxVotesCand": 5,
+        "maxChoices": 300,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=150 maxVotesCand=5 maxChoices=300"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 175,
+        "maxVotesCand": 5,
+        "maxChoices": 350,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=175 maxVotesCand=5 maxChoices=350"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 200,
+        "maxVotesCand": 5,
+        "maxChoices": 400,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=200 maxVotesCand=5 maxChoices=400"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 250,
+        "maxVotesCand": 5,
+        "maxChoices": 500,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=250 maxVotesCand=5 maxChoices=500"
+    },
+    {
+        "name": "multiVote",
+        "bitsVotes": 32,
+        "nVotes": 300,
+        "maxVotesCand": 5,
+        "maxChoices": 600,
+        "command": "./benchmark.sh combined multiVote 32 nVotes=300 maxVotesCand=5 maxChoices=600"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 1,
+        "nGrades": 1,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=1 nGrades=1"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 1,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=1 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 2,
+        "nGrades": 2,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=2 nGrades=2"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 2,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=2 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 3,
+        "nGrades": 3,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=3 nGrades=3"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 3,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=3 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 5,
+        "nGrades": 5,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=5 nGrades=5"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 5,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=5 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 10,
+        "nGrades": 10,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=10 nGrades=10"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 10,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=10 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 25,
+        "nGrades": 25,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=25 nGrades=25"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 25,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=25 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 50,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=50 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 75,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=75 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "bitsVotes": 32,
+        "nCand": 100,
+        "nGrades": 6,
+        "command": "./benchmark.sh combined majorityJudgement 32 nCand=100 nGrades=6"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 1,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=1"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 2,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=2"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=3"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=5"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=10"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=25"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=50"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=75"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=100"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 125,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=125"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 150,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=150"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 175,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=175"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 200,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=200"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 250,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=250"
+    },
+    {
+        "name": "lineVote",
+        "bitsVotes": 32,
+        "nVotes": 300,
+        "command": "./benchmark.sh combined lineVote 32 nVotes=300"
+    },
+    {
+        "name": "condorcet",
+        "bitsVotes": 32,
+        "nCand": 1,
+        "command": "./benchmark.sh combined condorcet 32 nCand=1"
+    },
+    {
+        "name": "condorcet",
+        "bitsVotes": 32,
+        "nCand": 2,
+        "command": "./benchmark.sh combined condorcet 32 nCand=2"
+    },
+    {
+        "name": "condorcet",
+        "bitsVotes": 32,
+        "nCand": 3,
+        "command": "./benchmark.sh combined condorcet 32 nCand=3"
+    },
+    {
+        "name": "condorcet",
+        "bitsVotes": 32,
+        "nCand": 5,
+        "command": "./benchmark.sh combined condorcet 32 nCand=5"
+    },
+    {
+        "name": "condorcet",
+        "bitsVotes": 32,
+        "nCand": 10,
+        "command": "./benchmark.sh combined condorcet 32 nCand=10"
+    },
+    {
+        "name": "condorcet",
+        "bitsVotes": 32,
+        "nCand": 25,
+        "command": "./benchmark.sh combined condorcet 32 nCand=25"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 1,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=1 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 2,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=2 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=3 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=5 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=10 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=25 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=50 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=75 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=100 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 125,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=125 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 150,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=150 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 175,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=175 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 200,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=200 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 250,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=250 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "bitsVotes": 32,
+        "nVotes": 300,
+        "a": 2,
+        "b": 1,
+        "command": "./benchmark.sh combined bordaTournamentStyle 32 nVotes=300 a=2 b=1"
+    }
+]
