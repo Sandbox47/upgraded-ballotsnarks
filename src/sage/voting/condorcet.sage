@@ -44,4 +44,4 @@ class CondorcetBallot(Ballot):
         return CondorcetBallot(votes, nCand, ranking, eegPubKey)
 
 # Test
-# Ballot.test(CondorcetBallot, nCand=10)
+# Ballot.test(CondorcetBallot, nCand=20)

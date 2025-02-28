@@ -6,9 +6,9 @@ include "../expElGamal/assertEEG.circom";
 
 /**
 * Counts the elements in the array that are greater than test.
-* maxValue is the maximum value of any of the inputs (including test).
+* The max allowed value in in is n.
 */
-template countGreater(n, maxValue) {
+template countGreater(n) {
     input signal in[n];
     input signal test;
 
@@ -16,7 +16,7 @@ template countGreater(n, maxValue) {
 
     component isGreater[n];
     var counter = 0;
-    var maxValueBits = numBits(maxValue);
+    var maxValueBits = numBits(n);
 
     for(var i = 0; i < n; i++) {
         isGreater[i] = GreaterThan(maxValueBits);
@@ -53,9 +53,9 @@ template countEqual(n) {
 
 /**
 * Given: A ranking of length n and the points a and b to be given to each candidate for every candidate ranked worse/ equal than the current one.
-* The template then computes the according ballot. The maximum value any entry in the ranking can have is maxValue.
+* The template then computes the according ballot. The maximum value any entry in the ranking can have is n. (Entries that are at most n are enpugh to produce all possible rankings of n candidates.)
 */
-template computeBordaTournamentStyleBallot(n, maxValue, a, b) {
+template computeBordaTournamentStyleBallot(n, a, b) {
     input signal ranking[n];
 
     output signal out[n]; // ballot
@@ -68,7 +68,7 @@ template computeBordaTournamentStyleBallot(n, maxValue, a, b) {
     signal rankedTheSamePoints[n];
 
     for(var i = 0; i < n; i++) {
-        rankedWorse[i] = countGreater(n, maxValue);
+        rankedWorse[i] = countGreater(n);
         rankedTheSame[i] = countEqual(n);
 
         rankedWorse[i].in <== ranking;
@@ -86,13 +86,13 @@ template computeBordaTournamentStyleBallot(n, maxValue, a, b) {
 
 /**
 * Assert that the given ballot corresponds to the given ranking according to the borda tournament style election type.
-* Parameters a, b, maxValue are defined the same as in computeBordaTournamentStyleBallot.
+* Parameters a, b are defined the same as in computeBordaTournamentStyleBallot.
 */
-template assertBordaTournamentStyleVoting(nVotes, maxValue, a, b) {
+template assertBordaTournamentStyleVoting(nVotes, a, b) {
     input signal ranking[nVotes];
     input signal ballot[nVotes];
 
-    component computeBallot = computeBordaTournamentStyleBallot(nVotes, maxValue, a, b);
+    component computeBallot = computeBordaTournamentStyleBallot(nVotes, a, b);
     computeBallot.ranking <== ranking;
 
     ballot === computeBallot.out;
@@ -102,7 +102,7 @@ template assertBordaTournamentStyleVoting(nVotes, maxValue, a, b) {
 * Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
 */
 /*
-template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, maxValue, a, b) {
+template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, a, b) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
@@ -121,7 +121,7 @@ template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, maxValue,
     encBallot[0] <== enc.gr;
     encBallot[1] <== enc.gv_pkr;
 
-    component assertVoting = assertBordaTournamentStyleVoting(nVotes, maxValue, a, b);
+    component assertVoting = assertBordaTournamentStyleVoting(nVotes, a, b);
     assertVoting.ballot <== ballot;
     assertVoting.ranking <== ranking;
 }
@@ -152,8 +152,7 @@ template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, a, b) {
     assertEnc.gr <== enc_gr;
     assertEnc.gv_pkr <== enc_gv_pkr;
 
-    var maxValue = 2**bitsVotes;
-    component assertVoting = assertBordaTournamentStyleVoting(nVotes, maxValue, a, b);
+    component assertVoting = assertBordaTournamentStyleVoting(nVotes, a, b);
     assertVoting.ballot <== ballot;
     assertVoting.ranking <== ranking;
 }
@@ -199,8 +198,7 @@ template assertBordaTournamentStyleVotingBenchmark(bitsVotes, bitsRand, A, B, nV
     input signal ranking[nVotes];
     input signal r[nVotes]; // Randomness
 
-    var maxValue = 2**bitsVotes;
-    component assertVoting = assertBordaTournamentStyleVoting(nVotes, maxValue, a, b);
+    component assertVoting = assertBordaTournamentStyleVoting(nVotes, a, b);
     assertVoting.ballot <== ballot;
     assertVoting.ranking <== ranking;
 }

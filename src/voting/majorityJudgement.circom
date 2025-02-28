@@ -142,3 +142,6 @@ template assertMajorityJudgementVotingBenchmark(bitsVotes, bitsRand, A, B, nCand
     component assertVoting = assertMajorityJudgementVoting(nCand, nGrades);
     assertVoting.ballot <== ballot;
 }
+
+// Test
+// component main = assertMajorityJudgement(32, 255, 126932, 1, 25, 25);

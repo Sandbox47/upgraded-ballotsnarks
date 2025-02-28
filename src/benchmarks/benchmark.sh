@@ -183,7 +183,9 @@ cd ..
 
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
-createProof.sh ${filePrefix}.zkey ../circomTestFiles/${filePrefix}_js/witness.wtns
+# Create Proof
+snarkjs groth16 prove ${filePrefix}.zkey ../circomTestFiles/${filePrefix}_js/witness.wtns proof.json public.json # Use prove command directly for more accurate proving times
+# createProof.sh ${filePrefix}.zkey ../circomTestFiles/${filePrefix}_js/witness.wtns
 end_time=$(date +%s%3N)
 t_prove=$((end_time - start_time))
 

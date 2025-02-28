@@ -30,3 +30,6 @@ class MajorityJudgementBallot(Ballot):
             posOneVote = random.randint(0, nGrades - 1)
             votes[i][posOneVote] = 1
         return MajorityJudgementBallot(votes, nCand, nGrades, eegPubKey)
+
+# Test
+# Ballot.test(MajorityJudgementBallot, nCand=25, nGrades=25)

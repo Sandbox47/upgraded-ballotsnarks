@@ -257,4 +257,4 @@ template assertCondorcetVotingBenchmark(bitsVotes, bitsRand, A, B, nCand) {
 }
 
 // Test
-// component main = assertCondorcet(32, 255, 126932, 1, 10);
+// component main = assertCondorcet(32, 255, 126932, 1, 20);
