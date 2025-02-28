@@ -138,7 +138,7 @@ echo "${constraints} constraints in total."
 # Define the range of ptau files available
 # min_n=8
 min_n=12 # For some of the smaller ptau files there is a weird bug where snarkjs claims that the file is too small even though it should be big enpugh for more than twice the constraints of the tested circuit. That's why we start with n=12.
-max_n=22
+max_n=25 # TODO: Change back to 22 later
 ptauFile=""
 
 # Iterate through available ptau files to find the smallest valid one
@@ -155,7 +155,8 @@ if [[ -z "$ptauFile" ]]; then
     exit 1
 fi
 
-ptauFile="powersOfTau_22.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
+ptauFile="powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
+# TODO: Change back to 22 later
 
 echo "Using ptau file: $ptauFile"
 
