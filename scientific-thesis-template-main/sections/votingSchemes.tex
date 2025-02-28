@@ -113,41 +113,63 @@ We can combat this problem using \glspl{zkp} as presented by Bernhard and Warins
 
 Although we consider an honest voting authority, a malicous voter Eve can still break the voting scheme:
 \begin{enumerate}
-  \item Eve can impersonate the $VA$ and submit a desireable election result (e.g., $(0,0,100)$) to $PBB$.
   \item Eve can impersonate other voters such as $A$ and submit ballots preferrable to her (e.g., $(0,0,1)$) to $PBB$ on their behalf.
+  \item Eve can impersonate the $VA$ and submit a desireable election result (e.g., $(0,0,100)$) to $PBB$.
 \end{enumerate}
-These problems are also illustraded in \cref{fig:ExVS3Prob}.
+These problems are also illustraded in \cref{fig:ExVS3Prob1}.
+
+\begin{figure}[h]
+  \hfill
+  \begin{subfigure}{.48\textwidth}
+    \includegraphics[width=\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem1_a.pdf}
+    \caption{A malicous $E$ can impersonate other voters and submit votes that are favourable to her on their behalf.}
+    \label{fig:ExVS3Prob1a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{.48\textwidth}
+    \includegraphics[width=\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem1_b.pdf}
+    \caption{A malicous $E$ can impersonate $VA$ and publish an election result favourable to her.}
+    \label{fig:ExVS3Prob1b}
+  \end{subfigure}
+  \hfill
+  \caption{The example voting scheme as in \cref{fig:ExVS3}. Impersonation is a problem caused by not checking the integrity of information submitted to $PBB$.}
+  \label{fig:ExVS3Prob1}
+\end{figure}
 
 \section{Integrity of Ballots and Election Result}
 To ensure that no malicous voter can submit ballots on behalf of other voters and that only $VA$ can publish the final election result, we employ digital signatures.
-% Here, every voter $V$ and $VA$ have a public-private key pair $(pk_V, sk_V)$ and $(pk_{VA}, sk_{VA})$ that is different from the key pair used for encryption.
-% We asssume that it is public knowledge which public key belongs to which voter and which public key belongs to $VA$.
-% This knowledgge can be obtained using a \gls{pki} based on a hierarchy of certificate authorities mapping public keys to entities \todo{Cite something}.
+Here, every voter $V$ and $VA$ have a public-private key pair $(pk_V, sk_V)$ and $(pk_{VA}, sk_{VA})$ that is different from the key pair used for encryption.
+We asssume that it is public knowledge which public key belongs to which voter and which public key belongs to $VA$.
+This knowledgge can be obtained using a \gls{pki} based on a hierarchy of certificate authorities mapping public keys to entities as presented in section 13.6 of \cite{katz_introduction_2021}.
 % $s_V=Sig(b'_V, sk_v)$
 % $Ver(b'_V, s_V, pk_V)$ returns $valid$
 
-Along with their encrypted ballot $b'_V$, each voter $V$ creates a signature $s_V$ by using a signing algorithm $Sig$.
-In doing so, the voter confirms that the ballot published to $PBB$ was submitted by them.
-Before aggregating the encrypted ballot of a voter $V$, $VA$ checks the signature using the verification algorithm $Ver$ on $b'_V$.
-Only if the verification is successful will $VA$ consider $b'_V$ in the aggregation.
+Then, every time a party $P$ publishes a message $m$ to $PBB$, they also submit a signature $s=Sign(m, sk)$ on $m$ signed with their private key $sk$.
+Since the public keys are public information, everybody can verify the signature $s$ on $m$ to check that it was actually $P$ who submitted the message by running the verification algorithm $Vrfy(m, s, pk)$.
+
+For instance, each voter submits a signature on their encrypted ballot $b'$ alongside the ballot itself and the voting authority additionally submits a signature on the final tally of the election $b_{total}$.
+Using the verification algorithm, the voting authority can check the signature on an encrypted ballot $b'$.
+Only if the verification is successful will the voting authority consider $b'$ in the aggregation.
+Similarly, any voter can check the final result of the election by verifying the signature of the voting authority on $b_{total}$.
 
 % $s_{VA}=Sig(b_{total}, sk_{VA})$
 % $Ver(b_{total}, s_{VA}, pk_{VA})$
-Similarly, $VA$ publishes a signature $s_{VA}$ on the decrypted tally of the election $b_{total}$ together with this total.
-If some party wants to check the election result they can onbtain $s_{VA}$ and $b_{total}$ from $PBB$ and verify $b_{total}$ via $Ver$.
-The modified version of our election scheme is illustrated in \cref{fig:ExVS4}.
+% Similarly, $VA$ publishes a signature $s_{VA}$ on the decrypted tally of the election $b_{total}$ together with this total.
+% If some party wants to check the election result they can onbtain $s_{VA}$ and $b_{total}$ from $PBB$ and verify $b_{total}$ via $Ver$.
+% The modified version of our election scheme is illustrated in \cref{fig:ExVS4}.
 
-\todo{Make new voting scheme version.}
+Since integrity checks are not the focus of this thesis, we abstract away from the details and do not formalize the use of digital signatures in our voting schemes.
+However, for the rest of the thesis, keep in mind that any message published to $PBB$ needs to be signed by the party publishing it and that any information retrieved from $PBB$ comes with a signature that needs to be checked before the information is used.
 
 Even after ensuring the integrity of submitted ballots and ensuring that only $VA$ can publish the final election result, two problems that are directly connected remain.
 In the current version of the voting scheme, voters can submit ballots that are not in the choice space to gain an unfair advantage. 
-In our example Eve could submit a vote $(0,0,100)$ to win the election as shown in \cref{fig:ExVS4Prob}.
+In our example Eve could submit a vote $(0,0,100)$ to win the election as shown in \cref{fig:ExVS3Prob2}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem.pdf}
-  \caption{The example voting scheme as in \cref{fig:ExVS4}. Eve malicously sends a ballot that does not come from the choice space $C$ and contains $100$ votes for Eve. The faulty ballot can not be detected by this voting scheme.}
-  \label{fig:ExVS4Prob}
+  \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem2.pdf}
+  \caption{The example voting scheme as in \cref{fig:ExVS3}. Eve malicously sends a ballot that does not come from the choice space $C$ and contains $100$ votes for Eve. The faulty ballot can not be detected by this voting scheme.}
+  \label{fig:ExVS3Prob2}
 \end{figure}
 
 Therefore, we need mechanisms to ensure the following:
@@ -175,13 +197,13 @@ Finally, the member publishes the encrypted ballot $b'_V$ along with the \gls{zk
 Before aggregating the ballots, the voting authority runs $Verify$ for each $(\pi_V, (b'_V, C))$. 
 The voting authority only accepts ballots with a valid \gls{zkp} $\pi_V$. 
 This prevents a malicous voter like $E$ from submitting ballots that are not part of the choice space $C$.
-This version of our example voting scheme is illustrated in \cref{fig:ExVS5}.
+This version of our example voting scheme is illustrated in \cref{fig:ExVS4}.
 
 \begin{figure}[!h]
   \centering
   \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_4.pdf}
-  \caption{The example voting scheme as in \cref{fig:ExVS4}. Additionally voters use \glspl{zkp} to show that the ballots they chose are in the choice space $C$ and belong to the submitted encrypted ballots.}
-  \label{fig:ExVS5}
+  \caption{The example voting scheme as in \cref{fig:ExVS3}. Additionally voters use \glspl{zkp} to show that the ballots they chose are in the choice space $C$ and belong to the submitted encrypted ballots.}
+  \label{fig:ExVS4}
 \end{figure}
 
 With this, we have reached the voting scheme we will use throughout the rest of this thesis.
@@ -229,19 +251,24 @@ However, to simplify things a little, we assume that the voting authority and th
 
 \begin{definition}[Voting Scheme]
   \label{def:votingScheme}
-  A voting scheme with $n$ voters is a eight-tuple of the form 
+  A voting scheme with $n$ voters is a seven-tuple of the form 
   \begin{align*}
-    VS=(C, \mathcal{S}, \mathcal{M}, ZPS, PBB, Setup, (V_0, \dots, V_{n-1}), VA)\text{.}
+    VS=(C, \mathcal{S}, ZPS, PBB, Setup, (V_0, \dots, V_{n-1}), VA)\text{.}
   \end{align*}
   Here, we use the following:
   \begin{itemize}
     \item $C$ is a choice space.
     \item $\mathcal{S}=(Gen, Enc, Dec)$ is a (semi-)homomorphic encryption scheme as defined by Katz and Lindell in section 12 of \cite{katz_introduction_2021}.
     We use $Enc^{aux}(x, pk)$ to denote the encryption of a plaintext $x$ under auxiliary information $aux$ with public key $pk$. 
-    For instance, $aux$ can include the randomness used in the non-deterministic encryption.
+    Since $Enc$ needs to be probabilistic to achieve security, $aux$ models the randomness used for the encryption of $x$.
+    Similarly, we use $Dec(y, sk)$ to denote the deterministic decryption of a ciphertext $y$ with the secret key $sk$.
+    % For instance, $aux$ can include the randomness used in the non-deterministic encryption.
     % Here, $C$ must be a subset of the message space $\mathcal{M}_{pk}$ for any public key $pk$ generated by $Gen$.
-    To simplify notation, we also denote the componentwise ecryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$.
-    For instance for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux=(aux_0,\dots, aux_{l-1})$ by $Enc^{aux}(b)=(Enc^{aux_0}(b_0),\dots, Enc^{aux_{l-1}}(b_{l-1}))$.
+    To simplify notation, we also denote the componentwise ecryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$ and the componentwise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
+    For instance for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux=(aux_0,\dots, aux_{l-1})$ by $Enc^{aux}(b):=(Enc^{aux_0}(b_0),\dots, Enc^{aux_{l-1}}(b_{l-1}))$.
+    % \item $\mathcal{M}=(Gen, Sign, Vrfy)$ is a digital signature scheme as defined by Katz and Lindell in section 13 of \cite{katz_introduction_2021}.
+    % We use $Sign(m, sk)$ to denote the signature of a message $m$ under the secret key $sk$.
+    % Similarly, we denote the verification of the signature $s$ for the message $m$ with the public key $pk$ by $Vrfy(m, s, pk)$.
     \item $ZPS$ is a zero-knowledge proof system used to prove ballot validity.
     Here, $Prove(CRS, (pk, b'), (aux, b))$ uses a plain ballot $b$ and the auxiliary information from the encryption of $b$ as the private witness as well as a public key $pk$ and the encrypted ballot $b'$ as an instance.
     The proof $\pi$ created by $Prove(CRS, (pk, b'), (aux, b))$ then shows that $b\in C$ and that $Enc^{aux}(b, pk)=b'$.
@@ -259,7 +286,7 @@ However, to simplify things a little, we assume that the voting authority and th
     \item $VA$ is the voting authority tallying the valid votes submitted to the $PBB$.
     Here, $VA$ is a five-tuple of the form $VA=(PBB, sk, Setup, agg, Tally)$. 
     $Setup(sk)$ sets the secret key used for decryption. 
-    $agg(b'_0, \dots, b'_{n-1})$ is the function performed on the encrypted ballots to aggregate them. 
+    $agg((b'_0, \dots, b'_{n-1}))$ is the function performed on the encrypted ballots to aggregate them. 
     This function is used in the tallying algorithm $Tally$ defined in \cref{alg:tally}.
   \end{itemize}
 \end{definition}

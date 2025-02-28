@@ -16,7 +16,7 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
     // var maxVotesCandBits = numBits(maxVotesCand);
     // var maxChoicesBits = numBits(maxChoices);
     var totalBits = bitsVotes + numBits(nVotes); // Number of bits required for the sum of all entries at most
-    log("Total Bits: ", totalBits);
+    // log("Total Bits: ", totalBits);
 
     component assertLtEq[nVotes];
     component assertSumLtEq = assertLtEq(totalBits);
@@ -29,8 +29,8 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
         assertLtEq[i].test <== maxVotesCand;
         sum += ballot[i];
     }
-    log("Sum: ", sum);
-    log("Max choices:", maxChoices);
+    // log("Sum: ", sum);
+    // log("Max choices:", maxChoices);
 
     assertSumLtEq.in <== sum;
     assertSumLtEq.test <== maxChoices;
