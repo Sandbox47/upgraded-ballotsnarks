@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Give Javascript heap more memory
+export NODE_OPTIONS="--max-old-space-size=16384"
+
 # ========================================================================================================================
 # 1. Check argument validity
 # Check for the required arguments
