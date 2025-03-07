@@ -6,7 +6,7 @@
 
 
 % vv  scroll down to line 200 for content  vv
-
+  
 
 \let\ifdeutsch\iffalse
 \let\ifenglisch\iftrue
@@ -125,25 +125,25 @@
 % \addtocontents{toc}{\protect\newpage}
 % an der passenden Stelle im Fließtext erzwungen werden.
 
-\listoffigures
-\listoftables
+%\listoffigures
+%\listoftables
 
 %Wird nur bei Verwendung von der lstlisting-Umgebung mit dem "caption"-Parameter benoetigt
 %\lstlistoflistings
 %ansonsten:
-\ifdeutsch
-  \listof{Listing}{Verzeichnis der Listings}
-\else
-  \listof{Listing}{List of Listings}
-\fi
+% \ifdeutsch
+%   \listof{Listing}{Verzeichnis der Listings}
+% \else
+%   \listof{Listing}{List of Listings}
+% \fi
 
 %mittels \newfloat wurde die Algorithmus-Gleitumgebung definiert.
 %Mit folgendem Befehl werden alle floats dieses Typs ausgegeben
-\ifdeutsch
-  \listof{Algorithmus}{Verzeichnis der Algorithmen}
-\else
-  \listof{Algorithmus}{List of Algorithms}
-\fi
+% \ifdeutsch
+%   \listof{Algorithmus}{Verzeichnis der Algorithmen}
+% \else
+%   \listof{Algorithmus}{List of Algorithms}
+% \fi
 %\listofalgorithms %Ist nur für Algorithmen, die mittels \begin{algorithm} umschlossen werden, nötig
 
 % Abkürzungsverzeichnis
@@ -242,7 +242,9 @@
 % All links were last followed on March 17, 2025.
 
 \appendix
-\input{latexhints-english}
+\input{sections/appendix.tex}
+
+%\input{latexhints-english}
 
 \pagestyle{empty}
 \renewcommand*{\chapterpagestyle}{empty}

@@ -139,11 +139,11 @@ template yRecoveryProjective(A, B) {
     component ifThenElse = ifThenElseProjective();
 
     // Infty tests
-    component testInftyQ = isInftyProjective();
-    testInftyQ.in <== normQ;
-    signal isInftyQ <== testInftyQ.out;
+    // component testInftyQ = isInftyProjective();
+    // testInftyQ.in <== normQ;
+    // signal isInftyQ <== testInftyQ.out;
 
-    // Output -P if PPlusQ.x is 0, Q is not infty and P.X/P.Z = Q.X/Q.Z
+    // Output -P if PPlusQ.z is 0, Q is not infty and P.X/P.Z = Q.X/Q.Z
     component testInftyPPlusQ = isInftyProjective();
     testInftyPPlusQ.in <== PPlusQ;
 
@@ -154,7 +154,8 @@ template yRecoveryProjective(A, B) {
     component and = AND();
     and.a <== testInftyPPlusQ.out;
     and.b <== testEquality.out;
-    signal isQNegatedP <== (1-isInftyQ) * and.out;
+    //signal isQNegatedP <== (1-isInftyQ) * and.out;
+    signal isQNegatedP <== and.out;
 
     ProjectivePoint() minusP; // Normalized to minusP.Z=1
     minusP.X <== normP.X;

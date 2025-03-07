@@ -1,0 +1,595 @@
+\chapter{Montgomery Curves}
+\label{chap:montgomeryCurves}
+
+In our voting scheme, we use \gls{eeg} encryption for the ballots.
+All operation in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
+For a secure encryption, the \gls{ddh} assumption needs to hold on $\mathbb{G}$.
+Elliptic curves of a sufficiently large order $q$ are finity cyclic groups on which the \gls{ddh} assumption is believed to hold.
+Moreover, Elliptic curves are benefitial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{noauthor_case_2009}.
+
+The most general form of Elliptic curves are so-called Short Weierstrass curves \cite{least_authority_moonmath_2024}.
+Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_nodate}.
+We can transform any Montgomery curve into an isomorphic Short Weierstrass curve but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
+Therefore, Montgomery curves are more limited than Short Weierstrass curves \cite{least_authority_moonmath_2024}.
+
+However, as established previously, we will later use an Elliptic curve as the group $(\mathbb{G}, \odot_{\mathbb{G}})$ for \gls{eeg} encryption.
+In \gls{eeg} we need to compute exponentiations of group elements, i.e., $g^m:=g\underbrace{\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}}_{m \text{ times}} g$ very often.
+Montgomery curves allow us to compute $g^m$ efficiently using the Montgomery Ladder algorithm.
+
+Fundamentally, Elliptic curves are sets of points that satisfy certain equations \cite{least_authority_moonmath_2024}. 
+Here, a curve point consists of multiple elements from a so-called base field $\mathbb{F}_p$ of order $p$.
+For better distinction, we call the field $\mathbb{F}_q$ with elliptic curve order $q$ the scalar field of the elliptic curve.
+
+Our introduction of elliptic curves largely parallels the one given in chapter 5 of \cite{least_authority_moonmath_2024}.
+However, as we exclusively use Montgomery Curves, we introduce them directly and do not introduce Short Weierstrass Curves seperately.
+
+\section{Affine Montgomery Form}
+As in \cite{least_authority_moonmath_2024} we introduce elliptic curves first in their affine representation and then in their projective representation.
+Later on, we use both representations in the voting scheme.
+
+\begin{definition}[Affine Montgomery Curve]
+    Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$.
+    Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\neq4 \mod p$.
+    Then, the corresponding Affine Montgomery curve is the group $(M_{A,B}(\mathbb{F}), \odot_M^{Aff})$, with:
+    \begin{itemize}
+        \item The set of points $M_{A,B}(\mathbb{F})$:
+        \begin{align*}
+            M_{A,B}(\mathbb{F})=\{(x,y)\in\mathbb{F}\times\mathbb{F}|B\cdot y^2=x^3+A\cdot x^2+x\}\cup \{\mathcal{O}\}
+        \end{align*}
+        Here, $\mathcal{O}$ is the so-called \glqq point at infinity\grqq.
+        \item The group law $\odot_M^{Aff}$:\\
+        Let $P_1, P_2\in M_{A,B}(\mathbb{F})$.
+        Then:
+        \begin{align*}
+            P_1\odot_M^{Aff} P_2 =\begin{cases}
+                P_1, &\quad\text{if } P_2=\mathcal{O}\\
+                P_2, &\quad\text{if } P_1=\mathcal{O}\\
+                \mathcal{O}, &\quad\text{if } P_1=(x, y) \text{ and } P_2=(x, -y)\\
+                TangentRule(x,y), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
+                ChordRule(x_1, y_1, x_2, y_2), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
+                %\left(\left(\frac{3x^2+a}{2y}\right)^2-2x, \left(\frac{3x^2+a}{2y}\right)\cdot\left(x-\left(\left(\frac{3x^2+a}{2y}\right)^2-2x\right)\right)-y\right), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
+                %\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2, \left(\frac{y_2-y_1}{x_2-x_1}\right)\cdot\left(x_1-\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2\right)\right)-y_1\right), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
+            \end{cases}
+        \end{align*}
+        $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleAffineMontgomery} and \ref{alg:chordRuleAffineMontgomery}.
+    \end{itemize}
+    The neutral element of $M_{A,B}(\mathbb{F})$ is $\mathcal{O}$.
+    For $P\in M_{A,B}(\mathbb{F})$, the inverse element $P^{-1}$ is defined as $P^{-1}:=\begin{cases}
+        \mathcal{O}, &\quad\text{if } P=\mathcal{O}\\
+        (x, -y), &\quad\text{otherwise, with } P=(x,y)
+    \end{cases}$.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Affine Tangent Rule used to compute $P\odot_M^{Aff} P$ where $P=(x,y)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.}
+    \label{alg:tangentRuleAffineMontgomery}
+    \begin{algorithmic}
+    \Procedure{$TangentRule$}{$x,y$}
+        \State $tmp := \frac{3x^2+2Ax+1}{2By}$
+        \State $x' := tmp^2\cdot B-2x-A$
+        \State $y':= tmp\cdot (x-x')-y$
+        \State \Return $(x', y')$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Affine Chord Rule used to compute $P_1\odot_M^{Aff} P_2$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.}
+    \label{alg:chordRuleAffineMontgomery}
+    \begin{algorithmic}
+    \Procedure{$ChordRule$}{$x_1,y_1, x_2, y_2$}
+        \State $tmp := \frac{y_2-y_1}{x_2-x_1}$
+        \State $x' := tmp^2\cdot B-x_1-x_2-A$
+        \State $y':= tmp\cdot (x_1-x')-y_1$
+        \State \Return $(x', y')$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+%\subsection{Affine and Projective Coordinates}
+%To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
+
+\section{Projective Montgomery Form}
+To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
+
+\begin{definition}[Projective Point and Projective Plane]
+    Let $(\mathbb{F}, +, \cdot)$ be a field. 
+    We define $\mathbb{F}^*$ as the set of invertible elements in $\mathbb{F}$.
+    Let $(X, Y, Z)=\in\mathbb{F}^3$. 
+    Then, the projective point corresponding to $(X, Y, Z)$ is defined as
+    \begin{align*}
+        [X:Y:Z] :=\{(k\cdot X, k\cdot Y, k\cdot Z)|k\in\mathbb{F}^*\}\text{.}
+    \end{align*}
+    The projective plane of $\mathbb{F}$ is defined as
+    \begin{align*}
+        \mathbb{F}P^2:=\{[X:Y:Z]|(X,Y,Z)\in\mathbb{F}^3 \text{ and } (X, Y, Z)\neq (0,0,0)\}\text{.}
+    \end{align*}
+\end{definition}
+
+Using projective planes, we can define Montgomery Curves in their projective representation as groups of projective points.
+
+\begin{definition}[Projective Montgomery Curve]
+    Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$. 
+    Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\neq4 \mod p$.
+    Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
+    Then, the corresponding Projective Montgomery curve is the group $(M_{A,B}(\mathbb{F}P^2), \odot_M^{Pro})$, with:
+    \begin{itemize}
+        \item The set of points $M_{A,B}(\mathbb{F}P^2)$:
+        \begin{align*}
+            M_{A,B}(\mathbb{F}P^2)=\{[X:Y:Z]\in\mathbb{F}P^2|B\cdot Y^2\cdot Z=X^3+A\cdot X^2\cdot Z+X\cdot Z^2\}
+        \end{align*}
+        Here, $[0:1:0]$ corresponds to the point at infinity $\mathcal{O}$ of the affine form.
+        \item The group law $\odot_M^{Pro}$:\\
+        Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)$. 
+        To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding Affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
+        Formally:
+        \begin{align*}
+            P_1\odot_M^{Pro} P_2 = I(I^{-1}(P_1)\odot_M^{Aff}I^{-1}(P_2))
+        \end{align*}
+        % $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleProjectiveMontgomery} and \ref{alg:chordRuleProjectiveMontgomery}.
+        Here, $I$ converts points from affine representation to projective representation, and $I^{-1}$ executes the reverse conversion.
+        $I$ and $I^{-1}$ are introduced in \cref{sec:coordinateTranformation}.
+    \end{itemize}
+    The neutral element of $M_{A,B}(\mathbb{F}P^2)$ is $[0:1:0]$.
+    For $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P)$, the inverse element $P^{-1}$ is defined as $P^{-1}:=[X:-Y:Z]$.
+\end{definition}
+
+\section{Transforming between Projective and Affine Coordinates}
+\label{sec:coordinateTranformation}
+As mentioned earlier, we will use both the projective and affine representation of elliptic curves in our voting schemes.
+Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(\mathbb{F})$ to a corresponding projective elliptic curve $M_{A,B}(\mathbb{F}P^2)$ and vice versa.
+
+\begin{definition}[Coordinate Transformation]
+    Let $(\mathbb{F}, +, \cdot)$ be a finite field of order $q$ with $q>3$. 
+    Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$. 
+    Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
+    Then, the bijective function $I:M_{A,B}(\mathbb{F})\to M_{A,B}(\mathbb{F}P^2)$ converts points from affine representation to projective representation.
+    Consequently, $I^{-1}:M_{A,B}(\mathbb{F}P^2)\to M_{A,B}(\mathbb{F})$ converts points from projective representation to affine representation.
+    Here, we define:
+    \begin{align*}
+        I(P) &:= \begin{cases}
+            [x:y:1], \quad\text{if } P\neq\mathcal{O}, \text{ with } P=(x,y)\\
+            [0:1:0], \quad\text{otherwise}
+        \end{cases}\\
+        I^{-1}([X:Y:Z]) &:= \begin{cases}
+            \left(\frac{X}{Z}, \frac{Y}{Z}\right), \quad\text{if } Z\neq 0\\
+            \mathcal{O}, \quad\text{otherwise}
+        \end{cases}
+    \end{align*}
+\end{definition}
+
+%Note that this conversion works the same for Short Weierstrass elliptic curves and Montgomery Curves which are introduced next.
+
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Tangent Rule used to compute $P\odot_M^{Pro} P$ where $P=[X:Y:Z]\in M_{A,B}(\mathbb{F})\setminus\{[0:1:0]\}$ and $Y\neq 0$.}
+%     \label{alg:tangentRuleProjectiveMontgomery}
+%     \begin{algorithmic}
+%     \Procedure{$TangentRule$}{$[X:Y:Z]$}
+%         \State \todo{Write Alg.}
+%         \State \Return $([X':Y':Z'])$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+% 
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $X_1\neq X_2$.}
+%     \label{alg:chordRuleProjectiveMontgomery}
+%     \begin{algorithmic}
+%     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
+%         \State \todo{Write Alg.}
+%         \State \Return $([X':Y':Z'])$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+
+
+
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Tangent Rule used to compute $P\odot_M^{Pro} P$ where $P=[X:Y:Z]\in M_{A,B}(\mathbb{F})\setminus\{[0:1:0]\}$ and $Y\neq 0$.}
+%     \label{alg:tangentRuleProjectiveMontgomery}
+%     \begin{algorithmic}
+%     \Procedure{$TangentRule$}{$[X:Y:Z]$}
+%         \State \todo{Write Alg.}
+%         \State \Return $([X':Y':Z'])$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+% 
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $X_1\neq X_2$.}
+%     \label{alg:chordRuleProjectiveMontgomery}
+%     \begin{algorithmic}
+%     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
+%         \State \todo{Write Alg.}
+%         \State \Return $([X':Y':Z'])$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+
+% \section{Short Weierstrass Curves}
+% As in \cite{least_authority_moonmath_2024} we will introduce elliptic curves first in their affine representation and then in their projective representation.
+% Later on, we will use both representations in the voting scheme.
+% 
+% \subsection{Affine Short Weierstrass form}
+% We can define a Short Weierstrass elliptic curve in affine representation as follows.
+% 
+% \begin{definition}[Affine Short Weierstrass curve]
+%     Let $(\mathbb{F}, +, \cdot)$ be a finite field of order $q$ with $q>3$. 
+%     Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$.
+%     Then, the corresponding Affine Short Weierstrass Curve is the group $(E_{a,b}(\mathbb{F}), \odot_E^{Aff})$, with:
+%     \begin{itemize}
+%         \item The set of points $E_{a,b}(\mathbb{F})$:
+%         \begin{align*}
+%             E_{a,b}(\mathbb{F})=\{(x,y)\in\mathbb{F}\times\mathbb{F}|y^2=x^3+a\cdot x+b\}\cup \{\mathcal{O}\}
+%         \end{align*}
+%         Here, $\mathcal{O}$ is the so-called \glqq point at infinity\grqq.
+%         \item The group law $\odot_E^{Aff}$:\\
+%         Let $P_1, P_2\in E_{a,b}(\mathbb{F})$.
+%         Then:
+%         \begin{align*}
+%             P_1\odot_E^{Aff} P_2 =\begin{cases}
+%                 P_1, &\quad\text{if } P_2=\mathcal{O}\\
+%                 P_2, &\quad\text{if } P_1=\mathcal{O}\\
+%                 \mathcal{O}, &\quad\text{if } P_1=(x, y) \text{ and } P_2=(x, -y)\\
+%                 TangentRule(x,y), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
+%                 ChordRule(x_1, y_1, x_2, y_2), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
+%                 %\left(\left(\frac{3x^2+a}{2y}\right)^2-2x, \left(\frac{3x^2+a}{2y}\right)\cdot\left(x-\left(\left(\frac{3x^2+a}{2y}\right)^2-2x\right)\right)-y\right), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
+%                 %\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2, \left(\frac{y_2-y_1}{x_2-x_1}\right)\cdot\left(x_1-\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2\right)\right)-y_1\right), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
+%             \end{cases}
+%         \end{align*}
+%         $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleAffineWeierstrass} and \ref{alg:chordRuleAffineWeierstrass}.
+%     \end{itemize}
+%     The neutral element of $E_{a,b}(\mathbb{F})$ is $\mathcal{O}$.
+%     For $P\in E_{a,b}(\mathbb{F})$, the inverse element $P^{-1}$ is defined as $P^{-1}:=\begin{cases}
+%         \mathcal{O}, &\quad\text{if } P=\mathcal{O}\\
+%         (x, -y), &\quad\text{otherwise, with } P=(x,y)
+%     \end{cases}$.
+% \end{definition}
+% 
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Affine Tangent Rule used to compute $P\odot_E^{Aff} P$ where $P=(x,y)\in E_{a,b}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.}
+%     \label{alg:tangentRuleAffineWeierstrass}
+%     \begin{algorithmic}
+%     \Procedure{$TangentRule$}{$x,y$}
+%         \State $tmp := \frac{3x^2+a}{2y}$
+%         \State $x' := tmp^2-2x$
+%         \State $y':= tmp\cdot (x-x')-y$
+%         \State \Return $(x', y')$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+% 
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Affine Chord Rule used to compute $P_1\odot_E^{Aff} P_2$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in E_{a,b}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.}
+%     \label{alg:chordRuleAffineWeierstrass}
+%     \begin{algorithmic}
+%     \Procedure{$ChordRule$}{$x_1,y_1, x_2, y_2$}
+%         \State $tmp := \frac{y_2-y_1}{x_2-x_1}$
+%         \State $x' := tmp^2-x_1-x_2$
+%         \State $y':= tmp\cdot (x_1-x')-y_1$
+%         \State \Return $(x', y')$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+% 
+% \subsection{Projective Short Weierstrass form}
+% To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
+% 
+% \begin{definition}[Projective Point and Projective Plane]
+%     Let $(\mathbb{F}, +, \cdot)$ be a field. 
+%     We define $\mathbb{F}^*$ as the set of invertible elements in $\mathbb{F}$.
+%     Let $(X, Y, Z)=\in\mathbb{F}^3$. 
+%     Then, the projective point corresponding to $(X, Y, Z)$ is defined as
+%     \begin{align*}
+%         [X:Y:Z] :=\{(k\cdot X, k\cdot Y, k\cdot Z)|k\in\mathbb{F}^*\}\text{.}
+%     \end{align*}
+%     The projective plane of $\mathbb{F}$ is defined as
+%     \begin{align*}
+%         \mathbb{F}P^2:=\{[X:Y:Z]|(X,Y,Z)\in\mathbb{F}^3 \text{ and } (X, Y, Z)\neq (0,0,0)\}\text{.}
+%     \end{align*}
+% \end{definition}
+% 
+% With this, we can define Short Weierstrass Elliptic Curves in their projective representation as groups of projective points.
+% 
+% \begin{definition}[Projective Short Weierstrass Curve]
+%     Let $(\mathbb{F}, +, \cdot)$ be a finite field of order $q$ with $q>3$. 
+%     Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$. 
+%     Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
+%     Then, the corresponging Projective Short Weierstrass Curve is the group $(E_{a,b}(\mathbb{F}P^2), \odot_E^{Pro})$, with:
+%     \begin{itemize}
+%         \item The set of points $E_{a,b}(\mathbb{F}P^2)$:
+%         \begin{align*}
+%             E_{a,b}(\mathbb{F}P^2)=\{[X:Y:Z]\in\mathbb{F}P^2|Y^2\cdot Z=X^3+a\cdot X\cdot Z^2+b\cdot Z^3\}
+%         \end{align*}
+%         Here, $[0:1:0]$ corresponds to the point at infinity $\mathcal{O}$ of the affine form.
+%         \item The group law $\odot_E^{Pro}$:\\
+%         Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in E_{a,b}(\mathbb{F}P^2)$. 
+%         Then:
+%         \begin{align*}
+%             P_1\odot_E^{Pro} P_2 =\begin{cases}
+%                 P_1, &\quad\text{if } P_2=[0:1:0]\\
+%                 P_2, &\quad\text{if } P_1=[0:1:0]\\
+%                 [0:1:0], &\quad\text{if } [X_1:Y_1:Z_1]=[X_2:-Y_2:Z_2]\\
+%                 TangentRule([X_1:Y_1:Z_1]), &\quad\text{if } P_1=P_2 \text{ and } Y_1\neq 0\\
+%                 ChordRule([X_1:Y_1:Z_1], [X_2:Y_2:Z_2]), &\quad\text{otherwise}
+%                 %\left(\left(\frac{3x^2+a}{2y}\right)^2-2x, \left(\frac{3x^2+a}{2y}\right)\cdot\left(x-\left(\left(\frac{3x^2+a}{2y}\right)^2-2x\right)\right)-y\right), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
+%                 %\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2, \left(\frac{y_2-y_1}{x_2-x_1}\right)\cdot\left(x_1-\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2\right)\right)-y_1\right), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
+%             \end{cases}
+%         \end{align*}
+%         $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleProjectiveWeierstrass} and \ref{alg:chordRuleProjectiveWeierstrass}.
+%     \end{itemize}
+%     The neutral element of $E_{a,b}(\mathbb{F}P^2)$ is $[0:1:0]$.
+%     For $P=[X:Y:Z]\in E_{a,b}(\mathbb{F}P)$, the inverse element $P^{-1}$ is defined as $P^{-1}:=[X:-Y:Z]$.
+% \end{definition}
+% 
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Tangent Rule used to compute $P\odot_E^{Pro} P$ where $P=[X:Y:Z]\in E_{a,b}(\mathbb{F})\setminus\{[0:1:0]\}$ and $Y\neq 0$.}
+%     \label{alg:tangentRuleProjectiveWeierstrass}
+%     \begin{algorithmic}
+%     \Procedure{$TangentRule$}{$[X:Y:Z]$}
+%         \State $W := a\cdot Z^2 + 3\cdot X^3$
+%         \State $S := Y\cdot Z$
+%         \State $B := X\cdot Y\cdot S$
+%         \State $H := W^2-8\cdot B$
+%         \State $X':= 2\cdot H\cdot S$
+%         \State $Y':= W\cdot (4\cdot B-H)-8\cdot Y^2\cdot S^2$
+%         \State $Z':= 8\cdot S^3$
+%         \State \Return $([X':Y':Z'])$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+% 
+% \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Chord Rule used to compute $P_1\odot_E^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in E_{a,b}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $X_1\neq X_2$.}
+%     \label{alg:chordRuleProjectiveWeierstrass}
+%     \begin{algorithmic}
+%     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
+%         \State $U_1 := Y_2\cdot Z_1$
+%         \State $U_2 := Y_1\cdot Z_2$
+%         \State $U := U_1 - U_2$
+%         \State $V_1 := X_2\cdot Z_1$
+%         \State $V_2 := X_1\cdot Z_2$
+%         \State $V := V_1 - V_2$
+%         \State $W := Z_1\cdot Z_2$
+%         \State $A := U^2\cdot W - V^3-2\cdot V^2\cdot V_2$
+%         \State $X' := V\cdot A$
+%         \State $Y' := U\cdot (V^2\cdot V_2 - A)-V^3\cdot U_2$
+%         \State $Z' := V^3\cdot W$
+%         \State \Return $([X':Y':Z'])$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+
+\section{Exponentiation}
+We use a Montgomery curve $M_{A,B}(\mathbb{F}P^2)$ as group in \gls{eeg} encryption because computing exponentiations of group elements is comparatively efficient.
+Group exponentiation is defined as follows:
+\begin{align*}
+    \forall P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\forall n\in\mathbb{N}:\quad P^n:=\underbrace{P\odot_{M}^{Pro}\dots\odot_{M}^{Pro}P}_{n \text{ times}}
+\end{align*}
+However, computing $P^n=[X_n:Y_n:Z_n]$ by iteratively using the group law $\odot_{M}^{Pro}$ $n$ times is computationally expensive.
+Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018}.
+This algorithm only requires $\mathcal{O}(\log_2(n))$ many iterations to compute the coordinates $X_n$ and $Z_n$ of $P^n$ from the coordinates $X$ and $Z$ of $P$.
+Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_n$ from the last two iterations of the Montgomery Ladder.
+
+\subsection{Pseudooperations}
+For the Montgomery Ladder algorithm we work only with the $X$ and $Z$ coordinates of points $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
+For this purpose, we define a quotient map $x$ to map projective points to pairs of their $X$ and $Z$ coordinates.
+Specially treated is the point at infinity $[0:1:0]$.
+\begin{definition}[Quotient Map of Montgomery Curves]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Then, we define te quotient map $x$ as follows:
+    \begin{align*}
+        &x:M_{A,B}(\mathbb{F}P^2)\to \{[X:Z]|X,Z\in\mathbb{F}\},\\
+        &x([X:Y:Z]) :=\begin{cases}
+            [X:Z], \quad\text{if } Z\neq 0\\
+            [1:0], \quad\text{otherwise ($\rightsquigarrow [X:Y:Z]=[0:1:0]$)}
+        \end{cases}
+    \end{align*}
+    We call $x(P)$ the Pseudopoint of $P\in M_{A,B}(\mathbb{F}P^2)$.
+\end{definition}
+
+Using this map, we want to be able to apply the group law to Pseudopoints. 
+In other words, we want to compute $x(P\odot_M^{Pro}Q)$ from $x(P)$ and $x(Q)$.
+Unfortunately, as mentioned in chapter 3.1 of \cite{costello_montgomery_2018} this is not possible, since $x(P)$ and $x(Q)$ doesn't uniquely determine $x(P\odot_M^{Pro} Q)$.
+However, it is possible to determine $x(P\odot_M^{Pro} Q)$ based on $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$.
+This is useful for the Montgomery Ladder later on, since $P\odot_M^{Pro}Q$ will be a fixed, known point.
+
+Based on this, we can define two pseudo-operations $xAdd$ and $xDbl$ which mostly parallel the Chord Rule and Tangent Rule of the group law $\odot_M^{Aff}$.
+We define these operations analog to the approach presented in chapter 3 of \cite{costello_montgomery_2018}.
+
+\begin{definition}[Pseudooperation $xAdd$]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Let $P, Q\in M_{A,B}(\mathbb{F}P^2)$ with $P\neq Q$.
+    We define:
+    \begin{align*}
+        xAdd(x(P), x(Q), x(P\odot_M^{Pro}Q^{-1})) := x(P\odot_M^{Pro} Q)
+    \end{align*}
+    We can compute $xAdd$ as presented in \cref{alg:xAdd}.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Pseudooperation $xAdd$ used to compute $x(P\odot_M^{Pro} Q)$ from $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$ with $P,Q\in M_{A,B}(\mathbb{F}P^2)$ and $P\neq Q$.}
+    \label{alg:xAdd}
+    \begin{algorithmic}
+    \Procedure{$xAdd$}{$x(P), x(Q), (P\odot_M^{Pro}Q^{-1})$}
+        \State $[X_P:Z_P]:=x(P);\: [X_Q:Z_Q]:=x(Q);\: [X_{\odot^{-1}}, Z_{\odot^{-1}}]:=x(P\odot_m^{Pro}Q^{-1})$
+        \State $X_\odot:= Z_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)+(X_P+Z_P)(X_Q-Z_Q))^2$
+        \State $Z_\odot:= X_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)-(X_P+Z_P)(X_Q-Z_Q))^2$
+        \State \Return $[X_\odot:Z_\odot]$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{definition}[Pseudooperation $xDbl$]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Let $P\in M_{A,B}(\mathbb{F}P^2)$.
+    We define:
+    \begin{align*}
+        xDbl(x(P)) := x(P\odot_M^{Pro} P) = x(P^2)
+    \end{align*}
+    We can compute $xDbl$ as presented in \cref{alg:xDbl}.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Pseudooperation $xDbl$ used to compute $x(P\odot_M^{Pro} P)=x(P^2)$ from $x(P)$ with $P\in M_{A,B}(\mathbb{F}P^2)$.}
+    \label{alg:xDbl}
+    \begin{algorithmic}
+    \Procedure{$xDbl$}{$x(P)$}
+        \State $[X_P:Z_P]:=x(P)$
+        \State $X_\odot:= (X_P+Z_P)^2(X_P-Z_P)^2$
+        \State $Z_\odot:= \left(4X_PZ_P\right)\left(\left(X_P-Z_P\right)^2+\left(\frac{A+2}{4}\left(4X_PZ_P\right)\right)\right)$
+        \State \Return $[X_\odot:Z_\odot]$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\subsection{The Montgomery Ladder}
+The Idea behind the Montgomery Ladder is similar to that of Fast Exponentiation.
+Analogously to Fast Exponentiation, we can compute exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
+However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^n)$ based on $x(P)$. 
+The Montgomery Ladder Algorithm computes $x(P^n)$ along with $x(P^{n+1})$ which we need later on to recover the $Y$ coordinate of $P^n$.
+
+\begin{definition}[Montgomery Ladder]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Let $P\in M_{A,B}(\mathbb{F}P^2)$.
+    Let $n\in\mathbb{N}$, where $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
+    Then, we can compute $(x(P^n), x(P^{n+1}))$ with $MontgomeryLadder$ defined in \cref{alg:montgomeryLadder}.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Montgomery Ladder algorithm used to compute $x(P^n)$ and $x(P^{n+1})$ from $x(P)$ with $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
+        Here, $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
+    }
+    \label{alg:montgomeryLadder}
+    \begin{algorithmic}
+    \Procedure{$MontgomeryLadder$}{$x(P), (n_0,\dots, n_{l-1})$}
+        \State $(R_0, R_1):=(x([0:1:0]), x(P))$ 
+        \State \Comment \parbox[t]{0.7\linewidth}{%
+            Initialize $R_0$ with point at infinity and $R_0$ with $x(P)$. This is different compared to the standard version of the Montgomery Ladder.%
+        }
+        \For{$i=l-1$ \textbf{down to} $0$}
+            \If{$n_i=0$}
+                \State $(R_0, R_1):=(xDbl(R_0), xAdd(R_1, R_0, x(P)))$ 
+                \State \Comment \parbox[t]{0.7\linewidth}{%
+                    $R_1=x(P^{k+1})$ and $R_0=x(P^k)$ for some $k\in\mathbb{N}$ at all times.\\
+                    Therefore, $x(P^{k+1}\odot_{M}^{Pro}(P^k)^{-1})=x(P)$.
+                }
+            \Else
+                \State $(R_0, R_1):=(xAdd(R_1, R_0, x(P)), xDbl(R_1))$
+            \EndIf
+        \EndFor
+        \State \Return $(R_0, R_1)$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+Note that this is not the standard version of the Montgomery Ladder but slightly changed and originally intendended for constant-time execution \cite{costello_montgomery_2018}.
+In the standard version of the Montgomery Ladder algorithm, we require the most significant bit of the exponent $n_{l-1}$ to be $1$. 
+However, this means that the length of the bitstring representing $n$ changes based on the exponent $n$.
+When we implement the Montgomery Ladder in a ciruit for our voting scheme this is problematic.
+Since the exponent is not known during the compilation time of the circuit, we need to work with a exponents of a fixed length $l$ where the most significatn bit might be zero.
+Therefore, this version of the Montgomery Ladder is better suited for our purposes.
+
+\subsection{$Y$-Recovery}
+After performing the Montgomery Ladder algorithm on $x(P)$ and $n\in\mathbb{N}$ with $P\in M_{A,B}(\mathbb{F}P^2)$, we have $[X_n:Z_n]:=x(P^n)$ and $[X_{n+1}:Z_{n+1}]:=x(P^{n+1})$.
+To reconstruct the $Y$ coordinate $Y_n$ of $P^{n}=[X_n:Y_n:Z_n]$, we use a recovery algorithm based on $P, x(P^n)$ and $x(P^{n+1})$ introduced by Okeya and Sakurai in \cite{goos_efficient_2001}.
+
+\begin{definition}[Okeya-Sakurai $Y$-Recovery]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Let $P=[X_P:Y_P:Z_P], Q, P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ with $Y_P\neq 0$.
+    Then, we can reconstruct the complete $Q=Q_{rec}$, including the $Y$ coordinate from $(x_P, y_P):=I^{-1}(P)=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$, $x(Q)=[X_Q:Z_Q]$ and $x(P\odot_M^{Pro} Q)=[X_\odot:Z_\odot]$ using \cref{alg:okSakYRecovery}.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Okeya-Sakurai $Y$-Recovery used to recover $Q$ with $Y$ coordinate from $P$, $x(Q)$ and $x(P\odot_M^{Pro} Q)$.
+    Here, $P=[X_P:Y_P:Z_P],P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, with $Y_P\neq 0$.}
+    \label{alg:okSakYRecovery}
+    \begin{algorithmic}
+    \Procedure{$OkSakYRecovery$}{$P, x(Q), x(P\odot_M^{Pro}Q)$}
+        \State $[X_P:Y_P:Z_P]:=P;\: [X_Q:Z_Q]:=x(Q);\: [X_\odot:Z_\odot]:=x(P\odot_M^{Pro}Q)$
+        \State $(x_P, y_P):=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$
+        \State $X_{Q_{rec}}:=2By_PZ_QZ_\odot X_Q$
+        \State $Y_{Q_{rec}}:=Z_\odot((X_Q+x_PZ_Q+2AZ_Q)(X_Qx_P+Z_Q)-2AZ_Q^2)-(X_Q-x_PZ_Q)^2X_\odot$
+        \State $Z_{Q_{rec}}:=2By_PZ_Q^2Z_\odot$
+        \State $Q_{rec} := [X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]$
+        \State \Return $Q_{rec}$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+Now we can recover the $Y$ coordinate of a point $Q$ from its pseudopoint $x(Q)$, $P$ and $x(P\odot_M^{Pro} Q)$ if the preconditions for Okeya-Sakurai $Y$-Recovery are fulfilled.
+However, we only want to employ the Okeya-Sakurai $Y$-Recovery for group exponentiations.
+Here, we want to compute $P^n$ for some $P\in M_{A,B}^{Pro}$ and $n\in \mathbb{N}$.
+The Montgomery Ladder produces the pseudopoints $x(P^n)$ and $x(P^{n+1})$.
+In order to recover the correct $Y$-Coordinate of $P^n$, we can use the Okeya-Sakurai $Y$-Recovery with $P:=P$, $Q:=P^n$ and $P\odot_M^{Pro} Q:=P^{n+1}$ but need to treat some edge cases seperately:
+\begin{itemize}
+    \item First, we consider the case that $P=[0:1:0]$. 
+    Here, we can conclude $P^{n+1}=P^n=[0:1:0]$.
+    Note that the $OkSakYRecovery$ returns the correct result $P^n=Q_{rec}=[X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]=[0:Y_{Q_{rec}}:0]=[0:1:0]$ as long as $Y_{Q_{rec}}\neq 0$.
+    We introduce a normalization function $NormProjective$ which covers the edge case $Y_{Q_{rec}}=0$ and does not change any other projective coordinates.
+    \begin{align*}
+        NormProjective:\{\mathbb{F}^3\}\to\{\mathbb{F}^3\}, [X:Y:Z]\to\begin{cases}
+            \left[\frac{X}{Z}:\frac{Y}{Z}:1\right], &\:\text{if } Z\neq 0\\
+            [0:1:0], &\:\text{otherwise}
+        \end{cases}
+    \end{align*}
+    If we always perform this operation on the output of $OkSakYRecovery$, we don't need to check for $P^n=[0:1:0]$.
+    \item Next, we know that $P^{n+1}=[0:1:0]\:\Leftrightarrow\:P^n=P^{-1}$.
+    In this case, the correct output would be $P^n=Q_{rec}=P^{-1}=[X_P:-Y_P:Z_P]$.
+\end{itemize}
+% However, we only want to employ the Okeya-Sakurai $Y$ recovery for group exponentiations.
+% Therefore, we have the special case, where $P\in M_{A,B}^{Pro}(\mathbb{F}P^2)$, $Q=P^n$ and $P\odot_M^{Pro}Q=P^{n+1}$ for some $n\in\mathbb{N}$.
+% In this case, the conditions $P=[X_P:Y_P:Z_P], Q, P\odot_M^{Pro}Q\in M_{A,B}^{Pro}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $Y_P\neq 0$ simplify to 
+
+We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024} for the $Y$-Recovery on the output of the Montgomery Ladder.
+
+\begin{definition}[Montgomery Ladder $Y$-Recovery]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Let $P\in M_{A,B}(\mathbb{F}P^2)$, $n\in\mathbb{N}$.
+    Then, we can reconstruct the complete $P^n=Q_{rec}$, including the $Y$ coordinate from $P, x(P^n)$ and $x(P^{n+1})$ using \cref{alg:montgomeryYRecovery}.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{$Y$-Recovery used to recover $P^n$ with $Y$ coordinate from $P$, $x(P^n)$ and $x(P^{n+1})$ for some $n\in\mathbb{N}$.
+    Here, $P\in M_{A,B}(\mathbb{F}P^2)$.}
+    \label{alg:montgomeryYRecovery}
+    \begin{algorithmic}
+    \Procedure{$LadderYRecovery$}{$P, x(P^n), x(P^{n+1})$}
+        \State $[X_P:Y_P:Z_P]:=P;\: [X_{P^n}:Z_{P^n}]:=x(P^n);\: [X_{P^{n+1}}:Z_{P^{n+1}}]:=x(P^{n+1})$
+        \State $P_{rec}^n:=[0:1:0]$
+        \If{$Z_{P^{n+1}}=0$} \Comment \parbox[t]{0.7\linewidth}{%
+                $\rightsquigarrow P^{n+1}=[0:1:0]$ and therefore $P^n=P^{-1}$.
+            }
+            \State $P_{rec}^n:=[X_P:-Y_P:Z_P]$
+        \Else
+            \State $P_{rec}^n:=OkSakYRecovery(P, x(P^n), x(P^{n+1}))$
+        \EndIf
+        \State $P_{rec}^n:=NormProjective(P_{rec}^n)$
+        \State \Return $P_{rec}$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\subsection{Full Exponentiation}
+Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
+
+\begin{definition}[Montgomery Exponentiation]
+    Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
+    Let $P\in M_{A,B}(\mathbb{F}P^2)$.
+    Let $n\in\mathbb{N}$, where $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
+    Then, we can compute $P^n$ with $Exponentiation$ as described in \cref{alg:montgomeryExponentiation}.
+\end{definition}
+
+\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Exponentiation on Montgomery curves. Used to compute $P^n$ where $P\in M_{A,B}^{Pro}$ and $n\in\mathbb{N}$. 
+        Here, $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
+    }
+    \label{alg:montgomeryExponentiation}
+    \begin{algorithmic}
+    \Procedure{$Exponentiation$}{$P, (n_0,\dots,n_{l-1})$}
+        \State $(x(P^n), x(P^{n+1})):= MontgomeryLadder(x(P), (n_0,\dots,n_{l-1}))$
+        \State $P^n:=LadderYRecovery(P, x(P^n), x(P^{n+1}))$
+        \State \Return $P^n$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}

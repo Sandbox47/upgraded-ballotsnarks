@@ -49,6 +49,13 @@ The new version of our example voting scheme is illustrated in \cref{fig:ExVS2}.
   \label{fig:ExVS2}
 \end{figure}
 
+With this new voting system, abstention by not casting a ballot is no longer possible. 
+Instead, no preference for any candidate is represented by casting a ballot $(0, 0, 0)$.
+We chose to model abstention explicitly since this has security benefits compared to silent abstention where voters don't cast a ballot at all.
+For instance, it is more difficult for misbehaving parties to insert ballots into an election if every voter already cast a ballot.
+In such a case $VA$ can detect that that the election was influenced even if they might not know which ballots are fraudulent.
+However, the downside of explicit abstantion is aloss of convenience for the user as they always have to cast a ballot now.
+
 In the current version of the voting scheme, votes are transmitted to the voting authority in plain.
 This means that any party eavedropping this connection can see who the individual members voted for.
 To prevent this, we need to add encryption.
@@ -215,14 +222,14 @@ With this, we have reached the voting scheme we will use throughout the rest of 
 We can now define what a voting scheme is formally. 
 Here, we use asymmetric encryption schemes as presented in \cite{katz_introduction_2021}.
 The voting scheme is based on the approach presented in \cite{cortier_fifty_2020}.
-However, to simplify things a little, we assume that the voting authority and the public bulletin board are both honest.
+However, to simplify things a little, we assume that the voting authority and the public bulletin board are both honest and that the public bulletin board is available.
 
 \begin{definition}[Choice space]
     A choice space $C$ is a set of allowed ballots. 
     Ballots are always either vectors or matrices of natural numbers.
     Formally, $C\neq \emptyset$ and
     \begin{align*}
-      C\subseteq\bigcup\limits_{i\in\mathbb{N}}\mathbb{N}^{i}\cup \quad\lor\quad C\subseteq\bigcup\limits_{(i,j)\in\mathbb{N}^2}\mathbb{N}^{i\times j}\text{.}
+      C\subseteq \mathbb{N}\quad\lor \quad C\subseteq\bigcup\limits_{i\in\mathbb{N}}\mathbb{N}^{i}\cup \quad\lor\quad C\subseteq\bigcup\limits_{(i,j)\in\mathbb{N}^2}\mathbb{N}^{i\times j}\text{.}
     \end{align*}
 \end{definition}
 
@@ -234,18 +241,26 @@ However, to simplify things a little, we assume that the voting authority and th
   $obtain(id)$ will return $x$ if $publish(id, x)$ was executed by any party sometime before and $\bot$ otherwise.
 \end{definition}
 
-\begin{definition}[Zero Knowledge Proof System]
-  A zero knowledge proof system $ZPS$ consists of three algorithms: 
+\begin{definition}[Zero Knowledge Proof System for Relation $R$ \cite{groth_size_2016}]
+  Let $R: \mathcal{I}\times\mathcal{W}\to \{0,1\}$ be a binary polynomial time decidable relation $R$.
+  Here, $R$ relates instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$:
+  \begin{align*}
+    R(I, W) = \begin{cases}
+      1, \quad\text{if } I \text{ and } W \text{ are related}\\
+      0, \quad\text{otherwise.}
+    \end{cases}
+  \end{align*}
+  A zero knowledge proof system $ZPS(R)$ for the relation $R$ consists of three algorithms: 
   \begin{itemize}
-    \item $Setup$: This algorithm generates some auxiliary public information $CRS$ ("common reference string") that is needed to coduct and verify proofs.
-    \item $Prove(CRS, I, W)$: This algorithm uses the $CRS$ to generate a proof $\pi$ relating the public Instance $I$ and the private witness $W$.
+    \item $Setup()$: This algorithm generates some auxiliary public information $CRS$ ("common reference string") that is needed to coduct and verify proofs for the relation $R$.
+    \item $Prove(CRS, I, W)$: This algorithm uses the $CRS$ to generate a proof $\pi$, stating that the public instance $I\in\mathcal{I}$ and the private witness $W\in\mathcal{W}$ are related, i.e., $R(I, W)=1$.
     Here, $\pi$ proves that the party executing $Prove(CRS, I, W)$ knows the private witness $W$ without revealing any information about $W$.
     \item $Verify(CRS, I, \pi)$: This algorithm uses the $CRS$ to verify a proof $\pi$. This algorithm will return $valid$ or $invalid$. 
-    If $Verify(CRS, I, \pi)$ returns $valid$, this means that the party who created $\pi$ knows a private witness $W$ corresponding to $I$.
+    If $Verify(CRS, I, \pi)$ returns $valid$, this means that the party who created $\pi$ knows a private witness $W$ corresponding to $I$ such that $R(I, W)=1$.
   \end{itemize}
   Formally, 
   \begin{align*}
-    ZPS=(Setup, Prove, Verify)\text{.}
+    ZPS(R)=(Setup, Prove, Verify)\text{.}
   \end{align*}
 \end{definition}
 
@@ -253,32 +268,47 @@ However, to simplify things a little, we assume that the voting authority and th
   \label{def:votingScheme}
   A voting scheme with $n$ voters is a seven-tuple of the form 
   \begin{align*}
-    VS=(C, \mathcal{S}, ZPS, PBB, Setup, (V_0, \dots, V_{n-1}), VA)\text{.}
+    VS=(C, \mathcal{S}, ZPS(R_C), PBB, Setup, \{V_0, \dots, V_{n-1}\}, VA)\text{.}
   \end{align*}
   Here, we use the following:
   \begin{itemize}
     \item $C$ is a choice space.
-    \item $\mathcal{S}=(Gen, Enc, Dec)$ is a (semi-)homomorphic encryption scheme as defined by Katz and Lindell in section 12 of \cite{katz_introduction_2021}.
-    We use $Enc^{aux}(x, pk)$ to denote the encryption of a plaintext $x$ under auxiliary information $aux$ with public key $pk$. 
+    \item $\mathcal{S}=(Gen, Enc, Dec)$ is a homomorphic encryption scheme as presented by Katz and Lindell in definitions 12.1 and 15.14 of \cite{katz_introduction_2021}.
+    We use $Enc^{aux}(x, pk)$\footnote{\label{footnote:compwiseEncDec}
+      To simplify notation, we also denote the componentwise encryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$ and the componentwise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
+      For instance, for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux=(aux_0,\dots, aux_{l-1})$ by $Enc^{aux}(b):=(Enc^{aux_0}(b_0),\dots, Enc^{aux_{l-1}}(b_{l-1}))$.
+    } to denote the encryption of a plaintext $x$ under auxiliary information $aux$ with public key $pk$. 
     Since $Enc$ needs to be probabilistic to achieve security, $aux$ models the randomness used for the encryption of $x$.
-    Similarly, we use $Dec(y, sk)$ to denote the deterministic decryption of a ciphertext $y$ with the secret key $sk$.
+    Similarly, we use $Dec(y, sk)$\cref{footnote:compwiseEncDec} to denote the deterministic decryption of a ciphertext $y$ with the secret key $sk$.
     % For instance, $aux$ can include the randomness used in the non-deterministic encryption.
     % Here, $C$ must be a subset of the message space $\mathcal{M}_{pk}$ for any public key $pk$ generated by $Gen$.
-    To simplify notation, we also denote the componentwise ecryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$ and the componentwise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
-    For instance for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux=(aux_0,\dots, aux_{l-1})$ by $Enc^{aux}(b):=(Enc^{aux_0}(b_0),\dots, Enc^{aux_{l-1}}(b_{l-1}))$.
+    
     % \item $\mathcal{M}=(Gen, Sign, Vrfy)$ is a digital signature scheme as defined by Katz and Lindell in section 13 of \cite{katz_introduction_2021}.
     % We use $Sign(m, sk)$ to denote the signature of a message $m$ under the secret key $sk$.
     % Similarly, we denote the verification of the signature $s$ for the message $m$ with the public key $pk$ by $Vrfy(m, s, pk)$.
-    \item $ZPS$ is a zero-knowledge proof system used to prove ballot validity.
-    Here, $Prove(CRS, (pk, b'), (aux, b))$ uses a plain ballot $b$ and the auxiliary information from the encryption of $b$ as the private witness as well as a public key $pk$ and the encrypted ballot $b'$ as an instance.
-    The proof $\pi$ created by $Prove(CRS, (pk, b'), (aux, b))$ then shows that $b\in C$ and that $Enc^{aux}(b, pk)=b'$.
-    Consequently, $Verify(CRS, (C, pk, b'), \pi)$ uses the public key and the encrypted ballot to verify the proof $\pi$.
-    \item $PBB$ is an honest and accessible public bulletin board. Here, \glqq honest\grqq\ means that the $PBB$ does not discard any information published and answers queries truthfully.
-    It is possible to model voting systems with misbehaving bulletin boards. 
-    One such approach is described in \cite{cortier_fifty_2020}.
-    To simplify the construction we will only consider an honest public bulletin board.
-    Accessible means that all voters and the voting authority can publish entries to $PBB$ and query $PBB$ at any point. 
-    Neither information to publish nor answers from $PBB$ can be blocked.
+    \item $R_C$ is a relation indicating ballot validity.
+    To do so, $R_C$ relates between public instances $(pk, b')$ and private witnesses $(aux, b)$.
+    Here, $R_C((pk, b'), (aux, b))=1$ iff $b\in C$, $pk$ is a public key of $\mathcal{S}$, and $\mathcal{S}.Enc^{aux}(b, pk)=b'$. 
+    Otherwise, $R_C$ maps to $0$.
+    \item $ZPS(R_C)$ is a zero-knowledge proof system used to prove ballot validity. 
+    \glqq Ballot validity\grqq\ as defined by the relation $R_C$ above.
+    %Here, $Prove(CRS, (pk, b'), (aux, b))$ uses a plain ballot $b$ and the auxiliary information from the encryption of $b$ as the private witness as well as a public key $pk$ and the encrypted ballot $b'$ as an instance.
+    %The proof $\pi$ created by $Prove(CRS, (pk, b'), (aux, b))$ then shows that the ballot $b$ a voter chose is in $C$ and that $Enc^{aux}(b, pk)=b'$.
+    \footnote{\label{footnote:zkpKnowVsExists}
+      It is important to show that a voter \textit{knows} the ballot $b\in C$. 
+      It is not enough to show that such a ballot exists, since then, replay attacks based on copying the votes and corresponding \glspl{zkp} of other voters would be very problematic \cite{mestel_how_2022}. 
+
+      \todo{How do our ZKPs ensure this? In our version, can malicous voters not just copy the encrypted vote and zkp of other another voter? Do we need to include the ids of the voters in the instance of the ZKP?}
+    }
+    %Consequently, $Verify(CRS, (C, pk, b'), \pi)$ uses the public key and the encrypted ballot to verify the proof $\pi$.
+    \item $PBB$ is an honest and available public bulletin board\footnote{\label{footnote:honestAvailablePBB}
+      Here, \glqq honest\grqq\ means that the $PBB$ does not discard any information published and answers queries truthfully.
+      It is possible to model voting systems with misbehaving bulletin boards. 
+      One such approach is described in \cite{cortier_fifty_2020}.
+      To simplify the construction we will only consider an honest public bulletin board.
+      \glqq Available\grqq\ means that all voters and the voting authority can publish entries to $PBB$ and query $PBB$ at any point. 
+      Neither information to publish nor answers from $PBB$ can be blocked.
+    }. 
     \item $Setup$ is used at the start of the election to setup the $\mathcal{S}$ and $ZPS$ and subsequently also $PBB$, the voters and the voting authority.
     Here, the $Setup$ procedure is defined by \cref{alg:setupVotingScheme}.
     \item $V_0,\dots, V_{n-1}$ are voters. 
@@ -287,12 +317,16 @@ However, to simplify things a little, we assume that the voting authority and th
     Here, $VA$ is a five-tuple of the form $VA=(PBB, sk, Setup, agg, Tally)$. 
     $Setup(sk)$ sets the secret key used for decryption. 
     $agg((b'_0, \dots, b'_{n-1}))$ is the function performed on the encrypted ballots to aggregate them. 
-    This function is used in the tallying algorithm $Tally$ defined in \cref{alg:tally}.
+    This function is used in the tallying algorithm $Tally$ defined in \cref{alg:tally}.\footnote{\label{footnote:vaRegisterVoters} 
+      $VA$ needs to know which voters $V$ are part of the election in order to retrieve their ballots from $PBB$ via $id_V$.
+      In our system, we assume a fixed set of voters $\{V_0, \dots, V_{n-1}\}$ that $VA$ knows.
+      However, in a more flexible approach the $VA$ could register voters. \todo{Cite something}
+    }
   \end{itemize}
 \end{definition}
 
 \begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
-  \caption{Setup of a voting scheme $VS=(C, \mathcal{S}, ZPS, PBB, Setup, (V_0, \dots, V_{n-1}), VA)$}
+  \caption{Setup of a voting scheme $VS=(C, \mathcal{S}, ZPS, PBB, Setup, \{V_0, \dots, V_{n-1}\}, VA)$}
   \label{alg:setupVotingScheme}
   \begin{algorithmic}
   \Procedure{$Setup$}{}
@@ -320,14 +354,15 @@ However, to simplify things a little, we assume that the voting authority and th
 \end{Algorithmus}
 
 \begin{Algorithmus}
-  \caption{Tallying by a voting authority $VA=(PBB, sk, Setup, agg, tally)$}
+  \caption{Tallying by a voting authority $VA=(PBB, sk, Setup, agg, Tally)$}
   \label{alg:tally}
   \begin{algorithmic}
   \Procedure{$Tally$}{}
     \State $(C, ZPS, CRS, \mathcal{S}, pk, n)\gets PBB.obtain(setup)$
     \State $toAgg \gets []$
     \ForAll{$i \in \{0,\dots, n-1\}$}
-      \State $pb\gets PBB.obtain(id_{V_i})$
+      \State $pb\gets PBB.obtain(id_{V_i})$ 
+      %\cite{footnote:vaRegisterVoters}
       \If{$pb \neq \bot$}
         \State $(b'_i, \pi_i) := pb$
         \If{$ZPS.Verify(CRS, (pk, b'_i), \pi_i) = valid$}

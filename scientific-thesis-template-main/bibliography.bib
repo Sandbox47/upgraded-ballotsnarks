@@ -1,61 +1,3 @@
-% Encoding: UTF-8
-
-% ========================================================================================================================
-% TEST SOURCES
-
-%%%
-%
-%Beim Erstellen der Bibtex-Datei wird empfohlen darauf zu achten, dass die DOI aufgeführt wird.
-%
-%%%
-
-@Book{WSPA,
-  author    = {Sanjiva Weerawarana and Francisco Curbera and Frank Leymann and Tony Storey and Donald F. Ferguson},
-  title     = {Web Services Platform Architecture : SOAP, WSDL, WS-Policy, WS-Addressing, WS-BPEL, WS-Reliable Messaging, and More},
-  year      = {2005},
-  publisher = {Prentice Hall PTR},
-  isbn      = {0131488740},
-  doi       = {10.1.1/jpb001},
-}
-
-
-% !! DO NOT USE `label =   {ASF}` in other Misc entries !!
-
-@Misc{ApacheODE,
-  author = {{The Apache Software Foundation}},
-  title =  {Apache ODE\texttrademark{} -- The Orchestration Director Engine},
-  year =   {2016},
-  label =  {ASF},
-  url =    {http://ode.apache.org}
-}
-
-@Article{RVvdA2016,
-  author =    {H.A. Reijers and I. Vanderfeesten and W.M.P. van der Aalst},
-  title =     {The effectiveness of workflow management systems: A longitudinal study},
-  journal =   {International Journal of Information Management},
-  year =      {2016},
-  volume =    {36},
-  number =    {1},
-  pages =     {126--141},
-  month =     feb,
-  doi =       {10.1016/j.ijinfomgt.2015.08.003},
-  publisher = {Elsevier {BV}}
-}
-
-@Book{Duden2001,
-  author    = {Duden},
-  title     = {Die Deutsche Rechtschreibung},
-  year      = {2001},
-  edition   = {22., völlig neu bearbeitete und erweiterte Auflage},
-  note      = {Aktualisierter Nachdruck},
-  publisher = {Dudenverlag},
-  isbn      = {3-411-04012-2},
-}
-
-@Comment{jabref-meta: databaseType:biblatex;}
-
-% ========================================================================================================================
-% ACTUAL SOURCES
 
 @article{miyaji_new_2001,
 	title = {New {Explicit} {Conditions} of {Elliptic} {Curve} {Traces} for {FR}-{Reduction}},
@@ -211,7 +153,7 @@ Publisher: Multidisciplinary Digital Publishing Institute},
 	month = nov,
 	year = {2022},
 	pages = {1443--1457},
-	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/NHNFEXNK/Huber et al. - 2022 - Kryvos Publicly Tally-Hiding Verifiable E-Voting.pdf:application/pdf},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/NHNFEXNK/Huber et al. - 2022 - Kryvos Publicly Tally-Hiding Verifiable E-Voting.pdf:application/pdf;zk-snarks-for-ballot-validity:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/WLUBUE7G/zk-snarks-for-ballot-validity.pdf:application/pdf},
 }
 
 @incollection{pieprzyk_twisted_2008,
@@ -265,9 +207,12 @@ In this paper, we propose and implement several new Ordinos instantiations in or
 	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/FFG4AU6H/Hertel et al. - 2021 - Extending the Tally-Hiding Ordinos System Implementations for Borda, Hare-Niemeyer, Condorcet, and.pdf:application/pdf},
 }
 
-@book{noauthor_moonmath_nodate,
+@book{least_authority_moonmath_2024,
 	edition = {v1.1.5},
 	title = {The {MoonMath} {Manual} to {ZK}-{SNARKs}},
+	author = {{Least Authority}},
+	month = jun,
+	year = {2024},
 	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/CVHV8BAC/The MoonMath Manual to ZK-SNARKs.pdf:application/pdf},
 }
 
@@ -452,4 +397,109 @@ In this paper, we propose and implement several new Ordinos instantiations in or
 	year = {2016},
 	pages = {779--798},
 	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/2Q5BQ2LQ/Cortier et al. - 2016 - SoK Verifiability Notions for E-Voting Protocols.pdf:application/pdf},
+}
+
+@article{benaloh_simple_nodate,
+	title = {Simple {Veriﬁable} {Elections}},
+	abstract = {Much work has been done in recent decades to apply sophisticated cryptographic techniques to achieve strong end-to-end veriﬁability in election protocols. The properties of these protocols are much stronger than in any system in general use; however, the complexity of these systems has retarded their adoption. This paper describes a relatively simple but still eﬀective approach to cryptographic elections. Although not as computationally eﬃcient as previously proposed cryptographic approaches, the work presented herein is intended to be more accessible and therefore more suitable for comparison with other voting systems.},
+	language = {en},
+	author = {Benaloh, Josh},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/3QATYXUC/Benaloh - Simple Veriﬁable Elections.pdf:application/pdf},
+}
+
+@inproceedings{neff_verifiable_2001,
+	address = {New York, NY, USA},
+	series = {{CCS} '01},
+	title = {A verifiable secret shuffle and its application to e-voting},
+	isbn = {978-1-58113-385-1},
+	url = {https://dl.acm.org/doi/10.1145/501983.502000},
+	doi = {10.1145/501983.502000},
+	abstract = {We present a mathematical construct which provides a cryptographic protocol to verifiably shuffle a sequence of k modular integers, and discuss its application to secure, universally verifiable, multi-authority election schemes. The output of the shuffle operation is another sequence of k modular integers, each of which is the same secret power of a corresponding input element, but the order of elements in the output is kept secret. Though it is a trivial matter for the "shuffler" (who chooses the permutation of the elements to be applied) to compute the output from the input, the construction is important because it provides a linear size proof of correctness for the output sequence (i.e. a proof that it is of the form claimed) that can be checked by an arbitrary verifiers. The complexity of the protocol improves on that of Furukawa-Sako[16] both measured by number of exponentiations and by overall size.The protocol is shown to be honest-verifier zeroknowledge in a special case, and is computational zeroknowledge in general. On the way to the final result, we also construct a generalization of the well known Chaum-Pedersen protocol for knowledge of discrete logarithm equality [10], [7]. In fact, the generalization specializes exactly to the Chaum-Pedersen protocol in the case k = 2. This result may be of interest on its own.An application to electronic voting is given that matches the features of the best current protocols with significant efficiency improvements. An alternative application to electronic voting is also given that introduces an entirely new paradigm for achieving Universally Verifiable elections.},
+	urldate = {2025-03-03},
+	booktitle = {Proceedings of the 8th {ACM} conference on {Computer} and {Communications} {Security}},
+	publisher = {Association for Computing Machinery},
+	author = {Neff, C. Andrew},
+	month = nov,
+	year = {2001},
+	pages = {116--125},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/Q3ZQDG4X/Neff - 2001 - A verifiable secret shuffle and its application to e-voting.pdf:application/pdf},
+}
+
+@inproceedings{juels_coercion-resistant_2005,
+	address = {New York, NY, USA},
+	series = {{WPES} '05},
+	title = {Coercion-resistant electronic elections},
+	isbn = {978-1-59593-228-0},
+	url = {https://dl.acm.org/doi/10.1145/1102199.1102213},
+	doi = {10.1145/1102199.1102213},
+	abstract = {We introduce a model for electronic election schemes that involves a more powerful adversary than previous work. In particular, we allow the adversary to demand of coerced voters that they vote in a particular manner, abstain from voting, or even disclose their secret keys. We define a scheme to be coercion-resistant if it is infeasible for the adversary to determine if a coerced voter complies with the demands.A first contribution of this paper is to describe and characterize a new and strengthened adversary for coercion in elections. (In doing so, we additionally present what we believe to be the first formal security definitions for electronic elections of any type.) A second contribution is to demonstrate a protocol that is secure against this adversary. While it is clear that a strengthening of attack models is of theoretical relevance, it is important to note that our results lie close to practicality. This is true both in that we model real-life threats (such as vote-buying and vote-canceling), and in that our proposed protocol combines a fair degree of efficiency with an unusual lack of structural complexity. Furthermore, previous schemes have required use of an untappable channel throughout. Ours only carries the much more practical requirement of an anonymous channel during the casting of ballots, and an untappable channel during registration (potentially using postal mail).This extended abstract is a heavily truncated version of the full paper available at http://eprint.iacr.org/2002/165.},
+	urldate = {2025-03-03},
+	booktitle = {Proceedings of the 2005 {ACM} workshop on {Privacy} in the electronic society},
+	publisher = {Association for Computing Machinery},
+	author = {Juels, Ari and Catalano, Dario and Jakobsson, Markus},
+	month = nov,
+	year = {2005},
+	pages = {61--70},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/MUBNNLMY/Juels et al. - 2005 - Coercion-resistant electronic elections.pdf:application/pdf},
+}
+
+@misc{mestel_how_2022,
+	title = {How {Efficient} are {Replay} {Attacks} against {Vote} {Privacy}? {A} {Formal} {Quantitative} {Analysis}},
+	shorttitle = {How {Efficient} are {Replay} {Attacks} against {Vote} {Privacy}?},
+	url = {https://eprint.iacr.org/2022/743},
+	abstract = {Replay attacks are among the most well-known attacks against vote privacy. Many e-voting systems have been proven vulnerable to replay attacks, including systems like Helios that are used in real practical elections.
+
+Despite their popularity, it is commonly believed that replay attacks are inefficient but the actual threat that they pose to vote privacy has never been studied formally. Therefore, in this paper, we precisely analyze for the first time how efficient replay attacks really are.
+
+We study this question from commonly used and complementary perspectives on vote privacy, showing as an independent contribution that a simple extension of a popular game-based privacy definition corresponds to a strong entropy-based notion.
+
+Our results demonstrate that replay attacks can be devastating for a voter's privacy even when an adversary's resources are very limited. We illustrate our formal findings by applying them to a number of real-world elections, showing that a modest number of replays can result in significant privacy loss. Overall, our work reveals that, contrary to a common belief, replay attacks can be very efficient and must therefore be considered a serious threat.},
+	urldate = {2025-03-03},
+	author = {Mestel, David and Mueller, Johannes and Reisert, Pascal},
+	year = {2022},
+	note = {Publication info: Published elsewhere. IEEE CSF 2022},
+	keywords = {privacy, electronic voting, information flow},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/UWFJVPMP/Mestel et al. - 2022 - How Efficient are Replay Attacks against Vote Privacy A Formal Quantitative Analysis.pdf:application/pdf},
+}
+
+@misc{groth_size_2016,
+	title = {On the {Size} of {Pairing}-based {Non}-interactive {Arguments}},
+	url = {https://eprint.iacr.org/2016/260},
+	abstract = {Non-interactive arguments enable a prover to convince a verifier that a statement is true. Recently there has been a lot of progress both in theory and practice on constructing highly efficient non-interactive arguments with small size and low verification complexity, so-called succinct non-interactive arguments (SNARGs) and succinct non-interactive arguments of knowledge (SNARKs).
+
+Many constructions of SNARGs rely on pairing-based cryptography. In these constructions a proof consists of a number of group elements and the verification consists of checking a number of pairing product equations. The question we address in this article is how efficient pairing-based SNARGs can be.
+
+Our first contribution is a pairing-based (preprocessing) SNARK for arithmetic circuit satisfiability, which is an NP-complete language. In our SNARK we work with asymmetric pairings for higher efficiency, a proof is only 3 group elements, and verification consists of checking a single pairing product equations using 3 pairings in total. Our SNARK is zero-knowledge and does not reveal anything about the witness the prover uses to make the proof.
+
+As our second contribution we answer an open question of Bitansky, Chiesa, Ishai, Ostrovsky and Paneth (TCC 2013) by showing that 2-move linear interactive proofs cannot have a linear decision procedure. It follows from this that SNARGs where the prover and verifier use generic asymmetric bilinear group operations cannot consist of a single group element. This gives the first lower bound for pairing-based SNARGs. It remains an intriguing open problem whether this lower bound can be extended to rule out 2 group element SNARGs, which would prove optimality of our 3 element construction.},
+	urldate = {2025-03-03},
+	author = {Groth, Jens},
+	year = {2016},
+	note = {Publication info: A minor revision of an IACR publication in EUROCRYPT 2016},
+	keywords = {bilinear groups, linear interactive proofs, non-interactive zero-knowledge arguments, quadratic arithmetic programs, SNARKs},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/GIQD8I2F/Groth - 2016 - On the Size of Pairing-based Non-interactive Arguments.pdf:application/pdf},
+}
+
+@book{cohen_handbook_2005,
+	edition = {0},
+	title = {Handbook of {Elliptic} and {Hyperelliptic} {Curve} {Cryptography}},
+	isbn = {978-0-367-80162-5},
+	url = {https://www.taylorfrancis.com/books/9781420034981},
+	language = {en},
+	urldate = {2025-03-06},
+	publisher = {Chapman and Hall/CRC},
+	editor = {Cohen, Henri and Frey, Gerhard and Avanzi, Roberto and Doche, Christophe and Lange, Tanja},
+	month = jul,
+	year = {2005},
+	doi = {10.1201/9781420034981},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/G6WHAXTW/Cohen et al. - 2005 - Handbook of Elliptic and Hyperelliptic Curve Cryptography.pdf:application/pdf},
+}
+
+@misc{noauthor_case_2009,
+	title = {The {Case} for {Elliptic} {Curve} {Cryptography} - {NSA}/{CSS}},
+	url = {https://web.archive.org/web/20090117023500/http://www.nsa.gov/business/programs/elliptic_curve.shtml},
+	urldate = {2025-03-07},
+	month = jan,
+	year = {2009},
+	file = {Snapshot:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/WQJK42XY/elliptic_curve.html:text/html},
 }
