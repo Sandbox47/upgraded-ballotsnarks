@@ -248,3 +248,16 @@ echo "Results saved in 'results/${mode}/${electionType}.csv'."
 echo "Exported constraint count (non-lin, lin, total)=(${nonLinearConstraints}, ${linearConstraints}, ${constraints})."
 echo "Exported CRS size (${crsSize}MB)."
 echo "Exported times (preparation, proving, verification)=(${t_prep}ms, ${t_prove}ms, ${t_ver}ms)."
+
+# ========================================================================================================================
+# 9. Cleanup
+
+echo "Cleaning up unnecessary files..."
+
+cd "${electionType}"
+rm -rf circomTestFiles
+rm -rf sageTestFiles
+rm -rf snarkjsTestFiles
+cd ..
+
+echo "Cleanup complete.
