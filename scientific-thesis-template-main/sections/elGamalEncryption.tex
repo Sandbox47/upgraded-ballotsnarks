@@ -80,9 +80,11 @@ We define:
     \end{align*}
     \item For $\mathcal{C}$:
     \begin{align*}
-        c_1\odot_{\mathcal{C}}c_2 &= Enc(m_1, pk)\odot_{\mathcal{C}} Enc(m_2, pk)\\
-        &= (g^{y_1}, h^{y_1}\odot_{\mathbb{G}} m_1)\odot_{\mathcal{C}} (g^{y_2}, h^{y_2}\odot_{\mathbb{G}} m_2)\\
-        :&= (g^{y_1+y_2}, h^{y_1+y_2}\odot_{\mathbb{G}} m_1\odot_{\mathbb{G}} m_2)
+        c_1\odot_{\mathcal{C}}c_2 &= (c_{1,0}, c_{1,1})\odot_\mathcal{C} (c_{2,0}, c_{2,1})\\
+        &= (c_{1,0}\odot_\mathbb{G} c_{2,0}, c_{1,1}\odot_\mathbb{G} c_{2,1})
+        %c_1\odot_{\mathcal{C}}c_2 &= Enc(m_1, pk)\odot_{\mathcal{C}} Enc(m_2, pk)\\
+        %&= (g^{y_1}, h^{y_1}\odot_{\mathbb{G}} m_1)\odot_{\mathcal{C}} (g^{y_2}, h^{y_2}\odot_{\mathbb{G}} m_2)\\
+        %:&= (g^{y_1+y_2}, h^{y_1+y_2}\odot_{\mathbb{G}} m_1\odot_{\mathbb{G}} m_2)
     \end{align*}
 \end{itemize}
 
@@ -101,7 +103,7 @@ Then, we get:
 Despite the homomorphic property, standard ElGamal is not useful when it comes to aggregating ballots.
 To aggregate two ballots $b_1, b_2$ from a choice space $C$, we need to add them by performing the standard (component-wise) addition $b_1+b_2$.
 However, ElGamal encryption would only allow us to compute the (component-wise) operation $b_1\odot_{\mathbb{G}} b_2$ of two ballots $b_1$ and $b_2$ by performing the operation $\mathcal{C}$ on the corresponding ciphertexts.
-The operation $\odot_{\mathbb{G}}$ depends on the generated group $\mathbb{G}$ and in most cases is closer to the standard multiplication \glqq$\cdot$\grqq tan the addition \glqq$+$\grqq.
+The operation $\odot_{\mathbb{G}}$ depends on the generated group $\mathbb{G}$ and in most cases is closer to the standard multiplication \glqq$\cdot$\grqq\ than the addition \glqq$+$\grqq.
 To allow for (component-wise) addition of ballots, we need a slight variation of ElGamal, namely Exponential ElGamal.
 
 \section{Exponential ElGamal Encryption Scheme}
@@ -126,8 +128,10 @@ Formally, we define \gls{eeg} Encryption as in \cite{aldini_cryptographic_2014} 
         \end{align*}
         To compute the original message $m$ the algorithm computes $m$ such that $g^m=\tilde{m}$.\footnote{\label{footnote:eegDiscreteLogProblem}
             Note that this is equivalent to the Discrete Logarithm problem and assumed to be computationally hard for the groups $\mathbb{G}$ chosen in a secure \gls{eeg} encryption scheme if $m$ can be any element of $\mathbb{G}$.
-            However, in practical applications such as voting schemes the message is typically part of a very limited choice space $C\subsetneq \mathbb{G}$.
-            Then computing $m$ is possible by a guess-and-checkk approach where we try all elements $m\in C$ and return the current choice if $g^m=\tilde{m}$.
+            However, in practical applications such as voting schemes the message is typically one entry of a ballot in a choice space $C$. 
+            The set of allowed values for these entries $C_{entry}$ is typically very small.
+            In our example voting scheme from \cref{chap:votingschemes}, we had $C_{entry}=\{0,1\}$.
+            Then computing $m$ is possible by a guess-and-check approach where we try all elements $m\in C_{entry}$ and return the current choice if $g^m=\tilde{m}$.
         }
     \end{itemize}
 \end{definition}
@@ -160,8 +164,9 @@ Then, we get:
     & = Dec(Enc(m_1, (\mathbb{G}, n, g, h))\odot_{\mathcal{C}} Enc(m_2, pk), (\mathbb{G}, n, g ,h))\\
     & = Dec((g^{y_1}, h^{y_1}\odot_{\mathbb{G}}g^{m_1})\odot_{\mathcal{C}} (g^{y_2}, h^{y_2}\odot_{\mathbb{G}}g^{m_2}), sk)\\
     & = Dec((g^{y_1+y_2}, h^{y_1+y_2}\odot_{\mathbb{G}}g^{m_1+m_2}), (\mathbb{G}, n, g, x))\\
-    & = h^{y_1+y_2}\odot_{\mathbb{G}}g^{m_1+m_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1}\\
-    & = (g^x)^{y_1+y_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1}\odot_{\mathbb{G}}g^{m_1+m_2}\\
+    & = dlog_{(\mathbb{G}),g}(h^{y_1+y_2}\odot_{\mathbb{G}}g^{m_1+m_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1})\\
+    & = dlog_{(\mathbb{G}),g}((g^x)^{y_1+y_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1}\odot_{\mathbb{G}}g^{m_1+m_2})\\
+    & = dlog_{(\mathbb{G}),g}(g^{m_1+m_2})\\
     & = m_1+m_2\\
     & = m_1\odot_{\mathcal{M}}m_2
 \end{align*}

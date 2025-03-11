@@ -29,7 +29,7 @@ Later on, we use both representations in the voting scheme.
 
 \begin{definition}[Affine Montgomery Curve]
     Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$.
-    Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\neq4 \mod p$.
+    Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\mod p\neq4$.
     Then, the corresponding Affine Montgomery curve is the group $(M_{A,B}(\mathbb{F}), \odot_M^{Aff})$, with:
     \begin{itemize}
         \item The set of points $M_{A,B}(\mathbb{F})$:
@@ -51,7 +51,7 @@ Later on, we use both representations in the voting scheme.
                 %\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2, \left(\frac{y_2-y_1}{x_2-x_1}\right)\cdot\left(x_1-\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2\right)\right)-y_1\right), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
             \end{cases}
         \end{align*}
-        $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleAffineMontgomery} and \ref{alg:chordRuleAffineMontgomery}.
+        $TangentRule$ and $ChordRule$ are defined in \cref{alg:tangentRuleAffineMontgomery} and \cref{alg:chordRuleAffineMontgomery}.
     \end{itemize}
     The neutral element of $M_{A,B}(\mathbb{F})$ is $\mathcal{O}$.
     For $P\in M_{A,B}(\mathbb{F})$, the inverse element $P^{-1}$ is defined as $P^{-1}:=\begin{cases}
@@ -60,7 +60,7 @@ Later on, we use both representations in the voting scheme.
     \end{cases}$.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Affine Tangent Rule used to compute $P\odot_M^{Aff} P$ where $P=(x,y)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.}
     \label{alg:tangentRuleAffineMontgomery}
     \begin{algorithmic}
@@ -73,7 +73,7 @@ Later on, we use both representations in the voting scheme.
     \end{algorithmic}
 \end{Algorithmus}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Affine Chord Rule used to compute $P_1\odot_M^{Aff} P_2$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.}
     \label{alg:chordRuleAffineMontgomery}
     \begin{algorithmic}
@@ -377,7 +377,7 @@ For this purpose, we define a quotient map $x$ to map projective points to pairs
 Specially treated is the point at infinity $[0:1:0]$.
 \begin{definition}[Quotient Map of Montgomery Curves]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
-    Then, we define te quotient map $x$ as follows:
+    Then, we define the quotient map $x$ as follows:
     \begin{align*}
         &x:M_{A,B}(\mathbb{F}P^2)\to \{[X:Z]|X,Z\in\mathbb{F}\},\\
         &x([X:Y:Z]) :=\begin{cases}
@@ -407,7 +407,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     We can compute $xAdd$ as presented in \cref{alg:xAdd}.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Pseudooperation $xAdd$ used to compute $x(P\odot_M^{Pro} Q)$ from $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$ with $P,Q\in M_{A,B}(\mathbb{F}P^2)$ and $P\neq Q$.}
     \label{alg:xAdd}
     \begin{algorithmic}
@@ -430,7 +430,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     We can compute $xDbl$ as presented in \cref{alg:xDbl}.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Pseudooperation $xDbl$ used to compute $x(P\odot_M^{Pro} P)=x(P^2)$ from $x(P)$ with $P\in M_{A,B}(\mathbb{F}P^2)$.}
     \label{alg:xDbl}
     \begin{algorithmic}
@@ -456,7 +456,9 @@ The Montgomery Ladder Algorithm computes $x(P^n)$ along with $x(P^{n+1})$ which 
     Then, we can compute $(x(P^n), x(P^{n+1}))$ with $MontgomeryLadder$ defined in \cref{alg:montgomeryLadder}.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+A proof of correctness of the $MontgomeryLadder$ is given in section 4.1 of \cite{costello_montgomery_2018}.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Montgomery Ladder algorithm used to compute $x(P^n)$ and $x(P^{n+1})$ from $x(P)$ with $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
         Here, $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
     }
@@ -500,7 +502,10 @@ To reconstruct the $Y$ coordinate $Y_n$ of $P^{n}=[X_n:Y_n:Z_n]$, we use a recov
     Then, we can reconstruct the complete $Q=Q_{rec}$, including the $Y$ coordinate from $(x_P, y_P):=I^{-1}(P)=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$, $x(Q)=[X_Q:Z_Q]$ and $x(P\odot_M^{Pro} Q)=[X_\odot:Z_\odot]$ using \cref{alg:okSakYRecovery}.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+The algorithm $OkSakYRecovery$ we use here is based on Theorem 2 in \cite{goos_efficient_2001}. 
+A proof of this theorem can be found in section B in the Appendix of \cite{goos_efficient_2001}.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Okeya-Sakurai $Y$-Recovery used to recover $Q$ with $Y$ coordinate from $P$, $x(Q)$ and $x(P\odot_M^{Pro} Q)$.
     Here, $P=[X_P:Y_P:Z_P],P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, with $Y_P\neq 0$.}
     \label{alg:okSakYRecovery}
@@ -549,7 +554,7 @@ We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024
     Then, we can reconstruct the complete $P^n=Q_{rec}$, including the $Y$ coordinate from $P, x(P^n)$ and $x(P^{n+1})$ using \cref{alg:montgomeryYRecovery}.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{$Y$-Recovery used to recover $P^n$ with $Y$ coordinate from $P$, $x(P^n)$ and $x(P^{n+1})$ for some $n\in\mathbb{N}$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$.}
     \label{alg:montgomeryYRecovery}
@@ -580,7 +585,7 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     Then, we can compute $P^n$ with $Exponentiation$ as described in \cref{alg:montgomeryExponentiation}.
 \end{definition}
 
-\begin{Algorithmus} %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Exponentiation on Montgomery curves. Used to compute $P^n$ where $P\in M_{A,B}^{Pro}$ and $n\in\mathbb{N}$. 
         Here, $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
     }
