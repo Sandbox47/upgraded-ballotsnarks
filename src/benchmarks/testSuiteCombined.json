@@ -228,90 +228,6 @@
         "command": "./benchmark.sh combined multiVote 32 nVotes=575 maxVotesCand=5 maxChoices=1150"
     },
     {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 350,
-        "nGrades": 350,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=350 nGrades=350"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 350,
-        "nGrades": 6,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=350 nGrades=6"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 400,
-        "nGrades": 400,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=400 nGrades=400"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 400,
-        "nGrades": 6,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=400 nGrades=6"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 450,
-        "nGrades": 450,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=450 nGrades=450"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 450,
-        "nGrades": 6,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=450 nGrades=6"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 500,
-        "nGrades": 500,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=500 nGrades=500"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 500,
-        "nGrades": 6,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=500 nGrades=6"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 550,
-        "nGrades": 550,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=550 nGrades=550"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 550,
-        "nGrades": 6,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=550 nGrades=6"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 575,
-        "nGrades": 575,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=575 nGrades=575"
-    },
-    {
-        "name": "majorityJudgement",
-        "bitsVotes": 32,
-        "nCand": 575,
-        "nGrades": 6,
-        "command": "./benchmark.sh combined majorityJudgement 32 nCand=575 nGrades=6"
-    },
-    {
         "name": "lineVote",
         "bitsVotes": 32,
         "nVotes": 350,
@@ -346,42 +262,6 @@
         "bitsVotes": 32,
         "nVotes": 575,
         "command": "./benchmark.sh combined lineVote 32 nVotes=575"
-    },
-    {
-        "name": "condorcet",
-        "bitsVotes": 32,
-        "nCand": 350,
-        "command": "./benchmark.sh combined condorcet 32 nCand=350"
-    },
-    {
-        "name": "condorcet",
-        "bitsVotes": 32,
-        "nCand": 400,
-        "command": "./benchmark.sh combined condorcet 32 nCand=400"
-    },
-    {
-        "name": "condorcet",
-        "bitsVotes": 32,
-        "nCand": 450,
-        "command": "./benchmark.sh combined condorcet 32 nCand=450"
-    },
-    {
-        "name": "condorcet",
-        "bitsVotes": 32,
-        "nCand": 500,
-        "command": "./benchmark.sh combined condorcet 32 nCand=500"
-    },
-    {
-        "name": "condorcet",
-        "bitsVotes": 32,
-        "nCand": 550,
-        "command": "./benchmark.sh combined condorcet 32 nCand=550"
-    },
-    {
-        "name": "condorcet",
-        "bitsVotes": 32,
-        "nCand": 575,
-        "command": "./benchmark.sh combined condorcet 32 nCand=575"
     },
     {
         "name": "bordaTournamentStyle",

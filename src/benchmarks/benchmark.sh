@@ -260,4 +260,4 @@ rm -rf sageTestFiles
 rm -rf snarkjsTestFiles
 cd ..
 
-echo "Cleanup complete.
+echo "Cleanup complete."
