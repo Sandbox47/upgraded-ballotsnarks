@@ -233,6 +233,7 @@ However, to simplify things a little, we assume that the voting authority and th
 }
 
 \begin{definition}[Choice space]
+  \label{def:choiceSpace}
     A choice space $C$ is a set of allowed ballots. 
     Ballots are always either vectors or matrices of natural numbers.
 
@@ -241,13 +242,14 @@ However, to simplify things a little, we assume that the voting authority and th
     \begin{itemize}
       \item $C\neq \emptyset$
       \item \begin{align*}
-        C\subseteq \mathbb{F}\quad\lor \quad C\subseteq\bigcup\limits_{i\in\mathbb{F}}\mathbb{F}^{i}\cup \quad\lor\quad C\subseteq\bigcup\limits_{(i,j)\in\mathbb{F}^2}\mathbb{F}^{i\times j}\text{.}
+        C\subseteq \mathbb{F}\quad\lor \quad C\subseteq\bigcup\limits_{i\in\mathbb{N}}\mathbb{F}^{i}\cup \quad\lor\quad C\subseteq\bigcup\limits_{(i,j)\in\mathbb{N}^2}\mathbb{F}^{i\times j}\text{.}
       \end{align*}
     \end{itemize}
     
 \end{definition}
 
 \begin{definition}[Public Bulletin Board]
+  \label{def:pbb}
   A public bulletin board $PBB$ is a dictionary of public information.
   Anyone with access to this board can publish new information or obtain existing information.
   Formally, $PBB=(publish, obtain)$. 
@@ -255,15 +257,21 @@ However, to simplify things a little, we assume that the voting authority and th
   $obtain(id)$ will return $x$ if $publish(id, x)$ was executed by any party sometime before and $\bot$ otherwise.
 \end{definition}
 
-\begin{definition}[Zero Knowledge Proof System for Relation $R$ \cite{groth_size_2016}]
-  Let $R: \mathcal{I}\times\mathcal{W}\to \{0,1\}$ be a binary polynomial time decidable relation $R$ \cite{least_authority_moonmath_2024}.
-  Here, $R$ relates instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$:
+\begin{definition}[Relation \cite{least_authority_moonmath_2024}]
+  \label{def:relation}
+  Let $\mathcal{I}$ be a set of private instances, let $\mathcal{W}$ be a set of public witnesses.
+  Then, a relation $R$ between instances and witnesses is defined as follows:
   \begin{align*}
-    R(I, W) = \begin{cases}
+    R:\mathcal{I}\times\mathcal{W}\to\{0,1\},\:R(I, W) = \begin{cases}
       1, \quad\text{if } I \text{ and } W \text{ are related}\\
       0, \quad\text{otherwise.}
     \end{cases}
   \end{align*}
+\end{definition}
+
+\begin{definition}[Zero Knowledge Proof System for Relation $R$ \cite{groth_size_2016}]
+  \label{def:zpsForR}
+  Let $R$ be a binary polynomial time decidable relation \cite{least_authority_moonmath_2024} relating instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$.
   A zero knowledge proof system $ZPS(R)$ for the relation $R$ consists of three algorithms: 
   \begin{itemize}
     \item $Setup()$: This algorithm generates some auxiliary public information $CRS$ ("common reference string") that is needed to coduct and verify proofs for the relation $R$.
@@ -301,7 +309,7 @@ However, to simplify things a little, we assume that the voting authority and th
     % We use $Sign(m, sk)$ to denote the signature of a message $m$ under the secret key $sk$.
     % Similarly, we denote the verification of the signature $s$ for the message $m$ with the public key $pk$ by $Vrfy(m, s, pk)$.
     \item $R_C$ is a relation indicating ballot validity.
-    To do so, $R_C$ relates between public instances $(pk, b')$ and private witnesses $(aux, b)$.
+    To do so, $R_C$ relates public instances $(pk, b')$ and private witnesses $(aux, b)$.
     Here, $R_C((pk, b'), (aux, b))=1$ iff $b\in C$, $pk$ is a public key of $\mathcal{S}$, and $\mathcal{S}.Enc^{aux}(b, pk)=b'$. 
     Otherwise, $R_C$ maps to $0$.
     \item $ZPS(R_C)$ is a zero-knowledge proof system used to prove ballot validity. 

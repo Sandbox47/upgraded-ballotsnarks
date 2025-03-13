@@ -1,14 +1,21 @@
 \chapter{General Purpose Zero Knowledge Proofs}
+\label{chap:gpzkp}
 In the voting schemes introduced in \cref{chap:votingschemes}, we employ \glspl{zkp} to ensure ballot validity.
-Specifically, we use \glspl{gpzkp} over correct circuit execution to provide the ballot validity proofs.
-Fundamentally, \glspl{gpzkp} allow us to prove any statement expressible inside an algebraic circuit.
-Algebraic circuits are representations of algebraic functions.
+Previously, we used relations between public instance values and private witness values to express ballot validity.
+In our voting scheme, the relation $R$ is fulfilled if and only if the private ballot of a voter is chosen from the choice space and encrypts to the public encrypted ballot published by the voter.
+Now, we employ algebraic circuits to express the choice space membership checks and encryption of ballots.
+Then, we use \glspl{gpzkp} over correct circuit execution to provide the ballot validity proofs.
+%Fundamentally, \glspl{gpzkp} allow us to prove any statement expressible inside an algebraic circuit.
+%Algebraic circuits are representations of algebraic functions.
+%Moreover, \glspl{gpzkp} allow us to prove correct circuit execution even if we hide some inputs and outputs.
+%In this sense, depending on which values are public and which are private, 
 We introduce \glspl{gpzkp} is a similar fashion to \cite{least_authority_moonmath_2024}.
 
 \section{Algebraic Functions and Algebraic Circuts}
 An algebraic circuit models an algebraic function $r$ that maps from a set of inputs to a set of outputs.
 %An algebraic circuit represents a relation between a set of input signals and a set of output signals from a fixed field.
 \begin{definition}[Algebraic Function]
+    \label{def:algebraicFunction}
     Let $(\mathbb{F}, +, \cdot)$ be a finite field.
     Let $m, n\in\mathbb{N}$ where $m$ is the number of input signals and $n$ is the number of output signals.
     Then, an algebraic function is defined as:
@@ -132,15 +139,15 @@ We can express this membership of the choice space by the function $r_{3\text{-}
 \end{figure}
 \end{center}
 
-
 Now, we can assign arbitrary input and output values to the circuit for the function $r$.
 If we then compute the algebraic function $r$ on the input values, this either yields the chosen output values or it yields something else.
-If the computation results in the same output values as the ones chosen before, we say that the relation expressed by $r$ holds.
-Furthermore, we can fix some of the input and output values of the circuit.
-Then it is either possible to assign values to the rest of the signals such that the relation expressed by $r$ holds or it is not possible to do so.
-We can formalize these ideas with the concept of relation satisfiability.
-
-\begin{definition}[Relation Satisfiability]
+If the computation results in the same output values as the ones chosen before, we say that the circuit for $r$ is satisfied.
+% Furthermore, we can fix some of the input and output values of the circuit.
+% Then it is either possible to assign values to the rest of the signals such that the circuit for $r$ holds or it is not possible to do so.
+We can formalize these ideas with the concept circuit satisfiability.
+% 
+\begin{definition}[Circuit Satisfiability]
+    \label{circuitSat}
     Let $(\mathbb{F}, +, \cdot )$ be a finite field.
     Let $r:\mathbb{F}^m\to \mathbb{F}^n$ be an algebraic function.
     
@@ -149,34 +156,34 @@ We can formalize these ideas with the concept of relation satisfiability.
     \begin{align*}
         \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\:S_i^{in},S_j^{out}\in\mathbb{F}
     \end{align*}
-    We say that $S$ satisfies the relation expressed by $r$, if and only if $r(S_1^{in},\dots, S_{m}^{in})=(S_1^{out},\dots, S_{n}^{out})$.
-    We call the relation expressed by $r$ satisfiable if there exists an assignment $S$ such that $S$ satisfies the relation expressed by $r$.
+    We say that $S$ satisfies the circuit for $r$, if and only if $r(S_1^{in},\dots, S_{m}^{in})=(S_1^{out},\dots, S_{n}^{out})$.
+    % We call the circuit for $r$ satisfiable if there exists an assignment $S$ such that $S$ satisfies the circuit for $r$.
+    % We define the set of all assignments $S$ that satisfy $r$ as the language of $r$: $L_r\{S\in\mathbb{F}^{m+n}|S \text{ satisfies } r\}$.
     
-    Let $I=(I_1^{in}, \dots, I_{m}^{in}, I_1^{out},\dots, I_{n}^{out})$ be a partial assignment to $f$.
-    Here:
-    \begin{align*}
-        \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\:I_i^{in},I_j^{out}\in\mathbb{F}\cup\{\bot\}  
-    \end{align*}
-    We call the relation expressed by $r$ satisfiable under $I$ if there is an assignment $S'=(S'^{in}_1, \dots, S'^{in}_{m}, S'^{out}_1,\dots, S'^{out}_{n})$ that satisfies the relation expressed by $r$, where:
-    \begin{align*}
-        \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\\
-        S'^{in}_i=I_{i}^{in} \:\text{ if }\: I_{i}^{in}\neq \bot\\
-        S'^{in}_j=I_{j}^{out} \:\text{ if }\: I_{j}^{out}\neq \bot
-    \end{align*}
+    % Let $I=(I_1^{in}, \dots, I_{m}^{in}, I_1^{out},\dots, I_{n}^{out})$ be a partial assignment to $f$.
+    % Here:
+    % \begin{align*}
+    %     \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\:I_i^{in},I_j^{out}\in\mathbb{F}\cup\{\bot\}  
+    % \end{align*}
+    % We call the circuit for $r$ satisfiable under $I$ if there is an assignment $S'=(S'^{in}_1, \dots, S'^{in}_{m}, S'^{out}_1,\dots, S'^{out}_{n})$ that satisfies the circuit for $r$, where:
+    % \begin{align*}
+    %     \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\\
+    %     S'^{in}_i=I_{i}^{in} \:\text{ if }\: I_{i}^{in}\neq \bot\\
+    %     S'^{in}_j=I_{j}^{out} \:\text{ if }\: I_{j}^{out}\neq \bot
+    % \end{align*}
 \end{definition}
-
-% For instance, the assignment $(5,2,4,1)$ satisfies $r_{3\text{-}fac}$ since $5\cdot 2\cdot 4=1$ in $\mathbb{Z}_{13}$.
-% Therfore, $r_{3\text{-}fac}$ is satisfiable.
-% However, the assignment $(1,0,3,7)$ does not satisfy $r_{3\text{-}fac}$ since $1\cdot 0\cdot 3=0\neq 7$ in $\mathbb{Z}_{13}$.
-% Similarily, $r_{3\text{-}fac}$ is satisfiable under the partial assignment $(\bot, 2, 4, \bot)$ but not under the partial assignment $(0,\bot, \bot, 1)$.
-
-For instance, the assignment $(0,0,1,0,0,0,0)$ satisfies the relation expressed by $r_{3\text{-}vot}$ since $(0,0,1)\in C$.
-Therfore, the relation expressed by $r_{3\text{-}vot}$ is satisfiable.
-However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy the relation expressed by $r_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.
-Similarily, the relation expressed by $r_{3\text{-}vot}$ is satisfiable under the partial assignment $(\bot, \bot, 1, 0,0,0,0)$ but not under the partial assignment $(2,\bot, \bot, 0,0,0,0)$.
+% 
+% % For instance, the assignment $(5,2,4,1)$ satisfies $r_{3\text{-}fac}$ since $5\cdot 2\cdot 4=1$ in $\mathbb{Z}_{13}$.
+% % Therfore, $r_{3\text{-}fac}$ is satisfiable.
+% % However, the assignment $(1,0,3,7)$ does not satisfy $r_{3\text{-}fac}$ since $1\cdot 0\cdot 3=0\neq 7$ in $\mathbb{Z}_{13}$.
+% % Similarily, $r_{3\text{-}fac}$ is satisfiable under the partial assignment $(\bot, 2, 4, \bot)$ but not under the partial assignment $(0,\bot, \bot, 1)$.
+% 
+For instance, the assignment $(0,0,1,0,0,0,0)$ satisfies the circuit for $r_{3\text{-}vot}$ since $(0,0,1)\in C$.
+Therfore, the circuit for $r_{3\text{-}vot}$ is satisfiable.
+However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy the circuit for $r_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.
+% Similarily, the circuit for $r_{3\text{-}vot}$ is satisfiable under the partial assignment $(\bot, \bot, 1, 0,0,0,0)$ but not under the partial assignment $(2,\bot, \bot, 0,0,0,0)$.
 
 \section{Rank-1 Constraint Systems}
-\label{def:r1cs}
 Fundamentally, \glspl{r1cs} are systems of equations of a specific format between a set of variables.
 
 \begin{definition}[Rank-1 Constraint System]
@@ -251,7 +258,7 @@ Therefore, we set $n=7$ and $k=7$ for the \gls{r1cs} and set the variables as fo
     (S_1,S_2,S_3,S_4,S_5,S_6,S_7) = (S_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
 \end{align*}
 
-Then, we need to choose the constants $a_i^j, b_i^j, c_i^j$ for $i\in\{0,\dots, 7\}, j\in\{1,2,3,4\}$ as follows:
+Then, for the computation of $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$ we need to choose the constants $a_i^j, b_i^j, c_i^j$ for $i\in\{0,\dots, 7\}, j\in\{1,2,3,4\}$ as follows:
 \begin{align*}
     \text{For } S_1^{out}:&&&&&&&&&&&&&&\\
     a_0^1=1 && a_1^1=-1 && a_2^1=0 && a_3^1=0 && a_4^1=0 && a_5^1=0 && a_6^1=0 && a_7^1=0\\
@@ -291,6 +298,38 @@ Now, we can construct the equation system:
 }
 
 As we can see, this \gls{r1cs} $R_{r_{3\text{-}vot}}$ does represent $r_{3\text{-}vot}$.
+We can now define \gls{r1cs} Satisfiability in a similar fashion to Circuit Satisfiability.
+
+\begin{definition}[\gls{r1cs} Satisfiability]
+    \label{def:r1csSat}
+    Let $(\mathbb{F},+,\cdot )$ be a field, let $n,k\in\mathbb{N}$.
+    Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
+    Let $R$ be the corresponding \gls{r1cs} as in \cref{def:r1cs}.
+    Let $S=(S_1,\dots, S_n)$ be an assignment to $R$.
+    Then, we say that $S$ satisfies $R$, if and only if all $k$ equations from \cref{def:r1cs} are fulfilled.    
+
+    We call $R$ satisfiable, if there is an assignment $S$ that satisfies $R$.
+\end{definition}
+
+As we have shown before, the circuit for $r_{3\text{-}vot}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
+Therefore, the \gls{r1cs} $R_{r_{3\text{-}vot}}$ should also be satisfied by $S$ but not by $S'$.
+We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the equations of $R_{r_{3\text{-}vot}}$:
+\begin{itemize}
+    \item Assignment $(0,0,1,0,0,0,0)$:
+    \begin{align*}
+        \left(1-0\right)\cdot \left(0\right) = \left(0\right)\\
+        \left(1-0\right)\cdot \left(0\right) = \left(0\right)\\
+        \left(1-1\right)\cdot \left(1\right) = \left(0\right)\\
+        \left(1-0-0-1\right)\cdot \left(0+0+1\right) = \left(0\right)\\
+    \end{align*}
+    \item Assignment $(1,1,0,0,0,0,0)$:
+    \begin{align*}
+        \left(1-1\right)\cdot \left(1\right) = \left(0\right)\\
+        \left(1-1\right)\cdot \left(1\right) = \left(0\right)\\
+        \left(1-0\right)\cdot \left(0\right) = \left(0\right)\\
+        \left(1-1-1-0\right)\cdot \left(0+1+1\right) = -2 \neq \left(0\right)\\
+    \end{align*}
+\end{itemize}
 
 \section{Quadratic Arithmetic Programs}
 To use \glspl{r1cs} in \glspl{gpzkp}, we need to transform them into another different representation, namely \glspl{qap}.
@@ -513,7 +552,128 @@ Putting everything together, we get $QAP(R_{r_{3\text{-}vot}})$ as follows (when
     &\phantom{=bl} \{0,&& 0,&& 10x^3 + 7x^2 + 3x + 3\}&&\Bigr\}\\
 \end{align*}
 
+We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satisfiability.
 
+\begin{definition}[\gls{qap} Satisfiability]
+    \label{def:qapSat}
+    Let $(\mathbb{F},+,\cdot )$ be a field, let $n,k\in\mathbb{N}$.
+    Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
+    Let $R$ be the corresponding \gls{r1cs} as in \cref{def:r1cs} and 
+    \begin{align*}
+        QAP(R)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
+    \end{align*}
+    be the corresponding \gls{qap}.\\
+    Let $S=(S_1,\dots, S_n)$ be an assignment to $R$.
+    We compute a polynomial $P_S$ as follows:
+    \begin{align*}
+        P_S:=\left(A_0+\sum_{j=0}^{n}S_j\cdot A_j\right)\cdot\left(B_0+\sum_{j=0}^{n}S_j\cdot B_j\right)-\left(C_0+\sum_{j=0}^{n}S_j\cdot C_j\right)
+    \end{align*}
+    Then, we say that $S$ satisfies $QAP(R)$, if and only if $P_S\mod T = 0$.
+
+    We call $QAP(R)$ satisfiable, if there is an assignment $S$ that satisfies $QAP(R)$.
+\end{definition}
+
+As we have shown before, the \gls{r1cs} $R_{r_{3\text{-}vot}}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
+Therefore, the \gls{qap} $QAP(R_{r_{3\text{-}vot}})$ should also be satisfied by $S$ but not by $S'$.
+We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the definition of $P_S$ as in \cref{def:qapSat} and checking wheter this polynomial is divisible by $T$:
+\begin{itemize}
+    \item Assignment $S=(0,0,1,0,0,0,0)$:
+    {\setlength{\mathindent}{0pt}
+    \begin{align*}
+        \scriptstyle P_S&\scriptstyle=\left(1 + 0\cdot(2x^2+8x+1) + 0\cdot(5x^3+4x^2+11x) + 1\cdot(x^3+6x^2+x+5) + 0\cdot 0 + 0\cdot 0 + 0\cdot 0 + 0\cdot 0\right)\\
+        \scriptstyle &\scriptstyle\phantom{=bl}\cdot\left(0 + 0\cdot(11x^2+5x+12) + 0\cdot(8x^3+9x^2+2x) + 1\cdot(12x^3+7x^2+12x+8) + 0\cdot 0 + 0\cdot 0 + 0\cdot 0 + 0\cdot 0\right)\\
+        \scriptstyle &\scriptstyle\phantom{=bl}-\left(0 + 0\cdot 0 + 0\cdot 0 + 1\cdot 0 + 0\cdot(3x^3+4x^2+2x+9) + 0\cdot(11x^3+2x^2+12x+10) + 0\cdot(2x^3+9x+5) + 0\cdot(10x^3+7x^2+3x+3)\right)\\
+        \scriptstyle &\scriptstyle= (x^3+6x^2+x+6)\cdot(12x^3+7x^2+12x+8)-0\\
+        \scriptstyle &\scriptstyle= 12x^6+x^5+x^4+3x^3+11x^2+2x+9\\
+        &\\
+        \scriptstyle \rightsquigarrow&\scriptstyle P_S = (12 x^{2} + 9 x + 5)\cdot T + 0\\
+        \scriptstyle \rightsquigarrow&\scriptstyle P_S\mod T = 0
+    \end{align*}
+    }
+    \item Assignment $S'=(1,1,0,0,0,0,0)$:
+    {\setlength{\mathindent}{0pt}
+    \begin{align*}
+        \scriptstyle P_{S'}&\scriptstyle=\left(1 + 1\cdot(2x^2+8x+1) + 1\cdot(5x^3+4x^2+11x) + 0\cdot(x^3+6x^2+x+5) + 0\cdot 0 + 0\cdot 0 + 0\cdot 0 + 0\cdot 0\right)\\
+        \scriptstyle &\scriptstyle\phantom{=bl}\cdot\left(0 + 1\cdot(11x^2+5x+12) + 1\cdot(8x^3+9x^2+2x) + 0\cdot(12x^3+7x^2+12x+8) + 0\cdot 0 + 0\cdot 0 + 0\cdot 0 + 0\cdot 0\right)\\
+        \scriptstyle &\scriptstyle\phantom{=bl}-\left(0 + 1\cdot 0 + 1\cdot 0 + 0\cdot 0 + 0\cdot(3x^3+4x^2+2x+9) + 0\cdot(11x^3+2x^2+12x+10) + 0\cdot(2x^3+9x+5) + 0\cdot(10x^3+7x^2+3x+3)\right)\\
+        \scriptstyle &\scriptstyle= (5x^3+6x^2+6x+1)\cdot(8x^3+7x^2+7x+12)-0\\
+        \scriptstyle &\scriptstyle= x^{6} + 5 x^{5} + 8 x^{4} + 9 x^{3} + 4 x^{2} + x + 12\\
+        &\\
+        \scriptstyle \rightsquigarrow&\scriptstyle P_{S'} = (x^{2} + 10 x + 8)\cdot T + 11 x^{3} + 5 x^{2} + 8\\
+        \scriptstyle \rightsquigarrow&\scriptstyle P_{S'}\mod T = 1 x^{3} + 5 x^{2} + 8\neq 0
+    \end{align*}
+    }
+\end{itemize}
+
+\section{Instance and Witness}
+In practical applications such as proving ballot validity, we need to be able to conduct the proof without revealing the secret ballot. 
+More generally, we need to be able to hide a part of the assignment to a circuit for a relation $r$ and still be able to provide the proof of correct circuit execution.
+
+For this purpose, we split an assignment to the circuit for $r$ into an instance and a witness part. 
+As outlined in \cref{chap:votingschemes}, the instance is public and the witness is private.
+
+We can formalize this concept as an Instance-Witness Decomposition.
+
+\begin{definition}[Instance-Witness Decomposition]
+    Let $(\mathbb{F}, +, \cdot)$ be a finite field.
+    Let $r:\mathbb{F}^m\to\mathbb{F}^n$ be an algebraic function.
+    Then, $R_r$ is the corresponding \gls{r1cs} and $QAP(R_r)$ is the corresponding \gls{qap}.
+    The set of all assignments to $r$, $R_r$ and $QAP(R_r)$ is $\mathcal{A}=\mathbb{F}^{m+n}$.
+    In an Instance-Witness decomposition, we split this set into one set for instance and witness each: $\mathcal{I}=\mathbb{F}^u,\: \mathcal{W}=\mathbb{F}^v$ with $u+v=m+n$.
+    Furthermore, we use a permutation $p:\mathcal{I}\times\mathcal{W}\to \mathcal{A}$ to map an assignment to the instance and witness parts to a full assignment of the circuit for $r$.
+    The Instance-Witness decomposition $IWD(rep)$ where $rep\in\{r,R_r, QAP(R_r)\}$ is then defined as 
+    \begin{align*}
+        IWD(rep)=(\mathcal{I},\mathcal{W},p,rep)\text{.}
+    \end{align*}
+    We say that an assignment $(I,W)=((I_1,\dots, I_u), (W_1,\dots, W_v))\in\mathbb{F}^u\times\mathbb{F}^v$ satisfies $IWD(rep)$, if and onyl if $S=p((I,W))$ satisfies $rep$.
+    $IWD(rep)$ is called satisfiable, if there is an assignment $(I,W)\in\mathbb{F}^u\times\mathbb{F}^v$ such that $(I,W)$ satisfies $IWD(rep)$.
+    %two index sets $\{i_1,\dots, i_u\}$ and $\{w_1,\dots, w_v\}$ for some $u,v\in\mathbb{N}$ with $u+v=m+n$.
+\end{definition}
+
+We can also visualize an Instance-Witness decomposition as in \cref{fig:circuit:instanceWitnessDecomposition}.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{.48\textwidth}
+        \centering
+        \includegraphics[scale=1]{graphics/circuits/Notation_short.pdf}
+        %\caption{Circuit for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.48\textwidth}
+        \centering
+        \includegraphics[scale=1]{graphics/circuits/Notation_InstanceWitness.pdf}
+        %\caption{Exemplary Instance-Witness decomposition of $r$.}
+    \end{subfigure}
+    \caption{Circuit for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$ and exemplary Instance-Witness decomposition of $r$.}
+    \label{fig:circuit:instanceWitnessDecomposition}
+\end{figure}
+
+Once again, we consider $r_{3\text{-}vot}$ as an example. 
+To show ballot validity with the circuit for $r_{3\text{-}vot}$, we want to keep the ballot represented by the inputs $S_1^{in}, S_2^{in}$ and $S_3^{in}$ private.
+On the other hand, the output signals $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$ need to be $0$ in case we have a valid ballot as we observed earlier.
+Therefore, these signals can be public.
+To compute the corresponding Instance-Witness decomposition, we choose $\mathcal{I}=\mathbb{F}_{13}^{4}$ and $\mathcal{W}=\mathbb{F}_{13}^3$.
+Additionally, we choose the mapping $p$ as follows:
+\begin{align*}
+    p:\mathbb{F}_{13}^4\times \mathbb{F}_{13}^3\to\mathbb{F}_{13}^7, p((I_1, I_2, I_3, I_4), (W_1,W_2,W_3)) = (W_1,W_2,W_3,I_1,I_2,I_3,I_4)
+\end{align*}
+Then, $IWD(r)=(\mathcal{I}, \mathcal{W}, p, r)$ is the corresponding Instance-Witness decomposition.
+Visually, we can represent this as shown in \cref{fig:circuit:instanceWitnessDecompositionThreeVot}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.8]{graphics/circuits/ExampleVoting_instanceWitnessDecomposition.pdf}
+    \caption{Instance-Witness decomposition of the circuit for $r_{3\text{-}vot}$ if we choose the inputs as witness and the outputs as instance.}
+    \label{fig:circuit:instanceWitnessDecompositionThreeVot}
+\end{figure}
+
+Let $IWD(QAP(R_{r_{3\text{-}vot}}))=(\mathcal{I}, \mathcal{W}, p, QAP(R_{r_{3\text{-}vot}}))$ be defined analogously to $IWD(r)$.
+To prove that a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ without revealing it, a voter can create the assignment $S=p((0,0,0,0),(b_0,b_1,b_2))=(b_0,b_1,b_2,0,0,0,0)$ to $QAP(R_{r_{3\text{-}vot}})$ and compute the corresponding polynomial $P_S$.
+If $P_S$ is divisible by the target polynomial $T$ of $QAP(R_{r_{3\text{-}vot}})$, we know that the assignment $S$ satisfies $QAP(R_{r_{3\text{-}vot}})$ and therefore, that the ballot $b$ is valid.
+However, we do not learn what the ballot $b$ is.
+
+%However, it is currently not possible to show that the polynomial $P_S$ provided by a voter actually belongs to the assignment $S$.
 
 \section{Groth16 SNARKs}
 

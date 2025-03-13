@@ -164,9 +164,9 @@ Then, we get:
     & = Dec(Enc(m_1, (\mathbb{G}, n, g, h))\odot_{\mathcal{C}} Enc(m_2, pk), (\mathbb{G}, n, g ,h))\\
     & = Dec((g^{y_1}, h^{y_1}\odot_{\mathbb{G}}g^{m_1})\odot_{\mathcal{C}} (g^{y_2}, h^{y_2}\odot_{\mathbb{G}}g^{m_2}), sk)\\
     & = Dec((g^{y_1+y_2}, h^{y_1+y_2}\odot_{\mathbb{G}}g^{m_1+m_2}), (\mathbb{G}, n, g, x))\\
-    & = dlog_{(\mathbb{G}),g}(h^{y_1+y_2}\odot_{\mathbb{G}}g^{m_1+m_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1})\\
-    & = dlog_{(\mathbb{G}),g}((g^x)^{y_1+y_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1}\odot_{\mathbb{G}}g^{m_1+m_2})\\
-    & = dlog_{(\mathbb{G}),g}(g^{m_1+m_2})\\
+    & = dlog_{(\mathbb{G},g)}(h^{y_1+y_2}\odot_{\mathbb{G}}g^{m_1+m_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1})\\
+    & = dlog_{(\mathbb{G},g)}((g^x)^{y_1+y_2}\odot_{\mathbb{G}} ((g^{y_1+y_2})^x)^{-1}\odot_{\mathbb{G}}g^{m_1+m_2})\\
+    & = dlog_{(\mathbb{G},g)}(g^{m_1+m_2})\\
     & = m_1+m_2\\
     & = m_1\odot_{\mathcal{M}}m_2
 \end{align*}
