@@ -1,8 +1,32 @@
 [
     {
         "name": "singleVote",
-        "bitsVotes": 32,
-        "nVotes": 30,
-        "command": "./benchmark.sh encryption singleVote 32 nVotes=30"
+        "bitsVotes": 1,
+        "nVotes": 600,
+        "command": "./benchmark.sh encryption singleVote 1 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 2,
+        "nVotes": 600,
+        "command": "./benchmark.sh encryption singleVote 2 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 4,
+        "nVotes": 600,
+        "command": "./benchmark.sh encryption singleVote 4 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 8,
+        "nVotes": 600,
+        "command": "./benchmark.sh encryption singleVote 8 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "bitsVotes": 16,
+        "nVotes": 600,
+        "command": "./benchmark.sh encryption singleVote 16 nVotes=600"
     }
 ]
