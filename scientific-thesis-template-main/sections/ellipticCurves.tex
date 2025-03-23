@@ -40,6 +40,7 @@ Later on, we use both representations in the voting scheme.
         \item The group law $\odot_M^{Aff}$:\\
         Let $P_1, P_2\in M_{A,B}(\mathbb{F})$.
         Then:
+        {\setlength{\mathindent}{0pt}
         \begin{align*}
             P_1\odot_M^{Aff} P_2 =\begin{cases}
                 P_1, &\quad\text{if } P_2=\mathcal{O}\\
@@ -51,6 +52,7 @@ Later on, we use both representations in the voting scheme.
                 %\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2, \left(\frac{y_2-y_1}{x_2-x_1}\right)\cdot\left(x_1-\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2\right)\right)-y_1\right), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
             \end{cases}
         \end{align*}
+        }
         $TangentRule$ and $ChordRule$ are defined in \cref{alg:tangentRuleAffineMontgomery} and \cref{alg:chordRuleAffineMontgomery}.
     \end{itemize}
     The neutral element of $M_{A,B}(\mathbb{F})$ is $\mathcal{O}$.
@@ -123,16 +125,57 @@ Using projective planes, we can define Montgomery Curves in their projective rep
         Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)$. 
         To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding Affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
         Formally:
+        {\setlength{\mathindent}{0pt}
         \begin{align*}
-            P_1\odot_M^{Pro} P_2 = I(I^{-1}(P_1)\odot_M^{Aff}I^{-1}(P_2))
+            %P_1\odot_M^{Pro} P_2 = I(I^{-1}(P_1)\odot_M^{Aff}I^{-1}(P_2))
+            P_1\odot_M^{Pro} P_2 =\begin{cases}
+                P_1, &\quad\text{if } P_2=[0:1:0]\\
+                P_2, &\quad\text{if } P_1=[0:1:0]\\
+                [0:1:0], &\quad\text{if } [X_1:Y_1:Z_1]\\
+                &\quad\phantom{\text{if }}\:=[X_2:-Y_2:Z_2]\\
+                TangentRule([X_1:Y_1:Z_1]), &\quad\text{if } P_1=P_2 \text{ and } Y_1\neq 0\\
+                ChordRule([X_1:Y_1:Z_1], [X_2:Y_2:Z_2]), &\quad\text{otherwise}
+            \end{cases}
         \end{align*}
-        % $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleProjectiveMontgomery} and \ref{alg:chordRuleProjectiveMontgomery}.
-        Here, $I$ converts points from affine representation to projective representation, and $I^{-1}$ executes the reverse conversion.
-        $I$ and $I^{-1}$ are introduced in \cref{sec:coordinateTranformation}.
+        }
+        $TangentRule$ and $ChordRule$ are defined in \ref{alg:tangentRuleProjectiveMontgomery} and \ref{alg:chordRuleProjectiveMontgomery}.
+        Here, we follow the implementation from \cite{farashahi_faster_2024}.
+        % Here, $I$ converts points from affine representation to projective representation, and $I^{-1}$ executes the reverse conversion.
+        % $I$ and $I^{-1}$ are introduced in \cref{sec:coordinateTranformation}.
     \end{itemize}
     The neutral element of $M_{A,B}(\mathbb{F}P^2)$ is $[0:1:0]$.
     For $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P)$, the inverse element $P^{-1}$ is defined as $P^{-1}:=[X:-Y:Z]$.
 \end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Projective Tangent Rule used to compute $P\odot_M^{Pro} P$ where $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$.}
+    \label{alg:tangentRuleProjectiveMontgomery}
+    \begin{algorithmic}
+    \Procedure{$TangentRule$}{$[X:Y:Z]$}
+        \State $I:=3X^2+2AXZ+Z^2$
+        \State $H:=2BYZ$
+        \State $X':=BI^2HZ^2-(AZ^2+2XZ)H^3$
+        \State $Y':=-BI^3Z^2+(AZ^2+3XZ)IH^2-YZH^3$
+        \State $Z':=H^3Z^2$
+        \State \Return $[X':Y':Z']$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $P_1\neq P_2^{-1}$.}
+    \label{alg:chordRuleProjectiveMontgomery}
+    \begin{algorithmic}
+    \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
+        \State $I:=Y_2Z_1-Y_1Z_2$
+        \State $H:=X_2Z_1-X_1Z_2$
+        \State $X':=BI^2HZ_1Z_2-(AZ_1Z_2+X_1Z_2+X_2Z_1)H^3$
+        \State $Y':=-BI^3Z_1Z_2+(AZ_1Z_2+2X_1Z_2+X_2Z_1)IH^2-Y_1Z_2H^3$
+        \State $Z':=H^3Z^2$
+        \State \Return $[X':Y':Z']$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
 
 \section{Transforming between Projective and Affine Coordinates}
 \label{sec:coordinateTranformation}
@@ -411,7 +454,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     \caption{Pseudooperation $xAdd$ used to compute $x(P\odot_M^{Pro} Q)$ from $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$ with $P,Q\in M_{A,B}(\mathbb{F}P^2)$ and $P\neq Q$.}
     \label{alg:xAdd}
     \begin{algorithmic}
-    \Procedure{$xAdd$}{$x(P), x(Q), (P\odot_M^{Pro}Q^{-1})$}
+    \Procedure{$xAdd$}{$x(P), x(Q), x(P\odot_M^{Pro}Q^{-1})$}
         \State $[X_P:Z_P]:=x(P);\: [X_Q:Z_Q]:=x(Q);\: [X_{\odot^{-1}}, Z_{\odot^{-1}}]:=x(P\odot_m^{Pro}Q^{-1})$
         \State $X_\odot:= Z_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)+(X_P+Z_P)(X_Q-Z_Q))^2$
         \State $Z_\odot:= X_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)-(X_P+Z_P)(X_Q-Z_Q))^2$
@@ -449,12 +492,12 @@ Analogously to Fast Exponentiation, we can compute exponentiations $P^n$ for som
 However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^n)$ based on $x(P)$. 
 The Montgomery Ladder Algorithm computes $x(P^n)$ along with $x(P^{n+1})$ which we need later on to recover the $Y$ coordinate of $P^n$.
 
-\begin{definition}[Montgomery Ladder]
+\begin{theorem}[Montgomery Ladder]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P\in M_{A,B}(\mathbb{F}P^2)$.
     Let $n\in\mathbb{N}$, where $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
     Then, we can compute $(x(P^n), x(P^{n+1}))$ with $MontgomeryLadder$ defined in \cref{alg:montgomeryLadder}.
-\end{definition}
+\end{theorem}
 
 A proof of correctness of the $MontgomeryLadder$ is given in section 4.1 of \cite{costello_montgomery_2018}.
 
@@ -496,11 +539,11 @@ Therefore, this version of the Montgomery Ladder is better suited for our purpos
 After performing the Montgomery Ladder algorithm on $x(P)$ and $n\in\mathbb{N}$ with $P\in M_{A,B}(\mathbb{F}P^2)$, we have $[X_n:Z_n]:=x(P^n)$ and $[X_{n+1}:Z_{n+1}]:=x(P^{n+1})$.
 To reconstruct the $Y$ coordinate $Y_n$ of $P^{n}=[X_n:Y_n:Z_n]$, we use a recovery algorithm based on $P, x(P^n)$ and $x(P^{n+1})$ introduced by Okeya and Sakurai in \cite{goos_efficient_2001}.
 
-\begin{definition}[Okeya-Sakurai $Y$-Recovery]
+\begin{theorem}[Okeya-Sakurai $Y$-Recovery]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P=[X_P:Y_P:Z_P], Q, P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ with $Y_P\neq 0$.
     Then, we can reconstruct the complete $Q=Q_{rec}$, including the $Y$ coordinate from $(x_P, y_P):=I^{-1}(P)=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$, $x(Q)=[X_Q:Z_Q]$ and $x(P\odot_M^{Pro} Q)=[X_\odot:Z_\odot]$ using \cref{alg:okSakYRecovery}.
-\end{definition}
+\end{theorem}
 
 The algorithm $OkSakYRecovery$ we use here is based on Theorem 2 in \cite{goos_efficient_2001}. 
 A proof of this theorem can be found in section B in the Appendix of \cite{goos_efficient_2001}.
@@ -548,11 +591,11 @@ In order to recover the correct $Y$-Coordinate of $P^n$, we can use the Okeya-Sa
 
 We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024} for the $Y$-Recovery on the output of the Montgomery Ladder.
 
-\begin{definition}[Montgomery Ladder $Y$-Recovery]
+\begin{theorem}[Montgomery Ladder $Y$-Recovery]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P\in M_{A,B}(\mathbb{F}P^2)$, $n\in\mathbb{N}$.
     Then, we can reconstruct the complete $P^n=Q_{rec}$, including the $Y$ coordinate from $P, x(P^n)$ and $x(P^{n+1})$ using \cref{alg:montgomeryYRecovery}.
-\end{definition}
+\end{theorem}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{$Y$-Recovery used to recover $P^n$ with $Y$ coordinate from $P$, $x(P^n)$ and $x(P^{n+1})$ for some $n\in\mathbb{N}$.

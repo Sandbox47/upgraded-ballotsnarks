@@ -5,6 +5,10 @@ include "../curves/projectivePoint.circom";
 include "../curves/conversionsPointRepresentations.circom";
 include "../curves/montgomeryScalarMul.circom";
 include "../curves/montgomeryGroupLaw.circom";
+include "../curves/twistedEdwardsCurve.circom";
+
+// ========================================================================================================================
+// MONTGOMERY
 
 /**
 * Computes an exponential ElGamal ciphertext over a Montgomery curve.
@@ -105,7 +109,7 @@ template expElGamalMontgomeryAffine(bitsRand, bitsPlain, A, B) {
 * 
 * entires is the number of entries in the vector to be encrypted.
 */
-template expElGamalVector(bitsRand, bitsPlain, A, B, entries) {
+template expElGamalVectorMontgomeryProjective(bitsRand, bitsPlain, A, B, entries) {
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
     input signal v[entries]; // Signal
@@ -132,7 +136,7 @@ template expElGamalVector(bitsRand, bitsPlain, A, B, entries) {
 * 
 * rows and columns are the number of rows and columns in the matrix of entries to be encrypted.
 */
-template expElGamalMatrix(bitsRand, bitsPlain, A, B, rows, columns) {
+template expElGamalMatrixMontgomeryProjective(bitsRand, bitsPlain, A, B, rows, columns) {
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
     input signal v[rows][columns]; // Signal
@@ -144,9 +148,106 @@ template expElGamalMatrix(bitsRand, bitsPlain, A, B, rows, columns) {
     component expElGamal[rows];
 
     for(var i = 0; i < rows; i++) {
-        expElGamal[i] = expElGamalVector(bitsRand, bitsPlain, A, B, columns);
+        expElGamal[i] = expElGamalVectorMontgomeryProjective(bitsRand, bitsPlain, A, B, columns);
         expElGamal[i].g <== g;
         expElGamal[i].pk <== pk;
+        expElGamal[i].v <== v[i];
+        expElGamal[i].r <== r[i];
+        gr[i] <== expElGamal[i].gr;
+        gv_pkr[i] <== expElGamal[i].gv_pkr;
+    }
+}
+
+// ========================================================================================================================
+// TWISTED EDWARDS
+
+/**
+* Computes an exponential ElGamal ciphertext over a Twisted Edwards curve.
+* 
+* For given powers of a generator [g^1,g^2,g^4,...,g^{2^{bitsRand-1}}], powers of a public key [pk^1,pk^2,pk^4, ..., pk^{2^{bitsRand-1}}], plaintext v and randomness r, the ciphertext is (g^r, g^v*pk^r)
+* NOTE: We are now switching from additive to multiplicative notation for the application of the Montgomery group law.
+* 
+* bitsRand and bitsPlain are the number of bits r and v can have at most.
+*/
+template expElGamalTwistedEdwards(bitsRand, bitsPlain, a, d) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand]; // Powers of public key, pk=g^b for some private b
+    input signal v; // Plaintext
+    input signal r; // Randomness
+
+    output TwistedEdwardsPoint() gr; // g^r
+    output TwistedEdwardsPoint() gv_pkr; // g^v * pk^r
+
+    component scalarMul_gv = twistedEdwardsScalarMul(bitsPlain, a, d);
+    scalarMul_gv.m <== v;
+    for(var i=0; i < bitsPlain; i++) {
+        scalarMul_gv.powersOfP[i] <== powersOfg[i];
+    }
+    TwistedEdwardsPoint() gv <== scalarMul_gv.out; // g^v
+
+    component scalarMul_pkr = twistedEdwardsScalarMul(bitsRand, a, d);
+    scalarMul_pkr.m <== r;
+    scalarMul_pkr.powersOfP <== powersOfpk;
+    TwistedEdwardsPoint() pkr <== scalarMul_pkr.out; // pk^r
+
+    component scalarMul_gr = twistedEdwardsScalarMul(bitsRand, a, d);
+    scalarMul_gr.m <== r;
+    scalarMul_gr.powersOfP <== powersOfg;
+    gr <== scalarMul_gr.out;
+
+    component add_gv_pkr = twistedEdwardsGroupLaw(a, d);
+    add_gv_pkr.p1 <== gv;
+    add_gv_pkr.p2 <== pkr;
+    gv_pkr <== add_gv_pkr.out;
+}
+
+/**
+* Computes an exponential ElGamal ciphertext over a Twisted Edwards curve for each of the given inputs v with corresponding randomnesses r.
+* 
+* entires is the number of entries in the vector to be encrypted.
+*/
+template expElGamalVectorTwistedEdwards(bitsRand, bitsPlain, a, d, entries) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand]; // Powers of public key, pk=g^b for some private b
+    input signal v[entries]; // Signal
+    input signal r[entries]; // Randomness
+
+    output TwistedEdwardsPoint() gr[entries];
+    output TwistedEdwardsPoint() gv_pkr[entries];
+
+    component expElGamal[entries];
+
+    for(var i = 0; i < entries; i++) {
+        expElGamal[i] = expElGamalTwistedEdwards(bitsRand, bitsPlain, a, d);
+        expElGamal[i].powersOfg <== powersOfg;
+        expElGamal[i].powersOfpk <== powersOfpk;
+        expElGamal[i].v <== v[i];
+        expElGamal[i].r <== r[i];
+        gr[i] <== expElGamal[i].gr;
+        gv_pkr[i] <== expElGamal[i].gv_pkr;
+    }
+}
+
+/**
+* Computes an exponential ElGamal ciphertext over a Montgomery curve for each of the given inputs v with corresponding randomnesses r.
+* 
+* rows and columns are the number of rows and columns in the matrix of entries to be encrypted.
+*/
+template expElGamalMatrixTwistedEdwards(bitsRand, bitsPlain, a, d, rows, columns) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand]; // Powers of public key, pk=g^b for some private b
+    input signal v[rows][columns]; // Signal
+    input signal r[rows][columns]; // Randomness
+
+    output TwistedEdwardsPoint() gr[rows][columns];
+    output TwistedEdwardsPoint() gv_pkr[rows][columns];
+
+    component expElGamal[rows];
+
+    for(var i = 0; i < rows; i++) {
+        expElGamal[i] = expElGamalVectorTwistedEdwards(bitsRand, bitsPlain, a, d, columns);
+        expElGamal[i].powersOfg <== powersOfg;
+        expElGamal[i].powersOfpk <== powersOfpk;
         expElGamal[i].v <== v[i];
         expElGamal[i].r <== r[i];
         gr[i] <== expElGamal[i].gr;
@@ -157,3 +258,5 @@ template expElGamalMatrix(bitsRand, bitsPlain, A, B, rows, columns) {
 // component main = expElGamalMontgomeryProjective(255, 32, 126932, 1);
 // component main = expElGamalVector(255, 32, 126932, 1, 100);
 // component main = expElGamalMatrix(255, 32, 126932, 1, 10, 10);
+
+// component main = expElGamalTwistedEdwards(255, 32, 126934, 126930);

@@ -53,7 +53,7 @@ underlying algebraic structures.},
 	editor = {Duenas-Cid, David and Roenne, Peter and Volkamer, Melanie and Budurushi, Jurlind and Blom, Michelle and Rodríguez-Pérez, Adrià and Spycher-Krivonosova, Iuliia and Castellà Roca, Jordi and Barrat Esteve, Jordi},
 	year = {2025},
 	pages = {107--123},
-	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/QLYNUSGD/Huber et al. - 2025 - ZK-SNARKs for Ballot Validity A Feasibility Study.pdf:application/pdf},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/QLYNUSGD/Huber et al. - 2025 - ZK-SNARKs for Ballot Validity A Feasibility Study.pdf:application/pdf;zk-snarks-for-ballot-validity:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/KHQMIM9L/zk-snarks-for-ballot-validity.pdf:application/pdf},
 }
 
 @article{belles-munoz_twisted_2021,
@@ -153,7 +153,7 @@ Publisher: Multidisciplinary Digital Publishing Institute},
 	month = nov,
 	year = {2022},
 	pages = {1443--1457},
-	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/NHNFEXNK/Huber et al. - 2022 - Kryvos Publicly Tally-Hiding Verifiable E-Voting.pdf:application/pdf;zk-snarks-for-ballot-validity:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/WLUBUE7G/zk-snarks-for-ballot-validity.pdf:application/pdf},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/NHNFEXNK/Huber et al. - 2022 - Kryvos Publicly Tally-Hiding Verifiable E-Voting.pdf:application/pdf},
 }
 
 @incollection{pieprzyk_twisted_2008,
@@ -502,4 +502,52 @@ As our second contribution we answer an open question of Bitansky, Chiesa, Ishai
 	month = jan,
 	year = {2009},
 	file = {Snapshot:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/WQJK42XY/elliptic_curve.html:text/html},
+}
+
+@misc{baghery_another_2020,
+	title = {Another {Look} at {Extraction} and {Randomization} of {Groth}'s zk-{SNARK}},
+	url = {https://eprint.iacr.org/2020/811},
+	abstract = {Due to the simplicity and performance of zk-SNARKs they are widely used in real-world cryptographic protocols, including blockchain and smart contract systems. Simulation Extractability (SE) is a necessary security property for a NIZK argument to achieve Universal Composability (UC), a common requirement for such protocols. Most of the works that investigated SE focus on its strong variant which implies proof non-malleability. In this work we investigate a relaxed weaker notion, that allows proof randomization, while guaranteeing statement non-malleability, which we argue to be a more natural security property. First, we show that it is already achievable by Groth16, arguably the most efficient and widely deployed SNARK nowadays. Second, we show that because of this, Groth16 can be efficiently transformed into a black-box weakly SE NIZK, which is sufficient for UC protocols.
+
+To support the second claim, we present and compare two practical constructions, both of which strike different performance trade-offs:
+* Int-Groth16 makes use of a known transformation that encrypts the witness inside the SNARK circuit. We instantiate this transformation with an efficient SNARK-friendly encryption scheme.
+* Ext-Groth16 is based on the SAVER encryption scheme (Lee et al.) that plugs the encrypted witness directly into the verification equation, externally to the circuit. We prove that Ext-Groth16 is black-box weakly SE and, contrary to Int-Groth16, that its proofs are fully randomizable.},
+	urldate = {2025-03-18},
+	author = {Baghery, Karim and Kohlweiss, Markulf and Siim, Janno and Volkhov, Mikhail},
+	year = {2020},
+	note = {Publication info: Preprint. MINOR revision.},
+	keywords = {algebraic group model, NIZK, QAP, simulation extractability, zero knowledge, zk-SNARK},
+	annote = {Updated from technical report to an extended version.},
+	file = {Full Text PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/HNIZ4KIJ/Baghery et al. - 2020 - Another Look at Extraction and Randomization of Groth's zk-SNARK.pdf:application/pdf},
+}
+
+@misc{novakovic_groth16_2022,
+	title = {Groth16 {Malleability} - {Geometry}},
+	url = {https://geometry.xyz/notebook/groth16-malleability},
+	abstract = {Are all Groth16-proven statements to be trusted?! We explore malleability properties of Groth16 and show how some protocols can be attacked if they don't have the right protections.},
+	language = {en},
+	urldate = {2025-03-18},
+	author = {Novakovic, Andrija and Gurkan, Kobi},
+	month = aug,
+	year = {2022},
+	file = {Snapshot:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/I67IJPQ3/groth16-malleability.html:text/html},
+}
+
+@article{farashahi_faster_2024,
+	title = {Faster {Complete} {Addition} {Laws} for {Montgomery} {Curves}},
+	volume = {2024},
+	copyright = {https://creativecommons.org/licenses/by/4.0},
+	issn = {2569-2925},
+	url = {https://tches.iacr.org/index.php/TCHES/article/view/11808},
+	doi = {10.46586/tches.v2024.i4.737-762},
+	abstract = {An addition law for an elliptic curve is complete if it is deﬁned for all possible pairs of input points on the elliptic curve. In Elliptic Curve Cryptography (ECC), a complete addition law provides a natural protection against side-channel attacks which are based on Simple Power Analysis (SPA). Montgomery curves are a speciﬁc family of elliptic curves that play a crucial role in ECC because of its well-known Montgomery ladder, particularly in the Elliptic Curve Diﬃe-Hellman Key Exchange (ECDHKE) protocol and the Elliptic Curve factorization Method (ECM). However, the complete addition law for Montgomery curves, as stated in the literature, has a computational cost of 14M + 2D, where M, D denote the costs of a ﬁeld multiplication and a ﬁeld multiplication by a constant, respectively. The lack of a competitive complete addition law has led implementers towards twisted Edwards curves, which oﬀer a complete addition law at a lower cost of 8M + 1D for appropriately chosen curve constants.},
+	language = {en},
+	number = {4},
+	urldate = {2025-03-18},
+	journal = {IACR Transactions on Cryptographic Hardware and Embedded Systems},
+	author = {Farashahi, Reza Rezaeian and Fadavi, Mojtaba and Sabbaghian, Soheila},
+	month = sep,
+	year = {2024},
+	pages = {737--762},
+	file = {PDF:/home/felix-roehr/snap/zotero-snap/common/Zotero/storage/KTIW5QBL/Farashahi et al. - 2024 - Faster Complete Addition Laws for Montgomery Curves.pdf:application/pdf},
 }

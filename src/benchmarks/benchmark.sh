@@ -3,26 +3,55 @@
 # Give Javascript heap more memory
 export NODE_OPTIONS="--max-old-space-size=16384"
 
+# Montgomery curve paramters
+A="126932"
+B="1"
+montgomeryCurveParams="${A}, ${B}"
+
+# Twisted Edwards curve paramters
+a="126934"
+d="126930"
+twistedEdwardsCurveParams="${a}, ${d}"
+
 # ========================================================================================================================
 # 1. Check argument validity
 # Check for the required arguments
-if [ "$#" -lt 3 ]; then
-    echo "Usage: $0 <mode> <electionType> <nBits> key1=value1 key2=value2 ..."
+if [ "$#" -lt 4 ]; then
+    echo "Usage: $0 <mode> <ellipticCurve> <electionType> <nBits> key1=value1 key2=value2 ..."
     echo "Allowed values for <mode>: voting, encryption, combined"
     exit 1
 fi
 
 # Assign input arguments to variables
 mode="$1"
-electionType="$2"
-nBits="$3"
-shift 3 # Shift arguments so $@ now contains only key=value pairs
+ellipticCurve="$2"
+electionType="$3"
+nBits="$4"
+shift 4 # Shift arguments so $@ now contains only key=value pairs
+
+# Choose correct curve parameters
+curveParams=""
+curveCircom_g_pk=""
+if [ "$ellipticCurve" == "twistedEdwards" ]; then
+    curveParams="$twistedEdwardsCurveParams"
+    curveCircom_g_pk="powersOfg, powersOfpk"
+elif [ "$ellipticCurve" == "montgomeryProjective" ] || [ "$ellipticCurve" == "montgomeryAffine" ]; then
+    curveParams="$montgomeryCurveParams"
+    curveCircom_g_pk="g, pk"
+else
+    echo "Error: Elliptic curve '$ellipticCurve' not supported. Allows values: twistedEdwards, montgomeryProjective, (montgomeryAffine)"
+    exit 1
+fi
 
 # Validate mode
 if [[ "$mode" != "voting" && "$mode" != "encryption" && "$mode" != "combined" ]]; then
     echo "Error: Invalid mode '$mode'. Allowed values: voting, encryption, combined."
     exit 1
 fi
+
+# Create elliptic curve test folder (if it does not exist already)
+mkdir -p "${ellipticCurve}"
+cd ${ellipticCurve}
 
 # Create election type test folder (if it does not exist already)
 mkdir -p "${electionType}"
@@ -61,6 +90,7 @@ echo "Arguments valid."
 
 # Convert the first letter of electionType to uppercase
 capitalizedElectionType="$(echo "${electionType:0:1}" | tr '[:lower:]' '[:upper:]')${electionType:1}"
+capitalizedEllipticCurve="$(echo "${ellipticCurve:0:1}" | tr '[:lower:]' '[:upper:]')${ellipticCurve:1}"
 
 mkdir -p circomTestFiles # Ensure circom test file directory exists
 
@@ -69,20 +99,20 @@ testCircom="circomTestFiles/${filePrefix}.circom"
 
 # Determine the correct component name
 if [ "$mode" == "combined" ]; then
-    circomComponent="assert${capitalizedElectionType}"
+    circomComponent="assert${capitalizedElectionType}${capitalizedEllipticCurve}"
 elif [ "$mode" == "encryption" ]; then
-    circomComponent="assert${capitalizedElectionType}EncryptionBenchmark"
+    circomComponent="assert${capitalizedElectionType}${capitalizedEllipticCurve}EncryptionBenchmark"
 elif [ "$mode" == "voting" ]; then
-    circomComponent="assert${capitalizedElectionType}VotingBenchmark"
+    circomComponent="assert${capitalizedElectionType}${capitalizedEllipticCurve}VotingBenchmark"
 fi
 
 # Generate the test circom file
 cat > "$testCircom" <<EOF
 pragma circom 2.2.1;
 
-include "../../../voting/${electionType}.circom";
+include "../../../../voting/${electionType}.circom";
 
-component main {public [g, pk, enc_gr, enc_gv_pkr]} = ${circomComponent}(${nBits}, 255, 126932, 1, ${positionalParamsString});
+component main {public [${curveCircom_g_pk}, enc_gr, enc_gv_pkr]} = ${circomComponent}(${nBits}, 255, ${curveParams}, ${positionalParamsString});
 EOF
 
 echo "Circom test file '${testCircom}' created successfully with component ${circomComponent}."
@@ -99,10 +129,13 @@ testSage="sageTestFiles/${filePrefix}.sage"
 cat > "$testSage" <<EOF
 from sageImport import sage_import
 
-sage_import('../../../sage/voting/ballot', fromlist=['Ballot'])
-sage_import('../../../sage/voting/${electionType}', fromlist=['${capitalizedElectionType}Ballot'])
+sage_import('../../../../sage/voting/ballot', fromlist=['Ballot'])
+sage_import('../../../../sage/voting/${electionType}', fromlist=['${capitalizedElectionType}Ballot'])
+sage_import('../../../../sage/ellipticCurves/curve', fromlist=['CurvePoint'])
+sage_import('../../../../sage/ellipticCurves/Montgomery', fromlist=['MontgomeryAffinePoint', 'MontgomeryProjectivePoint'])
+sage_import('../../../../sage/ellipticCurves/TwistedEdwards', fromlist=['TwistedEdwardsPoint'])
 
-Ballot.test(${capitalizedElectionType}Ballot, ${namedParamsString})
+Ballot.test(${capitalizedElectionType}Ballot, ${capitalizedEllipticCurve}Point, ${namedParamsString})
 EOF
 
 echo "Sage test file '${testCircom}' created successfully."

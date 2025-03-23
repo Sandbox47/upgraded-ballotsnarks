@@ -128,10 +128,14 @@ Formally, we define \gls{eeg} Encryption as in \cite{aldini_cryptographic_2014} 
         \end{align*}
         To compute the original message $m$ the algorithm computes $m$ such that $g^m=\tilde{m}$.\footnote{\label{footnote:eegDiscreteLogProblem}
             Note that this is equivalent to the Discrete Logarithm problem and assumed to be computationally hard for the groups $\mathbb{G}$ chosen in a secure \gls{eeg} encryption scheme if $m$ can be any element of $\mathbb{G}$.
-            However, in practical applications such as voting schemes the message is typically one entry of a ballot in a choice space $C$. 
-            The set of allowed values for these entries $C_{entry}$ is typically very small.
-            In our example voting scheme from \cref{chap:votingschemes}, we had $C_{entry}=\{0,1\}$.
+
+            However, in practical applications such as voting schemes the message is typically one entry in a tally of ballots, where thi individual ballots are chosen from a choice space $C$.
+            We denote the set of allowed values for the entries in a ballot from $C$ by $C_{entry}$, which is typically very small. 
+            In an election with $n$ voters, the set of possible values for an entry in the plain tally $T_{entry}$ is therefore at most $n$ times larger than $C_{entry}$ and thus typically still quite small.
             Then computing $m$ is possible by a guess-and-check approach where we try all elements $m\in C_{entry}$ and return the current choice if $g^m=\tilde{m}$.
+            
+            In our example voting scheme from \cref{chap:votingschemes}, we had $n=5$ voters and $C_{entry}=\{0,1\}$.
+            By aggregating the individual entries of ballots, in the plain tally, we get entries $m$ in the set $T_{entry}=\{0,1,2,3,4,5\}$.
         }
     \end{itemize}
 \end{definition}

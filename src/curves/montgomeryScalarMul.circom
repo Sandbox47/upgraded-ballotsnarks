@@ -129,5 +129,34 @@ template scalarMulProjective(n, A, B) {
     // test === out;
 }
 
+/**
+* Computes mP. (Where m is later represented as a bit string of length n.
+* Needs powers of P of the form [P, 2P, 4P, 8P, ..., (2^n)P].
+* CAUTION: Only works if m > 0
+*/
+/*
+template scalarMulProjectivePrecomputedExponents(n, A, B) {
+    input signal m;
+    input ProjectivePoint() powersOfP[n]; //
+
+    output ProjectivePoint() out;
+
+    component toBits = Num2Bits(n);
+    toBits.in <== m;
+    signal mBits[n] <== toBits.out;
+
+    component adders[n];
+    component 
+
+    signal intermediateResults[n];
+    signal intermediateResults[0] <== powersOfP[0];
+    for(var i = 1; i < n; i++) {
+        intermediateResults[i] <== 
+    }
+
+    intermediateResults[0] <== powersOfP[0]
+}
+*/
+
 // component main = scalarMulProjective(255, 126932, 1);
 // component main = scalarMulAffine(255, 126932, 1);

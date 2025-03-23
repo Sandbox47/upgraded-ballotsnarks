@@ -55,7 +55,7 @@ template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
 /**
 * Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
 */
-template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
+template assertSingleVoteMontgomeryProjective(bitsVotes, bitsRand, A, B, nVotes) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
@@ -68,7 +68,7 @@ template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
     input signal ballot[nVotes];
     input signal r[nVotes]; // Randomness
 
-    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    component assertEnc = assertEncVectorMontgomeryProjective(nVotes, bitsVotes, bitsRand, A, B);
     assertEnc.v <== ballot;
     assertEnc.g <== g;
     assertEnc.pk <== pk;
@@ -80,10 +80,40 @@ template assertSingleVote(bitsVotes, bitsRand, A, B, nVotes) {
     assertVoting.ballot <== ballot;
 }
 
+/**
+* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
+*/
+template assertSingleVoteTwistedEdwards(bitsVotes, bitsRand, a, d, nVotes) {
+    // Public
+    input TwistedEdwardsPoint() powersOfg[bitsRand]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand]; // Powers of public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input TwistedEdwardsPoint() enc_gr[nVotes];
+    input TwistedEdwardsPoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVectorTwistedEdwards(nVotes, bitsVotes, bitsRand, a, d);
+    assertEnc.v <== ballot;
+    assertEnc.powersOfg <== powersOfg;
+    assertEnc.powersOfpk <== powersOfpk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+
+    component assertVoting = assertSingleVoteVoting(nVotes);
+    assertVoting.ballot <== ballot;
+}
+
 // ========================================================================================================================
 // BENCHMARKS
 
-template assertSingleVoteEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
+// MONTGOMERY
+
+template assertSingleVoteMontgomeryProjectiveEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
@@ -96,7 +126,7 @@ template assertSingleVoteEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes) 
     input signal ballot[nVotes];
     input signal r[nVotes]; // Randomness
 
-    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
+    component assertEnc = assertEncVectorMontgomeryProjective(nVotes, bitsVotes, bitsRand, A, B);
     assertEnc.v <== ballot;
     assertEnc.g <== g;
     assertEnc.pk <== pk;
@@ -105,7 +135,7 @@ template assertSingleVoteEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes) 
     assertEnc.gv_pkr <== enc_gv_pkr;
 }
 
-template assertSingleVoteVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
+template assertSingleVoteMontgomeryProjectiveVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
     // Public
     input ProjectivePoint() g; // Generator
     input ProjectivePoint() pk; // Public key, pk=g^b for some private b
@@ -113,6 +143,49 @@ template assertSingleVoteVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes) {
     //g^r and g^v*pk^r values from expElGamal
     input ProjectivePoint() enc_gr[nVotes];
     input ProjectivePoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertVoting = assertSingleVoteVoting(nVotes);
+    assertVoting.ballot <== ballot;
+}
+
+
+
+// TWISTED EDWARDS
+
+template assertSingleVoteTwistedEdwardsEncryptionBenchmark(bitsVotes, bitsRand, a, d, nVotes) {
+    // Public
+    input TwistedEdwardsPoint() powersOfg[bitsRand]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand]; // Powers of public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input TwistedEdwardsPoint() enc_gr[nVotes];
+    input TwistedEdwardsPoint() enc_gv_pkr[nVotes];
+
+    // Private/Witness
+    input signal ballot[nVotes];
+    input signal r[nVotes]; // Randomness
+
+    component assertEnc = assertEncVectorTwistedEdwards(nVotes, bitsVotes, bitsRand, a, d);
+    assertEnc.v <== ballot;
+    assertEnc.powersOfg <== powersOfg;
+    assertEnc.powersOfpk <== powersOfpk;
+    assertEnc.r <== r;
+    assertEnc.gr <== enc_gr;
+    assertEnc.gv_pkr <== enc_gv_pkr;
+}
+
+template assertSingleVoteTwistedEdwardsVotingBenchmark(bitsVotes, bitsRand, a, d, nVotes) {
+    // Public
+    input TwistedEdwardsPoint() powersOfg[bitsRand]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand]; // Powers of public key, pk=g^b for some private b
+
+    //g^r and g^v*pk^r values from expElGamal
+    input TwistedEdwardsPoint() enc_gr[nVotes];
+    input TwistedEdwardsPoint() enc_gv_pkr[nVotes];
 
     // Private/Witness
     input signal ballot[nVotes];

@@ -2,6 +2,16 @@ import json
 import os
 
 class JSONUtils():
+    def toJSON(obj, innerData):
+        data = None
+        if obj.name == None:
+            data = innerData
+        else:
+            data = {
+                obj.name: innerData
+            }
+        return data
+
     def arrayToJSON(data):
         if isinstance(data, list):
             return [JSONUtils.arrayToJSON(subdata) for subdata in data]

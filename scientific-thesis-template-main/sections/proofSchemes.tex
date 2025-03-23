@@ -190,7 +190,7 @@ Fundamentally, \glspl{r1cs} are systems of equations of a specific format betwee
     \label{def:r1cs}
     Let $(\mathbb{F},+,\cdot )$ be a field, let $n,k\in\mathbb{N}$.
     Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
-    Then, a \gls{r1cs} $R$ is defined as the following set of $k$ equations over the variables $S_1,\dots, S_n\in\mathbb{F}$:
+    Then, a \gls{r1cs} $R1CS$ is defined as the following set of $k$ equations over the variables $S_1,\dots, S_n\in\mathbb{F}$:
     \begin{align*}
         \left(a_0^1+\sum\limits_{j=1}^n a_j^1\cdot S_j\right)\cdot \left(b_0^1+\sum\limits_{j=1}^n b_j^1\cdot S_j\right) \:&=\: c_0^1+\sum\limits_{j=1}^n c_j^1\cdot S_j\\
         &\vdots\\
@@ -199,7 +199,7 @@ Fundamentally, \glspl{r1cs} are systems of equations of a specific format betwee
     Hence, $n$ is the number of variables involved in the \gls{r1cs} and $k$ is the number of equations or constraints of the system.
 \end{definition}
 
-Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit as a \gls{r1cs} $R_r$, since we require that $r$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
+Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit as a \gls{r1cs} $R1CS_r$, since we require that $r$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
 
 % For instance, we can represent $r_{3\text{-}fac}$ as an \gls{r1cs} as follows:\\
 % First, we need to rewrite the definition of $r_{3\text{-}fac}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot $.
@@ -246,14 +246,14 @@ Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}
 
 % As we can see, this \gls{r1cs} does represent $f_{3\text{-}fac}$.
 
-For instance, we can represent $r_{3\text{-}vot}$ as an \gls{r1cs} $R_{r_{3\text{-}vot}}$ as follows:\\
+For instance, we can represent $r_{3\text{-}vot}$ as an \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ as follows:\\
 First, we need to rewrite the definition of $r_{3\text{-}vot}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot$.
 This process is also called flattening \cite{least_authority_moonmath_2024}. We get:
 \begin{align*}
     S_4^{out}=(1-S_1^{in}-S_2^{in}-S_3^{in})\cdot (S_1^{in}+S_2^{in}+S_3^{in})
 \end{align*}
 Together with the compuations for $S_1^{out}$, $S_2^{out}$ and $S_3^{out}$ which remain unchanged, we have seven variables and four constraints.
-Therefore, we set $n=7$ and $k=7$ for the \gls{r1cs} and set the variables as follows:
+Therefore, we set $n=7$ and $k=4$ for the \gls{r1cs} and set the variables as follows:
 \begin{align*}
     (S_1,S_2,S_3,S_4,S_5,S_6,S_7) = (S_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
 \end{align*}
@@ -297,23 +297,23 @@ Now, we can construct the equation system:
 \end{align*}
 }
 
-As we can see, this \gls{r1cs} $R_{r_{3\text{-}vot}}$ does represent $r_{3\text{-}vot}$.
+As we can see, this \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ does represent $r_{3\text{-}vot}$.
 We can now define \gls{r1cs} Satisfiability in a similar fashion to Circuit Satisfiability.
 
 \begin{definition}[\gls{r1cs} Satisfiability]
     \label{def:r1csSat}
     Let $(\mathbb{F},+,\cdot )$ be a field, let $n,k\in\mathbb{N}$.
     Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
-    Let $R$ be the corresponding \gls{r1cs} as in \cref{def:r1cs}.
-    Let $S=(S_1,\dots, S_n)$ be an assignment to $R$.
-    Then, we say that $S$ satisfies $R$, if and only if all $k$ equations from \cref{def:r1cs} are fulfilled.    
+    Let $R1CS$ be the corresponding \gls{r1cs} as in \cref{def:r1cs}.
+    Let $S=(S_1,\dots, S_n)$ be an assignment to $R1CS$.
+    Then, we say that $S$ satisfies $R1CS$, if and only if all $k$ equations from \cref{def:r1cs} are fulfilled.    
 
-    We call $R$ satisfiable, if there is an assignment $S$ that satisfies $R$.
+    We call $R1CS$ satisfiable, if there is an assignment $S$ that satisfies $R$.
 \end{definition}
 
 As we have shown before, the circuit for $r_{3\text{-}vot}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
-Therefore, the \gls{r1cs} $R_{r_{3\text{-}vot}}$ should also be satisfied by $S$ but not by $S'$.
-We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the equations of $R_{r_{3\text{-}vot}}$:
+Therefore, the \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ should also be satisfied by $S$ but not by $S'$.
+We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the equations of $R1CS_{r_{3\text{-}vot}}$:
 \begin{itemize}
     \item Assignment $(0,0,1,0,0,0,0)$:
     \begin{align*}
@@ -333,17 +333,17 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
 
 \section{Quadratic Arithmetic Programs}
 To use \glspl{r1cs} in \glspl{gpzkp}, we need to transform them into another different representation, namely \glspl{qap}.
-For every \gls{r1cs} $R$, there is a corresponding \gls{qap} $QAP(R)$.
+For every \gls{r1cs} $R1CS$, there is a corresponding \gls{qap} $QAP(R1CS)$.
 
 \begin{definition}[Quadratic Arithmetic Program]
     \label{def:qap}
     Let $(\mathbb{F},+,\cdot )$ be a field, let $n,k\in\mathbb{N}$.
     Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
-    Let $R$ be the corresponding \gls{r1cs} as in \cref{def:r1cs}.
+    Let $R1CS$ be the corresponding \gls{r1cs} as in \cref{def:r1cs}.
     Let $m_1,\dots, m_k$ be arbitrary, invertible and distinct elements of $\mathbb{F}$.
-    Then, the \gls{qap} corresponding to the \gls{r1cs} $R$ is defined as follows:
+    Then, the \gls{qap} corresponding to the \gls{r1cs} $R1CS$ is defined as follows:
     \begin{align*}
-        QAP(R)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
+        QAP(R1CS)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
     \end{align*}
     Here, $T, A_j, B_j, C_j$ are polynomials over $\mathbb{F}$ with:
     \begin{itemize}
@@ -355,22 +355,22 @@ For every \gls{r1cs} $R$, there is a corresponding \gls{qap} $QAP(R)$.
     \end{itemize}
 \end{definition}
 
-We can construct $QAP(R)$ from $R$ by executing the follwoing steps:
+We can construct $QAP(R1CS)$ from $R1CS$ by executing the follwoing steps:
 \begin{enumerate}
-    \item Choose $k$ distinct, invertible elements $m_1,\dots, m_k\in\mathbb{F}$, one for each constraint in $R$.
+    \item Choose $k$ distinct, invertible elements $m_1,\dots, m_k\in\mathbb{F}$, one for each constraint in $R1CS$.
     \item Compute the target polynomial $T$ as in \cref{def:qap}.
     \item Use Lagrange's method of polynomial interpolation as described in section 3.3.4 of \cite{least_authority_moonmath_2024} to compute the polynomials $A_j, B_j$ and $C_j$ as in \cref{def:qap}.
     Here, we need to use the set $S_{A_j}:=\{(m_1,a_j^1),\dots, (m_k, a_j^k)\}$ as the (evaluation point, value)-pairs for the construction of $A_j$. 
     Analogously, we use $S_{B_j}:=\{(m_1,b_j^1),\dots, (m_k, b_j^k)\}$ and $S_{C_j}:=\{(m_1,c_j^1),\dots, (m_k, c_j^k)\}$ for the construction of $B_j$ and $C_j$.
 \end{enumerate}
 
-Once again, we use $r_{3\text{-}vot}$ and the corresponding \gls{r1cs} $R_{r_{3\text{-}vot}}$ as an example.
-To construct the corresponding $QAP(R_{r_{3\text{-}vot}})$, we first need to choose the elements $m_1,m_2,m_3,m_4\in\mathbb{F}$.
+Once again, we use $r_{3\text{-}vot}$ and the corresponding \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ as an example.
+To construct the corresponding $QAP(R1CS_{r_{3\text{-}vot}})$, we first need to choose the elements $m_1,m_2,m_3,m_4\in\mathbb{F}$.
 In order to obtain a specific \gls{qap} at the end, we need to choose the field $\mathbb{F}$.
 To keep things simple, we choose the finite field $\mathbb{F}=\mathbb{F}_{13}$.
 Now we can follow the instructions outlined previously:
 \begin{enumerate}
-    \item Since $R_{r_{3\text{-}vot}}$ has four constraints, we choose the four elements from $\mathbb{F}_{13}$:
+    \item Since $R1CS_{r_{3\text{-}vot}}$ has four constraints, we choose the four elements from $\mathbb{F}_{13}$:
     \begin{align*}
         m_1=2,\:m_2=4,\:m_3=5,\:m_4=7
     \end{align*}
@@ -533,16 +533,16 @@ Now we can follow the instructions outlined previously:
     \end{itemize}
 \end{enumerate}
 
-Putting everything together, we get $QAP(R_{r_{3\text{-}vot}})$ as follows (when using $\mathbb{F}_{13}$ as the base field):
+Putting everything together, we get $QAP(R1CS_{r_{3\text{-}vot}})$ as follows (when using $\mathbb{F}_{13}$ as the base field):
 \begin{align*}
-    QAP(R_{r_{3\text{-}vot}}) &= \left\{T, \left\{A_0, B_0, C_0\right\}, \left\{A_1, B_1, C_1\right\}, \left\{A_2, B_2, C_2\right\}, \left\{A_3, B_3, C_3\right\},\right.\\
+    QAP(R1CS_{r_{3\text{-}vot}}) &= \left\{T, \left\{A_0, B_0, C_0\right\}, \left\{A_1, B_1, C_1\right\}, \left\{A_2, B_2, C_2\right\}, \left\{A_3, B_3, C_3\right\},\right.\\
     &\phantom{=}\left.\left\{A_4, B_4, C_4\right\}, \left\{A_5, B_5, C_5\right\}, \left\{A_6, B_6, C_6\right\}, \left\{A_7, B_7, C_7\right\}\right\}
 \end{align*}
 \begin{align*}
-    \phantom{QAP(R_{r_{3\text{-}vot}})}&= \Bigl\{x^4+8x^3+11x^2+6x+7,
+    \phantom{QAP(R1CS_{r_{3\text{-}vot}})}&= \Bigl\{x^4+8x^3+11x^2+6x+7,
 \end{align*}
 \begin{align*}
-    \phantom{QAP(R_{r_{3\text{-}vot}})}&\phantom{=bl} \{1,&& 0,&& 0\}, &&\\
+    \phantom{QAP(R1CS_{r_{3\text{-}vot}})}&\phantom{=bl} \{1,&& 0,&& 0\}, &&\\
     &\phantom{=bl} \{2x^2 + 8x + 1,&& 11x^2 + 5x + 12,&& 0\},&&\\
     &\phantom{=bl} \{5x^3 + 4x^2 + 11x,&& 8x^3 + 9x^2 + 2x,&& 0\},&&\\
     &\phantom{=bl} \{x^3 + 6x^2 + x + 5,&& 12x^3 + 7x^2 + 12x + 8,&& 0\},&&\\
@@ -558,23 +558,23 @@ We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satis
     \label{def:qapSat}
     Let $(\mathbb{F},+,\cdot )$ be a field, let $n,k\in\mathbb{N}$.
     Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
-    Let $R$ be the corresponding \gls{r1cs} as in \cref{def:r1cs} and 
+    Let $R1CS$ be the corresponding \gls{r1cs} as in \cref{def:r1cs} and 
     \begin{align*}
-        QAP(R)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
+        QAP(R1CS)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
     \end{align*}
     be the corresponding \gls{qap}.\\
-    Let $S=(S_1,\dots, S_n)$ be an assignment to $R$.
+    Let $S=(S_1,\dots, S_n)$ be an assignment to $R1CS$.
     We compute a polynomial $P_S$ as follows:
     \begin{align*}
         P_S:=\left(A_0+\sum_{j=0}^{n}S_j\cdot A_j\right)\cdot\left(B_0+\sum_{j=0}^{n}S_j\cdot B_j\right)-\left(C_0+\sum_{j=0}^{n}S_j\cdot C_j\right)
     \end{align*}
-    Then, we say that $S$ satisfies $QAP(R)$, if and only if $P_S\mod T = 0$.
+    Then, we say that $S$ satisfies $QAP(R1CS)$, if and only if $P_S\mod T = 0$.
 
-    We call $QAP(R)$ satisfiable, if there is an assignment $S$ that satisfies $QAP(R)$.
+    We call $QAP(R1CS)$ satisfiable, if there is an assignment $S$ that satisfies $QAP(R1CS)$.
 \end{definition}
 
-As we have shown before, the \gls{r1cs} $R_{r_{3\text{-}vot}}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
-Therefore, the \gls{qap} $QAP(R_{r_{3\text{-}vot}})$ should also be satisfied by $S$ but not by $S'$.
+As we have shown before, the \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
+Therefore, the \gls{qap} $QAP(R1CS_{r_{3\text{-}vot}})$ should also be satisfied by $S$ but not by $S'$.
 We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the definition of $P_S$ as in \cref{def:qapSat} and checking wheter this polynomial is divisible by $T$:
 \begin{itemize}
     \item Assignment $S=(0,0,1,0,0,0,0)$:
@@ -612,25 +612,66 @@ More generally, we need to be able to hide a part of the assignment to a circuit
 For this purpose, we split an assignment to the circuit for $r$ into an instance and a witness part. 
 As outlined in \cref{chap:votingschemes}, the instance is public and the witness is private.
 
-We can formalize this concept as an Instance-Witness Decomposition.
+We can formalize this concept as a Decomposition Relation.
 
-\begin{definition}[Instance-Witness Decomposition]
+\begin{definition}[Decomposition Relation]
     Let $(\mathbb{F}, +, \cdot)$ be a finite field.
     Let $r:\mathbb{F}^m\to\mathbb{F}^n$ be an algebraic function.
-    Then, $R_r$ is the corresponding \gls{r1cs} and $QAP(R_r)$ is the corresponding \gls{qap}.
-    The set of all assignments to $r$, $R_r$ and $QAP(R_r)$ is $\mathcal{A}=\mathbb{F}^{m+n}$.
-    In an Instance-Witness decomposition, we split this set into one set for instance and witness each: $\mathcal{I}=\mathbb{F}^u,\: \mathcal{W}=\mathbb{F}^v$ with $u+v=m+n$.
-    Furthermore, we use a permutation $p:\mathcal{I}\times\mathcal{W}\to \mathcal{A}$ to map an assignment to the instance and witness parts to a full assignment of the circuit for $r$.
-    The Instance-Witness decomposition $IWD(rep)$ where $rep\in\{r,R_r, QAP(R_r)\}$ is then defined as 
+    Then, $R1CS_r$ is the corresponding \gls{r1cs} and $QAP(R1CS_r)$ is the corresponding \gls{qap}.
+
+    Assignments to $r$ have $m+n$ entries, to account for the input and output signals.
+    For $R1CS_r$ and $QAP(R1CS_r)$, assignments have more entries if intermediate signals are required to conform to the \gls{r1cs} and \gls{qap} format.
+    The set of all assignments to any of the representations $r$, $R1CS_r$ and $QAP(R1CS_r)$ is therefore $\mathcal{A}=\mathbb{F}^{m+n+s}$,where $s\in\mathbb{N}$ is the number of intermediate signals required.
+    
+    To decompose an assignment $S\in\mathcal{A}$ into an assignment $(I,W)\in\mathcal{I}\times\mathcal{W}$, we employ a bijective function $d_p$ based on a permutation $p:\{0,\dots, m+n+s\}\to\{0,\dots, n_I + n_W\}$ with $p(0):=0$. \footnote{\label{footnote:decompRelationPermutation}
+        To understand how $p$ helps to map between instance-witness decomposition and normal assignments, consider the following:
+        Let $S=(S_1,\dots, S_{m+n+s})$ be an assignment, and let $(I,W)=((I_1,\dots, I_u), (W_1,\dots, W_v))$ be the corresponding decomposed assignment, where the signals $S$ have each been assigned to instance $I$ or witness $W$.
+        If $I_j$ corresponds to $S_i$ , then $p(i):=j$ and consequently $p^{-1}(j)=i$.
+        Similarly, if $W_j$ corresponds to $S_i$, then $p(i)=u+j$ and consequently $p^{-1}(u+j)=i$.
+        (We need to add $u$ to the index of the witness signal to account for all $u$ instance signals before the witness signals.)
+
+        The definition $p(0):=0$ is purely to simplify notation in Groth16 SNARKs later on. 
+        For this section, defining $p:\{1,\dots, m+n+s\}\to\{1,\dots, n_I + n_W\}$ would be sufficient as well.
+    }
     \begin{align*}
-        IWD(rep)=(\mathcal{I},\mathcal{W},p,rep)\text{.}
+        &d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W},\\
+        &\quad d_p(S)=d_p((S_1,\dots, S_{m+n+s})):=(I,W)=((I_1,\dots,I_u),(W_1,\dots, W_v))\\
+        &\text{where}\\
+        &\forall j\in\{1,\dots,u\}:\:I_j=S_{p^{-1}(j)}\\
+        &\forall j\in\{1,\dots, v\}:\: W_j=S_{p^{-1}(u+j)}
     \end{align*}
-    We say that an assignment $(I,W)=((I_1,\dots, I_u), (W_1,\dots, W_v))\in\mathbb{F}^u\times\mathbb{F}^v$ satisfies $IWD(rep)$, if and onyl if $S=p((I,W))$ satisfies $rep$.
-    $IWD(rep)$ is called satisfiable, if there is an assignment $(I,W)\in\mathbb{F}^u\times\mathbb{F}^v$ such that $(I,W)$ satisfies $IWD(rep)$.
-    %two index sets $\{i_1,\dots, i_u\}$ and $\{w_1,\dots, w_v\}$ for some $u,v\in\mathbb{N}$ with $u+v=m+n$.
+    How $p$ and $d_p$ are used to decompose assignments is also visualized in \cref{fig:decompositionPerm}.
+    % The decomposition $(I,W)$ of an assignment $S=(S_1,\dots, S_{m+n+s})$ is then defined as
+    % \begin{align*}
+    %     (I,W)&\phantom{:}=((I_1,\dots, I_u), (W_1,\dots, W_v))\\
+    %     &:= ((S_{p^{-1}(1)},\dots, S_{p^{-1}(u)}))
+    % \end{align*}
+    % We need this, to map an assignment to the instance and witness parts to a full assignment of the circuit, \gls{r1cs} or \gls{qap} for $r$.
+    % Furthermore, we use a permutation $p:\mathcal{I}\times\mathcal{W}\to \mathcal{A}$ to map an assignment to the instance and witness parts to a full assignment of the circuit for $r$.
+
+    The decomposition relation $DR(rep, d_p)$ where $rep\in\{r,R1CS_r, QAP(R1CS_r)\}$ is then a relation defined as
+    \begin{align*}
+        &DR(rep, d_p): \mathcal{I}\times\mathcal{W}\to\{0,1\}, \\
+        &\quad DR(rep,d_p)(I, W)=DR(rep, d_p)((I_1,\dots, I_u), (W_1,\dots, W_v))\\
+        &\phantom{\quad DR(rep,d_p)(I, W)}=\begin{cases}
+            %1, \quad \text{if } p(I, W) \text{ satisfies } rep\\
+            1, \quad \text{if } d_p^{-1}((I_1,\cdots, I_u), (W_1,\dots, W_v)) \text{ satisfies } rep\\
+            0, \quad \text{otherwise}
+        \end{cases}
+    \end{align*}
+    This fulfills the relation definition from \ref{def:relation}.
+    %We say that an assignment $(I,W)=((I_1,\dots, I_u), (W_1,\dots, W_v))\in\mathbb{F}^{n_I}\times\mathbb{F}^{n_W}$ satisfies $DR(rep)$, if and only if $S=p(I,W)$ satisfies $rep$.
+    %$DR(rep)$ is called satisfiable, if there is an assignment $(I,W)\in\mathbb{F}^{n_I}\times\mathbb{F}^{n_W}$ such that $(I,W)$ satisfies $DR(rep)$.
 \end{definition}
 
-We can also visualize an Instance-Witness decomposition as in \cref{fig:circuit:instanceWitnessDecomposition}.
+\begin{figure}[h]
+    \centering
+        \includegraphics[scale=0.9]{graphics/GPZKPs/DecompositionPerm.pdf}
+    \caption{Decomposition of a signal $S=(S_1,\dots, S_{m+n+s})$ into instance and witness $(I, W)=((I_1,\dots, I_u),(W_1,\dots, W_v))$ as performed by $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$ using permutation $p$.}
+    \label{fig:decompositionPerm}
+\end{figure}
+
+We can also visualize a decomposition relation on a circuit directly as presented in \cref{fig:circuit:instanceWitnessRelation}.
 
 \begin{figure}[h]
     \centering
@@ -643,37 +684,172 @@ We can also visualize an Instance-Witness decomposition as in \cref{fig:circuit:
     \begin{subfigure}{.48\textwidth}
         \centering
         \includegraphics[scale=1]{graphics/circuits/Notation_InstanceWitness.pdf}
-        %\caption{Exemplary Instance-Witness decomposition of $r$.}
+        %\caption{Exemplary decomposition relation of $r$.}
     \end{subfigure}
-    \caption{Circuit for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$ and exemplary Instance-Witness decomposition of $r$.}
-    \label{fig:circuit:instanceWitnessDecomposition}
+    \caption{Circuit for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$ and exemplary decomposition relation of $r$.}
+    \label{fig:circuit:instanceWitnessRelation}
 \end{figure}
 
 Once again, we consider $r_{3\text{-}vot}$ as an example. 
 To show ballot validity with the circuit for $r_{3\text{-}vot}$, we want to keep the ballot represented by the inputs $S_1^{in}, S_2^{in}$ and $S_3^{in}$ private.
 On the other hand, the output signals $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$ need to be $0$ in case we have a valid ballot as we observed earlier.
 Therefore, these signals can be public.
-To compute the corresponding Instance-Witness decomposition, we choose $\mathcal{I}=\mathbb{F}_{13}^{4}$ and $\mathcal{W}=\mathbb{F}_{13}^3$.
-Additionally, we choose the mapping $p$ as follows:
+To compute the corresponding decomposition relation, we choose $\mathcal{I}=\mathbb{F}_{13}^{4}$ and $\mathcal{W}=\mathbb{F}_{13}^3$.
+Additionally, we choose permutation $p$ and consequently mapping $d_p$ as follows:
 \begin{align*}
-    p:\mathbb{F}_{13}^4\times \mathbb{F}_{13}^3\to\mathbb{F}_{13}^7, p((I_1, I_2, I_3, I_4), (W_1,W_2,W_3)) = (W_1,W_2,W_3,I_1,I_2,I_3,I_4)
+    &p:\{0,\dots, 7\}\to\{0,\dots, 7\},0\mapsto0,1\mapsto5,2\mapsto6,3\mapsto7,4\mapsto1,5\mapsto2,6\mapsto3,7\mapsto4
+    &\\
+    &d_p:\mathbb{F}_{13}^7\to\mathbb{F}_{13}^4\times \mathbb{F}_{13}^3, d_p(S_1,S_2,S_3,S_4,S_5,S_6,S_7) = ((S_4,S_5,S_6, S_7),(S_1,S_2,S_3))
 \end{align*}
-Then, $IWD(r)=(\mathcal{I}, \mathcal{W}, p, r)$ is the corresponding Instance-Witness decomposition.
-Visually, we can represent this as shown in \cref{fig:circuit:instanceWitnessDecompositionThreeVot}.
+Then, $DR(r_{3\text{-}vot}, d_p)$ is the corresponding decomposition relation.
+Visually, we can represent this as shown in \cref{fig:circuit:instanceWitnessRelationThreeVot}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/circuits/ExampleVoting_instanceWitnessDecomposition.pdf}
-    \caption{Instance-Witness decomposition of the circuit for $r_{3\text{-}vot}$ if we choose the inputs as witness and the outputs as instance.}
-    \label{fig:circuit:instanceWitnessDecompositionThreeVot}
+    \includegraphics[scale=.8]{graphics/circuits/ExampleVoting_instanceWitnessRelation.pdf}
+    \caption{Decomposition relation of the circuit for $r_{3\text{-}vot}$ if we choose the inputs as witness and the outputs as instance.}
+    \label{fig:circuit:instanceWitnessRelationThreeVot}
 \end{figure}
 
-Let $IWD(QAP(R_{r_{3\text{-}vot}}))=(\mathcal{I}, \mathcal{W}, p, QAP(R_{r_{3\text{-}vot}}))$ be defined analogously to $IWD(r)$.
-To prove that a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ without revealing it, a voter can create the assignment $S=p((0,0,0,0),(b_0,b_1,b_2))=(b_0,b_1,b_2,0,0,0,0)$ to $QAP(R_{r_{3\text{-}vot}})$ and compute the corresponding polynomial $P_S$.
-If $P_S$ is divisible by the target polynomial $T$ of $QAP(R_{r_{3\text{-}vot}})$, we know that the assignment $S$ satisfies $QAP(R_{r_{3\text{-}vot}})$ and therefore, that the ballot $b$ is valid.
+Let $DR(QAP(R1CS_{r_{3\text{-}vot}}), d_p)$ be defined analogously to $DR(r_{3\text{-}vot}, d_p)$. \footnote{\label{footnote:instanceWitnessIntermediateSignals}
+    Note, that in our case there are no intermediate signals that need to be assigned to instance or witness. 
+    However, in many circuits there are such signals. 
+    In that case, we typically determine whether an intermediate signal is instance or witness depending on the instance and witness properties of the rest of the signals.
+    If an intermediate signal is only dependent on instance signals, then it is typically also part of the instance.
+    Otherwise, the intermediate signal is usually assigned to the witness.
+}
+
+To prove that a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ without revealing it, a voter can create the assignment $S=d_p^{-1}((0,0,0,0),(b_0,b_1,b_2))=(b_0,b_1,b_2,0,0,0,0)$ to $QAP(R1CS_{r_{3\text{-}vot}})$ and compute the corresponding polynomial $P_S$.
+If $P_S$ is divisible by the target polynomial $T$ of $QAP(R1CS_{r_{3\text{-}vot}})$, we know that the assignment $S$ satisfies $QAP(R1CS_{r_{3\text{-}vot}})$.
+Therefore, $DR(QAP(R1CS_{r_{3\text{-}vot}}), d_p)(I,W)=1$ and the ballot $b$ is valid.
 However, we do not learn what the ballot $b$ is.
+Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
 
 %However, it is currently not possible to show that the polynomial $P_S$ provided by a voter actually belongs to the assignment $S$.
 
 \section{Groth16 SNARKs}
+\glspl{snark} are a special form of the \glspl{zkp} we introduced in \cref{chap:votingschemes}.
 
+\begin{definition}[Succinct Non-Interactive Argument of Knowledge for Relation $R$]
+    Let $R$ be a binary polynomial time decideable relation relating instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$.
+    Let $ZPS(R)=(Setup, Prove, Verify)$ be a \gls{zps} for $R$.
+    $ZPS(R)$ is a \gls{snark}, if it fulfills the following properties:\footnote{\label{footnote:NonInteractiveness}
+        Note that our definition of \glspl{zkp} is already non-interactive, meaning that a prover sends only the proof $\pi$ to the verifier.
+        There is no further interaction between the two parties.
+    }
+    \begin{itemize}
+        \item Succinctness: The size of the $\pi=Prove(CRS, I, W)$ is shorter than the witness $W$. \cite{least_authority_moonmath_2024}
+        \item Argument: The soundness property defined in \cref{def:zpsForR} holds only if $Prove$ is polynomially bound. \cite{least_authority_moonmath_2024}
+    \end{itemize}
+\end{definition}
+
+One widely used \gls{snark} is the Groth16 SNARK. 
+Our definition, largely parallels that in section 8.2 of \cite{least_authority_moonmath_2024} and appendix B in \cite{huber_zk-snarks_2025}.
+
+%\newpage
+\begin{definition}[Groth16 SNARK]
+    Let $\mathbb{F}_q$ be a field of prime order $q$.
+
+    Let $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ be an algebraic function.
+    Let 
+    \begin{align*}
+        QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}
+    \end{align*}
+    be a \gls{qap} corresponding to $r$.
+    We denote the number of constraints in $QAP(R1CS_r)$ by $k:=deg(T)$.
+    Let $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$ be a corresponding decomposition relation where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
+
+    Let $(\mathbb{G}_1, \odot_{\mathbb{G}_1}), (\mathbb{G}_2, \odot_{\mathbb{G}_2})$ and $(\mathbb{G}_T, \odot_{\mathbb{G}_T})$ be groups of prime order $q$.
+    Let $e:\mathbb{G}_1\times\mathbb{G}_2\to\mathbb{G}_T$ be an efficiently computable, non-degenrate, bilinear pairing as defined in \cref{def:bilinearPairing}.
+    Let $g_1\in\mathbb{G}_1, g_2\in\mathbb{G}_2$ be generators of the respective groups and $e(g_1, g_2)$ be a generator of $\mathbb{G}_T$.
+
+    Then, the \gls{g16snark} for the relation $DR(QAP(R1CS_r), d_p)$ based on the parameters $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$ is the \gls{snark}
+    \begin{align*}
+        GSNARK(DR(QAP(R1CS_r), d_p))=(Setup, Prove, Verify)
+    \end{align*}
+    where the procedures $Setup$, $Prove$ and $Verify$ are defined in Algorithms \ref{alg:setupG16}, \ref{alg:proveG16} and \ref{alg:verifyG16} respectively.
+    Here, the different components used in the algorithms are colored to see where they are being used, similarly as in \cite{huber_zk-snarks_2025}.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Procedure to setup the \gls{zps} $GSNARK(DR(QAP(R1CS_r), d_p))$ based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
+    Here, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
+    Additionally, $QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
+    }
+    \label{alg:setupG16}
+    \begin{algorithmic}
+    \Procedure{$Setup$}{$\vphantom{bla}$}
+        \State $\alpha, \beta, \gamma, \delta, \tau\probgets \mathbb{F}_q$
+        \State $st:=(\alpha,\beta,\gamma,\delta,\tau)$ \Comment Create simulation trapdoor from uniformly random field elements.
+        \State $CRS_{\mathbb{G}_1}:=\left\{\textcolor{red}{g_1^\alpha},\textcolor{blue}{g_1^\beta},\textcolor{lime}{g_1^\delta},\left(\textcolor{teal}{g_1^{\tau^j}}\right)_{j=0}^{k-1},\left(\textcolor{cyan}{g_1^{\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau)+C_{p^{-1}(j)}(\tau)}{\gamma}}}\right)_{j=0}^{n_I},\right.$
+        \Statex $\phantom{CRS_{\mathbb{G}_1}:=\quad\quad} \left. \left(\textcolor{magenta}{g_1^{\frac{\beta A_{p^{-1}(j+n_I)}(\tau)+\alpha B_{p^{-1}(j+n_I)}(\tau)+C_{p^{-1}(j+n_I)}(\tau)}{\delta}}}\right)_{j=1}^{n_W},\left(\textcolor{brown}{g_1^{\frac{\tau^jT(\tau)}{\delta}}}\right)_{j=0}^{k-2}\right\}$
+        \State $CRS_{\mathbb{G}_2}:=\left\{\textcolor{olive}{g_2^\beta}, \textcolor{green}{g_2^\gamma},\textcolor{violet}{g_2^\delta},\left(\textcolor{pink}{g_2^{\tau^j}}\right)_{j=0}^{k-1}\right\}$
+        \State $CRS:=(CRS_{\mathbb{G}_1},CRS_{\mathbb{G}_2})$ \Comment Compute Common Reference String
+        \State \Return $CRS$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Procedure to compute a proof for a \gls{g16snark} using a $CRS$ as computed by \cref{alg:setupG16}, instance $I$ and witness $W$.
+    Here, the \gls{g16snark} $GSNARK(DR(QAP(R1CS_r), d_p))$ is based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
+    Moreover, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
+    Additionally, $QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
+    }
+    \label{alg:proveG16}
+    \begin{algorithmic}
+    \Procedure{$Prove$}{$CRS, I, W$}
+        \State $(I_1,\dots, I_{n_I}:=I);\:(W_1,\dots, W_{n_W}):=W$
+        \State $(S_1,\dots, S_{n_I+n_W}):=S:=d_p^{-1}(I,W)$
+        \State Compute the polynomial $P_S$ corresponding to assignment $S$ as in \cref{def:qapSat}.
+        \State $H:=\frac{P_S}{T}$ with $H(x)=\sum\limits_{l=0}^{k-2}H_{l}x^{l}$ \Comment $H_{l}$ is the $l$-th coefficient of $H$.
+        \Statex 
+        \State Compute $\textcolor{NavyBlue}{g_1^S}:=\textcolor{NavyBlue}{g_1^{\frac{H(\tau)T(\tau)}{\delta}}}=\prod\limits_{j=0}^{k-2}\left(\textcolor{brown}{g_1^{\frac{\tau^jT(\tau)}{\delta}}}\right)^{H_j}$
+        \State $\textcolor{yellow}{g_1^{W}}:=\prod\limits_{j=1}^{n_W}\left(\textcolor{magenta}{g_1^\frac{\beta A_{p^{-1}(j+n_I)}(\tau)+\alpha B_{p^{-1}(j+n_I)}(\tau) + C_{p^{-1}(j+n_I)}(\tau)}{\delta}}\right)^{W_j}$
+        \State $\rho, \sigma\probgets \mathbb{F}_q$
+        \Statex
+        \State Compute $\left(\textcolor{lightgray}{g_1^{A_j(\tau)}}\right)_{j=0}^{n_I+n_W}, \left(\textcolor{orange}{g_1^{B_j(\tau)}}\right)_{j=0}^{n_I+n_W}$ and $\left(\textcolor{RawSienna}{g_2^{B_j(\tau)}}\right)_{j=0}^{n_I+n_W}$ \Comment Using $CRS$. \footnotemark
+        \Statex
+        \State $g_1^A:=\left(\textcolor{lime}{g_1^\delta}\right)^\rho\odot_{\mathbb{G}_1} \textcolor{red}{g_1^\alpha}\odot_{\mathbb{G}_1} \textcolor{lightgray}{g_1^{A_0(\tau)}}\odot_{\mathbb{G}_1} \prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{lightgray}{g_1^{A_j(\tau)}}\right)^{S_j}$
+        \State $g_1^B:=\left(\textcolor{lime}{g_1^\delta}\right)^\sigma\odot_{\mathbb{G}_1} \textcolor{blue}{g_1^\beta} \odot_{\mathbb{G}_1} \textcolor{orange}{g_1^{B_0(\tau)}}\odot_{\mathbb{G}_1} \prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{orange}{g_1^{B_j(\tau)}}\right)^{S_j}$
+        \State $g_1^C:=\textcolor{yellow}{g_1^W}\odot_{\mathbb{G}_1} \textcolor{NavyBlue}{g_1^S}\odot_{\mathbb{G}_1} \left(g_1^{A}\right)^\sigma\odot_{\mathbb{G}_1} \left(g_1^B\right)^\rho\odot_{\mathbb{G}_1} \left(\textcolor{lime}{g_1^\delta}\right)^{-\sigma\rho}$
+        \State $g_2^B:=\left(\textcolor{violet}{g_2^\delta}\right)^\sigma\odot_{\mathbb{G}_2} \textcolor{olive}{g_2^\beta} \odot_{\mathbb{G}_2} \textcolor{RawSienna}{g_2^{B_0(\tau)}}\odot_{\mathbb{G}_2}\prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{RawSienna}{g_2^{B_j(\tau)}}\right)^{S_j}$
+        \Statex
+        \State $\pi:=(g_1^A,g_1^C,g_2^B)$
+        \State \Return $\pi$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+\footnotetext{
+    \label{footnote:qapPolynomialsAtTau}
+    Let $g\in\{g_1, g_2\}$, let $P\in\bigcup\limits_{j=0}^{n_I+n_W}\{A_j, B_j\}$ with $P(x)=p_0x^0+p_1x^1+\dots+p_{n_P}x^{n_P}$. 
+    With $\mathbb{G}\in\{\mathbb{G}_1,\mathbb{G}_2\}$ we denote the group $g$ is a part of.
+    We compute $g^{P(\tau)}$ via\\
+    \begin{align*}
+        g^{P(\tau)}&=g^{p_0x^0+p_1x^1+\dots+p_{n_P}x^{n_P}}\\
+        &=g^{p_0\tau^0}\odot_{\mathbb{G}}g^{p_1\tau^1}\odot_{\mathbb{G}}\dots \odot_{\mathbb{G}}g^{p_{n_P}\tau^{n_P}}\\
+        &=\left(g^{\tau^0}\right)^{p_0}\odot_{\mathbb{G}} \left(g^{\tau^1}\right)^{p_1}\odot_{\mathbb{G}} \dots \odot_{\mathbb{G}}\left(g^{\tau^{n_P}}\right)^{p_{n_P}}
+    \end{align*}
+    Note that $\forall j\in\{0,\dots, n_P\}: g^{\tau^j}\in CRS$, since $n_P=deg(P)<k=deg(T)$.
+    Therefore, computing $\left(g_1^{A_j(\tau)}\right)_{j=0}^{n_I+n_W}, \left(g_1^{B_j(\tau)}\right)_{j=0}^{n_I+n_W}$ and $\left(g_2^{B_j(\tau)}\right)_{j=0}^{n_I+n_W}$ from $CRS$ is possible.    
+}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Procedure to verify a proof $\pi$ as computed in \cref{alg:setupG16} in a \gls{g16snark} using a $CRS$ as computed by \cref{alg:setupG16} and instance $I$.
+    Here, the \gls{g16snark} $GSNARK(DR(QAP(R1CS_r), d_p))$ is based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
+    Moreover, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
+    Additionally, $QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
+    }
+    \label{alg:verifyG16}
+    \begin{algorithmic}
+    \Procedure{$Prove$}{$CRS, I, \pi$}
+        \State $(g_1^A, g_1^C, g_2^B):=\pi;\:(W_1,\dots, W_{n_W}):=W$
+        \State $g_1^I:=\left(\textcolor{cyan}{g_1^\frac{\beta A_0(\tau)+\alpha B_0(\tau)+C_0(\tau)}{\gamma}}\right)\odot_{\mathbb{G}_1}\prod\limits_{j=1}^{n_I}\left(\textcolor{cyan}{g_1^\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau) + C_{p^{-1}(j)}(\tau)}{\delta}}\right)^{I_j}$
+        \If{$e(g_1^A, g_2^B)=e(\textcolor{red}{g_1^\alpha}, \textcolor{olive}{g_2^\beta})\odot_{\mathbb{G}_T} e(g_1^I, \textcolor{green}{g_2^\gamma})\odot_{\mathbb{G}_T} e(g_1^C, \textcolor{violet}{g_2^\delta})$}
+            \State \Return $valid$
+        \Else
+            \State \Return $invalid$
+        \EndIf
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}

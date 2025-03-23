@@ -22,4 +22,25 @@ In this work, we exclusively use finite commutative groups and will therefore re
     
 \end{definition}
 
+\begin{definition}[Bilinear Pairing \cite{least_authority_moonmath_2024}]
+    \label{def:bilinearPairing}
+    Let $(\mathbb{G}_1, \odot_{\mathbb{G}}), (\mathbb{G}_2, \odot_{\mathbb{G}_2})$ and $(\mathbb{G}_3, \odot_{\mathbb{G}_2})$ be groups.
+    Then, a bilinear pairing on these groups is a function 
+    \begin{align*}
+        e:\mathbb{G}_1\times\mathbb{G}_2\to\mathbb{G}_3\text{,}
+    \end{align*}
+    where the bilinearity property holds:
+    \begin{align*}
+        &\forall g_1, g_1'\in\mathbb{G}_1\forall g_2, g_2'\in\mathbb{G}_2: \\
+        &\quad e(g_1\odot_{\mathbb{G}_1}g_1', g_2)=e(g_1, g_2)\odot_{\mathbb{G}_3} e(g_1',g_2) \text{ and }\\
+        &\quad e(g_1, g_2\odot_{\mathbb{G}_2}g_2')=e(g_1, g_2)\odot_{\mathbb{G}_3} e(g_1,g_2') \\
+    \end{align*}
+    $e$ is called non-degenerate, if:
+    \begin{align*}
+        &\forall g_1\in\mathbb{G}_1\forall g_2\in\mathbb{G}_2:
+        &\quad e(g_1, g_2)=e_{\mathbb{G}_3}\quad\Leftrightarrow\quad g_1=e_{\mathbb{G}_1} \lor g_2=e_{\mathbb{G}_2}
+    \end{align*}
+    Here, $e_{\mathbb{G}_1}, e_{\mathbb{G}_2}$ and $e_{\mathbb{G}_3}$ denote the neutral elements of the respective groups.
+\end{definition}
+
 \section{Encryption Scheme}

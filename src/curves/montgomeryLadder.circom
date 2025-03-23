@@ -84,6 +84,23 @@ template xAddProjective() {
     //PPlusQ.Z <== PMinusQ.X * v4_1;
     //PPlusQ.Y <== 0;
 }
+template xAddProjectiveXZ() {
+    input signal PX;
+    input signal PZ;
+    input signal QX;
+    input signal QZ;
+    input signal PMinusQX;
+    input signal PMinusQZ;
+    output signal outX;
+    output signal outZ;
+    signal tmp1 <== (PX - PZ) * (QX + QZ);
+    signal tmp2 <== (PX + PZ) * (QX - QZ);
+    signal tmpX <== (tmp1 + tmp2) * (tmp1 + tmp2);
+    signal tmpZ <== (tmp1 - tmp2) * (tmp1 - tmp2);
+    outX <== PMinusQZ * tmpX;
+    outZ <== PMinusQX * tmpZ;
+}
+
 /**
 * According to "Montgomery curves and their arithmetic" (Equation (10)).
 * CAUTION: Does not check input for infty.
@@ -99,6 +116,19 @@ template xDblProjective(A) {
     out.X <== tmp1 * tmp2;
     out.Y <== 0;
     out.Z <== tmpZ1 * tmpZ2;
+}
+template xDblProjectiveXZ(A) {
+    input signal PX;
+    input signal PZ;
+    output signal outX;
+    output signal outZ;
+    signal tmp1 <== (PX + PZ) * (PX + PZ);
+    signal tmp2 <== (PX - PZ) * (PX - PZ);
+    signal tmpZ1 <== tmp1 - tmp2; // 4*P_X*P_Z
+    signal tmpZ2 <== tmp2 + ((A + 2)/4) * tmpZ1;
+    
+    outX <== tmp1 * tmp2;
+    outZ <== tmpZ1 * tmpZ2;
 }
 template xDblProjectivePadding(A) {
     input ProjectivePoint() P;
