@@ -200,7 +200,7 @@ echo "Using ptau file: $ptauFile"
 mkdir -p snarkjsTestFiles # Ensure snarkjs test file directory exists
 cd snarkjsTestFiles
 start_time=$(date +%s%3N)
-prepareProof.sh ../circomTestFiles/${filePrefix}.r1cs ../../../scripts/ptau/${ptauFile}
+prepareProof.sh ../circomTestFiles/${filePrefix}.r1cs ../../../../scripts/ptau/${ptauFile}
 end_time=$(date +%s%3N)
 t_prep=$((end_time - start_time))
 
@@ -294,3 +294,5 @@ rm -rf snarkjsTestFiles
 cd ..
 
 echo "Cleanup complete."
+
+cd ..

@@ -33,12 +33,15 @@ if [[ "$INPUT_FILE" == *.sage ]]; then
   # sage "$INPUT_FILE"
   sage "$INPUT_FILE" | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
   # sage "$INPUT_FILE" | tee /dev/tty | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
-  # cat $SAGE_OUTPUT
+  # cat "$SAGE_OUTPUT"
   
   # Update INPUT_FILE to point to the generated JSON file
   INPUT_FILE="$SAGE_OUTPUT"
   # echo "Input file: $INPUT_FILE"
 fi
+
+# echo "Current location: ${PWD}"
+# echo "Circom test file: ${CIRCOM_FILE}"
 
 # Run circom to generate r1cs, sym, and wasm files (or C++ if --c is used)
 if [ "$USE_CPP_WITNESS" = true ]; then

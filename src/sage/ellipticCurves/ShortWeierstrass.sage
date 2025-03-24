@@ -17,7 +17,7 @@ class ShortWeierstrassPoint(CurvePoint):
     @classmethod
     def getInfinity(cls, curveParams: list, chosenSubgroupOrder=CURVE_CHOSEN_SUBGROUP_ORDER, name=None):
         if len(curveParams) != 2:
-            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} were required")
+            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} are required")
         return ShortWeierstrassPoint(0, 0, False, curveParams[0], curveParams[1], chosenSubgroupOrder=chosenSubgroupOrder, name=name)
 
     def toSage(self):

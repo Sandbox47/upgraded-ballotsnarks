@@ -3,7 +3,7 @@ import random
 import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
-sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
+# sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class BordaTournamentStyleBallot(Ballot):
     def __init__(self, votes, nVotes: int, ranking: list[int], a: int, b: int, eegPubKey: EEGPubKey):

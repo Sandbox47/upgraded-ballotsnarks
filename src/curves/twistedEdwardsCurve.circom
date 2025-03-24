@@ -33,8 +33,8 @@ template ifThenElseTwistedEdwards() {
 
 template inftyTwistedEdwards() {
     output TwistedEdwardsPoint out;
-    out.x <== 1;
-    out.y <== 0;
+    out.x <== 0;
+    out.y <== 1;
 }
 
 // ========================================================================================================================

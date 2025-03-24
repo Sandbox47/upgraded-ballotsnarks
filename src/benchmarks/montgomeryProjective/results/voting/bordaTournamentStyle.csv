@@ -1,0 +1,2 @@
+Number of Bits;nVotes;a;b;non-linear constraints;linear constraints;total constraints;CRS size [MB];t_prep [ms];t_prove [ms];t_ver [ms]
+32;10;2;1;700;450;1150;0.5522994995117188;1984;817;706

@@ -88,7 +88,7 @@ template computeBordaTournamentStyleBallot(n, a, b) {
 * Assert that the given ballot corresponds to the given ranking according to the borda tournament style election type.
 * Parameters a, b are defined the same as in computeBordaTournamentStyleBallot.
 */
-template assertBordaTournamentStyleVoting(nVotes, a, b) {
+template assertBordaTournamentStyleVoting(bitsVotes, nVotes, a, b) {
     input signal ranking[nVotes];
     input signal ballot[nVotes];
 
@@ -96,109 +96,4 @@ template assertBordaTournamentStyleVoting(nVotes, a, b) {
     computeBallot.ranking <== ranking;
 
     ballot === computeBallot.out;
-}
-
-/**
-* Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
-*/
-/*
-template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, a, b) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-    output ProjectivePoint() encBallot[2][nVotes]; //g^r and g^v*pk^r values from expElGamal
-
-    // Private/Witness
-    input signal ballot[nVotes];
-    input signal ranking[nVotes];
-    input signal r[nVotes]; // Randomness
-
-    component enc = expElGamalVector(bitsVotes, bitsRand, A, B, nVotes);
-    enc.v <== ballot;
-    enc.g <== g;
-    enc.pk <== pk;
-    enc.r <== r;
-    encBallot[0] <== enc.gr;
-    encBallot[1] <== enc.gv_pkr;
-
-    component assertVoting = assertBordaTournamentStyleVoting(nVotes, a, b);
-    assertVoting.ballot <== ballot;
-    assertVoting.ranking <== ranking;
-}
-*/
-
-/**
-* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
-*/
-template assertBordaTournamentStyle(bitsVotes, bitsRand, A, B, nVotes, a, b) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-
-    //g^r and g^v*pk^r values from expElGamal
-    input ProjectivePoint() enc_gr[nVotes];
-    input ProjectivePoint() enc_gv_pkr[nVotes];
-
-    // Private/Witness
-    input signal ballot[nVotes];
-    input signal ranking[nVotes];
-    input signal r[nVotes]; // Randomness
-
-    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
-    assertEnc.v <== ballot;
-    assertEnc.g <== g;
-    assertEnc.pk <== pk;
-    assertEnc.r <== r;
-    assertEnc.gr <== enc_gr;
-    assertEnc.gv_pkr <== enc_gv_pkr;
-
-    component assertVoting = assertBordaTournamentStyleVoting(nVotes, a, b);
-    assertVoting.ballot <== ballot;
-    assertVoting.ranking <== ranking;
-}
-
-
-// ========================================================================================================================
-// BENCHMARKS
-
-template assertBordaTournamentStyleEncryptionBenchmark(bitsVotes, bitsRand, A, B, nVotes, a, b) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-
-    //g^r and g^v*pk^r values from expElGamal
-    input ProjectivePoint() enc_gr[nVotes];
-    input ProjectivePoint() enc_gv_pkr[nVotes];
-
-    // Private/Witness
-    input signal ballot[nVotes];
-    input signal ranking[nVotes];
-    input signal r[nVotes]; // Randomness
-
-    component assertEnc = assertEncVector(nVotes, bitsVotes, bitsRand, A, B);
-    assertEnc.v <== ballot;
-    assertEnc.g <== g;
-    assertEnc.pk <== pk;
-    assertEnc.r <== r;
-    assertEnc.gr <== enc_gr;
-    assertEnc.gv_pkr <== enc_gv_pkr;
-}
-
-template assertBordaTournamentStyleVotingBenchmark(bitsVotes, bitsRand, A, B, nVotes, a, b) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-
-    //g^r and g^v*pk^r values from expElGamal
-    input ProjectivePoint() enc_gr[nVotes];
-    input ProjectivePoint() enc_gv_pkr[nVotes];
-
-    // Private/Witness
-    input signal ballot[nVotes];
-    input signal ranking[nVotes];
-    input signal r[nVotes]; // Randomness
-
-    component assertVoting = assertBordaTournamentStyleVoting(nVotes, a, b);
-    assertVoting.ballot <== ballot;
-    assertVoting.ranking <== ranking;
 }

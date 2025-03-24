@@ -1,6 +1,6 @@
 {
     "testSuite": {
-        "ellipticCurve": "twistedEdwards",
+        "ellipticCurve": "montgomeryProjective",
         "ellipticCurves_TEST": [
             "twistedEdwards",
             "montgomeryProjective"
@@ -14,9 +14,6 @@
             32
         ],
         "nCand": [
-            1, 
-            2, 
-            5, 
             10
         ],
         "nCand_TEST": [
@@ -43,7 +40,14 @@
             600
         ],
         "electionTypes": [
-            "singleVote"
+            "singleVote",
+            "pointlistBorda", 
+            "multiVoteWithRules", 
+            "multiVote", 
+            "majorityJudgement", 
+            "lineVote", 
+            "condorcet", 
+            "bordaTournamentStyle"
         ],
         "electionTypes_TEST": [
             "singleVote", 

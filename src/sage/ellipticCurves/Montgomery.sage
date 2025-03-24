@@ -56,7 +56,7 @@ class MontgomeryAffinePoint(MontgomeryPoint):
         if curveParams == None:
             return MontgomeryAffinePoint(0, 0, False, chosenSubgroupOrder=chosenSubgroupOrder, name=name)
         if len(curveParams) != 2:
-            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} were required")
+            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} are required")
         return MontgomeryAffinePoint(0, 0, False, curveParams[0], curveParams[1], chosenSubgroupOrder=chosenSubgroupOrder, name=name)
 
     def toJSON(self):
@@ -116,13 +116,13 @@ class MontgomeryProjectivePoint(MontgomeryPoint):
         if curveParams == None:
             return MontgomeryProjectivePoint(0, 1, 0, chosenSubgroupOrder=chosenSubgroupOrder, name=name)
         if len(curveParams) != 2:
-            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} were required")
+            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} are required")
         return MontgomeryProjectivePoint(0, 1, 0, curveParams[0], curveParams[1], chosenSubgroupOrder=chosenSubgroupOrder, name=name)
 
     def toJSON(self):
         innerData = {
-            "X": str(self.x),
-            "Y": str(self.y),
+            "X": str(self.X),
+            "Y": str(self.Y),
             "Z": str(self.Z)
         }
         return JSONUtils.toJSON(self, innerData)

@@ -12,7 +12,12 @@ class Test():
         self.additionalParams = additionalParams
 
     def getBenchmarkCommand(self):
-        command = "./benchmark.sh " + str(self.testCircuit) + " " + str(self.ellipticCurve) + " " + str(self.name) + " " + str(self.bitsVotes) + " " + str(self.nCandName) + "=" + str(self.nCand)
+        # With shell:
+        # command = "./benchmark.sh " + str(self.testCircuit) + " " + str(self.ellipticCurve) + " " + str(self.name) + " " + str(self.bitsVotes) + " " + str(self.nCandName) + "=" + str(self.nCand)
+
+        # With python:
+        command = "python3 benchmark.py " + str(self.testCircuit) + " " + str(self.ellipticCurve) + " " + str(self.name) + " " + str(self.bitsVotes) + " " + str(self.nCandName) + "=" + str(self.nCand)
+
         for param in self.additionalParams:
             command += " " + str(param[0]) + "=" + str(param[1]).replace(" ", "")
         return command

@@ -123,8 +123,25 @@ template assertEncTwistedEdwards(bitsPlain, bitsRand, a, d) {
     expElGamal.v <== v;
     expElGamal.r <== r;
 
+    /**
+    log("test_gr:");
+    log("x:", gr.x);
+    log("y:", gr.y);
+    log("test_gv_pkr:");
+    log("x:", gv_pkr.x);
+    log("y:", gv_pkr.y);
+
+    log("enc_gr:");
+    log("x:", expElGamal.gr.x);
+    log("y:", expElGamal.gr.y);
+    log("enc_gv_pkr:");
+    log("x:", expElGamal.gv_pkr.x);
+    log("y:", expElGamal.gv_pkr.y);
+    log();
+
     gr === expElGamal.gr;
     gv_pkr === expElGamal.gv_pkr;
+    */
 }
 
 template assertEncVectorTwistedEdwards(entries, bitsPlain, bitsRand, a, d) {

@@ -10,7 +10,7 @@ include "../expElGamal/assertEEG.circom";
 * Checks that a given ballot (as a (n x n)-Matrix) confirms to the condorcet election type.
 * Condorcet Election type defined in "zk-SNARKS for Ballot Validity: A Feasibility Study".
 */
-template assertCondorcetVoting(n) {
+template assertCondorcetVotingWithoutRanking(n) {
     input signal ballot[n][n];
 
     // Assert that all entries are bits
@@ -119,11 +119,13 @@ template computeCondorcetBallot(n, maxValue) {
 
 /**
 * Assert that the given ballot corresponds to the given ranking according to the condorcet election type.
-* Parameters n, maxValue are defined the same as in computeCondorcetBallot.
+* Parameters n, bitsVotes are defined the same as in computeCondorcetBallot.
 */
-template assertCondorcetWithRankingVoting(n, maxValue) {
+template assertCondorcetVoting(bitsVotes, n) {
     input signal ranking[n];
     input signal ballot[n][n];
+
+    var maxValue = 2**bitsVotes;
 
     component computeBallot = computeCondorcetBallot(n, maxValue);
     computeBallot.ranking <== ranking;
@@ -149,112 +151,3 @@ template assertCondorcetWithRankingVoting(n, maxValue) {
     }
     
 }
-
-/**
-* Combined circuit checking that the ballot is valid encrypting the ballot using expElGamal.
-*/
-/*
-template assertCondorcet(bitsVotes, bitsRand, A, B, nCand, maxValue) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-    output ProjectivePoint() encBallot[2][nCand][nCand]; //g^r and g^v*pk^r values from expElGamal
-
-    // Private/Witness
-    input signal ballot[nCand][nCand];
-    input signal ranking[nCand];
-    input signal r[nCand][nCand]; // Randomness
-
-    component enc = expElGamalMatrix(bitsVotes, bitsRand, A, B, nCand, nCand);
-    enc.v <== ballot;
-    enc.g <== g;
-    enc.pk <== pk;
-    enc.r <== r;
-    encBallot[0] <== enc.gr;
-    encBallot[1] <== enc.gv_pkr;
-
-    component assertVoting = assertCondorcetWithRankingVoting(nCand, maxValue);
-    assertVoting.ballot <== ballot;
-    assertVoting.ranking <== ranking;
-}
-*/
-
-/**
-* Combined circuit checking that the ballot is valid and that the encrypted ballot is the encryption of the provided ballot.
-*/
-template assertCondorcet(bitsVotes, bitsRand, A, B, nCand) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-
-    //g^r and g^v*pk^r values from expElGamal
-    input ProjectivePoint() enc_gr[nCand][nCand];
-    input ProjectivePoint() enc_gv_pkr[nCand][nCand];
-
-    // Private/Witness
-    input signal ballot[nCand][nCand];
-    input signal ranking[nCand];
-    input signal r[nCand][nCand]; // Randomness
-
-    component assertEnc = assertEncMatrix(nCand, nCand, bitsVotes, bitsRand, A, B);
-    assertEnc.v <== ballot;
-    assertEnc.g <== g;
-    assertEnc.pk <== pk;
-    assertEnc.r <== r;
-    assertEnc.gr <== enc_gr;
-    assertEnc.gv_pkr <== enc_gv_pkr;
-
-    var maxValue = 2**bitsVotes;
-    component assertVoting = assertCondorcetWithRankingVoting(nCand, maxValue);
-    assertVoting.ballot <== ballot;
-    assertVoting.ranking <== ranking;
-}
-
-// ========================================================================================================================
-// BENCHMARKS
-
-template assertCondorcetEncryptionBenchmark(bitsVotes, bitsRand, A, B, nCand) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-
-    //g^r and g^v*pk^r values from expElGamal
-    input ProjectivePoint() enc_gr[nCand][nCand];
-    input ProjectivePoint() enc_gv_pkr[nCand][nCand];
-
-    // Private/Witness
-    input signal ballot[nCand][nCand];
-    input signal ranking[nCand];
-    input signal r[nCand][nCand]; // Randomness
-
-    component assertEnc = assertEncMatrix(nCand, nCand, bitsVotes, bitsRand, A, B);
-    assertEnc.v <== ballot;
-    assertEnc.g <== g;
-    assertEnc.pk <== pk;
-    assertEnc.r <== r;
-    assertEnc.gr <== enc_gr;
-    assertEnc.gv_pkr <== enc_gv_pkr;
-}
-
-template assertCondorcetVotingBenchmark(bitsVotes, bitsRand, A, B, nCand) {
-    // Public
-    input ProjectivePoint() g; // Generator
-    input ProjectivePoint() pk; // Public key, pk=g^b for some private b
-
-    //g^r and g^v*pk^r values from expElGamal
-    input ProjectivePoint() enc_gr[nCand][nCand];
-    input ProjectivePoint() enc_gv_pkr[nCand][nCand];
-
-    // Private/Witness
-    input signal ballot[nCand][nCand];
-    input signal ranking[nCand];
-    input signal r[nCand][nCand]; // Randomness
-
-    var maxValue = 2**bitsVotes;
-    component assertVoting = assertCondorcetWithRankingVoting(nCand, maxValue);
-    assertVoting.ballot <== ballot;
-    assertVoting.ranking <== ranking;
-}
-
-// Test
-// component main = assertCondorcet(32, 255, 126932, 1, 20);

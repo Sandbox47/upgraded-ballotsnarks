@@ -1,0 +1,3 @@
+Number of Bits;nCand;nGrades;non-linear constraints;linear constraints;total constraints;CRS size [MB];t_prep [ms];t_prove [ms];t_ver [ms]
+32;3;3;9;3;12;0.033695220947265625;1648;821;693
+32;3;6;18;3;21;0.0641326904296875;1569;792;720

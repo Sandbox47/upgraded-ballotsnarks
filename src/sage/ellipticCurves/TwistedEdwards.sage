@@ -20,7 +20,7 @@ class TwistedEdwardsPoint(CurvePoint):
         if curveParams == None:
             return TwistedEdwardsPoint(0, 1, chosenSubgroupOrder=chosenSubgroupOrder, name=name)
         if len(curveParams) != 2:
-            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} were required")
+            raise AttributeError(f"You provided {len(curveParams)} curve parameters but {2} are required")
         return TwistedEdwardsPoint(0, 1, curveParams[0], curveParams[1], chosenSubgroupOrder=chosenSubgroupOrder, name=name)
 
     def toJSON(self):
