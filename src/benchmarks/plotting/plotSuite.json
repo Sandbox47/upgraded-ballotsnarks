@@ -1,0 +1,58 @@
+[
+    {
+        "plotPath": "test",
+        "xLabel": "$m$ votes/ plaintexts",
+        "xLimit": 600,
+        "yLabel": "Prove[s]",
+        "yLimit": 450,
+        "label": "Proving times for $\\mathfrak{C}^{Enc}$",
+
+        "dataSets": [
+            {
+                "fileName": "../montgomeryProjective/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "yNameData": "t_prove [ms]",
+                "scalingFactor": 0.001,
+                "lines": [
+                    {
+                        "filterValue": 16,
+                        "color": "blue",
+                        "linestyle": "solid",
+                        "label": "$m$ Ciphertexts [16 bits] with Montgomery curves in Circom"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "linestyle": "solid",
+                        "label": "$m$ Ciphertexts [32 bits] with Montgomery curves in Circom"
+                    }
+                ]
+            },
+            {
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
+                "xNameData": "n_values",
+                "yNameData": "Prove[s]",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "linestyle": "dotted",
+                        "label": "$m$ Ciphertexts [16 bits] with Montgomery curves in libsnark"
+                    }
+                ]
+            },
+            {
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
+                "xNameData": "n_values",
+                "yNameData": "Prove[s]",
+                "lines": [
+                    {
+                        "color": "green",
+                        "linestyle": "dotted",
+                        "label": "$m$ Ciphertexts [32 bits] with Montgomery curves in libsnark"
+                    }
+                ]
+            }
+        ]
+    }
+]

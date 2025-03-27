@@ -1,2 +1,0 @@
-Number of Bits;nCand;nPoints;orderedPoints;non-linear constraints;linear constraints;total constraints;CRS size [MB];t_prep [ms];t_prove [ms];t_ver [ms]
-32;10;10;[10,9,8,7,6,5,4,3,2,1];105460;22770;128230;60.77925109863281;31329;5257;711

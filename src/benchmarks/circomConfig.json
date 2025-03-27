@@ -64,16 +64,5 @@
             "ballot_format": "Vector",
             "has_ranking": false
         }
-    },
-    "modes": {
-        "voting": {
-
-        },
-        "encryption": {
-
-        },
-        "combined": {
-
-        }
     }
 }
