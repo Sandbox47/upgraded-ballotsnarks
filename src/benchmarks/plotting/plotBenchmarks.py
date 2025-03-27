@@ -54,12 +54,12 @@ def plot_data(entry):
             else:
                 plt.plot(x, y, color=color, linestyle=linestyle, label=label)  # Fallback if not enough points
     
-    plt.legend()
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))  # Move legend to the right
     plt.grid()
 
     output_path = os.path.join("plots", f"{entry['plotPath']}.pdf")
     os.makedirs(os.path.dirname(output_path), exist_ok=True)  # Ensure the directory exists
-    plt.savefig(output_path, format="pdf")
+    plt.savefig(output_path, format="pdf", bbox_inches='tight')  # Adjust bounding box for legend
     plt.close()
 
 def main():
