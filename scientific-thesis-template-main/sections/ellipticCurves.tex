@@ -1,31 +1,32 @@
-\chapter{Montgomery Curves}
+\chapter{Elliptic Curves}
 \label{chap:ellipticCurves}
 
 In our voting scheme, we use \gls{eeg} encryption for the ballots.
-All operation in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
+All operations in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
 For a secure encryption, the \gls{ddh} assumption needs to hold on $\mathbb{G}$.
-Elliptic curves of a sufficiently large order $q$ are finity cyclic groups on which the \gls{ddh} assumption is believed to hold.
+Elliptic curves of a sufficiently large order $q$ are finite cyclic groups on which the \gls{ddh} assumption is believed to hold.
 Moreover, Elliptic curves are benefitial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{noauthor_case_2009}.
-
-The most general form of Elliptic curves are so-called Short Weierstrass curves \cite{least_authority_moonmath_2024}.
-Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_nodate}.
-We can transform any Montgomery curve into an isomorphic Short Weierstrass curve but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
-Therefore, Montgomery curves are more limited than Short Weierstrass curves \cite{least_authority_moonmath_2024}.
-
-However, as established previously, we will later use an Elliptic curve as the group $(\mathbb{G}, \odot_{\mathbb{G}})$ for \gls{eeg} encryption.
-In \gls{eeg} we need to compute exponentiations of group elements, i.e., $g^m:=g\underbrace{\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}}_{m \text{ times}} g$ very often.
-Montgomery curves allow us to compute $g^m$ efficiently using the Montgomery Ladder algorithm.
 
 Fundamentally, Elliptic curves are sets of points that satisfy certain equations \cite{least_authority_moonmath_2024}. 
 Here, a curve point consists of multiple elements from a so-called base field $\mathbb{F}_p$ of order $p$.
 For better distinction, we call the field $\mathbb{F}_q$ with elliptic curve order $q$ the scalar field of the elliptic curve.
 
 Our introduction of elliptic curves largely parallels the one given in chapter 5 of \cite{least_authority_moonmath_2024}.
-However, as we exclusively use Montgomery Curves, we introduce them directly and do not introduce Short Weierstrass Curves seperately.
+However, as we exclusively use Montgomery curves and Twisted Edwards curves, we introduce them directly and do not introduce Short Weierstrass Curves seperately.
 
-\section{Affine Montgomery Form}
+\section{Montgomery Curves}
+The most general form of Elliptic curves are so-called Short Weierstrass curves \cite{least_authority_moonmath_2024}.
+Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_nodate}.
+We can transform any Montgomery curve into an isomorphic Short Weierstrass curve but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
+Overall, Montgomery curves are more limited than Short Weierstrass curves \cite{least_authority_moonmath_2024}.
+
+However, as established previously, we will later use an Elliptic curve as the group $(\mathbb{G}, \odot_{\mathbb{G}})$ for \gls{eeg} encryption.
+In \gls{eeg} we need to compute exponentiations of group elements, i.e., $g^m:=\underbrace{g\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}g}_{m \text{ times}}$ very often.
+Even if we do not provide precomputed powers of $g$, Montgomery curves still allow us to compute $g^m$ efficiently using the Montgomery Ladder algorithm.
+
+\subsection{Affine Montgomery Form}
 As in \cite{least_authority_moonmath_2024} we introduce elliptic curves first in their affine representation and then in their projective representation.
-Later on, we use both representations in the voting scheme.
+Later on, we use both representations in the voting schemes.
 
 \begin{definition}[Affine Montgomery Curve]
     Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$.
@@ -91,7 +92,7 @@ Later on, we use both representations in the voting scheme.
 %\subsection{Affine and Projective Coordinates}
 %To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
 
-\section{Projective Montgomery Form}
+\subsection{Projective Montgomery Form}
 To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
 
 \begin{definition}[Projective Point and Projective Plane]
@@ -177,17 +178,18 @@ Using projective planes, we can define Montgomery Curves in their projective rep
     \end{algorithmic}
 \end{Algorithmus}
 
-\section{Transforming between Projective and Affine Coordinates}
+\subsection{Transforming between Projective and Affine Coordinates}
 \label{sec:coordinateTranformation}
 As mentioned earlier, we will use both the projective and affine representation of elliptic curves in our voting schemes.
 Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(\mathbb{F})$ to a corresponding projective elliptic curve $M_{A,B}(\mathbb{F}P^2)$ and vice versa.
 
 \begin{definition}[Coordinate Transformation]
+    \label{def:coordinateTransformation}
     Let $(\mathbb{F}, +, \cdot)$ be a finite field of order $q$ with $q>3$. 
-    Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$. 
+    % Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$. 
     Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
-    Then, the bijective function $I:M_{A,B}(\mathbb{F})\to M_{A,B}(\mathbb{F}P^2)$ converts points from affine representation to projective representation.
-    Consequently, $I^{-1}:M_{A,B}(\mathbb{F}P^2)\to M_{A,B}(\mathbb{F})$ converts points from projective representation to affine representation.
+    Then, the function $I:\mathbb{F}^2\cup\{\mathcal{O}\}\to\mathbb{F}P^2$ converts points from affine representation to projective representation.
+    Consequently, $I^{-1}:\mathbb{F}P^2\to\mathbb{F}^2\cup\{\mathcal{O}\}$ converts points from projective representation to affine representation.
     Here, we define:
     \begin{align*}
         I(P) &:= \begin{cases}
@@ -338,7 +340,7 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 %     Let $(\mathbb{F}, +, \cdot)$ be a finite field of order $q$ with $q>3$. 
 %     Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$. 
 %     Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
-%     Then, the corresponging Projective Short Weierstrass Curve is the group $(E_{a,b}(\mathbb{F}P^2), \odot_E^{Pro})$, with:
+%     Then, the corresponding Projective Short Weierstrass Curve is the group $(E_{a,b}(\mathbb{F}P^2), \odot_E^{Pro})$, with:
 %     \begin{itemize}
 %         \item The set of points $E_{a,b}(\mathbb{F}P^2)$:
 %         \begin{align*}
@@ -403,18 +405,18 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 %     \end{algorithmic}
 % \end{Algorithmus}
 
-\section{Exponentiation}
+\subsection{Exponentiation}
 We use a Montgomery curve $M_{A,B}(\mathbb{F}P^2)$ as group in \gls{eeg} encryption because computing exponentiations of group elements is comparatively efficient.
 Group exponentiation is defined as follows:
 \begin{align*}
     \forall P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\forall n\in\mathbb{N}:\quad P^n:=\underbrace{P\odot_{M}^{Pro}\dots\odot_{M}^{Pro}P}_{n \text{ times}}
 \end{align*}
-However, computing $P^n=[X_n:Y_n:Z_n]$ by iteratively using the group law $\odot_{M}^{Pro}$ $n$ times is computationally expensive.
-Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018}.
-This algorithm only requires $\mathcal{O}(\log_2(n))$ many iterations to compute the coordinates $X_n$ and $Z_n$ of $P^n$ from the coordinates $X$ and $Z$ of $P$.
+However, computing $P^n=[X_n:Y_n:Z_n]$ by iteratively using the group law $\odot_{M}^{Pro}$ $n-1$ times is computationally expensive as discussed in \cref{section:elGamalEncryption:precomputedPowers}.
+Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018} based on $FastExp$ presented in \cref{alg:fastExp}.
+This algorithm requires $\mathcal{O}(\log_2(n))$ many iterations to compute the coordinates $X_n$ and $Z_n$ of $P^n$ from the coordinates $X$ and $Z$ of $P$.
 Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_n$ from the last two iterations of the Montgomery Ladder.
 
-\subsection{Pseudooperations}
+\subsubsection{Pseudooperations}
 For the Montgomery Ladder algorithm we work only with the $X$ and $Z$ coordinates of points $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
 For this purpose, we define a quotient map $x$ to map projective points to pairs of their $X$ and $Z$ coordinates.
 Specially treated is the point at infinity $[0:1:0]$.
@@ -433,7 +435,7 @@ Specially treated is the point at infinity $[0:1:0]$.
 
 Using this map, we want to be able to apply the group law to Pseudopoints. 
 In other words, we want to compute $x(P\odot_M^{Pro}Q)$ from $x(P)$ and $x(Q)$.
-Unfortunately, as mentioned in chapter 3.1 of \cite{costello_montgomery_2018} this is not possible, since $x(P)$ and $x(Q)$ doesn't uniquely determine $x(P\odot_M^{Pro} Q)$.
+Unfortunately, as mentioned in chapter 3.1 of \cite{costello_montgomery_2018} this is not possible, since $x(P)$ and $x(Q)$ do not uniquely determine $x(P\odot_M^{Pro} Q)$.
 However, it is possible to determine $x(P\odot_M^{Pro} Q)$ based on $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$.
 This is useful for the Montgomery Ladder later on, since $P\odot_M^{Pro}Q$ will be a fixed, known point.
 
@@ -486,9 +488,10 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     \end{algorithmic}
 \end{Algorithmus}
 
-\subsection{The Montgomery Ladder}
-The Idea behind the Montgomery Ladder is similar to that of Fast Exponentiation.
-Analogously to Fast Exponentiation, we can compute exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
+\subsubsection{The Montgomery Ladder}
+\label{section:ellipticCurves:montgomeryLadder}
+The Montgomery Ladder is based on the Square and Multiply approach presented earlier in \cref{alg:fastExp}.
+Analogously to Square and Multiply, we can compute exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
 However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^n)$ based on $x(P)$. 
 The Montgomery Ladder Algorithm computes $x(P^n)$ along with $x(P^{n+1})$ which we need later on to recover the $Y$ coordinate of $P^n$.
 
@@ -535,7 +538,7 @@ When we implement the Montgomery Ladder in a ciruit for our voting scheme this i
 Since the exponent is not known during the compilation time of the circuit, we need to work with a exponents of a fixed length $l$ where the most significatn bit might be zero.
 Therefore, this version of the Montgomery Ladder is better suited for our purposes.
 
-\subsection{$Y$-Recovery}
+\subsubsection{$Y$-Recovery}
 After performing the Montgomery Ladder algorithm on $x(P)$ and $n\in\mathbb{N}$ with $P\in M_{A,B}(\mathbb{F}P^2)$, we have $[X_n:Z_n]:=x(P^n)$ and $[X_{n+1}:Z_{n+1}]:=x(P^{n+1})$.
 To reconstruct the $Y$ coordinate $Y_n$ of $P^{n}=[X_n:Y_n:Z_n]$, we use a recovery algorithm based on $P, x(P^n)$ and $x(P^{n+1})$ introduced by Okeya and Sakurai in \cite{goos_efficient_2001}.
 
@@ -618,14 +621,14 @@ We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024
     \end{algorithmic}
 \end{Algorithmus}
 
-\subsection{Full Exponentiation}
+\subsubsection{Full Exponentiation}
 Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
 
 \begin{definition}[Montgomery Exponentiation]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P\in M_{A,B}(\mathbb{F}P^2)$.
     Let $n\in\mathbb{N}$, where $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
-    Then, we can compute $P^n$ with $Exponentiation$ as described in \cref{alg:montgomeryExponentiation}.
+    Then, we can compute $P^n=M\_Exp(P, (n_0, \dots, n_{l-1}))$ as described in \cref{alg:montgomeryExponentiation}.
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
@@ -634,7 +637,7 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     }
     \label{alg:montgomeryExponentiation}
     \begin{algorithmic}
-    \Procedure{$Exponentiation$}{$P, (n_0,\dots,n_{l-1})$}
+    \Procedure{$M\_Exp$}{$P, (n_0,\dots,n_{l-1})$}
         \State $(x(P^n), x(P^{n+1}))\gets  MontgomeryLadder(x(P), (n_0,\dots,n_{l-1}))$
         \State $P^n\gets LadderYRecovery(P, x(P^n), x(P^{n+1}))$
         \State \Return $P^n$
@@ -642,8 +645,96 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \end{algorithmic}
 \end{Algorithmus}
 
+\section{Twisted Edwards Curves}
 \todo{
-    Better introduction of group exponentiation (via $g^m=\sum\limits_{i=0}^l \left(g^{2^i}\right)^{m_i}$). 
-    Use this to introduce idea for exponentiation using precomputed powers of $g$.
     Introduce Twisted Edwards curves and efficient group exponentiation with precomputed powers for TE-curve.
 }
+
+A third class of elliptic curves besides Short Weierstrass and Montgomery curves are Twisted Edwards curves.
+
+As discussed in \cref{section:elGamalEncryption:precomputedPowers}, it can be benefitial to precompute powers of the public key elements $g$ and $h$ in \gls{eeg} if we want to encrypt many messages with the same public key.
+This leads to \gls{ppeeg} which was introduced in \cref{def:ppeeg}.
+If we use this approach, the montgomery ladder is no longer applicable.
+The group law of Twisted Edwards curves is more efficient that that of Montgomery Curves.
+Therefore, we can use this to compute group exponentiations more efficiently than with Montgomery Curves.
+Then, \gls{ppeeg} based on Twisted Edwards curves is more efficient than \gls{eeg} based on Montgomery Curves.
+
+\subsection{Twisted Edwards Form}
+As with Montgomery Curves, we introduce Twisted Edwards curves similarly to \cite{least_authority_moonmath_2024}.
+
+\begin{definition}[Twisted Edwards Curve]
+    Let $(\mathbb{F},+,\cdot)$ be a finite field of chracteristic $p>3$. Let $a, d\in\mathbb{F}\setminus\{0\}$ with $a\neq d$.
+    Then, the corresponding Twisted Edwards curve is the group $(TE_{a,d}(\mathbb{F}, \odot_{TE}))$, with:
+    \begin{itemize}
+        \item The set of points $TE_{a,d}(\mathbb{F})$:
+        \begin{align*}
+            TE_{a,d}(\mathbb{F})=\{(x,y)\in\mathbb(F)\times\mathbb{F}|a\cdot x^2+y^2=1+d\cdot x^2y^2\}
+        \end{align*}
+        \item The group law $\odot_{TE}$:\\
+        Let $P_1, P_2\in TE_{a,d}(\mathbb{F})$ with $P_1=(x_1,y_1)$, $P_2=(x_2, y_2)$. Then:
+        \begin{align*}
+            (x_1, y_1)\odot_{TE} (x_2, y_2)=\left(\frac{x_1y_2+x_2y_1}{1+dx_1y_2y_1y_2},\frac{y_1y_2-ax_1x_2}{1-dx_1x_2y_1y_2}\right)
+        \end{align*}
+    \end{itemize}
+    The neutral element of $TE_{a,d}(\mathbb{F})$ is $(0,1)$. For $P=(x,y)\in TE_{a,d}(\mathbb{F})$, the inverse element is $P^{-1}:=(-x,y)$.
+\end{definition}
+
+In constrast to Montgomery Curves there is no distinguished point at infinity $\mathcal{O}$ as the neutral element since the point $(0,1)$ is the neutral element of every Twisted Edwards curve.
+Therefore, there is also no need for a projective version of Twisted Edwards curves.
+
+\subsection{Group Exponentiation with Precomputed Powers}
+We use a Twisted Edwards curve $TE_{a,d}(\mathbb{F})$ as the group for \gls{ppeeg} encryption because the Twisted Edwards group law is more efficient than the Montgomery group law.
+The group exponentiation with precomputed powers of the element to exponentiate utilizes the approach presented in \cref{alg:fastExpPrecomputedPowers}.
+
+\begin{definition}[Twisted Edwards Exponentiation with Precomputed Powers]
+    Let $TE_{a,d}(\mathbb{F})$ be a Twisted Edwards curve. 
+    Let $P=(x,y)\in TE_{a,d}(\mathbb{F})$ be a point, let $k\in\mathbb{N}$, where $k=\sum\limits_{i=0}^{l-1}k_i2^i$ is a bit string of length $l$.
+    Let $\left(P^{2^i}\right)_{i=0}^{l-1}$ be precomputed powers of $P$.
+    Then, we can compute $P^k=TE\_Exp\left(\left(P^{2^i}\right)_{i=0}^{l-1}, \left(k_i\right)_{i=0}^{l-1}\right)$ as described in \cref{alg:twistedEdwardsExp}.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Algorithm $PrecomputedPowersFastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
+    Here, $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^i$ is a bitstring of length $l$ and $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ are precomputed powers of $g$.}
+    \label{alg:twistedEdwardsExp}
+    \begin{algorithmic}
+    \Procedure{$TE\_Exp$}{$\left(P^{2^i}\right)_{i=0}^{l-1}, \left(k_i\right)_{i=0}^{l-1}$}
+        \State $y\gets (0,1)$ \Comment Neutral element
+        \For{$i=0$ \textbf{ to } $l-1$}
+            \If{$k_i=1$}
+                $y\gets P^{2^i}\odot_{TE} y$
+            \EndIf
+        \EndFor
+        \State \Return $y$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\subsection{Isomorphism with Montgomery Curves}
+For every Twisted Edwards curve, there is an isomorphic Montgomery curve and vice versa.
+Thus, we can transform between these two representations freely.
+Additionally, it is typically quite simple to switch the two curves out for each other in most use cases such as our voting schemes.
+
+\begin{theorem}[Twisted Edwards-Montgomery Isomorphism]
+    Let $TE_{a,d}(\mathbb{F})$ be a Twisted Edwards curve.
+    Then, for $A:=\frac{4}{a-d}$ and $B:=\frac{2(a+d)}{a-d}$ \cite{least_authority_moonmath_2024}, the Montgomery curve $M_{A,B}(\mathbb{F})$ is isomorphic to $TE_{a,d}(\mathbb{F})$.
+    We can transform from the Twisted Edwards to the Montgomery curve with the function $TE\_to\_M:TE_{a,d}(\mathbb{F})\to M_{A,B}(\mathbb{F})$. 
+    Let $P=(x,y)\in TE_{a,d}(\mathbb{F})$. Then \cite{costello_montgomery_2018}:
+    \begin{align*}
+        TE\_to\_M(P)=\begin{cases}
+            \left(\frac{1+y}{1-y}, \frac{1+y}{(1-y)x}\right),\quad\text{if } (x,y)\neq (0,1)\\
+            \mathcal{O},\quad\text{otherwise}
+        \end{cases}
+    \end{align*}
+
+    Let $M_{A',B'}(\mathbb{F})$ be a Montgomery curve.
+    Then, for $a':=\frac{A'+2}{B'}$ and $d':=\frac{A'-2}{B'}$ \cite{least_authority_moonmath_2024}, the Twisted Edwards curve $TE_{a',d'}(\mathbb{F})$ is isomorphic to $M_{A',B'}(\mathbb{F})$.
+    We can transform from the Montgomers to the Twisted Edwards curve with the function $M\_to\_TE:M_{A',B'}(\mathbb{F})\to TE_{a',d'}(\mathbb{F})$. 
+    Let $P'\in M_{A',B'}(\mathbb{F})$. Then \cite{costello_montgomery_2018}:
+    \begin{align*}
+        M\_to\_TE(P)=\begin{cases}
+            \left(\frac{x'}{y'}, \frac{x'-1}{x'+1}\right),\quad\text{if } P'\neq\mathcal{O} \text{ with } P'=(x',y')\\
+            (0,1),\quad\text{otherwise}
+        \end{cases}
+    \end{align*}
+\end{theorem}

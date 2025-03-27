@@ -29,7 +29,9 @@ We mostly follow the definition in construction 12.16 of \cite{katz_introduction
     \begin{itemize}
         \item $Gen(1^\eta)$: First, this algorithm generates a cyclic group $(\mathbb{G}, \odot_{\mathbb{G}})$ along with a generator $g$ of this group and computes the order of the group $n:=|\mathbb{G}|$.
         Then, it chooses an $x\in\mathbb{Z}_n$ uniformly at random, sets $h:=g^x$ and returns $(pk, sk)=((\mathbb{G}, n, g, h), (\mathbb{G}, n, g, x))$ as the public-private key pair.
-        \footnote{\label{footnote:groupExponentiation} We define $g^l := g\underbrace{\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}}_{l \text{ times}}g \quad\forall g\in\mathbb{G}\forall l\in\mathbb{N}$ with $g^0:=e_{\mathbb{G}}$. (Here, $e_{\mathbb{G}}$ denotes the neutral element of $\mathbb{G}$.)}
+        \footnote{\label{footnote:groupExponentiation} 
+            We define $g^k := \underbrace{g\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}g}_{k \text{ times}}\quad\forall g\in\mathbb{G}\forall k\in\mathbb{N}$ with $g^0:=e_{\mathbb{G}}$. (Here, $e_{\mathbb{G}}$ denotes the neutral element of $\mathbb{G}$.)
+        }
         \item $Enc(m, pk):$ To encrypt a message $m\in \mathbb{G}$ with $pk=(\mathbb{G}, n, g, h)$, the algorithm chooses $y\in\mathbb{Z}_n$ uniformly at random and outputs the ciphertext
         \begin{align*}
             c:=(g^y, h^y\odot_{\mathbb{G}} m)
@@ -107,18 +109,20 @@ The operation $\odot_{\mathbb{G}}$ depends on the generated group $\mathbb{G}$ a
 To allow for (component-wise) addition of ballots, we need a slight variation of ElGamal, namely Exponential ElGamal.
 
 \section{Exponential ElGamal Encryption Scheme}
-\gls{eeg} Encryption is very similar to normal ElGamal Encryption. 
+\gls{eeg} encryption is very similar to normal ElGamal encryption.
 The only difference is, that instead of encrypting a message $m$ with a public key $(\mathbb{G}, n, g, h)$ directly, we encrypt $g^m$.
 Therefore, $m$ must now be chosen from $\{0,\dots, n-1\}$ instead of from $\mathbb{G}$.
 \gls{eeg} encryption is benefitial as it is additively homomorphic independent of the chosen group $\mathbb{G}$ and therefore allows easy aggregation of encrypted ballots in our election scheme.
 
-Formally, we define \gls{eeg} Encryption as in \cite{aldini_cryptographic_2014} but align the notation with our notation of encryption schemes.
+Formally, we define \gls{eeg} encryption as in \cite{aldini_cryptographic_2014} but align the notation with our notation of encryption schemes.
 
 \begin{definition}[Exponential ElGamal Encryption Scheme]
-    The \gls{eeg} is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$. Here:
+    \label{def:eeg}
+    The \gls{eeg} encryption scheme is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$. 
+    Here:
     \begin{itemize}
         \item $Gen(1^\eta)$ is defined as in \cref{def:elGamalEncryption}.
-        \item $Enc(m, pk):$ To encrypt a message $m\in \mathbb{G}$ with $pk=(\mathbb{G}, n, g, h)$, the algorithm chooses $y\in\mathbb{Z}_n$ uniformly at random and outputs the ciphertext
+        \item $Enc(m, pk):$ To encrypt a message $m\in \mathbb{Z}_n$ with $pk=(\mathbb{G}, n, g, h)$, the algorithm chooses $y\in\mathbb{Z}_n$ uniformly at random and outputs the ciphertext
         \begin{align*}
             c:=(g^y, h^y\odot_{\mathbb{G}} g^m)
         \end{align*}
@@ -132,7 +136,7 @@ Formally, we define \gls{eeg} Encryption as in \cite{aldini_cryptographic_2014} 
             However, in practical applications such as voting schemes the message is typically one entry in a tally of ballots, where thi individual ballots are chosen from a choice space $C$.
             We denote the set of allowed values for the entries in a ballot from $C$ by $C_{entry}$, which is typically very small. 
             In an election with $n$ voters, the set of possible values for an entry in the plain tally $T_{entry}$ is therefore at most $n$ times larger than $C_{entry}$ and thus typically still quite small.
-            Then computing $m$ is possible by a guess-and-check approach where we try all elements $m\in C_{entry}$ and return the current choice if $g^m=\tilde{m}$.
+            Then computing $m$ is possible by a guess-and-check approach where we try all elements $m\in T_{entry}$ and return the current choice if $g^m=\tilde{m}$.
             
             In our example voting scheme from \cref{chap:votingschemes}, we had $n=5$ voters and $C_{entry}=\{0,1\}$.
             By aggregating the individual entries of ballots, in the plain tally, we get entries $m$ in the set $T_{entry}=\{0,1,2,3,4,5\}$.
@@ -187,3 +191,107 @@ We can compute a possible encryption of the total $b_1+b_2$ as follows.\footnote
     Enc(b_1+b_2, pk) &= Enc(b_1, pk) \odot_{\mathcal{C}} Enc(b_1, pk)
 \end{align*}
 In a voting scheme, the $VA$ can aggregate all submitted ballots in this way and decrypt just the final tally at the end.
+
+\section{Precomputed Powers Exponential ElGamal Encryption Scheme}
+\label{section:elGamalEncryption:precomputedPowers}
+The overwhelming majority of the computational effort needed to compute \gls{eeg} is caused by the exponentiation of group elements.
+Let $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$ be an \gls{eeg} encryption scheme and $pk=(\mathbb{G}, n, g, h)$ a public key in this scheme.
+Then, to compute the encryption of a message $m\in\{0, \dots, n-1\}$ as introduced in \cref{def:eeg}, we need to compute three group exponentiations $g^y, h^y$ and $g^m$ where $y\probgets \{0,\dots, n-1\}$.
+
+Let $\mathbb{G}$ be a group, let $g\in\mathbb{G}$ and let $k\in\{0,\dots, |\mathbb{G}|-1\}$.
+Then, the naive way of computing $g^k$ as $g^k=\underbrace{g\odot_{\mathbb{G}}\cdots\odot_\mathbb{G} g}_{k \text{ times}}$ requires $k-1$ applications of the group law.
+In our use case, $\mathbb{G}$ has an order that can be expressed as a $251$-bit number. 
+Therefore, $k$ can also be a number with up to $251$ bits.
+Then, computing $g^k$ naively is completely infeasible.
+A more efficient approach is the Square and Multiply method as introduced in chapter 9 of \cite{todo cite handbook of elliptic curves} which needs $\mathcal{O}(\log(k))$ applications of the group law.
+Here, we use the binary representation $(k_0,\dots, k_{l-1})$ of $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}$ to compute $g^k$:
+\begin{align*}
+    g^k&=g^{\left(\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}\right)}\\
+    &= \prod_{i=0}^{l-1} g^{k_i\cdot 2^{i}}\\
+    &= \prod_{i=0}^{l-2} \left(g^{2^{i}}\right)^{k_i}
+\end{align*}
+This is benefitial, since we can compute $g^{2^i}$ by iterated squaring of $g$.
+
+The algorithm $FastExp(g, k)$ to compute $g^k$ in $\mathbb{G}$ with the Square and Multiply approach is presented in \cref{alg:fastExp}.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Algorithm $FastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
+    Here, $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^i$ is a bitstring of length $l$.}
+    \label{alg:fastExp}
+    \begin{algorithmic}
+    \Procedure{$FastExp$}{$g, (k_0,\dots, k_{l-1})$}
+        \State $y\gets e_\mathbb{G}$ \Comment $e_\mathbb{G}$ is the neutral element of $\mathbb{G}$
+        \For{$i=l-1$ \textbf{ down to } $0$}
+            \State $y\gets y^2=y\odot_\mathbb{G} y$
+            \If{$k_i=1$}
+                $y\gets g\odot_\mathbb{G} y$
+            \EndIf
+        \EndFor
+        \State \Return $y$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+This is the basis for the Montgomery Ladder Algorithm we use in \cref{section:ellipticCurves:montgomery} to compute group exponentiations for montgomery curves.
+
+It is possible to optimize computing group exponentiation further if we provide $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ to the exponentiation algorithm.
+This algorithm, using precomputed powers of the element to compute $g^k$, is defined in \cref{alg:fastExpPrecomputedPowers}.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Algorithm $PrecomputedPowersFastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
+    Here, $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^i$ is a bitstring of length $l$ and $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ are precomputed powers of $g$.}
+    \label{alg:fastExpPrecomputedPowers}
+    \begin{algorithmic}
+    \Procedure{$PrecomputedPowersFastExp$}{$(g^{2^0}, \dots, g^{2^{l-1}}), (k_0,\dots, k_{l-1})$}
+        \State $y\gets e_\mathbb{G}$ \Comment $e_\mathbb{G}$ is the neutral element of $\mathbb{G}$
+        \For{$i=0$ \textbf{ to } $l-1$}
+            \If{$k_i=1$}
+                $y\gets g^{2^i}\odot_\mathbb{G} y$
+            \EndIf
+        \EndFor
+        \State \Return $y$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+The algorithm $PrecomputedPowersFastExp$ is used in \cref{section:ellipticCurves:twistedEdwards} to compute group exponentiation for Twisted Edwards curves.
+Precomputing $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ can be adventageus, when computing multiple group exponentiations with exponents that have at most $l$ bits.
+In this case, we only need to compute the powers of $g$ once and can reuse them for all exponentiations.
+One such use case is \gls{eeg} encryption.
+In our voting schemes, we want to encrypt ballots $b$ with entries $b_0,\dots, b_{m-1}$.
+With \gls{eeg} encryption, we reuse the same public key $pk=(\mathbb{G}, n, g, h)$ to compute all entries $b'_0,\dots,b'_{m-1}$ of the encrypted ballot $b'=\mathcal{S}.Enc(b, pk)$ belonging to ballot $b$:
+\begin{align*}
+    \forall i\in\{0,\dots, m-1\}:\:b'_i=\mathcal{S}.Enc(b_i, pk)=(g^{y_i}, h^{y_i}\odot_\mathbb{G} g^{b_i})\text{ with } y_i\probgets \mathbb{Z}_n
+\end{align*}
+Additionally, we reuse the key $pk$ to compute encryptions of other ballots.
+With the current definition of \gls{eeg}, we can use $FastExp$ to compute $g^{y_i}, h^{y_i}$ and $g^{b_i}$.
+However, we can only use $PrecomputedPowersFastExp$ for that purpose if we compute $g^{2^0},\dots, g^{2^{\lceil\log_2(n)\rceil}}$ and $h^{2^0},\dots, h^{2^{\lceil\log_2(n)\rceil}}$ before.
+This requires the same computational effort as $FastExp$.
+
+Therefore, we propose a slightly modified version of \gls{eeg} which includes the precomputed powers of $g$ and $h$ in the public key $pk$: \gls{ppeeg}.
+
+\begin{definition}[Precomputed Powers Exponential ElGamal Encryption]
+    \label{def:ppeeg}
+    The \gls{ppeeg} encryption scheme is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$. 
+    Here:
+    \begin{itemize}
+        \item $Gen(1^\eta)$: The algorithm generates $(\mathbb{G}, \odot_{\mathbb{G}}), g, x$ and $h$ as in \cref{def:elGamalEncryption}.
+        Then, it computes $g^{2^i}, h^{2^i}\:\forall i\in\{0,\dots, \lceil\log_2(n)\rceil\}$ and returns 
+        \begin{align*}
+            (pk, sk)=\left(\left(\mathbb{G}, n, \left(g^{2^i}\right)_{i=0}^{\lceil\log_2(n)\rceil}, \left(h^{2^i}\right)_{i=0}^{\lceil\log_2(n)\rceil}\right), (\mathbb{G}, n, g, x)\right) 
+        \end{align*}
+        as the public-private key pair.
+        \item $Enc(m, pk)$ is defined as in \cref{def:eeg} but uses $PrecomputedPowersFastExp$ to compute the group exponentiations. 
+        Specifically, for $y=\sum\limits_{i=0}^{\lceil\log_2(n)\rceil}y_i\cdot 2^i$ and $m=\sum\limits_{i=0}^{\lceil\log_2(n)\rceil}m_i\cdot 2^i$:
+        \begin{align*}
+            g^{y}&:= PrecomputedPowersFastExp\left(\left(g^{2^i}\right)_{i=0}^{\lceil\log_2(n)\rceil}, \left(y_i\right)_{i=0}^{\lceil\log_2(n)\rceil}\right)\\
+            h^{y}&:= PrecomputedPowersFastExp\left(\left(h^{2^i}\right)_{i=0}^{\lceil\log_2(n)\rceil}, \left(y_i\right)_{i=0}^{\lceil\log_2(n)\rceil}\right)\\
+            g^{m}&:= PrecomputedPowersFastExp\left(\left(g^{2^i}\right)_{i=0}^{\lceil\log_2(n)\rceil}, \left(m_i\right)_{i=0}^{\lceil\log_2(n)\rceil}\right)
+        \end{align*}
+        \item $Dec(c, sk)$ is defined as in \cref{def:eeg}.
+    \end{itemize}
+\end{definition}
+
+Note that a \gls{ppeeg} encryption scheme $\mathcal{S}'$ is secure if the corresponding \gls{eeg} encryption scheme $\mathcal{S}$ is secure.
+If an adversary $A'$ can break security in $\mathcal{S}'$, then we can construct an adversary $A$ on $\mathcal{S}$ which computes the powers $g^{2^i}, h^{2^i}\:\forall i\in\{0,\dots, \lceil\log_2(n)\rceil\}$ from the public key $pk$ and simulates $A'$ after that.
+Then, $A$ will break security of $\mathcal{S}$.
