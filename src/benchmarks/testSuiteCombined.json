@@ -17,6 +17,13 @@
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
         "bitsVotes": 32,
+        "nVotes": 3,
+        "command": "python3 benchmark.py combined twistedEdwards singleVote 32 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
         "nVotes": 5,
         "command": "python3 benchmark.py combined twistedEdwards singleVote 32 nVotes=5"
     },
@@ -163,6 +170,15 @@
         "nPoints": 2,
         "orderedPoints": [2, 1],
         "command": "python3 benchmark.py combined twistedEdwards pointlistBorda 32 nCand=2 nPoints=2 orderedPoints=[2,1]"
+    },
+    {
+        "name": "pointlistBorda",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nCand": 3,
+        "nPoints": 3,
+        "orderedPoints": [3, 2, 1],
+        "command": "python3 benchmark.py combined twistedEdwards pointlistBorda 32 nCand=3 nPoints=3 orderedPoints=[3, 2,1]"
     },
     {
         "name": "pointlistBorda",
@@ -501,6 +517,15 @@
         "name": "multiVoteWithRules",
         "ellipticCurve": "twistedEdwards",
         "bitsVotes": 32,
+        "nVotes": 3,
+        "maxVotesCand": 3,
+        "maxChoices": 6,
+        "command": "python3 benchmark.py combined twistedEdwards multiVoteWithRules 32 nVotes=3 maxVotesCand=5 maxChoices=6"
+    },
+    {
+        "name": "multiVoteWithRules",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
         "nVotes": 5,
         "maxVotesCand": 5,
         "maxChoices": 10,
@@ -685,6 +710,15 @@
         "maxVotesCand": 5,
         "maxChoices": 4,
         "command": "python3 benchmark.py combined twistedEdwards multiVote 32 nVotes=2 maxVotesCand=5 maxChoices=4"
+    },
+    {
+        "name": "multiVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "maxVotesCand": 3,
+        "maxChoices": 6,
+        "command": "python3 benchmark.py combined twistedEdwards multiVote 32 nVotes=3 maxVotesCand=5 maxChoices=6"
     },
     {
         "name": "multiVote",
@@ -893,6 +927,22 @@
         "name": "majorityJudgement",
         "ellipticCurve": "twistedEdwards",
         "bitsVotes": 32,
+        "nCand": 3,
+        "nGrades": 3,
+        "command": "python3 benchmark.py combined twistedEdwards majorityJudgement 32 nCand=3 nGrades=3"
+    },
+    {
+        "name": "majorityJudgement",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nCand": 3,
+        "nGrades": 6,
+        "command": "python3 benchmark.py combined twistedEdwards majorityJudgement 32 nCand=3 nGrades=6"
+    },
+    {
+        "name": "majorityJudgement",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
         "nCand": 5,
         "nGrades": 5,
         "command": "python3 benchmark.py combined twistedEdwards majorityJudgement 32 nCand=5 nGrades=5"
@@ -1014,6 +1064,13 @@
         "bitsVotes": 32,
         "nVotes": 2,
         "command": "python3 benchmark.py combined twistedEdwards lineVote 32 nVotes=2"
+    },
+    {
+        "name": "lineVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "command": "python3 benchmark.py combined twistedEdwards lineVote 32 nVotes=3"
     },
     {
         "name": "lineVote",
@@ -1166,6 +1223,13 @@
         "name": "condorcet",
         "ellipticCurve": "twistedEdwards",
         "bitsVotes": 32,
+        "nCand": 3,
+        "command": "python3 benchmark.py combined twistedEdwards condorcet 32 nCand=3"
+    },
+    {
+        "name": "condorcet",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
         "nCand": 5,
         "command": "python3 benchmark.py combined twistedEdwards condorcet 32 nCand=5"
     },
@@ -1214,6 +1278,15 @@
         "a": 2,
         "b": 1,
         "command": "python3 benchmark.py combined twistedEdwards bordaTournamentStyle 32 nVotes=2 a=2 b=1"
+    },
+    {
+        "name": "bordaTournamentStyle",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "a": 2,
+        "b": 1,
+        "command": "python3 benchmark.py combined twistedEdwards bordaTournamentStyle 32 nVotes=3 a=2 b=1"
     },
     {
         "name": "bordaTournamentStyle",
