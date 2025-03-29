@@ -25,14 +25,14 @@ An algebraic circuit models an algebraic function $r$ that maps from a set of in
     Here, the function needs to be expressible using the basic operations $+$ and $\cdot$ of $\mathbb{F}$.
 \end{definition}
 
-We can visualize the circuit for a function $r$ graphically as in \cref{fig:circuit:notation}.
+We can visualize the circuit $\mathfrak{C}$ for a function $r$ graphically as in \cref{fig:circuit:notation}.
 
 %For every algebraic function $r$, there is a corresponding algebraic relation as defined in 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=1]{graphics/circuits/Notation.pdf}
-    \caption{Graphical representation of a circuit for the function $r:\mathbb{F}^m\to\mathbb{F}^n$.}
+    \includegraphics[scale=1]{graphics/proofSchemes/Notation.pdf}
+    \caption{Graphical representation of a circuit $\mathfrak{C}$ for the function $r:\mathbb{F}^m\to\mathbb{F}^n$.}
     \label{fig:circuit:notation}
 \end{figure}
 
@@ -42,12 +42,12 @@ The basic operations $+$ and $\cdot$ are represented by the addition and multipl
     \centering
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/circuits/Add.pdf}
+        \includegraphics[scale=1]{graphics/proofSchemes/Add.pdf}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/circuits/Mul.pdf}
+        \includegraphics[scale=1]{graphics/proofSchemes/Mul.pdf}
     \end{subfigure}
     \caption{Circuits for the basic field operation $+$ and $\cdot$ of $\mathbb{F}$.}
     \label{fig:circuit:addMul}
@@ -68,14 +68,14 @@ The basic operations $+$ and $\cdot$ are represented by the addition and multipl
 %     \hfill
 %     \begin{subfigure}{.48\textwidth}
 %         \centering
-%         \includegraphics[scale=1]{graphics/circuits/ThreeFac_def}
+%         \includegraphics[scale=1]{graphics/proofSchemes/ThreeFac_def}
 %         \caption{Detailed Circuit.}
 %         \label{fig:circuit:threeFacDef}
 %     \end{subfigure}
 %     \hfill
 %     \begin{subfigure}{.48\textwidth}
 %         \centering
-%         \includegraphics[scale=1]{graphics/circuits/ThreeFac_short.pdf}
+%         \includegraphics[scale=1]{graphics/proofSchemes/ThreeFac_short.pdf}
 %         \caption{Circuit Representation when used as a building block inside other circuits.}
 %         \label{fig:circuit:threeFacShort}
 %     \end{subfigure}
@@ -86,32 +86,31 @@ The basic operations $+$ and $\cdot$ are represented by the addition and multipl
 
 To see how algebraic functions can be used to indicate ballot validity, we consider our example from \cref{chap:votingschemes}.
 Here, among other things, a voter needs to show that the ballot $b=(b_0,b_1,b_2)$ they chose is part of the choice space $C=\{(0,0,0),(1,0,0), (0,1,0), (0,0,1)\}$.
-We can express this membership of the choice space by the function $r_{3\text{-}vot}$:
-%\begin{example}[$3$-factorization]
-%    \label{exp:threeFac}
+We can express this membership of the choice space by the function $r_{3\text{-}vot}$ defined in \cref{example:threeVot}.
+\begin{example}[Choice space membership for $3\text{-}vot$]
+    \label{example:threeVot}
     Let $(\mathbb{F},+,\cdot)$ be a finite field with $0,1\in\mathbb{F}$.
     Then, $r_{3\text{-}vot}$ is defined as:
     \begin{align*}
-        r_{3\text{-}vot}:\mathbb{F}^3\to\mathbb{F}^4;\\
-        (S_1^{in},S_2^{in}, S_3^{in})\mapsto (S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
+        r_{3\text{-}vot}:\mathbb{F}^3\to\mathbb{F}^4;\quad(S_1^{in},S_2^{in}, S_3^{in})\mapsto (S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
     \end{align*}
-    Here, we can compute $S_1^{out}=r_{3\text{-}vot}(S_1^{in},S_2^{in}, S_3^{in})$ as in \cref{alg:threeVot}
+    Here, we can compute $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})=r_{3\text{-}vot}(S_1^{in},S_2^{in}, S_3^{in})$ as in \cref{alg:threeVot}.
     Note, that $r_{3\text{-}vot}(b_0,b_1,b_2)=(0,0,0,0)\Leftrightarrow (b_0,b_1,b_2)\in C$.
 
-    $r_{3\text{-}vot}$ can be represented by the circuit in \cref{fig:circuit:exampleVoting}.
-%\end{example}
+    $r_{3\text{-}vot}$ can be represented by the circuit $\mathfrak{C}_{3\text{-}vot}$ in \cref{fig:circuit:exampleVoting}.
+\end{example}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Function $r_{3\text{-}vot}$ used to check whether a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
-    $r_{3-\text{-}vot}$ returns $(0,0,0,0)$ if this is the case and something else otherwise.}
+    $r_{3\text{-}vot}$ returns $(0,0,0,0)$ if this is the case and something else otherwise.}
     \label{alg:threeVot}
     \begin{algorithmic}
-    \Procedure{$r_{3-\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
-        \State $S_1^{out}:=(1-S_1^{in})\cdot S_1^{in}$
-        \State $S_2^{out}:=(1-S_2^{in})\cdot S_2^{in}$
-        \State $S_3^{out}:=(1-S_3^{in})\cdot S_3^{in}$ \Comment Determine whether the individual ballots are bits.
-        \State $tmp:=S_1^{in}+S_2^{in}+S_3^{in}$
-        \State $S_4^{out}:=(1-tmp)\cdot tmp$ \Comment Determine whether the sum of all ballots is a bit.
+    \Procedure{$r_{3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
+        \State $S_1^{out}\gets (1-S_1^{in})\cdot S_1^{in}$
+        \State $S_2^{out}\gets (1-S_2^{in})\cdot S_2^{in}$
+        \State $S_3^{out}\gets (1-S_3^{in})\cdot S_3^{in}$ \Comment Determine whether the individual ballots are bits.
+        \State $tmp\gets S_1^{in}+S_2^{in}+S_3^{in}$
+        \State $S_4^{out}\gets (1-tmp)\cdot tmp$ \Comment Determine whether the sum of all ballots is a bit.
         \State \Return $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})$
     \EndProcedure
     \end{algorithmic}
@@ -122,26 +121,28 @@ We can express this membership of the choice space by the function $r_{3\text{-}
     
     \begin{subfigure}{.7\textwidth}
         \centering
-        \includegraphics[scale=.8]{graphics/circuits/ExampleVoting_def}
+        \includegraphics[scale=.8]{graphics/proofSchemes/ExampleVoting_def}
         \caption{Detailed Circuit.}
         \label{fig:circuit:exampleVotingDef}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.28\textwidth}
         \centering
-        \includegraphics[scale=.8]{graphics/circuits/ExampleVoting_short.pdf}
+        \includegraphics[scale=.8]{graphics/proofSchemes/ExampleVoting_short.pdf}
         \caption{Circuit Representation when used as a building block inside other circuits.}
         \label{fig:circuit:exampleVotingShort}
     \end{subfigure}
     \hfill
-    \caption{Circuit for the function $r_{3\text{-}vot}$, computing whether a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$.}
+    \caption{Circuit $\mathfrak{C}_{3\text{-}vot}$ for the function $r_{3\text{-}vot}$, computing whether a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$.}
     \label{fig:circuit:exampleVoting}
 \end{figure}
 \end{center}
 
-Now, we can assign arbitrary input and output values to the circuit for the function $r$.
+\subsection{Satisfiability}
+
+Now, we can assign arbitrary input and output values to the circuit $\mathfrak{C}$ for the function $r$.
 If we then compute the algebraic function $r$ on the input values, this either yields the chosen output values or it yields something else.
-If the computation results in the same output values as the ones chosen before, we say that the circuit for $r$ is satisfied.
+If the computation results in the same output values as the ones chosen before, we say that $\mathfrak{C}$ is satisfied.
 % Furthermore, we can fix some of the input and output values of the circuit.
 % Then it is either possible to assign values to the rest of the signals such that the circuit for $r$ holds or it is not possible to do so.
 We can formalize these ideas with the concept circuit satisfiability.
@@ -156,7 +157,7 @@ We can formalize these ideas with the concept circuit satisfiability.
     \begin{align*}
         \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\:S_i^{in},S_j^{out}\in\mathbb{F}
     \end{align*}
-    We say that $S$ satisfies the circuit for $r$, if and only if $r(S_1^{in},\dots, S_{m}^{in})=(S_1^{out},\dots, S_{n}^{out})$.
+    We say that $S$ satisfies the circuit $\mathfrak{C}$ for $r$, if and only if $r(S_1^{in},\dots, S_{m}^{in})=(S_1^{out},\dots, S_{n}^{out})$.
     % We call the circuit for $r$ satisfiable if there exists an assignment $S$ such that $S$ satisfies the circuit for $r$.
     % We define the set of all assignments $S$ that satisfy $r$ as the language of $r$: $L_r\{S\in\mathbb{F}^{m+n}|S \text{ satisfies } r\}$.
     
@@ -178,10 +179,167 @@ We can formalize these ideas with the concept circuit satisfiability.
 % % However, the assignment $(1,0,3,7)$ does not satisfy $r_{3\text{-}fac}$ since $1\cdot 0\cdot 3=0\neq 7$ in $\mathbb{Z}_{13}$.
 % % Similarily, $r_{3\text{-}fac}$ is satisfiable under the partial assignment $(\bot, 2, 4, \bot)$ but not under the partial assignment $(0,\bot, \bot, 1)$.
 % 
-For instance, the assignment $(0,0,1,0,0,0,0)$ satisfies the circuit for $r_{3\text{-}vot}$ since $(0,0,1)\in C$.
-Therfore, the circuit for $r_{3\text{-}vot}$ is satisfiable.
-However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy the circuit for $r_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.
+For instance, the assignment $(0,0,1,0,0,0,0)$ satisfies the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$ since $(0,0,1)\in C$.
+Therfore, the $\mathfrak{C}_{3\text{-}vot}$ is satisfiable.
+However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy $\mathfrak{C}_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.
 % Similarily, the circuit for $r_{3\text{-}vot}$ is satisfiable under the partial assignment $(\bot, \bot, 1, 0,0,0,0)$ but not under the partial assignment $(2,\bot, \bot, 0,0,0,0)$.
+
+% \todo{
+%     Introduce concept of fixed input/ output values.
+%     Introduce modularity of circuits.
+%     Represent circuit $r_{3\text{-}vot}$ based on multiple $r_{assert-bit}$ circuits.
+%     %Define complete ballot validity circuit using high-level components from the voting system in \cref{chap:votingschemes}.
+%     %(And note that the decomposition relation based on this circuit is equivalent to the relation $R_C$ used in \cref{chap:votingschemes}.)
+% }
+
+\subsection{Asserts}
+
+In general, an assignment $(s_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out}):=(b_0, b_1, b_2, 0, 0, 0, 0)$ satisfies $\mathfrak{C}_{3\text{-}vot}$ if and only if $b=(b_0, b_1, b_2)\in C$.
+Therefore, to assert that ballots are part of the choice space, we assign the constant $0$ to $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$.
+This creates a new circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ which operates only on the three input signals $S_1^{in}, S_2^{in}$ and $S_3^{in}$ and does not have any outputs.
+$\mathfrak{C}_{assert\text{-}3\text{-}vot}$ is illustrated in \cref{fig:circuit:exampleAssertThreeVot}.
+An assignment $(S_1^{in}, S_2^{in}, S_3^{in})$ satisfies $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ if and only if $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})\in C$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.8]{graphics/proofSchemes/ExampleAssertVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$, asserting that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$.}
+    \label{fig:circuit:exampleAssertThreeVot}
+\end{figure}
+
+%To represent asserting circuits as algebraic functions, we need to account for the event that 
+The algebraic function $r_{assert\text{-}3\text{-}vot}$ corresponding to $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ is then defined as:
+\begin{align*}
+    r_{assert\text{-}3\text{-}vot}:\mathbb{F}^3\to\emptyset; \quad\text{with } r_{assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in}) \text{ as in \cref{alg:assertThreeVot}}
+\end{align*}
+The computation of $r_{assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in})$ is possible if and only if $b=(b_0, b_1, b_2)=(S_1^{in}, S_2^{in}, S_3^{in})\in C$.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{assert\text{-}3\text{-}vot}$ used to assert that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
+    $r_{assert\text{-}3\text{-}vot}$ returns nothing if this is the case. Otherwise, the computation of $r_{assert\text{-}3\text{-}vot}$ results in an error.}
+    \label{alg:assertThreeVot}
+    \begin{algorithmic}
+    \Procedure{$r_{assert\text{-}3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
+        \State $0\mbeq (1-S_1^{in})\cdot S_1^{in}$
+        \State $0\mbeq (1-S_2^{in})\cdot S_2^{in}$
+        \State $0\mbeq (1-S_3^{in})\cdot S_3^{in}$ \Comment Assert that the individual ballots are bits.
+        \State $tmp \gets  S_1^{in}+S_2^{in}+S_3^{in}$
+        \State $0\mbeq (1-tmp)\cdot tmp$ \Comment Assert that the sum of all ballots is a bit.
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\subsection{Modularity}
+
+In many cases, we need the same functionality at multiple places in an algebraic function $r$ and its corresponding circuit $\mathfrak{C}$.
+For instance, in $r_{3\text{-}vot}$ and $r_{assert\text{-}3\text{-}vot}$, this applies to the computation needed to check whether a signal is a bit.
+$(1-S)\cdot S$ and $(1-S)\cdot S\mbeq 0$ respectively is used for all individual votes $b_0,b_1,b_2$ in a ballot $b$ and for the sum of all votes $b_0+b_1+b_2$.
+We can now capture the function to check that a signal is a bit inside another algebraic relation $r_{is\text{-}Bit}$:
+\begin{align*}
+    r_{is\text{-}Bit}:\mathbb{F}\to\mathbb{F}, S_1^{in}\to S_1^{out}:=(1-S_1^{in})\cdot S_1^{in}=\begin{cases}
+        0,&\quad\text{if } S_1^{in}\in\{0,1\}\\
+        x\in\mathbb{F}\setminus\{0\},&\quad\text{otherwise}
+    \end{cases}
+\end{align*}
+
+Similarly, we can capture the assertion that signals are bits in an algebraic relation $r_{assert\text{-}Bit}$.
+Here, we can already reuse our definition of $r_{is\text{-}Bit}$:
+\begin{align*}
+    r_{assert\text{-}Bit}:\mathbb{F}\to\emptyset, \text{ with}%r_{assert\text{-}Bit}(S_1^{in}):=\left(r_{is\text{-}Bit}(S_1^{in})\mbeq 0\right)
+\end{align*}
+\begin{algorithmic}
+    \Procedure{$r_{assert\text{-}Bit}$}{$S_1^{in}$}
+        \State $0\mbeq r_{is\text{-}Bit}(S_1^{in})$
+    \EndProcedure
+\end{algorithmic}
+
+The corresponding circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ are presented in \cref{fig:circuit:bitModularity}.
+
+\begin{center}
+    \begin{figure}[h]
+        \begin{subfigure}{.48\textwidth}
+            \centering
+            \includegraphics[scale=.8]{graphics/proofSchemes/isBit.pdf}
+            %\caption{Detailed Circuit.}
+            %\label{fig:circuit:exampleVotingDef}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{.48\textwidth}
+            \centering
+            \includegraphics[scale=.8]{graphics/proofSchemes/assertBit.pdf}
+            %\caption{Circuit Representation when used as a building block inside other circuits.}
+            %\label{fig:circuit:exampleVotingShort}
+        \end{subfigure}
+        \hfill
+        \caption{Circuit $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ to check and assert whether a signal is a Bit.}
+        \label{fig:circuit:bitModularity}
+    \end{figure}
+\end{center}
+
+Using these circuits as components, the computation of $r_{3\text{-}vot}$ and $r_{assert\text{-}3\text{-}vot}$ can be reformulated as presented in \cref{alg:threeVot_components} and \cref{alg:assertThreeVot_components} respectively.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{3\text{-}vot}$ used to check whether a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
+    $r_{3\text{-}vot}$ returns $(0,0,0,0)$ if this is the case and something else otherwise. Using $r_{is\text{-}Bit}$.}
+    \label{alg:threeVot_components}
+    \begin{algorithmic}
+    \Procedure{$r_{3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
+        \State $S_1^{out}\gets r_{is\text{-}Bit}(S_1^{in})$
+        \State $S_2^{out}\gets r_{is\text{-}Bit}(S_2^{in})$
+        \State $S_3^{out}\gets r_{is\text{-}Bit}(S_3^{in})$ \Comment Determine whether the individual ballots are bits.
+        \State $tmp\gets S_1^{in}+S_2^{in}+S_3^{in}$
+        \State $S_4^{out}\gets r_{is\text{-}Bit}(tmp)$ \Comment Determine whether the sum of all ballots is a bit.
+        \State \Return $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{assert\text{-}3\text{-}vot}$ used to assert that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
+    $r_{assert\text{-}3\text{-}vot}$ returns nothing if this is the case. Otherwise, the computation of $r_{assert\text{-}3\text{-}vot}$ results in an error. Using $r_{assert\text{-}Bit}$.}
+    \label{alg:assertThreeVot_components}
+    \begin{algorithmic}
+    \Procedure{$r_{assert\text{-}3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
+        \State $r_{assert\text{-}Bit}(S_1^{in})$
+        \State $r_{assert\text{-}Bit}(S_2^{in})$
+        \State $r_{assert\text{-}Bit}(S_3^{in})$ \Comment Assert that the individual ballots are bits.
+        \State $tmp \gets  S_1^{in}+S_2^{in}+S_3^{in}$
+        \State $r_{assert\text{-}Bit}(tmp)$ \Comment Assert that the sum of all ballots is a bit.
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+The corresponding circuits $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ are presented in \cref{fig:circuit:threeVotModularity}.
+These circuits are exactly the same as the ones defined in \cref{fig:circuit:exampleVotingDef} and \cref{fig:circuit:exampleAssertThreeVot}, we have just grouped some of the internal structure as new circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ respectively.
+
+Note that we can not reuse the same circuit $\mathfrak{C}_{module}$ multiple times inside another circuit $\mathfrak{C}$.
+Therefore, we use multiple sepearate instantiations of $\mathfrak{C}_{module}$ inside $\mathfrak{C}$.
+In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ in the definition of $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ respectively.
+
+\begin{center}
+    \begin{figure}[h]
+        \begin{subfigure}{.48\textwidth}
+            \centering
+            \includegraphics[scale=.8]{graphics/proofSchemes/threeVotModular.pdf}
+            \caption{Circuit $\mathfrak{C}_{3\text{-}vot}$ for the function $r_{3\text{-}vot}$ using instantiations of $\mathfrak{C}_{is\text{-}Bit}$.}
+            %\label{fig:circuit:exampleVotingDef}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{.48\textwidth}
+            \centering
+            \includegraphics[scale=.8]{graphics/proofSchemes/assertThreeVotModular.pdf}
+            \caption{Circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ for the function $r_{assert{-}3\text{-}vot}$ using instantiations of $\mathfrak{C}_{assert\text{-}Bit}$.}
+            %\label{fig:circuit:exampleVotingShort}
+        \end{subfigure}
+        \hfill
+        \caption{Circuits to check and assert membership of the choice space for $3\text{-}vot$.}
+        \label{fig:circuit:threeVotModularity}
+    \end{figure}
+\end{center}
+
+The modularity of circuits allows us to define more complicated circuits based on simpler ones and will be used througout the thesis.
+For the rest of this chapter however, we need to know the exact specification of a circuit down to the circuits for the basic field operations $+$ and $\cdot$ of $\mathbb{F}$.
+Therefore, we will use the definition of $r_{3\text{-}vot}$ from \cref{example:threeVot} and the corresponding circuit $\mathfrak{C}_{3\text{-}vot}$ from \cref{fig:circuit:exampleVotingDef}.
 
 \section{Rank-1 Constraint Systems}
 Fundamentally, \glspl{r1cs} are systems of equations of a specific format between a set of variables.
@@ -199,7 +357,7 @@ Fundamentally, \glspl{r1cs} are systems of equations of a specific format betwee
     Hence, $n$ is the number of variables involved in the \gls{r1cs} and $k$ is the number of equations or constraints of the system.
 \end{definition}
 
-Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit as a \gls{r1cs} $R1CS_r$, since we require that $r$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
+Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit $\mathfrak{C}$ as a \gls{r1cs} $R1CS_r$, since we require that $r$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
 
 % For instance, we can represent $r_{3\text{-}fac}$ as an \gls{r1cs} as follows:\\
 % First, we need to rewrite the definition of $r_{3\text{-}fac}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot $.
@@ -311,7 +469,7 @@ We can now define \gls{r1cs} Satisfiability in a similar fashion to Circuit Sati
     We call $R1CS$ satisfiable, if there is an assignment $S$ that satisfies $R$.
 \end{definition}
 
-As we have shown before, the circuit for $r_{3\text{-}vot}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
+As we have shown before, the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
 Therefore, the \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ should also be satisfied by $S$ but not by $S'$.
 We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the equations of $R1CS_{r_{3\text{-}vot}}$:
 \begin{itemize}
@@ -607,7 +765,7 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
 
 \section{Instance and Witness}
 In practical applications such as proving ballot validity, we need to be able to conduct the proof without revealing the secret ballot. 
-More generally, we need to be able to hide a part of the assignment to a circuit for a relation $r$ and still be able to provide the proof of correct circuit execution.
+More generally, we need to be able to hide a part of the assignment to a circuit $\mathfrak{C}$ for a relation $r$ and still be able to provide the proof of correct circuit execution.
 
 For this purpose, we split an assignment to the circuit for $r$ into an instance and a witness part. 
 As outlined in \cref{chap:votingschemes}, the instance is public and the witness is private.
@@ -666,7 +824,7 @@ We can formalize this concept as a Decomposition Relation.
 
 \begin{figure}[h]
     \centering
-        \includegraphics[scale=0.9]{graphics/GPZKPs/DecompositionPerm.pdf}
+        \includegraphics[scale=0.9]{graphics/proofSchemes/DecompositionPerm.pdf}
     \caption{Decomposition of a signal $S=(S_1,\dots, S_{m+n+s})$ into instance and witness $(I, W)=((I_1,\dots, I_u),(W_1,\dots, W_v))$ as performed by $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$ using permutation $p$.}
     \label{fig:decompositionPerm}
 \end{figure}
@@ -677,21 +835,21 @@ We can also visualize a decomposition relation on a circuit directly as presente
     \centering
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/circuits/Notation_short.pdf}
+        \includegraphics[scale=1]{graphics/proofSchemes/Notation_short.pdf}
         %\caption{Circuit for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$.}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/circuits/Notation_InstanceWitness.pdf}
+        \includegraphics[scale=1]{graphics/proofSchemes/Notation_InstanceWitness.pdf}
         %\caption{Exemplary decomposition relation of $r$.}
     \end{subfigure}
-    \caption{Circuit for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$ and exemplary decomposition relation of $r$.}
+    \caption{Circuit $\mathfrak{C}$ for an algebraic function $r:\mathbb{F}^m\to\mathbb{F}^n$ and exemplary decomposition relation of $r$.}
     \label{fig:circuit:instanceWitnessRelation}
 \end{figure}
 
 Once again, we consider $r_{3\text{-}vot}$ as an example. 
-To show ballot validity with the circuit for $r_{3\text{-}vot}$, we want to keep the ballot represented by the inputs $S_1^{in}, S_2^{in}$ and $S_3^{in}$ private.
+To show ballot validity with the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$, we want to keep the ballot represented by the inputs $S_1^{in}, S_2^{in}$ and $S_3^{in}$ private.
 On the other hand, the output signals $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$ need to be $0$ in case we have a valid ballot as we observed earlier.
 Therefore, these signals can be public.
 To compute the corresponding decomposition relation, we choose $\mathcal{I}=\mathbb{F}_{13}^{4}$ and $\mathcal{W}=\mathbb{F}_{13}^3$.
@@ -706,8 +864,8 @@ Visually, we can represent this as shown in \cref{fig:circuit:instanceWitnessRel
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/circuits/ExampleVoting_instanceWitnessRelation.pdf}
-    \caption{Decomposition relation of the circuit for $r_{3\text{-}vot}$ if we choose the inputs as witness and the outputs as instance.}
+    \includegraphics[scale=.8]{graphics/proofSchemes/ExampleVoting_instanceWitnessRelation.pdf}
+    \caption{Decomposition relation of the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$ if we choose the inputs as witness and the outputs as instance.}
     \label{fig:circuit:instanceWitnessRelationThreeVot}
 \end{figure}
 
@@ -780,11 +938,11 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     \begin{algorithmic}
     \Procedure{$Setup$}{$\vphantom{bla}$}
         \State $\alpha, \beta, \gamma, \delta, \tau\probgets \mathbb{F}_q$
-        \State $st:=(\alpha,\beta,\gamma,\delta,\tau)$ \Comment Create simulation trapdoor from uniformly random field elements.
-        \State $CRS_{\mathbb{G}_1}:=\left\{\textcolor{red}{g_1^\alpha},\textcolor{blue}{g_1^\beta},\textcolor{lime}{g_1^\delta},\left(\textcolor{teal}{g_1^{\tau^j}}\right)_{j=0}^{k-1},\left(\textcolor{cyan}{g_1^{\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau)+C_{p^{-1}(j)}(\tau)}{\gamma}}}\right)_{j=0}^{n_I},\right.$
-        \Statex $\phantom{CRS_{\mathbb{G}_1}:=\quad\quad} \left. \left(\textcolor{magenta}{g_1^{\frac{\beta A_{p^{-1}(j+n_I)}(\tau)+\alpha B_{p^{-1}(j+n_I)}(\tau)+C_{p^{-1}(j+n_I)}(\tau)}{\delta}}}\right)_{j=1}^{n_W},\left(\textcolor{brown}{g_1^{\frac{\tau^jT(\tau)}{\delta}}}\right)_{j=0}^{k-2}\right\}$
-        \State $CRS_{\mathbb{G}_2}:=\left\{\textcolor{olive}{g_2^\beta}, \textcolor{green}{g_2^\gamma},\textcolor{violet}{g_2^\delta},\left(\textcolor{pink}{g_2^{\tau^j}}\right)_{j=0}^{k-1}\right\}$
-        \State $CRS:=(CRS_{\mathbb{G}_1},CRS_{\mathbb{G}_2})$ \Comment Compute Common Reference String
+        \State $st\gets (\alpha,\beta,\gamma,\delta,\tau)$ \Comment Create simulation trapdoor from uniformly random field elements.
+        \State $CRS_{\mathbb{G}_1}\gets \left\{\textcolor{red}{g_1^\alpha},\textcolor{blue}{g_1^\beta},\textcolor{lime}{g_1^\delta},\left(\textcolor{teal}{g_1^{\tau^j}}\right)_{j=0}^{k-1},\left(\textcolor{cyan}{g_1^{\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau)+C_{p^{-1}(j)}(\tau)}{\gamma}}}\right)_{j=0}^{n_I},\right.$
+        \Statex $\phantom{CRS_{\mathbb{G}_1}\gets \quad\quad} \left. \left(\textcolor{magenta}{g_1^{\frac{\beta A_{p^{-1}(j+n_I)}(\tau)+\alpha B_{p^{-1}(j+n_I)}(\tau)+C_{p^{-1}(j+n_I)}(\tau)}{\delta}}}\right)_{j=1}^{n_W},\left(\textcolor{brown}{g_1^{\frac{\tau^jT(\tau)}{\delta}}}\right)_{j=0}^{k-2}\right\}$
+        \State $CRS_{\mathbb{G}_2}\gets \left\{\textcolor{olive}{g_2^\beta}, \textcolor{green}{g_2^\gamma},\textcolor{violet}{g_2^\delta},\left(\textcolor{pink}{g_2^{\tau^j}}\right)_{j=0}^{k-1}\right\}$
+        \State $CRS\gets (CRS_{\mathbb{G}_1},CRS_{\mathbb{G}_2})$ \Comment Compute Common Reference String
         \State \Return $CRS$
     \EndProcedure
     \end{algorithmic}
@@ -800,22 +958,22 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     \begin{algorithmic}
     \Procedure{$Prove$}{$CRS, I, W$}
         \State $(I_1,\dots, I_{n_I}:=I);\:(W_1,\dots, W_{n_W}):=W$
-        \State $(S_1,\dots, S_{n_I+n_W}):=S:=d_p^{-1}(I,W)$
+        \State $(S_1,\dots, S_{n_I+n_W}):=S=d_p^{-1}(I,W)$
         \State Compute the polynomial $P_S$ corresponding to assignment $S$ as in \cref{def:qapSat}.
-        \State $H:=\frac{P_S}{T}$ with $H(x)=\sum\limits_{l=0}^{k-2}H_{l}x^{l}$ \Comment $H_{l}$ is the $l$-th coefficient of $H$.
+        \State $H\gets \frac{P_S}{T}$ with $H(x)=\sum\limits_{l=0}^{k-2}H_{l}x^{l}$ \Comment $H_{l}$ is the $l$-th coefficient of $H$.
         \Statex 
         \State Compute $\textcolor{NavyBlue}{g_1^S}:=\textcolor{NavyBlue}{g_1^{\frac{H(\tau)T(\tau)}{\delta}}}=\prod\limits_{j=0}^{k-2}\left(\textcolor{brown}{g_1^{\frac{\tau^jT(\tau)}{\delta}}}\right)^{H_j}$
-        \State $\textcolor{yellow}{g_1^{W}}:=\prod\limits_{j=1}^{n_W}\left(\textcolor{magenta}{g_1^\frac{\beta A_{p^{-1}(j+n_I)}(\tau)+\alpha B_{p^{-1}(j+n_I)}(\tau) + C_{p^{-1}(j+n_I)}(\tau)}{\delta}}\right)^{W_j}$
+        \State $\textcolor{yellow}{g_1^{W}}\gets \prod\limits_{j=1}^{n_W}\left(\textcolor{magenta}{g_1^\frac{\beta A_{p^{-1}(j+n_I)}(\tau)+\alpha B_{p^{-1}(j+n_I)}(\tau) + C_{p^{-1}(j+n_I)}(\tau)}{\delta}}\right)^{W_j}$
         \State $\rho, \sigma\probgets \mathbb{F}_q$
         \Statex
         \State Compute $\left(\textcolor{lightgray}{g_1^{A_j(\tau)}}\right)_{j=0}^{n_I+n_W}, \left(\textcolor{orange}{g_1^{B_j(\tau)}}\right)_{j=0}^{n_I+n_W}$ and $\left(\textcolor{RawSienna}{g_2^{B_j(\tau)}}\right)_{j=0}^{n_I+n_W}$ \Comment Using $CRS$. \footnotemark
         \Statex
-        \State $g_1^A:=\left(\textcolor{lime}{g_1^\delta}\right)^\rho\odot_{\mathbb{G}_1} \textcolor{red}{g_1^\alpha}\odot_{\mathbb{G}_1} \textcolor{lightgray}{g_1^{A_0(\tau)}}\odot_{\mathbb{G}_1} \prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{lightgray}{g_1^{A_j(\tau)}}\right)^{S_j}$
-        \State $g_1^B:=\left(\textcolor{lime}{g_1^\delta}\right)^\sigma\odot_{\mathbb{G}_1} \textcolor{blue}{g_1^\beta} \odot_{\mathbb{G}_1} \textcolor{orange}{g_1^{B_0(\tau)}}\odot_{\mathbb{G}_1} \prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{orange}{g_1^{B_j(\tau)}}\right)^{S_j}$
-        \State $g_1^C:=\textcolor{yellow}{g_1^W}\odot_{\mathbb{G}_1} \textcolor{NavyBlue}{g_1^S}\odot_{\mathbb{G}_1} \left(g_1^{A}\right)^\sigma\odot_{\mathbb{G}_1} \left(g_1^B\right)^\rho\odot_{\mathbb{G}_1} \left(\textcolor{lime}{g_1^\delta}\right)^{-\sigma\rho}$
-        \State $g_2^B:=\left(\textcolor{violet}{g_2^\delta}\right)^\sigma\odot_{\mathbb{G}_2} \textcolor{olive}{g_2^\beta} \odot_{\mathbb{G}_2} \textcolor{RawSienna}{g_2^{B_0(\tau)}}\odot_{\mathbb{G}_2}\prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{RawSienna}{g_2^{B_j(\tau)}}\right)^{S_j}$
+        \State $g_1^A\gets \left(\textcolor{lime}{g_1^\delta}\right)^\rho\odot_{\mathbb{G}_1} \textcolor{red}{g_1^\alpha}\odot_{\mathbb{G}_1} \textcolor{lightgray}{g_1^{A_0(\tau)}}\odot_{\mathbb{G}_1} \prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{lightgray}{g_1^{A_j(\tau)}}\right)^{S_j}$
+        \State $g_1^B\gets \left(\textcolor{lime}{g_1^\delta}\right)^\sigma\odot_{\mathbb{G}_1} \textcolor{blue}{g_1^\beta} \odot_{\mathbb{G}_1} \textcolor{orange}{g_1^{B_0(\tau)}}\odot_{\mathbb{G}_1} \prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{orange}{g_1^{B_j(\tau)}}\right)^{S_j}$
+        \State $g_1^C\gets \textcolor{yellow}{g_1^W}\odot_{\mathbb{G}_1} \textcolor{NavyBlue}{g_1^S}\odot_{\mathbb{G}_1} \left(g_1^{A}\right)^\sigma\odot_{\mathbb{G}_1} \left(g_1^B\right)^\rho\odot_{\mathbb{G}_1} \left(\textcolor{lime}{g_1^\delta}\right)^{-\sigma\rho}$
+        \State $g_2^B\gets \left(\textcolor{violet}{g_2^\delta}\right)^\sigma\odot_{\mathbb{G}_2} \textcolor{olive}{g_2^\beta} \odot_{\mathbb{G}_2} \textcolor{RawSienna}{g_2^{B_0(\tau)}}\odot_{\mathbb{G}_2}\prod\limits_{j=1}^{n_I+n_W}\left(\textcolor{RawSienna}{g_2^{B_j(\tau)}}\right)^{S_j}$
         \Statex
-        \State $\pi:=(g_1^A,g_1^C,g_2^B)$
+        \State $\pi\gets (g_1^A,g_1^C,g_2^B)$
         \State \Return $\pi$
     \EndProcedure
     \end{algorithmic}
@@ -844,7 +1002,7 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     \begin{algorithmic}
     \Procedure{$Prove$}{$CRS, I, \pi$}
         \State $(g_1^A, g_1^C, g_2^B):=\pi;\:(W_1,\dots, W_{n_W}):=W$
-        \State $g_1^I:=\left(\textcolor{cyan}{g_1^\frac{\beta A_0(\tau)+\alpha B_0(\tau)+C_0(\tau)}{\gamma}}\right)\odot_{\mathbb{G}_1}\prod\limits_{j=1}^{n_I}\left(\textcolor{cyan}{g_1^\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau) + C_{p^{-1}(j)}(\tau)}{\delta}}\right)^{I_j}$
+        \State $g_1^I\gets \left(\textcolor{cyan}{g_1^\frac{\beta A_0(\tau)+\alpha B_0(\tau)+C_0(\tau)}{\gamma}}\right)\odot_{\mathbb{G}_1}\prod\limits_{j=1}^{n_I}\left(\textcolor{cyan}{g_1^\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau) + C_{p^{-1}(j)}(\tau)}{\delta}}\right)^{I_j}$
         \If{$e(g_1^A, g_2^B)=e(\textcolor{red}{g_1^\alpha}, \textcolor{olive}{g_2^\beta})\odot_{\mathbb{G}_T} e(g_1^I, \textcolor{green}{g_2^\gamma})\odot_{\mathbb{G}_T} e(g_1^C, \textcolor{violet}{g_2^\delta})$}
             \State \Return $valid$
         \Else

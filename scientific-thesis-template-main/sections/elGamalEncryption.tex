@@ -27,7 +27,7 @@ We mostly follow the definition in construction 12.16 of \cite{katz_introduction
     \label{def:elGamalEncryption}
     The ElGamal asymmetric encryption scheme is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$. Here:
     \begin{itemize}
-        \item $Gen(1\eta)$: First, this algorithm generates a cyclic group $(\mathbb{G}, \odot_{\mathbb{G}})$ along with a generator $g$ of this group and computes the order of the group $n:=|\mathbb{G}|$.
+        \item $Gen(1^\eta)$: First, this algorithm generates a cyclic group $(\mathbb{G}, \odot_{\mathbb{G}})$ along with a generator $g$ of this group and computes the order of the group $n:=|\mathbb{G}|$.
         Then, it chooses an $x\in\mathbb{Z}_n$ uniformly at random, sets $h:=g^x$ and returns $(pk, sk)=((\mathbb{G}, n, g, h), (\mathbb{G}, n, g, x))$ as the public-private key pair.
         \footnote{\label{footnote:groupExponentiation} We define $g^l := g\underbrace{\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}}_{l \text{ times}}g \quad\forall g\in\mathbb{G}\forall l\in\mathbb{N}$ with $g^0:=e_{\mathbb{G}}$. (Here, $e_{\mathbb{G}}$ denotes the neutral element of $\mathbb{G}$.)}
         \item $Enc(m, pk):$ To encrypt a message $m\in \mathbb{G}$ with $pk=(\mathbb{G}, n, g, h)$, the algorithm chooses $y\in\mathbb{Z}_n$ uniformly at random and outputs the ciphertext
@@ -117,7 +117,7 @@ Formally, we define \gls{eeg} Encryption as in \cite{aldini_cryptographic_2014} 
 \begin{definition}[Exponential ElGamal Encryption Scheme]
     The \gls{eeg} is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$. Here:
     \begin{itemize}
-        \item $Gen(1\eta)$ is defined as in \cref{def:elGamalEncryption}.
+        \item $Gen(1^\eta)$ is defined as in \cref{def:elGamalEncryption}.
         \item $Enc(m, pk):$ To encrypt a message $m\in \mathbb{G}$ with $pk=(\mathbb{G}, n, g, h)$, the algorithm chooses $y\in\mathbb{Z}_n$ uniformly at random and outputs the ciphertext
         \begin{align*}
             c:=(g^y, h^y\odot_{\mathbb{G}} g^m)

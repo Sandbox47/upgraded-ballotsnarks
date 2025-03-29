@@ -162,7 +162,7 @@ component main {{public [{g_name}, {pk_name}, enc_gr, enc_gv_pkr]}} = assert{cap
     circom_file += "}\n" + file_main_component
 
     circom_file_name_prefix = f"{election_type}_nBits={n_bits}_" + ",".join(f"{k}={v}" for k, v in named_params.items())
-    circom_file_name_prefix = re.sub(r',?\s*orderedPoints=\[[^\]]*\]$', '', circom_file_name_prefix)
+    circom_file_name_prefix = re.sub(r',?\s*orderedPoints=\[[^\]]*\]$', '', circom_file_name_prefix) # Remove Pointlist from file name to avoid file names getting to large
 
     circom_path = base_path / "circomTestFiles"
     circom_path.mkdir(exist_ok=True)

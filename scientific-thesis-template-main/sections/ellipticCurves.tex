@@ -1,5 +1,5 @@
 \chapter{Montgomery Curves}
-\label{chap:montgomeryCurves}
+\label{chap:ellipticCurves}
 
 In our voting scheme, we use \gls{eeg} encryption for the ballots.
 All operation in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
@@ -67,9 +67,9 @@ Later on, we use both representations in the voting scheme.
     \label{alg:tangentRuleAffineMontgomery}
     \begin{algorithmic}
     \Procedure{$TangentRule$}{$x,y$}
-        \State $tmp := \frac{3x^2+2Ax+1}{2By}$
-        \State $x' := tmp^2\cdot B-2x-A$
-        \State $y':= tmp\cdot (x-x')-y$
+        \State $tmp \gets  \frac{3x^2+2Ax+1}{2By}$
+        \State $x' \gets  tmp^2\cdot B-2x-A$
+        \State $y'\gets  tmp\cdot (x-x')-y$
         \State \Return $(x', y')$
     \EndProcedure
     \end{algorithmic}
@@ -80,9 +80,9 @@ Later on, we use both representations in the voting scheme.
     \label{alg:chordRuleAffineMontgomery}
     \begin{algorithmic}
     \Procedure{$ChordRule$}{$x_1,y_1, x_2, y_2$}
-        \State $tmp := \frac{y_2-y_1}{x_2-x_1}$
-        \State $x' := tmp^2\cdot B-x_1-x_2-A$
-        \State $y':= tmp\cdot (x_1-x')-y_1$
+        \State $tmp \gets  \frac{y_2-y_1}{x_2-x_1}$
+        \State $x' \gets  tmp^2\cdot B-x_1-x_2-A$
+        \State $y'\gets  tmp\cdot (x_1-x')-y_1$
         \State \Return $(x', y')$
     \EndProcedure
     \end{algorithmic}
@@ -152,11 +152,11 @@ Using projective planes, we can define Montgomery Curves in their projective rep
     \label{alg:tangentRuleProjectiveMontgomery}
     \begin{algorithmic}
     \Procedure{$TangentRule$}{$[X:Y:Z]$}
-        \State $I:=3X^2+2AXZ+Z^2$
-        \State $H:=2BYZ$
-        \State $X':=BI^2HZ^2-(AZ^2+2XZ)H^3$
-        \State $Y':=-BI^3Z^2+(AZ^2+3XZ)IH^2-YZH^3$
-        \State $Z':=H^3Z^2$
+        \State $I\gets 3X^2+2AXZ+Z^2$
+        \State $H\gets 2BYZ$
+        \State $X'\gets BI^2HZ^2-(AZ^2+2XZ)H^3$
+        \State $Y'\gets -BI^3Z^2+(AZ^2+3XZ)IH^2-YZH^3$
+        \State $Z'\gets H^3Z^2$
         \State \Return $[X':Y':Z']$
     \EndProcedure
     \end{algorithmic}
@@ -167,11 +167,11 @@ Using projective planes, we can define Montgomery Curves in their projective rep
     \label{alg:chordRuleProjectiveMontgomery}
     \begin{algorithmic}
     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
-        \State $I:=Y_2Z_1-Y_1Z_2$
-        \State $H:=X_2Z_1-X_1Z_2$
-        \State $X':=BI^2HZ_1Z_2-(AZ_1Z_2+X_1Z_2+X_2Z_1)H^3$
-        \State $Y':=-BI^3Z_1Z_2+(AZ_1Z_2+2X_1Z_2+X_2Z_1)IH^2-Y_1Z_2H^3$
-        \State $Z':=H^3Z^2$
+        \State $I\gets Y_2Z_1-Y_1Z_2$
+        \State $H\gets X_2Z_1-X_1Z_2$
+        \State $X'\gets BI^2HZ_1Z_2-(AZ_1Z_2+X_1Z_2+X_2Z_1)H^3$
+        \State $Y'\gets -BI^3Z_1Z_2+(AZ_1Z_2+2X_1Z_2+X_2Z_1)IH^2-Y_1Z_2H^3$
+        \State $Z'\gets H^3Z^2$
         \State \Return $[X':Y':Z']$
     \EndProcedure
     \end{algorithmic}
@@ -294,9 +294,9 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 %     \label{alg:tangentRuleAffineWeierstrass}
 %     \begin{algorithmic}
 %     \Procedure{$TangentRule$}{$x,y$}
-%         \State $tmp := \frac{3x^2+a}{2y}$
-%         \State $x' := tmp^2-2x$
-%         \State $y':= tmp\cdot (x-x')-y$
+%         \State $tmp \gets  \frac{3x^2+a}{2y}$
+%         \State $x' \gets  tmp^2-2x$
+%         \State $y'\gets  tmp\cdot (x-x')-y$
 %         \State \Return $(x', y')$
 %     \EndProcedure
 %     \end{algorithmic}
@@ -307,9 +307,9 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 %     \label{alg:chordRuleAffineWeierstrass}
 %     \begin{algorithmic}
 %     \Procedure{$ChordRule$}{$x_1,y_1, x_2, y_2$}
-%         \State $tmp := \frac{y_2-y_1}{x_2-x_1}$
-%         \State $x' := tmp^2-x_1-x_2$
-%         \State $y':= tmp\cdot (x_1-x')-y_1$
+%         \State $tmp \gets  \frac{y_2-y_1}{x_2-x_1}$
+%         \State $x' \gets  tmp^2-x_1-x_2$
+%         \State $y'\gets  tmp\cdot (x_1-x')-y_1$
 %         \State \Return $(x', y')$
 %     \EndProcedure
 %     \end{algorithmic}
@@ -370,13 +370,13 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 %     \label{alg:tangentRuleProjectiveWeierstrass}
 %     \begin{algorithmic}
 %     \Procedure{$TangentRule$}{$[X:Y:Z]$}
-%         \State $W := a\cdot Z^2 + 3\cdot X^3$
-%         \State $S := Y\cdot Z$
-%         \State $B := X\cdot Y\cdot S$
-%         \State $H := W^2-8\cdot B$
-%         \State $X':= 2\cdot H\cdot S$
-%         \State $Y':= W\cdot (4\cdot B-H)-8\cdot Y^2\cdot S^2$
-%         \State $Z':= 8\cdot S^3$
+%         \State $W \gets  a\cdot Z^2 + 3\cdot X^3$
+%         \State $S \gets  Y\cdot Z$
+%         \State $B \gets  X\cdot Y\cdot S$
+%         \State $H \gets  W^2-8\cdot B$
+%         \State $X'\gets  2\cdot H\cdot S$
+%         \State $Y'\gets  W\cdot (4\cdot B-H)-8\cdot Y^2\cdot S^2$
+%         \State $Z'\gets  8\cdot S^3$
 %         \State \Return $([X':Y':Z'])$
 %     \EndProcedure
 %     \end{algorithmic}
@@ -387,17 +387,17 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 %     \label{alg:chordRuleProjectiveWeierstrass}
 %     \begin{algorithmic}
 %     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
-%         \State $U_1 := Y_2\cdot Z_1$
-%         \State $U_2 := Y_1\cdot Z_2$
-%         \State $U := U_1 - U_2$
-%         \State $V_1 := X_2\cdot Z_1$
-%         \State $V_2 := X_1\cdot Z_2$
-%         \State $V := V_1 - V_2$
-%         \State $W := Z_1\cdot Z_2$
-%         \State $A := U^2\cdot W - V^3-2\cdot V^2\cdot V_2$
-%         \State $X' := V\cdot A$
-%         \State $Y' := U\cdot (V^2\cdot V_2 - A)-V^3\cdot U_2$
-%         \State $Z' := V^3\cdot W$
+%         \State $U_1 \gets  Y_2\cdot Z_1$
+%         \State $U_2 \gets  Y_1\cdot Z_2$
+%         \State $U \gets  U_1 - U_2$
+%         \State $V_1 \gets  X_2\cdot Z_1$
+%         \State $V_2 \gets  X_1\cdot Z_2$
+%         \State $V \gets  V_1 - V_2$
+%         \State $W \gets  Z_1\cdot Z_2$
+%         \State $A \gets  U^2\cdot W - V^3-2\cdot V^2\cdot V_2$
+%         \State $X' \gets  V\cdot A$
+%         \State $Y' \gets  U\cdot (V^2\cdot V_2 - A)-V^3\cdot U_2$
+%         \State $Z' \gets  V^3\cdot W$
 %         \State \Return $([X':Y':Z'])$
 %     \EndProcedure
 %     \end{algorithmic}
@@ -456,8 +456,8 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     \begin{algorithmic}
     \Procedure{$xAdd$}{$x(P), x(Q), x(P\odot_M^{Pro}Q^{-1})$}
         \State $[X_P:Z_P]:=x(P);\: [X_Q:Z_Q]:=x(Q);\: [X_{\odot^{-1}}, Z_{\odot^{-1}}]:=x(P\odot_m^{Pro}Q^{-1})$
-        \State $X_\odot:= Z_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)+(X_P+Z_P)(X_Q-Z_Q))^2$
-        \State $Z_\odot:= X_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)-(X_P+Z_P)(X_Q-Z_Q))^2$
+        \State $X_\odot\gets  Z_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)+(X_P+Z_P)(X_Q-Z_Q))^2$
+        \State $Z_\odot\gets  X_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)-(X_P+Z_P)(X_Q-Z_Q))^2$
         \State \Return $[X_\odot:Z_\odot]$
     \EndProcedure
     \end{algorithmic}
@@ -479,8 +479,8 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     \begin{algorithmic}
     \Procedure{$xDbl$}{$x(P)$}
         \State $[X_P:Z_P]:=x(P)$
-        \State $X_\odot:= (X_P+Z_P)^2(X_P-Z_P)^2$
-        \State $Z_\odot:= \left(4X_PZ_P\right)\left(\left(X_P-Z_P\right)^2+\left(\frac{A+2}{4}\left(4X_PZ_P\right)\right)\right)$
+        \State $X_\odot\gets  (X_P+Z_P)^2(X_P-Z_P)^2$
+        \State $Z_\odot\gets  \left(4X_PZ_P\right)\left(\left(X_P-Z_P\right)^2+\left(\frac{A+2}{4}\left(4X_PZ_P\right)\right)\right)$
         \State \Return $[X_\odot:Z_\odot]$
     \EndProcedure
     \end{algorithmic}
@@ -508,19 +508,19 @@ A proof of correctness of the $MontgomeryLadder$ is given in section 4.1 of \cit
     \label{alg:montgomeryLadder}
     \begin{algorithmic}
     \Procedure{$MontgomeryLadder$}{$x(P), (n_0,\dots, n_{l-1})$}
-        \State $(R_0, R_1):=(x([0:1:0]), x(P))$ 
+        \State $(R_0, R_1)\gets (x([0:1:0]), x(P))$ 
         \State \Comment \parbox[t]{0.7\linewidth}{%
             Initialize $R_0$ with point at infinity and $R_0$ with $x(P)$. This is different compared to the standard version of the Montgomery Ladder.%
         }
         \For{$i=l-1$ \textbf{down to} $0$}
             \If{$n_i=0$}
-                \State $(R_0, R_1):=(xDbl(R_0), xAdd(R_1, R_0, x(P)))$ 
+                \State $(R_0, R_1)\gets (xDbl(R_0), xAdd(R_1, R_0, x(P)))$ 
                 \State \Comment \parbox[t]{0.7\linewidth}{%
                     $R_1=x(P^{k+1})$ and $R_0=x(P^k)$ for some $k\in\mathbb{N}$ at all times.\\
                     Therefore, $x(P^{k+1}\odot_{M}^{Pro}(P^k)^{-1})=x(P)$.
                 }
             \Else
-                \State $(R_0, R_1):=(xAdd(R_1, R_0, x(P)), xDbl(R_1))$
+                \State $(R_0, R_1)\gets (xAdd(R_1, R_0, x(P)), xDbl(R_1))$
             \EndIf
         \EndFor
         \State \Return $(R_0, R_1)$
@@ -555,11 +555,11 @@ A proof of this theorem can be found in section B in the Appendix of \cite{goos_
     \begin{algorithmic}
     \Procedure{$OkSakYRecovery$}{$P, x(Q), x(P\odot_M^{Pro}Q)$}
         \State $[X_P:Y_P:Z_P]:=P;\: [X_Q:Z_Q]:=x(Q);\: [X_\odot:Z_\odot]:=x(P\odot_M^{Pro}Q)$
-        \State $(x_P, y_P):=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$
-        \State $X_{Q_{rec}}:=2By_PZ_QZ_\odot X_Q$
-        \State $Y_{Q_{rec}}:=Z_\odot((X_Q+x_PZ_Q+2AZ_Q)(X_Qx_P+Z_Q)-2AZ_Q^2)-(X_Q-x_PZ_Q)^2X_\odot$
-        \State $Z_{Q_{rec}}:=2By_PZ_Q^2Z_\odot$
-        \State $Q_{rec} := [X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]$
+        \State $(x_P, y_P)\gets \left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$
+        \State $X_{Q_{rec}}\gets 2By_PZ_QZ_\odot X_Q$
+        \State $Y_{Q_{rec}}\gets Z_\odot((X_Q+x_PZ_Q+2AZ_Q)(X_Qx_P+Z_Q)-2AZ_Q^2)-(X_Q-x_PZ_Q)^2X_\odot$
+        \State $Z_{Q_{rec}}\gets 2By_PZ_Q^2Z_\odot$
+        \State $Q_{rec} \gets  [X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]$
         \State \Return $Q_{rec}$
     \EndProcedure
     \end{algorithmic}
@@ -604,15 +604,15 @@ We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024
     \begin{algorithmic}
     \Procedure{$LadderYRecovery$}{$P, x(P^n), x(P^{n+1})$}
         \State $[X_P:Y_P:Z_P]:=P;\: [X_{P^n}:Z_{P^n}]:=x(P^n);\: [X_{P^{n+1}}:Z_{P^{n+1}}]:=x(P^{n+1})$
-        \State $P_{rec}^n:=[0:1:0]$
+        \State $P_{rec}^n\gets [0:1:0]$
         \If{$Z_{P^{n+1}}=0$} \Comment \parbox[t]{0.7\linewidth}{%
                 $\rightsquigarrow P^{n+1}=[0:1:0]$ and therefore $P^n=P^{-1}$.
             }
-            \State $P_{rec}^n:=[X_P:-Y_P:Z_P]$
+            \State $P_{rec}^n\gets [X_P:-Y_P:Z_P]$
         \Else
-            \State $P_{rec}^n:=OkSakYRecovery(P, x(P^n), x(P^{n+1}))$
+            \State $P_{rec}^n\gets OkSakYRecovery(P, x(P^n), x(P^{n+1}))$
         \EndIf
-        \State $P_{rec}^n:=NormProjective(P_{rec}^n)$
+        \State $P_{rec}^n\gets NormProjective(P_{rec}^n)$
         \State \Return $P_{rec}$
     \EndProcedure
     \end{algorithmic}
@@ -635,9 +635,15 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \label{alg:montgomeryExponentiation}
     \begin{algorithmic}
     \Procedure{$Exponentiation$}{$P, (n_0,\dots,n_{l-1})$}
-        \State $(x(P^n), x(P^{n+1})):= MontgomeryLadder(x(P), (n_0,\dots,n_{l-1}))$
-        \State $P^n:=LadderYRecovery(P, x(P^n), x(P^{n+1}))$
+        \State $(x(P^n), x(P^{n+1}))\gets  MontgomeryLadder(x(P), (n_0,\dots,n_{l-1}))$
+        \State $P^n\gets LadderYRecovery(P, x(P^n), x(P^{n+1}))$
         \State \Return $P^n$
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
+
+\todo{
+    Better introduction of group exponentiation (via $g^m=\sum\limits_{i=0}^l \left(g^{2^i}\right)^{m_i}$). 
+    Use this to introduce idea for exponentiation using precomputed powers of $g$.
+    Introduce Twisted Edwards curves and efficient group exponentiation with precomputed powers for TE-curve.
+}
