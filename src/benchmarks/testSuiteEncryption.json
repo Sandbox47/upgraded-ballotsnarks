@@ -2,148 +2,505 @@
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 1,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=1"
+        "bitsVotes": 1,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=650"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 2,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=2"
+        "bitsVotes": 1,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=700"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 5,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=5"
+        "bitsVotes": 1,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=750"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 10,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=10"
+        "bitsVotes": 1,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=800"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 25,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=25"
+        "bitsVotes": 1,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=850"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 50,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=50"
+        "bitsVotes": 1,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=900"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 75,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=75"
+        "bitsVotes": 1,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=950"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 100,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=100"
+        "bitsVotes": 1,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 1 nVotes=1000"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 125,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=125"
+        "bitsVotes": 2,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=650"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 150,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=150"
+        "bitsVotes": 2,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=700"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 175,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=175"
+        "bitsVotes": 2,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=750"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 200,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=200"
+        "bitsVotes": 2,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=800"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 250,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=250"
+        "bitsVotes": 2,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=850"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 300,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=300"
+        "bitsVotes": 2,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=900"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 350,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=350"
+        "bitsVotes": 2,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=950"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 400,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=400"
+        "bitsVotes": 2,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 2 nVotes=1000"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 450,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=450"
+        "bitsVotes": 4,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=650"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 500,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=500"
+        "bitsVotes": 4,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=700"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 550,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=550"
+        "bitsVotes": 4,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=750"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 575,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=575"
+        "bitsVotes": 4,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=800"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "twistedEdwards",
-        "bitsVotes": 250,
-        "nVotes": 600,
-        "command": "python3 benchmark.py encryption twistedEdwards singleVote 250 nVotes=600"
+        "bitsVotes": 4,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 4,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 4,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 4,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 4 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 8,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 8 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 16 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 32 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 64 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 128 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 650,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 700,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 750,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 800,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 850,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 900,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 950,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 256,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py encryption twistedEdwards singleVote 256 nVotes=1000"
     }
 ]
