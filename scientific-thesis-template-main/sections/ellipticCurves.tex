@@ -409,12 +409,12 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
 We use a Montgomery curve $M_{A,B}(\mathbb{F}P^2)$ as group in \gls{eeg} encryption because computing exponentiations of group elements is comparatively efficient.
 Group exponentiation is defined as follows:
 \begin{align*}
-    \forall P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\forall n\in\mathbb{N}:\quad P^n:=\underbrace{P\odot_{M}^{Pro}\dots\odot_{M}^{Pro}P}_{n \text{ times}}
+    \forall P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\forall k\in\mathbb{N}:\quad P^k:=\underbrace{P\odot_{M}^{Pro}\dots\odot_{M}^{Pro}P}_{k \text{ times}}
 \end{align*}
-However, computing $P^n=[X_n:Y_n:Z_n]$ by iteratively using the group law $\odot_{M}^{Pro}$ $n-1$ times is computationally expensive as discussed in \cref{section:elGamalEncryption:precomputedPowers}.
+However, computing $P^k=[X_k:Y_k:Z_k]$ by iteratively using the group law $\odot_{M}^{Pro}$ $k-1$ times is computationally expensive as discussed in \cref{section:elGamalEncryption:precomputedPowers}.
 Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018} based on $FastExp$ presented in \cref{alg:fastExp}.
-This algorithm requires $\mathcal{O}(\log_2(n))$ many iterations to compute the coordinates $X_n$ and $Z_n$ of $P^n$ from the coordinates $X$ and $Z$ of $P$.
-Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_n$ from the last two iterations of the Montgomery Ladder.
+This algorithm requires $\mathcal{O}(\log_2(k))$ many iterations to compute the coordinates $X_k$ and $Z_k$ of $P^k$ from the coordinates $X$ and $Z$ of $P$.
+Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_k$ from the last two iterations of the Montgomery Ladder.
 
 \subsubsection{Pseudooperations}
 For the Montgomery Ladder algorithm we work only with the $X$ and $Z$ coordinates of points $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
@@ -433,6 +433,40 @@ Specially treated is the point at infinity $[0:1:0]$.
     We call $x(P)$ the Pseudopoint of $P\in M_{A,B}(\mathbb{F}P^2)$.
 \end{definition}
 
+The quotient map can be implemented inside a circuit $\mathfrak{C}_x$ as shown in \cref{fig:circuit:quotientMap}.
+Here, we use the utility circuits $\mathfrak{C}_{Is\text{-}Equal}$ and $\mathfrak{C}_{If\text{-}Else(1)}$.
+Their functionality is explained in \cref{fig:circuit:isEqualIfElse}.
+For an actual implementation please refer to \cref{todoAppendix}. \todo{Make section in Appendix.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.8]{graphics/ellipticCurves/QuotientMap.pdf}
+    \caption{Circuit $\mathfrak{C}_{x}$ for computing $x(P)$ with $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.}
+    \label{fig:circuit:quotientMap}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{.48\textwidth}
+        \centering
+        \includegraphics[scale=1]{graphics/ellipticCurves/IsEqual.pdf}
+        \caption{Black box circuit $\mathfrak{C}_{Is\text{-}Equal}$ for computing wheter $x$ equals $y$. Returns $1$ if $x=y$ and $0$ otherwise.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.48\textwidth}
+        \centering
+        \includegraphics[scale=1]{graphics/ellipticCurves/IfElse.pdf}
+        \caption{Black box circuit $\mathfrak{C}_{If\text{-}Else(l)}$ for computing $v^{res}:=\left(v_{0}^{res},\dots, v_{l-1}^{res}\right)$ from $v^{else}:=\left(v_{0}^{else},\dots, v_{l-1}^{else}\right), v^{if}:=\left(v_{0}^{if},\dots, v_{l-1}^{if}\right)$ and $cond$:\\
+            $v^{res}:=\begin{cases}
+                v^{if}, &\quad\text{if } cond=1\\
+                v^{else}, &\quad\text{if } cond=0
+            \end{cases}$
+        }
+    \end{subfigure}
+    \caption{Black box circuits for computing whether two signals are equal and for implementing branching.}
+    \label{fig:circuit:isEqualIfElse}
+\end{figure}
+
 Using this map, we want to be able to apply the group law to Pseudopoints. 
 In other words, we want to compute $x(P\odot_M^{Pro}Q)$ from $x(P)$ and $x(Q)$.
 Unfortunately, as mentioned in chapter 3.1 of \cite{costello_montgomery_2018} this is not possible, since $x(P)$ and $x(Q)$ do not uniquely determine $x(P\odot_M^{Pro} Q)$.
@@ -447,16 +481,17 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     Let $P, Q\in M_{A,B}(\mathbb{F}P^2)$ with $P\neq Q$.
     We define:
     \begin{align*}
-        xAdd(x(P), x(Q), x(P\odot_M^{Pro}Q^{-1})) := x(P\odot_M^{Pro} Q)
+        xAdd(x(Q), x(P), x(P\odot_M^{Pro}Q^{-1})) := x(P\odot_M^{Pro} Q)
     \end{align*}
     We can compute $xAdd$ as presented in \cref{alg:xAdd}.
+    The corresponding circuit $\mathfrak{C}_{xAdd}$ is illustrated in \cref{fig:circuit:xAdd}.
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Pseudooperation $xAdd$ used to compute $x(P\odot_M^{Pro} Q)$ from $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$ with $P,Q\in M_{A,B}(\mathbb{F}P^2)$ and $P\neq Q$.}
     \label{alg:xAdd}
     \begin{algorithmic}
-    \Procedure{$xAdd$}{$x(P), x(Q), x(P\odot_M^{Pro}Q^{-1})$}
+    \Procedure{$xAdd$}{$x(Q), x(P), x(P\odot_M^{Pro}Q^{-1})$}
         \State $[X_P:Z_P]:=x(P);\: [X_Q:Z_Q]:=x(Q);\: [X_{\odot^{-1}}, Z_{\odot^{-1}}]:=x(P\odot_m^{Pro}Q^{-1})$
         \State $X_\odot\gets  Z_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)+(X_P+Z_P)(X_Q-Z_Q))^2$
         \State $Z_\odot\gets  X_{\odot^{-1}}((X_P-Z_P)(X_Q+Z_Q)-(X_P+Z_P)(X_Q-Z_Q))^2$
@@ -464,6 +499,13 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.8]{graphics/ellipticCurves/xAdd.pdf}
+    \caption{Circuit $\mathfrak{C}_{x}$ for computing $xAdd(x(Q), x(P), x(P\odot_M^{Pro}Q^{-1}))$ with $P,Q\in M_{A,B}(\mathbb{F}P^2)$, $x(Q)=[X_Q:Z_Q]$, $x(P)=[X_P:Z_P]$ and $x(P\odot_M^{Pro}Q^{-1})=[X_{\odot^{-1}}:Z_{\odot^{-1}}]$.}
+    \label{fig:circuit:xAdd}
+\end{figure}
 
 \begin{definition}[Pseudooperation $xDbl$]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
@@ -473,6 +515,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
         xDbl(x(P)) := x(P\odot_M^{Pro} P) = x(P^2)
     \end{align*}
     We can compute $xDbl$ as presented in \cref{alg:xDbl}.
+    The corresponding circuit $\mathfrak{C}_{xDbl}$ is illustrated in \cref{fig:circuit:xDbl}.
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
@@ -488,42 +531,52 @@ We define these operations analog to the approach presented in chapter 3 of \cit
     \end{algorithmic}
 \end{Algorithmus}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.8]{graphics/ellipticCurves/xDbl.pdf}
+    \caption{Circuit $\mathfrak{C}_{x}$ for computing $xDbl(x(P))$ with $P\in M_{A,B}(\mathbb{F}P^2)$ and $x(P)=[X_P:Z_P]$.
+    Here, we use the equivalence $(X_P+Z_P)^2-(X_P-Z_P)^2=(X_P^2+2X_PZ_P+Z_P^2)-(X_P^2-2X_PZ_P+Z_P^2)=4X_PZ_P$ to compute the term $4X_PZ_P$.
+    }
+    \label{fig:circuit:xAdd}
+\end{figure}
+
 \subsubsection{The Montgomery Ladder}
 \label{section:ellipticCurves:montgomeryLadder}
 The Montgomery Ladder is based on the Square and Multiply approach presented earlier in \cref{alg:fastExp}.
-Analogously to Square and Multiply, we can compute exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
-However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^n)$ based on $x(P)$. 
-The Montgomery Ladder Algorithm computes $x(P^n)$ along with $x(P^{n+1})$ which we need later on to recover the $Y$ coordinate of $P^n$.
+Analogously to Square and Multiply, we can compute exponentiations $P^k$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$.
+However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^k)$ based on $x(P)$. 
+The Montgomery Ladder Algorithm computes $x(P^k)$ along with $x(P^{k+1})$ which we need later on to recover the $Y$ coordinate of $P^k$.
 
 \begin{theorem}[Montgomery Ladder]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P\in M_{A,B}(\mathbb{F}P^2)$.
-    Let $n\in\mathbb{N}$, where $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
-    Then, we can compute $(x(P^n), x(P^{n+1}))$ with $MontgomeryLadder$ defined in \cref{alg:montgomeryLadder}.
+    Let $k\in\mathbb{N}$, where $k=\sum\limits_{i=0}^{l-1}k_i2^i$ is a bit string of fixed length $l$.
+    Then, we can compute $(x(P^k), x(P^{k+1}))$ with $Montgomery\text{-}Ladder$ defined in \cref{alg:montgomeryLadder}.
 \end{theorem}
 
-A proof of correctness of the $MontgomeryLadder$ is given in section 4.1 of \cite{costello_montgomery_2018}.
+A proof of correctness of the $Montgomery\text{-}Ladder$ is given in section 4.1 of \cite{costello_montgomery_2018}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Montgomery Ladder algorithm used to compute $x(P^n)$ and $x(P^{n+1})$ from $x(P)$ with $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
-        Here, $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
+    \caption{Montgomery Ladder algorithm used to compute $x(P^k)$ and $x(P^{k+1})$ from $x(P)$ with $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$.
+        Here, $k=\sum\limits_{i=0}^{l-1}k_i2^i$ is a bit string of fixed length $l$.
     }
     \label{alg:montgomeryLadder}
     \begin{algorithmic}
-    \Procedure{$MontgomeryLadder$}{$x(P), (n_0,\dots, n_{l-1})$}
+    \Procedure{$Montgomery\text{-}Ladder$}{$x(P), (k_0,\dots, k_{l-1})$}
         \State $(R_0, R_1)\gets (x([0:1:0]), x(P))$ 
         \State \Comment \parbox[t]{0.7\linewidth}{%
-            Initialize $R_0$ with point at infinity and $R_0$ with $x(P)$. This is different compared to the standard version of the Montgomery Ladder.%
+            Initialize $R_0$ with point at infinity and $R_1$ with $x(P)$. This is different compared to the standard version of the Montgomery Ladder.%
         }
         \For{$i=l-1$ \textbf{down to} $0$}
-            \If{$n_i=0$}
-                \State $(R_0, R_1)\gets (xDbl(R_0), xAdd(R_1, R_0, x(P)))$ 
+            \If{$k_i=0$}
+                \State $(R_0, R_1)\gets (xDbl(R_0), xAdd(R_0, R_1, x(P)))$ 
                 \State \Comment \parbox[t]{0.7\linewidth}{%
                     $R_1=x(P^{k+1})$ and $R_0=x(P^k)$ for some $k\in\mathbb{N}$ at all times.\\
                     Therefore, $x(P^{k+1}\odot_{M}^{Pro}(P^k)^{-1})=x(P)$.
                 }
             \Else
-                \State $(R_0, R_1)\gets (xAdd(R_1, R_0, x(P)), xDbl(R_1))$
+                \State $(R_0, R_1)\gets (xAdd(R_0, R_1,
+                 x(P)), xDbl(R_1))$
             \EndIf
         \EndFor
         \State \Return $(R_0, R_1)$
@@ -532,15 +585,15 @@ A proof of correctness of the $MontgomeryLadder$ is given in section 4.1 of \cit
 \end{Algorithmus}
 
 Note that this is not the standard version of the Montgomery Ladder but slightly changed and originally intendended for constant-time execution \cite{costello_montgomery_2018}.
-In the standard version of the Montgomery Ladder algorithm, we require the most significant bit of the exponent $n_{l-1}$ to be $1$. 
-However, this means that the length of the bitstring representing $n$ changes based on the exponent $n$.
+In the standard version of the Montgomery Ladder algorithm, we require the most significant bit of the exponent $k_{l-1}$ to be $1$. 
+However, this means that the length of the bitstring representing $k$ changes based on the exponent $k$.
 When we implement the Montgomery Ladder in a ciruit for our voting scheme this is problematic.
 Since the exponent is not known during the compilation time of the circuit, we need to work with a exponents of a fixed length $l$ where the most significatn bit might be zero.
 Therefore, this version of the Montgomery Ladder is better suited for our purposes.
 
 \subsubsection{$Y$-Recovery}
-After performing the Montgomery Ladder algorithm on $x(P)$ and $n\in\mathbb{N}$ with $P\in M_{A,B}(\mathbb{F}P^2)$, we have $[X_n:Z_n]:=x(P^n)$ and $[X_{n+1}:Z_{n+1}]:=x(P^{n+1})$.
-To reconstruct the $Y$ coordinate $Y_n$ of $P^{n}=[X_n:Y_n:Z_n]$, we use a recovery algorithm based on $P, x(P^n)$ and $x(P^{n+1})$ introduced by Okeya and Sakurai in \cite{goos_efficient_2001}.
+After performing the Montgomery Ladder algorithm on $x(P)$ and $n\in\mathbb{N}$ with $P\in M_{A,B}(\mathbb{F}P^2)$, we have $[X_k:Z_k]:=x(P^k)$ and $[X_{k+1}:Z_{k+1}]:=x(P^{k+1})$.
+To reconstruct the $Y$ coordinate $Y_k$ of $P^{k}=[X_k:Y_k:Z_k]$, we use a recovery algorithm based on $P, x(P^k)$ and $x(P^{k+1})$ introduced by Okeya and Sakurai in \cite{goos_efficient_2001}.
 
 \begin{theorem}[Okeya-Sakurai $Y$-Recovery]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
@@ -548,7 +601,7 @@ To reconstruct the $Y$ coordinate $Y_n$ of $P^{n}=[X_n:Y_n:Z_n]$, we use a recov
     Then, we can reconstruct the complete $Q=Q_{rec}$, including the $Y$ coordinate from $(x_P, y_P):=I^{-1}(P)=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$, $x(Q)=[X_Q:Z_Q]$ and $x(P\odot_M^{Pro} Q)=[X_\odot:Z_\odot]$ using \cref{alg:okSakYRecovery}.
 \end{theorem}
 
-The algorithm $OkSakYRecovery$ we use here is based on Theorem 2 in \cite{goos_efficient_2001}. 
+The algorithm $OkSak\text{-}Y\text{-}Recovery$ we use here is based on Theorem 2 in \cite{goos_efficient_2001}. 
 A proof of this theorem can be found in section B in the Appendix of \cite{goos_efficient_2001}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
@@ -556,7 +609,7 @@ A proof of this theorem can be found in section B in the Appendix of \cite{goos_
     Here, $P=[X_P:Y_P:Z_P],P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, with $Y_P\neq 0$.}
     \label{alg:okSakYRecovery}
     \begin{algorithmic}
-    \Procedure{$OkSakYRecovery$}{$P, x(Q), x(P\odot_M^{Pro}Q)$}
+    \Procedure{$OkSak\text{-}Y\text{-}Recovery$}{$P, x(Q), x(P\odot_M^{Pro}Q)$}
         \State $[X_P:Y_P:Z_P]:=P;\: [X_Q:Z_Q]:=x(Q);\: [X_\odot:Z_\odot]:=x(P\odot_M^{Pro}Q)$
         \State $(x_P, y_P)\gets \left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$
         \State $X_{Q_{rec}}\gets 2By_PZ_QZ_\odot X_Q$
@@ -570,85 +623,82 @@ A proof of this theorem can be found in section B in the Appendix of \cite{goos_
 
 Now we can recover the $Y$ coordinate of a point $Q$ from its pseudopoint $x(Q)$, $P$ and $x(P\odot_M^{Pro} Q)$ if the preconditions for Okeya-Sakurai $Y$-Recovery are fulfilled.
 However, we only want to employ the Okeya-Sakurai $Y$-Recovery for group exponentiations.
-Here, we want to compute $P^n$ for some $P\in M_{A,B}^{Pro}$ and $n\in \mathbb{N}$.
-The Montgomery Ladder produces the pseudopoints $x(P^n)$ and $x(P^{n+1})$.
-In order to recover the correct $Y$-Coordinate of $P^n$, we can use the Okeya-Sakurai $Y$-Recovery with $P:=P$, $Q:=P^n$ and $P\odot_M^{Pro} Q:=P^{n+1}$ but need to treat some edge cases seperately:
+Here, we want to compute $P^k$ for some $P\in M_{A,B}^{Pro}$ and $k\in \mathbb{N}$.
+The Montgomery Ladder produces the pseudopoints $x(P^k)$ and $x(P^{k+1})$.
+In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sakurai $Y$-Recovery with $P:=P$, $Q:=P^k$ and $P\odot_M^{Pro} Q:=P^{k+1}$ but need to treat some edge cases seperately:
 \begin{itemize}
     \item First, we consider the case that $P=[0:1:0]$. 
-    Here, we can conclude $P^{n+1}=P^n=[0:1:0]$.
-    Note that the $OkSakYRecovery$ returns the correct result $P^n=Q_{rec}=[X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]=[0:Y_{Q_{rec}}:0]=[0:1:0]$ as long as $Y_{Q_{rec}}\neq 0$.
-    We introduce a normalization function $NormProjective$ which covers the edge case $Y_{Q_{rec}}=0$ and does not change any other projective coordinates.
+    Here, we can conclude $P^{k+1}=P^k=[0:1:0]$.
+    Note that the $OkSak\text{-}Y\text{-}Recovery$ returns the correct result $P^k=Q_{rec}=[X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]=[0:Y_{Q_{rec}}:0]=[0:1:0]$ as long as $Y_{Q_{rec}}\neq 0$.
+    We introduce a normalization function $Norm\text{-}Projective$ which covers the edge case $Y_{Q_{rec}}=0$ and does not change any other projective coordinates.
     \begin{align*}
-        NormProjective:\{\mathbb{F}^3\}\to\{\mathbb{F}^3\}, [X:Y:Z]\to\begin{cases}
+        Norm\text{-}Projective:\{\mathbb{F}^3\}\to\{\mathbb{F}^3\}, [X:Y:Z]\to\begin{cases}
             \left[\frac{X}{Z}:\frac{Y}{Z}:1\right], &\:\text{if } Z\neq 0\\
             [0:1:0], &\:\text{otherwise}
         \end{cases}
     \end{align*}
-    If we always perform this operation on the output of $OkSakYRecovery$, we don't need to check for $P^n=[0:1:0]$.
-    \item Next, we know that $P^{n+1}=[0:1:0]\:\Leftrightarrow\:P^n=P^{-1}$.
-    In this case, the correct output would be $P^n=Q_{rec}=P^{-1}=[X_P:-Y_P:Z_P]$.
+    If we always perform this operation on the output of $OkSak\text{-}Y\text{-}Recovery$, we don't need to check for $P^k=[0:1:0]$.
+    \item Next, we know that $P^{k+1}=[0:1:0]\:\Leftrightarrow\:P^k=P^{-1}$.
+    In this case, the correct output would be $P^k=Q_{rec}=P^{-1}=[X_P:-Y_P:Z_P]$.
 \end{itemize}
 % However, we only want to employ the Okeya-Sakurai $Y$ recovery for group exponentiations.
-% Therefore, we have the special case, where $P\in M_{A,B}^{Pro}(\mathbb{F}P^2)$, $Q=P^n$ and $P\odot_M^{Pro}Q=P^{n+1}$ for some $n\in\mathbb{N}$.
+% Therefore, we have the special case, where $P\in M_{A,B}^{Pro}(\mathbb{F}P^2)$, $Q=P^k$ and $P\odot_M^{Pro}Q=P^{n+1}$ for some $n\in\mathbb{N}$.
 % In this case, the conditions $P=[X_P:Y_P:Z_P], Q, P\odot_M^{Pro}Q\in M_{A,B}^{Pro}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $Y_P\neq 0$ simplify to 
 
 We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024} for the $Y$-Recovery on the output of the Montgomery Ladder.
 
 \begin{theorem}[Montgomery Ladder $Y$-Recovery]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
-    Let $P\in M_{A,B}(\mathbb{F}P^2)$, $n\in\mathbb{N}$.
-    Then, we can reconstruct the complete $P^n=Q_{rec}$, including the $Y$ coordinate from $P, x(P^n)$ and $x(P^{n+1})$ using \cref{alg:montgomeryYRecovery}.
+    Let $P\in M_{A,B}(\mathbb{F}P^2)$, $k\in\mathbb{N}$.
+    Then, we can reconstruct the complete $P^k=Q_{rec}$, including the $Y$ coordinate from $P, x(P^k)$ and $x(P^{k+1})$ using \cref{alg:montgomeryYRecovery}.
 \end{theorem}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{$Y$-Recovery used to recover $P^n$ with $Y$ coordinate from $P$, $x(P^n)$ and $x(P^{n+1})$ for some $n\in\mathbb{N}$.
+    \caption{$Y$-Recovery used to recover $P^k$ with $Y$ coordinate from $P$, $x(P^k)$ and $x(P^{k+1})$ for some $k\in\mathbb{N}$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$.}
     \label{alg:montgomeryYRecovery}
     \begin{algorithmic}
-    \Procedure{$LadderYRecovery$}{$P, x(P^n), x(P^{n+1})$}
-        \State $[X_P:Y_P:Z_P]:=P;\: [X_{P^n}:Z_{P^n}]:=x(P^n);\: [X_{P^{n+1}}:Z_{P^{n+1}}]:=x(P^{n+1})$
-        \State $P_{rec}^n\gets [0:1:0]$
-        \If{$Z_{P^{n+1}}=0$} \Comment \parbox[t]{0.7\linewidth}{%
-                $\rightsquigarrow P^{n+1}=[0:1:0]$ and therefore $P^n=P^{-1}$.
+    \Procedure{$Ladder\text{-}Y\text{-}Recovery$}{$P, x(P^k), x(P^{k+1})$}
+        \State $[X_P:Y_P:Z_P]:=P;\: [X_{P^k}:Z_{P^k}]:=x(P^k);\: [X_{P^{k+1}}:Z_{P^{k+1}}]:=x(P^{k+1})$
+        \State $P_{rec}^k\gets [0:1:0]$
+        \If{$Z_{P^{k+1}}=0$} \Comment \parbox[t]{0.7\linewidth}{%
+                $\rightsquigarrow P^{k+1}=[0:1:0]$ and therefore $P^k=P^{-1}$.
             }
-            \State $P_{rec}^n\gets [X_P:-Y_P:Z_P]$
+            \State $P_{rec}^k\gets [X_P:-Y_P:Z_P]$
         \Else
-            \State $P_{rec}^n\gets OkSakYRecovery(P, x(P^n), x(P^{n+1}))$
+            \State $P_{rec}^k\gets OkSak\text{-}Y\text{-}Recovery(P, x(P^k), x(P^{k+1}))$
         \EndIf
-        \State $P_{rec}^n\gets NormProjective(P_{rec}^n)$
+        \State $P_{rec}^k\gets Norm\text{-}Projective(P_{rec}^k)$
         \State \Return $P_{rec}$
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
 
 \subsubsection{Full Exponentiation}
-Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full exponentiations $P^n$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $n\in\mathbb{N}$.
+Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full exponentiations $P^k$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$.
 
 \begin{definition}[Montgomery Exponentiation]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P\in M_{A,B}(\mathbb{F}P^2)$.
-    Let $n\in\mathbb{N}$, where $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
-    Then, we can compute $P^n=M\_Exp(P, (n_0, \dots, n_{l-1}))$ as described in \cref{alg:montgomeryExponentiation}.
+    Let $k\in\mathbb{N}$, where $k=\sum\limits_{i=0}^{l-1}k_i2^i$ is a bit string of fixed length $l$.
+    Then, we can compute $P^k=M\_Exp(P, (k_0, \dots, k_{l-1}))$ as described in \cref{alg:montgomeryExponentiation}.
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Exponentiation on Montgomery curves. Used to compute $P^n$ where $P\in M_{A,B}^{Pro}$ and $n\in\mathbb{N}$. 
-        Here, $n=\sum\limits_{i=0}^{l-1}n_i2^i$ is a bit string of fixed length $l$.
+    \caption{Exponentiation on Montgomery curves. Used to compute $P^k$ where $P\in M_{A,B}^{Pro}$ and $k\in\mathbb{N}$. 
+        Here, $k=\sum\limits_{i=0}^{l-1}k_i2^i$ is a bit string of fixed length $l$.
     }
     \label{alg:montgomeryExponentiation}
     \begin{algorithmic}
-    \Procedure{$M\_Exp$}{$P, (n_0,\dots,n_{l-1})$}
-        \State $(x(P^n), x(P^{n+1}))\gets  MontgomeryLadder(x(P), (n_0,\dots,n_{l-1}))$
-        \State $P^n\gets LadderYRecovery(P, x(P^n), x(P^{n+1}))$
-        \State \Return $P^n$
+    \Procedure{$M\_Exp$}{$P, (k_0,\dots,k_{l-1})$}
+        \State $(x(P^k), x(P^{k+1}))\gets  Montgomery\text{-}Ladder(x(P), (k_0,\dots,k_{l-1}))$
+        \State $P^k\gets Ladder\text{-}Y\text{-}Recovery(P, x(P^k), x(P^{k+1}))$
+        \State \Return $P^k$
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
 
 \section{Twisted Edwards Curves}
-\todo{
-    Introduce Twisted Edwards curves and efficient group exponentiation with precomputed powers for TE-curve.
-}
 
 A third class of elliptic curves besides Short Weierstrass and Montgomery curves are Twisted Edwards curves.
 
@@ -668,12 +718,12 @@ As with Montgomery Curves, we introduce Twisted Edwards curves similarly to \cit
     \begin{itemize}
         \item The set of points $TE_{a,d}(\mathbb{F})$:
         \begin{align*}
-            TE_{a,d}(\mathbb{F})=\{(x,y)\in\mathbb(F)\times\mathbb{F}|a\cdot x^2+y^2=1+d\cdot x^2y^2\}
+            TE_{a,d}(\mathbb{F})=\{(x,y)\in\mathbb{F}\times\mathbb{F}|a\cdot x^2+y^2=1+d\cdot x^2y^2\}
         \end{align*}
         \item The group law $\odot_{TE}$:\\
         Let $P_1, P_2\in TE_{a,d}(\mathbb{F})$ with $P_1=(x_1,y_1)$, $P_2=(x_2, y_2)$. Then:
         \begin{align*}
-            (x_1, y_1)\odot_{TE} (x_2, y_2)=\left(\frac{x_1y_2+x_2y_1}{1+dx_1y_2y_1y_2},\frac{y_1y_2-ax_1x_2}{1-dx_1x_2y_1y_2}\right)
+            P_\odot=(x_\odot, y_\odot)=(x_1, y_1)\odot_{TE} (x_2, y_2)=\left(\frac{x_1y_2+x_2y_1}{1+dx_1y_2y_1y_2},\frac{y_1y_2-ax_1x_2}{1-dx_1x_2y_1y_2}\right)
         \end{align*}
     \end{itemize}
     The neutral element of $TE_{a,d}(\mathbb{F})$ is $(0,1)$. For $P=(x,y)\in TE_{a,d}(\mathbb{F})$, the inverse element is $P^{-1}:=(-x,y)$.
@@ -694,18 +744,18 @@ The group exponentiation with precomputed powers of the element to exponentiate 
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Algorithm $PrecomputedPowersFastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
-    Here, $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^i$ is a bitstring of length $l$ and $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ are precomputed powers of $g$.}
+    \caption{Exponentiation on Twisted Edwards curves. Used used to compute $P^k$ for $P\in TE_{a,d}(\mathbb{F})$ and $k\in\mathbb{N}$.
+    Here, $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^i$ is a bitstring of length $l$ and $P^{2^i}\:\forall i\in\{0,\dots, l-1\}$ are precomputed powers of $P$.}
     \label{alg:twistedEdwardsExp}
     \begin{algorithmic}
     \Procedure{$TE\_Exp$}{$\left(P^{2^i}\right)_{i=0}^{l-1}, \left(k_i\right)_{i=0}^{l-1}$}
-        \State $y\gets (0,1)$ \Comment Neutral element
+        \State $res\gets (0,1)$ \Comment Neutral element
         \For{$i=0$ \textbf{ to } $l-1$}
             \If{$k_i=1$}
-                $y\gets P^{2^i}\odot_{TE} y$
+                $res\gets P^{2^i}\odot_{TE} res$
             \EndIf
         \EndFor
-        \State \Return $y$
+        \State \Return $res$
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}

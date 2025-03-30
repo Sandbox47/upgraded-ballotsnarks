@@ -2,9 +2,9 @@
 \label{chap:gpzkp}
 In the voting schemes introduced in \cref{chap:votingschemes}, we employ \glspl{zkp} to ensure ballot validity.
 Previously, we used relations between public instance values and private witness values to express ballot validity.
-In our voting scheme, the relation $R$ is fulfilled if and only if the private ballot of a voter is chosen from the choice space and encrypts to the public encrypted ballot published by the voter.
+In our voting scheme, the relation $R_C$ is fulfilled if and only if the private ballot of a voter is chosen from the choice space and encrypts to the public encrypted ballot published by the voter.
 Now, we employ algebraic circuits to express the choice space membership checks and encryption of ballots.
-Then, we use \glspl{gpzkp} over correct circuit execution to provide the ballot validity proofs.
+This allows us to use \glspl{gpzkp} over correct circuit execution to provide the ballot validity proofs.
 %Fundamentally, \glspl{gpzkp} allow us to prove any statement expressible inside an algebraic circuit.
 %Algebraic circuits are representations of algebraic functions.
 %Moreover, \glspl{gpzkp} allow us to prove correct circuit execution even if we hide some inputs and outputs.
