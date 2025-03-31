@@ -238,21 +238,19 @@ However, to simplify things a little, we assume that the voting authority and th
     Ballots are always either vectors or matrices of field elements.
 
     Formally, Let $(\mathbb{F}, +, \cdot)$ be a sufficiently large finite field.\footnote{\label{footnote:choiceSpaceSize}
-      Intuitively, \glqq Sufficiently large\grqq\ means that the aggregated tally of plain ballots does not exceed the field order $|\mathbb{F}|$.
+      Intuitively, \glqq Sufficiently large\grqq\ means that the aggregated tally of plain ballots does not exceed the characteristic $char_\mathbb{F}$ of the field $\mathbb{F}$.
       More formally: 
       Consider an election with $n$ voters and a choice space $C$ over $\mathbb{F}$.
-      Let $g$ be a generator of $(\mathbb{F}\setminus\{0\},\cdot)$.
+      % Let $g$ be a generator of $(\mathbb{F}\setminus\{0\},\cdot)$.
       Let $b\in C$ be a ballot. 
-      Let $v$ be an individual entry in $b$.
-      Then, we can represent $v$ as $g^{m}$ for some $m\in\{0,\dots, |\mathbb{F}|-1\}$.
-      The field $\mathbb{F}$ has a sufficient size if $n\cdot m < |\mathbb{F}|$.
+      Let $v_{max}$ be the largest allowed value for an individual entry in $b$.
+      %Then, we can represent $v$ as $g^{m}$ for some $m\in\{0,\dots, |\mathbb{F}|-1\}$.
+      Then, the field $\mathbb{F}$ has a sufficient size if $n\cdot v_{max} < char_\mathbb{F}$.
     }
     Then, a choice space $C$ over $\mathbb{F}$ fulfills: 
     \begin{itemize}
       \item $C\neq \emptyset$
-      \item \begin{align*}
-        \exists i\in\mathbb{N}:C\subseteq\mathbb{F}^{i}\cup \quad\lor\quad \exists i,j\in\mathbb{N}: C\subseteq\mathbb{F}^{i\times j}\text{.}
-      \end{align*}
+      \item $\exists i\in\mathbb{N}:C\subseteq\mathbb{F}^{i}\cup \quad\lor\quad \exists i,j\in\mathbb{N}: C\subseteq\mathbb{F}^{i\times j}$.
     \end{itemize}
     
 \end{definition}

@@ -25,6 +25,7 @@
   draft=false
 ]{scrbook}
 \input{config}
+\usepackage{chngcntr}
 
 
 \usepackage[
@@ -65,9 +66,14 @@
 %\VerbatimFootnotes %verbatim text in Fußnoten erlauben. Geht normalerweise nicht.
 
 \input{commands}
+\counterwithout{footnote}{chapter}
+
 \renewcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \newcommand{\probgets}{\overset{\$}{\gets}}
 \newcommand{\mbeq}{\overset{!}{=}}
+\definecolor{instanceblue}{HTML}{0000FF}
+\definecolor{witnessorange}{HTML}{FF9933}
+
 \pagenumbering{arabic}
 \Titelblatt
 

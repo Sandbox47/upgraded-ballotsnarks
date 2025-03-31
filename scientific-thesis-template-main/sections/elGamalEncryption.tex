@@ -197,29 +197,31 @@ In a voting scheme, the $VA$ can aggregate all submitted ballots in this way and
 
 In order to create a \gls{zkp} of correct encryption of a ballot in our voting scheme, we need to implement the encryption function $Enc$ of the used encryption scheme inside a circuit.
 This also requires circuits $\mathfrak{C}_{\mathbb{G}\_\odot}$ and $\mathfrak{C}_{\mathbb{G}\_Exp}$ for computing group exponentiation $g^k$ and the group law $g_1\odot_{\mathbb{G}} g_2$.
-Since these circuits depend on the concrete choice of $\mathbb{G}$, we will use them as black box circuits as shown in \cref{fig:circuit:groupLawExpAbstract} for now.
+Since these circuits depend on the concrete choice of $\mathbb{G}$, we will use them as black box circuits as shown in \cref{fig:circuit:groupLaw} and \cref{fig:circuit:groupExp} for now.
 With this, and if we provide the randomness $y$ used by $Enc$ as an additional input, we can also define $EEG(\mathbb{G}).Enc$ inside a circuit as presented in \cref{fig:circuit:eegEnc}.
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}{.48\textwidth}
+    \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/elGamalEncryption/GroupLaw.pdf}
-        \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ for computing $g_1\odot_{\mathbb{G}} g_2$ where $g_1, g_2\in\mathbb{G}$.}
-    \end{subfigure}
+        \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupLaw.pdf}
+        \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ for computing the group law $g_1\odot_{\mathbb{G}} g_2$ where $g_1, g_2\in\mathbb{G}$.}
+        \label{fig:circuit:groupLaw}
+    \end{minipage}
     \hfill
-    \begin{subfigure}{.48\textwidth}
+    \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/elGamalEncryption/GroupExp.pdf}
-        \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_Exp}$ for computing $g^k$ where $g\in\mathbb{G}, k\in\{0,\dots, |\mathbb{G}|-1\}$.}
-    \end{subfigure}
-    \caption{Black box circuits for computing group law and group exponentiation in $\mathbb{G}$.}
-    \label{fig:circuit:groupLawExpAbstract}
+        \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupExp.pdf}
+        \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_Exp}$ for computing group exponentiation $g^k$ where $g\in\mathbb{G}, k\in\{0,\dots, |\mathbb{G}|-1\}$.}
+        \label{fig:circuit:groupExp}
+    \end{minipage}
+    %\caption{Black box circuits for computing group law and group exponentiation in $\mathbb{G}$.}
+    %\label{fig:circuit:groupLawExpAbstract}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/elGamalEncryption/EEGEncryption.pdf}
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/EEGEncryption.pdf}
     \caption{Circuit $\mathfrak{C}_{EEG(\mathbb{G}).Enc}$ for computing $Enc(m,pk)=Enc(m,(\mathbb{G}, n, g, h))$ under the chosen randomness $y$ in $EEG(\mathbb{G})$.}
     \label{fig:circuit:eegEnc}
 \end{figure}
@@ -290,34 +292,36 @@ This approach, using precomputed powers of the element to compute $g^k$, is defi
 To represent $PrecomputedPowersFastExp$ as a circuit, we need additional circuits $\mathfrak{C}_{Num2Bits}$ to compute $Num2Bits(k)$ and $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ to enable branching.
 $Num2Bits$ is a standard template and preimplemented in the circuit language Circom we use here \cite{circomlib}.
 $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ depends on the choice of $\mathbb{G}$.
-Therefore, we will use both of these as black box circuits as shown in \cref{fig:circuit:numBitsGroupIfElse} for now.
-Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cref{fig:circuit:groupLawExpAbstract}, we can then implement $PrecomputedPowersFastExp$ as the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ presented in \cref{fig:circuit:ppfexp}.
+Therefore, we will use both of these as black box circuits as shown in \cref{fig:circuit:numBits} and \cref{fig:circuit:groupIfElse} for now.
+Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cref{fig:circuit:groupLaw}, we can then implement $PrecomputedPowersFastExp$ as the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ presented in \cref{fig:circuit:ppfexp}.
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}{.48\textwidth}
+    \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/elGamalEncryption/Num2Bits.pdf}
-        \caption{Black box circuit $\mathfrak{C}_{Num2Bits}$ for computing the binary representation $(k_0,\dots, k_{l-1})$ with $k=\sum\limits_{i=0}^{l-1}k_i2^i$ from $k$.}
-    \end{subfigure}
+        \includegraphics[scale=.7]{graphics/elGamalEncryption/Num2Bits.pdf}
+        \caption{Black box circuit $\mathfrak{C}_{Num2Bits}$ for computing the binary representation $(k_0,\dots, k_{l-1})$ with $k=\sum\limits_{i=0}^{l-1}k_i2^i$ from $k$. Here, $k\in\mathbb{N}$ needs to be representable by a bitstring of length $l$ and therfore $k<2^l$.}
+        \label{fig:circuit:numBits}
+    \end{minipage}
     \hfill
-    \begin{subfigure}{.48\textwidth}
+    \begin{minipage}{.48\textwidth}
         \centering
-        \includegraphics[scale=1]{graphics/elGamalEncryption/GroupIfElse.pdf}
-        \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ for computing $g_{res}$ from $g_{else}, g_{if}$ and $cond$:\\
+        \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupIfElse.pdf}
+        \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ implementing branching for group elements. Computes $g_{res}$ from $g_{else}, g_{if}$ and $cond$:\\
             $g_{res}:=\begin{cases}
                     g_{if}, &\quad\text{if } cond=1\\
                     g_{else}, &\quad\text{if } cond=0
             \end{cases}$
         }
-    \end{subfigure}
-    \caption{Black box circuits for computing binary representation of a number and for implementing branching for elements of $\mathbb{G}$.}
-    \label{fig:circuit:numBitsGroupIfElse}
+        \label{fig:circuit:groupIfElse}
+    \end{minipage}
+    %\caption{Black box circuits for computing binary representation of a number and for implementing branching for elements of $\mathbb{G}$.}
+    %\label{fig:circuit:numBitsGroupIfElse}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/elGamalEncryption/PPFExp.pdf}
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/PPFExp.pdf}
     \caption{Circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ for computing $g^k$ from $\left(g^{2^i}\right)_{i=0}^{l-1}$ and $k$.
     Here, $g\in\mathbb{G}$ and $k$ can be represented as bitstring of length $l$.
     }
@@ -367,11 +371,11 @@ If an adversary $A'$ can break security in $\mathcal{S}'$, then we can construct
 Then, $A$ will break security of $\mathcal{S}$.
 
 Just as with \gls{eeg}, we can also compute encryption in a \gls{ppeeg} encryption scheme inside a circuit.
-Using the previously established black box circuits $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ and $\mathfrak{C}_{\mathbb{G}\_\odot}$ (\ref{fig:circuit:ppfexp}, \ref{fig:circuit:groupLawExpAbstract}), and by providing the randomness $y$ used by $Enc$ as an additional input, we can implement $PPEEG(\mathbb{G}.Enc)$ as the circuit $\mathfrak{C}_{PPEEG(\mathbb{G}.Enc)}$ presented in \cref{fig:circuit:ppeegExp}.
+Using the previously established black box circuits $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ and $\mathfrak{C}_{\mathbb{G}\_\odot}$ (\ref{fig:circuit:ppfexp}, \ref{fig:circuit:groupLaw}), and by providing the randomness $y$ used by $Enc$ as an additional input, we can implement $PPEEG(\mathbb{G}.Enc)$ as the circuit $\mathfrak{C}_{PPEEG(\mathbb{G}.Enc)}$ presented in \cref{fig:circuit:ppeegEnc}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/elGamalEncryption/PPEEGEncryption.pdf}
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/PPEEGEncryption.pdf}
     \caption{Circuit $\mathfrak{C}_{PPEEG(\mathbb{G}).Enc}$ for computing $Enc(m,pk)=Enc\left(m,\left(\mathbb{G}, n, \left(g^{2^i}\right)_{i=0}^{l-1}, \left(h^{2^i}\right)_{i=0}^{l-1}\right)\right)$ under the chosen randomness $y$ in $PPEEG(\mathbb{G})$.
     Here, $m$ and $y$ can be represented as bit strings of length $l:=\lfloor\log_2(n)\rfloor+1$.}
     \label{fig:circuit:ppeegEnc}

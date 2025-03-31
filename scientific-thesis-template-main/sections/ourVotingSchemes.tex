@@ -18,33 +18,34 @@ To show that our approach to voting schemes can be easily adapted to many differ
 %    Split into two relations $r_C^{enc}$ and $r_C^{vot}$.
 %}
 In \cref{chap:votingschemes}, $R_C$ is defined as the relation checking ballot validity.
-Here, $R_C$ gets a ballot $b$ and auxiliary information $aux$ needed by the encryption scheme as a private witness.
+Here, $R_C$ gets a ballot $b$ and auxiliary information $aux=(aux^{Vot}, aux^{Enc})$ as a private witness.
 The public instance is the public key $pk$ of the encryption scheme and an encrypted ballot $b'$.
 As presented earlier, $R_C$ outputs $1$ if and only if two checks are fulfilled:
 \begin{itemize}
     \item $b\in C$
-    \item $\mathcal{S}.Enc^{aux}(b)=b'$
+    \item $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$
 \end{itemize}
 In order to compute a \gls{zkp} for these checks, we need to express them inside a circuit.
-The algebraic function asserting $b\in C$ is called $r^{Vot}$ and the corresponding circuit is $\mathfrak{C}^{Vot}$.
-How we can compute $r^{Vot}$ is highly dependent on the choice space $C$ and therefore also the election type.
+The algebraic function asserting $b\in C$ is called $r_C^{Vot}$ and the corresponding circuit is $\mathfrak{C}_C^{Vot}$.
+How we can compute $r_C^{Vot}$ is highly dependent on the choice space $C$ and therefore also the election type.
 Thus, we will define this in detail for the different election types in \cref{section:ourVotingSchemes:choiceSpaces}.
 
-For the assertion $\mathcal{S}.Enc^{aux}(b)=b'$ we create an algebraic function $r^{Enc}$ and corresponding circuit $\mathfrak{C}^{Enc}$.
+For the assertion $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$ we create an algebraic function $r_C^{Enc}$ and corresponding circuit $\mathfrak{C}_C^{Enc}$.
 This function depends on the choice of the encryption scheme $\mathcal{S}$ and will be defined in \cref{section:ourVotingSchemes:encryption}.
 
-We can combine $r^{Vot}$ and $r^{Enc}$ into the function $r^{Ballot\text{-}Validity}$ which can be computed as in \cref{alg:ballotValidity}.
+We can combine $r_C^{Vot}$ and $r_C^{Enc}$ into the function $r_C^{Ballot\text{-}Validity}$ which can be computed as in \cref{alg:ballotValidity}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Function $r^{Ballot\text{-}Validity}$ used to assert Ballot validity. 
+    \caption{Function $r_C^{Ballot\text{-}Validity}$ used to assert Ballot validity. 
     Input is a ballot $b$, encrypted ballot $b'$, public key $pk$ and auxiliary encryption information $aux$.
     %$r^{Ballot\text{-}Validity}$ asserts $b\in C$ via $r^{Vot}$ and $\mathcal{S}.Enc^{aux}(b)=b'$ via $r^{Enc}$.
     }
     \label{alg:ballotValidity}
     \begin{algorithmic}
-    \Procedure{$r^{Ballot\text{-}Validity}$}{$pk, b, aux, b'$}
-        \State $r^{Vot}(b)$ \Comment Assert $b\in C$.
-        \State $r^{Enc}(pk, b, aux, b')$ \Comment Assert $\mathcal{S}.Enc^{aux}(b)=b'$.
+    \Procedure{$r_C^{Ballot\text{-}Validity}$}{$pk, b, aux, b'$}
+        \State $(aux^{Vot}, aux^{Enc})\gets aux$
+        \State $r_C^{Vot}(b)$ \Comment Assert $b\in C$.
+        \State $r_C^{Enc}(pk, b, aux^{Enc}, b')$ \Comment Assert $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$.
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
@@ -53,10 +54,14 @@ The corresponding circuit $\mathfrak{C}^{Ballot\text{-}Validity}$ is presented i
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/ourVotingSchemes/ballotValidity.pdf}
-    \caption{Circuit $\mathfrak{C}^{Ballot\text{-}Validity}$, asserting Ballot Validity.
-    Input is the witness consisting of a ballot $b$ and auxiliary encryption information $aux$ and the instance consisting of an encrypted ballot $b'$ and the public key $pk$.
-    $\mathfrak{C}^{Ballot\text{-}Validity}$ asserts $b\in C$ via $\mathfrak{C}^{Vot}$ and $\mathcal{S}.Enc^{aux}(b)=b'$ via $\mathfrak{C}^{Enc}$.
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/ballotValidity.pdf}
+    \caption{Circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$, asserting Ballot Validity.
+    Input is \textcolor{witnessorange}{witness} and \textcolor{instanceblue}{instance}. 
+    The witness consists of a ballot $b$ and auxiliary information $aux=(aux^{Vot}, aux^{Enc})$.
+    $aux^{Enc}$ is typically the randomness needed for encrypting the individual ballot entries. 
+    Whether we need $aux^{Vot}$ and which format it takes depends on the choice space $C$.
+    The instance consists of an encrypted ballot $b'$ and the public key $pk$.
+    $\mathfrak{C}^{Ballot\text{-}Validity}$ asserts $b\in C$ via $\mathfrak{C}_C^{Vot}$ and $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$ via $\mathfrak{C}_C^{Enc}$.
     }
     \label{fig:circuit:ballotValidity}
 \end{figure}
@@ -77,8 +82,8 @@ For the bilinear pairing $e(\cdot, \cdot)$, we choose the Weil pairing or a vari
 
 \section{Encryption Scheme $\mathcal{S}$}
 \label{section:ourVotingSchemes:encryption}
-We use an \gls{eeg} scheme $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$ because it is homomorphic and therefore allows us to aggregate ballots in their encrypted form. \cref{chap:elGamalEncryption}
-Furthermore, we choose an elliptic curve as the group $\mathbb{G}$ that $\mathcal{S}$ is based on for security reasons. \cref{chap:ellipticCurves}
+We use an \gls{eeg} encryption scheme $\mathcal{S}$ because it is homomorphic and therefore allows us to aggregate ballots in their encrypted form. \cref{chap:elGamalEncryption}
+Furthermore, we choose an elliptic curve as the group $\mathbb{G}$ that the encryption scheme is based on for security reasons. \cref{chap:ellipticCurves}
 
 As established in \cref{section:ourVotingSchemes:zps}, our $GSNARK(R_C)$ requires that $R_C$ operates over $\mathbb{F}_q$ with 
 \begin{align*}
@@ -86,21 +91,59 @@ As established in \cref{section:ourVotingSchemes:zps}, our $GSNARK(R_C)$ require
 \end{align*}
 Therefore, as the elliptic curve $\mathbb{G}$ used in $\mathcal{S}$, we need to choose one that operates over elements of $\mathbb{F}_q$.
 Here, we implement two options: 
-Either, we use the Montgomery Curve $M_{126932, 1}(\mathbb{F}_q)$ or the isomorphic Twisted Edwards Curve $TE_{126934, 126930}(\mathbb{F}_q)$.
+Either, we use the Montgomery Curve $M_{126932, 1}(\mathbb{F}_qP^2)$ or the isomorphic Twisted Edwards Curve $TE_{126934, 126930}(\mathbb{F}_q)$.\footnote{
+    \label{footnote:ellipticCurveSubgroup}
+    Note that the use of $M_{126932, 1}(\mathbb{F}_qP^2)$ or $TE_{126934, 126930}(\mathbb{F}_q)$ directly is insecure.
+    These groups have the order $2^3\cdot p$ where
+    \begin{align*}
+        \scriptstyle p = 2736030358979909402780800718157159386074658810754251464600343418943805806723
+    \end{align*}
+    is the large prime factor.
+    Then, computations in the subgroup of order $2^3=8$ are trivially insecure.
+    Computing the discrete logarithm in this subgroup is efficiently possible by trying all possibilities.
+    To avoid operating in this small subgroup, we actually choose the subgroup with order $p$ as the basis for \gls{eeg} encryption.
+    Since all operations are defined the same as in the full group $M_{126932, 1}(\mathbb{F}_qP^2)$ or $TE_{126934, 126930}(\mathbb{F}_q)$, we abstract away from the details here.
+}
+This curve is an instantiation of Curve25519 \cite{curve25519}.
 Huber et. al. \cite{huber_zk-snarks_2025} used the Montgomery Curve in their implementation.
 However, as discussed in \cref{chap:ellipticCurves}, Twisted Edwards Curves can offer more efficient group exponentiation if we provide a list of powers of the element to exponentiate.
 
-\todo{
-    Define Encryption Circuit sepearately for Twisted Edwards and Montgomery Curves.
-    Maybe put powers of $g$ and $pk$ into the public key in a slightly modified version of \gls{eeg} (Define this in ElGamal chapter \ref{chap:elGamalEncryption}).
-    Based on this, define $\mathfrak{C}^{Enc}$.
-    Mention that encryption is done componentwise and therefore onyl dependent on the dimensions of the choice space but not its actual definition.
+This leads to the two different choices $\mathcal{S}=EEG(M_{126932,1}(\mathbb{F}_qP^2))$ or $\mathcal{S}:=PPEEG(TE_{126934, 126930}(\mathbb{F}_qP^2))$. \ref{footnote:ellipticCurveSubgroup}
+The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illustrated in \cref{fig:circuit:encMEEG} and \cref{fig:circuit:encTEPPEEG}.\footnote{
+    \label{footnote:encryptionComponentwiseCircuit}
+    Note that encryption of a ballot $b\in C$ is done componentwise.
+    Therefore, the encryption circuit $\mathfrak{C}_C^{Enc}$ only depends on the dimensions of $C$ but not the precise definition of $C$.
+    %The definition of $\mathfrak{C}_C^{Enc}$ given here is for vector choice spaces ($\exists i: C\subseteq \mathbb{F}^i$).
+    The definition of $\mathfrak{C}_C^{Enc}$ given here is for a choice space $C\subseteq \mathbb{F}$.
+    For vector choice spaces ($\exists i: C\subseteq \mathbb{F}^i$), we have $i$ entries in $b$ and $aux^{Enc}$, and $i$ tuples in $b'$.
+    Therefore, we need $i$ instantiations of $\mathfrak{C}_C^{Enc}$ respectively to assert correct encryption of all entries.
+    The definition for matrix choice spaces ($\exists i, j\in\mathbb{N}: C\subseteq \mathbb{F}^{i\times j}$) is analogous.
 }
 
+\begin{figure}[h]
+\centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/CEncM.pdf}
+    \caption{Circuit $\mathfrak{C}_{C}^{Enc}$ for asserting correct encryption of a ballot $b\in C$ when using the encryption scheme $EEG(M_{126932,1}(\mathbb{F}_qP^2))$.
+    Asserts that $EEG(M_{126932, 1}(\mathbb{F}_qP^2)).Enc^{aux^{Enc}}(b, pk)=b'$.
+    Here, we use a choice space $C\subseteq\mathbb{F}$.\cref{footnote:encryptionComponentwiseCircuit}
+    The circuit utilizes $\mathfrak{C}_{EEG(M_{126932, 1}(\mathbb{F}_qP^2)).Enc}$ (\ref{fig:circuit:eegEnc}) as a building block.
+    }
+    \label{fig:circuit:encMEEG}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/CEncTE.pdf}
+    \caption{Circuit $\mathfrak{C}_{C}^{Enc}$ for asserting correct encryption of a ballot $b\in C$ when using the encryption scheme $EEG(TE_{126934,126930}(\mathbb{F}_q))$.
+    Asserts that $EEG(TE_{126934, 126930}(\mathbb{F}_q)).Enc^{aux^{Enc}}(b, pk)=b'$.
+    Here, we use a choice space $C\subseteq\mathbb{F}$.\cref{footnote:encryptionComponentwiseCircuit}
+    The circuit utilizes $\mathfrak{C}_{EEG(TE_{126934, 126930}(\mathbb{F}_q)).Enc}$ (\ref{fig:circuit:ppeegEnc}) as a building block.
+    }
+    \label{fig:circuit:encTEPPEEG}
+\end{figure}
 
 \section{Choice Spaces $C$}
 \label{section:ourVotingSchemes:choiceSpaces}
-The choice space $C$ in a voting system $VS$ only influences the relation $R_C$ and by extension the \gls{zps} instantiation but not any other part of the voting scheme.
+The choice space $C$ in a voting system $VS_C$ only influences the relation $R_C$ and by extension the \gls{zps} instantiation but not any other part of the voting scheme.
 As described in \cref{section:ourVotingSchemes:ballotValidity}, there is an algebraic function $r_C$ and a function $d_p$ for which $R_C=DR(QAP(R1CS(r_C)), d_p)$.
 Here, $r_C$ can be split into a part $r_C^{Enc}$ for ensuring correct encryption and a part $r_C^{Vot}$ for ensuring that a ballot $b$ is part of $C$.
 Since encryption is done component-wise, $r_C^{Enc}$ is only influenced by the dimensions of $C$.
@@ -121,14 +164,14 @@ The example voting system introduced in \cref{chap:votingschemes} is election of
     \begin{align*}
         C_{\text{Single}, m}=\left\{(b_0,\dots, b_{m-1})|\forall i\in\{0,\dots, m-1\}: b_i\in\{0,1\}\:\land\: \sum_{i=0}^{m-1}b_i\in\{0,1\}\right\}
     \end{align*}
-    The relation $r_{\text{Single}, m}^{Vot}:\mathbb{F}_q^m\to\emptyset$ asserts that a given ballot $b\in\mathbb{F}_q^{m}$ is in the choice space.
+    The relation $r_{C_{\text{Single}, m}}^{Vot}:\mathbb{F}_q^m\to\emptyset$ asserts that a given ballot $b\in\mathbb{F}_q^{m}$ is in the choice space.
     To do so, the function asserts that all individual entries of $b$ are a bit and that the sum of all entries is a bit.
-    Formally, let $b=(b_0,\dots, b_{m-1})\in\mathbb{F}_q^m$. Then, $r_{\text{Single}, m}^{Vot}$ operates as shown in \cref{alg:singleVoteVoting}.
+    Formally, let $b=(b_0,\dots, b_{m-1})\in\mathbb{F}_q^m$. Then, $r_{C_{\text{Single}}, m}^{Vot}$ operates as shown in \cref{alg:singleVoteVoting}.
 
-    Here, the corresponding circuit $\mathfrak{C}_{\text{Single},m}^{Vot}$ is satisfied by a ballot $b=(b_0,\dots, b_{m-1})\in\mathbb{F}_q^m$ if and only if $b\in C_{\text{Single}, m}$.
+    Here, the corresponding circuit $\mathfrak{C}_{C_{\text{Single}, m}}^{Vot}$ is satisfied by a ballot $b=(b_0,\dots, b_{m-1})\in\mathbb{F}_q^m$ if and only if $b\in C_{\text{Single}, m}$.
     We can represent this circuit graphically as in \cref{fig:circuit:singleVoteVoting}.
 
-    The voting system based on the choice space $C_{\text{Singe}, m}$ is $VS_{\text{Single}, m}$.
+    The voting system based on the choice space $C_{\text{Singe}, m}$ is $VS_{C_{\text{Single}, m}}$.
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
@@ -149,7 +192,7 @@ The example voting system introduced in \cref{chap:votingschemes} is election of
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.8]{graphics/ourVotingSchemes/singleVoteVoting.pdf}
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/singleVoteVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{\text{Single}, m}^{Vot}$, asserting that a ballot $b$ is part of the choice space $C_{\text{Single, m}}$.}
     \label{fig:circuit:singleVoteVoting}
 \end{figure}
