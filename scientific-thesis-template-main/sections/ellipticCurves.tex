@@ -435,57 +435,38 @@ Specially treated is the point at infinity $[0:1:0]$.
 \end{definition}
 
 The quotient map can be implemented inside a circuit $\mathfrak{C}_x$ as shown in \cref{fig:circuit:quotientMap}.
-Here, we use the utility circuits $\mathfrak{C}_{Is\text{-}Equal}$ and $\mathfrak{C}_{xIf\text{-}Else}$.
-Their functionality is explained in \cref{fig:circuit:isEqual} and \cref{fig:circuit:xIfElse}.
-Here, $\mathfrak{C}_{xIf\text{-}Else}$ is based on the circuit $\mathfrak{C}_{If\text{-}Else(l)}$ described in \cref{fig:circuit:ifElse}.
-For an actual implementation of $\mathfrak{C}_{Is\text{-}Equal}$ and $\mathfrak{C}_{If\text{-}Else(l)}$ please refer to \cref{section:appendix:circuits}. \todo{Make section in Appendix.}
+%Here, we use the utility circuits $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{}) and $\mathfrak{C}_{xIf\text{-}Else}$.
+%Their functionality is explained in \cref{fig:circuit:isEqual} and \cref{fig:circuit:xIfElse}.
+%Here, $\mathfrak{C}_{xIf\text{-}Else}$ is based on the circuit $\mathfrak{C}_{If\text{-}Else(l)}$ described in \cref{fig:circuit:ifElse}.
+%For an actual implementation of $\mathfrak{C}_{Is\text{-}Equal}$ and $\mathfrak{C}_{If\text{-}Else(l)}$ please refer to \cref{section:appendix:circuits}. \todo{Make section in Appendix.}
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=.7]{graphics/ellipticCurves/QuotientMap.pdf}
-    \caption{Circuit $\mathfrak{C}_{x}$ for computing $x(P)$ with $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.}
+    \caption{Circuit $\mathfrak{C}_{x}$ for computing $x(P)$ with $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
+    Here, we use $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}) and $\mathfrak{C}_{xIf\text{-}Else}$ (\cref{fig:circuit:xIfElse}) as building blocks.
+    }
     \label{fig:circuit:quotientMap}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    % \begin{minipage}{.38\textwidth}
-    %     \centering
-    %     \includegraphics[scale=1]{graphics/ellipticCurves/IsEqual.pdf}
-    %     \caption{Black box circuit $\mathfrak{C}_{Is\text{-}Equal}$ for computing wheter $x$ equals $y$. Returns $1$ if $x=y$ and $0$ otherwise.}
-    %     \label{fig:circuit:isEqual}
-    % \end{minipage}
-    \begin{minipage}{.48\textwidth}
-        \begin{minipage}{\textwidth}
-            \centering
-            \includegraphics[scale=.7]{graphics/ellipticCurves/IsEqual.pdf}
-            \caption{Black box circuit $\mathfrak{C}_{Is\text{-}Equal}$ for computing wheter $x$ equals $y$. Returns $1$ if $x=y$ and $0$ otherwise.}
-            \label{fig:circuit:isEqual}
-        \end{minipage}
-
-        \begin{minipage}{\textwidth}
-            \centering
-            \includegraphics[scale=.7]{graphics/ellipticCurves/xIfElse.pdf}
-            \caption{Circuit $\mathfrak{C}_{xIf\text{-}Else}$ implementing branching for pseudopoints $x(P_{else})$ and $x(P_{if})$ based on condition $cond$. 
-            We utilize $\mathfrak{C}_{If\text{-}Else(2)}$ to achieve this.
-            }
-            \label{fig:circuit:xIfElse}
-        \end{minipage}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{.48\textwidth}
-        \centering
-        \includegraphics[scale=.7]{graphics/ellipticCurves/IfElse.pdf}
-        \caption{Black box circuit $\mathfrak{C}_{If\text{-}Else(l)}$ implementing branching for arrays of signals of length $l$. Computes $v^{res}:=\left(v_{0}^{res},\dots, v_{l-1}^{res}\right)$ from $v^{else}:=\left(v_{0}^{else},\dots, v_{l-1}^{else}\right), v^{if}:=\left(v_{0}^{if},\dots, v_{l-1}^{if}\right)$ and $cond$:\\
-            $v^{res}:=\begin{cases}
-                v^{if}, &\quad\text{if } cond=1\\
-                v^{else}, &\quad\text{if } cond=0
-            \end{cases}$
-        }
-        \label{fig:circuit:ifElse}
-    \end{minipage}    
-    %\caption{Black box circuits for computing whether two signals are equal and for implementing branching.}
-    %\label{fig:circuit:isEqualIfElse}
+    \includegraphics[scale=.7]{graphics/ellipticCurves/xIfElse.pdf}
+    \caption{Circuit $\mathfrak{C}_{xIf\text{-}Else}$ implementing branching for pseudopoints $x(P_{else})$ and $x(P_{if})$ based on condition $cond$. 
+    We utilize $\mathfrak{C}_{If\text{-}Else(2)}$ (\cref{fig:circuit:ifElse}) to achieve this.
+    }
+    \label{fig:circuit:xIfElse}
+    %\begin{minipage}{.48\textwidth}
+    %    \centering
+    %    \includegraphics[scale=.7]{graphics/ellipticCurves/IfElse.pdf}
+    %    \caption{Black box circuit $\mathfrak{C}_{If\text{-}Else(l)}$ implementing branching for arrays of signals of length $l$. Computes $v^{res}:=\left(v_{0}^{res},\dots, v_{l-1}^{res}\right)$ from $v^{else}:=\left(v_{0}^{else},\dots, v_{l-1}^{else}\right), v^{if}:=\left(v_{0}^{if},\dots, v_{l-1}^{if}\right)$ and $cond$:\\
+    %        $v^{res}:=\begin{cases}
+    %            v^{if}, &\quad\text{if } cond=1\\
+    %            v^{else}, &\quad\text{if } cond=0
+    %        \end{cases}$
+    %    }
+    %    \label{fig:circuit:ifElse}
+    %\end{minipage}    
 \end{figure}
 
 Using this map, we want to be able to apply the group law to Pseudopoints. 
@@ -660,8 +641,7 @@ A proof of this theorem can be found in section B in the Appendix of \cite{goos_
     \includegraphics[scale=.7]{graphics/ellipticCurves/OkSakYRecovery.pdf}
     \caption{Circuit $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$ for computing $Q_{rec}=[X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]$ according to $OkSak\text{-}Y\text{-}Recovery(P, x(Q), x(P\odot_M^{Pro}))$.
     Here, $P=[X_P:Y_P:Z_P],P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, with $Y_P\neq 0$.
-    The circuit $\mathfrak{C}_{division}$ is used to compute output $\frac{x}{y}$ for inputs $x$ and $y$.
-    For an implementation, please refer to \cref{section:appendix:circuits}. \todo{Make section in Appendix.}
+    The circuit $\mathfrak{C}_{division}$ (\cref{fig:circuit:division}) is used to compute output $\frac{x}{y}$ for inputs $x$ and $y$.
     }
     \label{fig:circuit:okSakYRecovery}
 \end{figure}
@@ -697,7 +677,7 @@ In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sa
     \includegraphics[scale=.7]{graphics/ellipticCurves/NormProjective.pdf}
     \caption{Circuit $\mathfrak{C}_{Norm\text{-}Projective}$ for computing $P_{norm}:=Norm\text{-}Projective(P)$.
     Here, $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
-    The circuit $\mathfrak{C}_{Pro\_If\text{-}Else}$ implements branching for projective points and is defined in \cref{fig:circuit:proIfElse}.
+    The circuit $\mathfrak{C}_{Pro\_If\text{-}Else}$ (\cref{fig:circuit:proIfElse}) implements branching for projective points.
     }
     \label{fig:circuit:normProjective}
 \end{figure}
@@ -706,7 +686,7 @@ In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sa
     \centering
     \includegraphics[scale=.7]{graphics/ellipticCurves/ProIfElse.pdf}
     \caption{Circuit $\mathfrak{C}_{Pro\_If\text{-}Else}$ implements branching for projective points $P_{else}$ and $P_{if}$ based on condition $cond$.
-    We utilize $\mathfrak{C}_{If\text{-}Else(3)}$ to achieve this.
+    We utilize $\mathfrak{C}_{If\text{-}Else(3)}$ (\cref{fig:circuit:ifElse}) to achieve this.
     }
     \label{fig:circuit:proIfElse}
 \end{figure}
@@ -782,21 +762,21 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \includegraphics[scale=.7]{graphics/ellipticCurves/MontgomeryExp.pdf}
     \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ for computing $P^k$ according to $M\_Exp(P, k)$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$ where $k$ can be represented as a bitstring of fixed length $l$.
-    We utilize circuits $\mathfrak{C}_{x}$ (\ref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits}$ (\ref{fig:circuit:numBits}), $\mathfrak{C}_{reverse}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\ref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\ref{fig:circuit:ladderYRecovery}) as building blocks.
-    The circuit $\mathfrak{C}_{reverse}$ just reverses the order of the individual inputs and is illustrated in \cref{fig:circuit:reverse}.
+    We utilize circuits $\mathfrak{C}_{x}$ (\cref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{reverse}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\cref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\cref{fig:circuit:ladderYRecovery}) as building blocks.
+    The circuit $\mathfrak{C}_{reverse}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs and is illustrated in \cref{fig:circuit:reverse}.
     }
     \label{fig:circuit:montgomeryExp}
 \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=.7]{graphics/ellipticCurves/Reverse.pdf}
-    \caption{Circuit $\mathfrak{C}_{reverse}$ reversing the order of its inputs.
-    Let $l\in\mathbb{N}$. Then, the function $reverse$ that $\mathfrak{C}_{reverse}$ corresponds to is defined as:
-    $reverse:\mathbb{F}^l\to\mathbb{F}^l, (v_0,\dots, v_{l-1})\mapsto (v_{l-1},\dots, v_{0})$.
-    }
-    \label{fig:circuit:reverse}
-\end{figure}
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[scale=.7]{graphics/ellipticCurves/Reverse.pdf}
+%     \caption{Circuit $\mathfrak{C}_{reverse}$ reversing the order of its inputs.
+%     Let $l\in\mathbb{N}$. Then, the function $reverse$ that $\mathfrak{C}_{reverse}$ corresponds to is defined as:
+%     $reverse:\mathbb{F}^l\to\mathbb{F}^l, (v_0,\dots, v_{l-1})\mapsto (v_{l-1},\dots, v_{0})$.
+%     }
+%     \label{fig:circuit:reverse}
+% \end{figure}
 
 \section{Twisted Edwards Curves}
 \label{section:ellipticCurves:twistedEdwards}
@@ -854,9 +834,9 @@ The group exponentiation with precomputed powers of the element to exponentiate 
     
 \end{definition}
 
-The circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ corresponding to $TE\_PPFExp$ is an instantiation of the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\ref{fig:circuit:ppfexp}) where we choose $\mathbb{G}:=TE_{a,d}(\mathbb{G})$.
-Note that this also requires the circuits $\mathfrak{C}_{Num2Bits}$ (\ref{fig:circuit:numBits}), $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ (\ref{fig:circuit:teGroupLaw}) and $\mathfrak{C}_{TE_{a,d}(\mathbb{F}\_If\text{-}Else)}$ as building blocks.
-$\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ is defined analogously to $\mathfrak{C}_{xIf\text{-}Else}$ (\ref{fig:circuit:xIfElse}) and is illustrated in \cref{fig:circuit:teIfElse}.
+The circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ corresponding to $TE\_PPFExp$ is an instantiation of the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\cref{fig:circuit:ppfexp}) where we choose $\mathbb{G}:=TE_{a,d}(\mathbb{G})$.
+Note that this also requires the circuits $\mathfrak{C}_{Num2Bits}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ (\cref{fig:circuit:teGroupLaw}) and $\mathfrak{C}_{TE_{a,d}(\mathbb{F}\_If\text{-}Else)}$ as building blocks.
+$\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ (\cref{fig:circuit:teIfElse}) is defined analogously to $\mathfrak{C}_{xIf\text{-}Else}$ (\cref{fig:circuit:xIfElse}).
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Exponentiation on Twisted Edwards curves. Used used to compute $P^k$ for $P\in TE_{a,d}(\mathbb{F})$ and $k\in\mathbb{N}$.

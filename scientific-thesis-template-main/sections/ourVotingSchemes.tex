@@ -50,7 +50,7 @@ We can combine $r_C^{Vot}$ and $r_C^{Enc}$ into the function $r_C^{Ballot\text{-
     \end{algorithmic}
 \end{Algorithmus}
 
-The corresponding circuit $\mathfrak{C}^{Ballot\text{-}Validity}$ is presented in \cref{fig:circuit:ballotValidity}.
+The corresponding circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is presented in \cref{fig:circuit:ballotValidity}.
 
 \begin{figure}[h]
     \centering
@@ -66,10 +66,13 @@ The corresponding circuit $\mathfrak{C}^{Ballot\text{-}Validity}$ is presented i
     \label{fig:circuit:ballotValidity}
 \end{figure}
 
+Let $DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$ be the decomposition relation which assigns $pk$ and $b'$ to the instance and $aux$ and $b$ to the witness as shown in \cref{fig:circuit:ballotValidity}.
+Then, $R_C=DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$.
+
 \section{Zero Knowledge Proof System $ZPS(R_C)$}
 \label{section:ourVotingSchemes:zps}
 Assume, we have a ballot validity relation $R_C$ as introduced in \cref{chap:votingschemes}.
-Moreover, assume that $R_C$ is a decomposition relation $DR(QAP(R1CS(r_C)), d_p)$ for the algebraic relation $r_C$ as previously \ref{section:ourVotingSchemes:ballotValidity}.
+Moreover, assume that $R_C$ is a decomposition relation $DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$ for the algebraic relation $r_C^{Ballot\text{-}Validity}$ as previously (\cref{section:ourVotingSchemes:ballotValidity}).
 Then, we use the \gls{g16snark} $GSNARK(R_C)=(Setup, Prove, Verify)$ based on paramters $param=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot, \cdot), g_1, g_2, \mathbb{F}_q)$ as $ZPS(R_C)$.
 We use the Barreto-Naehrig curve \verb|BN254| \cite{todo cite} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.  
 This curve has the order 
@@ -82,8 +85,8 @@ For the bilinear pairing $e(\cdot, \cdot)$, we choose the Weil pairing or a vari
 
 \section{Encryption Scheme $\mathcal{S}$}
 \label{section:ourVotingSchemes:encryption}
-We use an \gls{eeg} encryption scheme $\mathcal{S}$ because it is homomorphic and therefore allows us to aggregate ballots in their encrypted form. \cref{chap:elGamalEncryption}
-Furthermore, we choose an elliptic curve as the group $\mathbb{G}$ that the encryption scheme is based on for security reasons. \cref{chap:ellipticCurves}
+We use an \gls{eeg} encryption scheme $\mathcal{S}$ because it is homomorphic and therefore allows us to aggregate ballots in their encrypted form (\cref{chap:elGamalEncryption}).
+Furthermore, we choose an elliptic curve as the group $\mathbb{G}$ that the encryption scheme is based on for security reasons (\cref{chap:ellipticCurves}).
 
 As established in \cref{section:ourVotingSchemes:zps}, our $GSNARK(R_C)$ requires that $R_C$ operates over $\mathbb{F}_q$ with 
 \begin{align*}
@@ -108,7 +111,7 @@ This curve is an instantiation of Curve25519 \cite{curve25519}.
 Huber et. al. \cite{huber_zk-snarks_2025} used the Montgomery Curve in their implementation.
 However, as discussed in \cref{chap:ellipticCurves}, Twisted Edwards Curves can offer more efficient group exponentiation if we provide a list of powers of the element to exponentiate.
 
-This leads to the two different choices $\mathcal{S}=EEG(M_{126932,1}(\mathbb{F}_qP^2))$ or $\mathcal{S}:=PPEEG(TE_{126934, 126930}(\mathbb{F}_qP^2))$. \ref{footnote:ellipticCurveSubgroup}
+This leads to the two different choices $\mathcal{S}=EEG(M_{126932,1}(\mathbb{F}_qP^2))$ or $\mathcal{S}:=PPEEG(TE_{126934, 126930}(\mathbb{F}_qP^2))$. \cref{footnote:ellipticCurveSubgroup}
 The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illustrated in \cref{fig:circuit:encMEEG} and \cref{fig:circuit:encTEPPEEG}.\footnote{
     \label{footnote:encryptionComponentwiseCircuit}
     Note that encryption of a ballot $b\in C$ is done componentwise.
@@ -116,7 +119,7 @@ The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illus
     %The definition of $\mathfrak{C}_C^{Enc}$ given here is for vector choice spaces ($\exists i: C\subseteq \mathbb{F}^i$).
     The definition of $\mathfrak{C}_C^{Enc}$ given here is for a choice space $C\subseteq \mathbb{F}$.
     For vector choice spaces ($\exists i: C\subseteq \mathbb{F}^i$), we have $i$ entries in $b$ and $aux^{Enc}$, and $i$ tuples in $b'$.
-    Therefore, we need $i$ instantiations of $\mathfrak{C}_C^{Enc}$ respectively to assert correct encryption of all entries.
+    Then, $\mathfrak{C}_C^{Enc}$ needs $i$ instantiations of $\mathcal{S}=EEG(M_{126932,1}(\mathbb{F}_qP^2))$ or $\mathcal{S}:=PPEEG(TE_{126934, 126930}(\mathbb{F}_qP^2))$ respectively to assert correct encryption of all entries.
     The definition for matrix choice spaces ($\exists i, j\in\mathbb{N}: C\subseteq \mathbb{F}^{i\times j}$) is analogous.
 }
 
@@ -126,7 +129,7 @@ The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illus
     \caption{Circuit $\mathfrak{C}_{C}^{Enc}$ for asserting correct encryption of a ballot $b\in C$ when using the encryption scheme $EEG(M_{126932,1}(\mathbb{F}_qP^2))$.
     Asserts that $EEG(M_{126932, 1}(\mathbb{F}_qP^2)).Enc^{aux^{Enc}}(b, pk)=b'$.
     Here, we use a choice space $C\subseteq\mathbb{F}$.\cref{footnote:encryptionComponentwiseCircuit}
-    The circuit utilizes $\mathfrak{C}_{EEG(M_{126932, 1}(\mathbb{F}_qP^2)).Enc}$ (\ref{fig:circuit:eegEnc}) as a building block.
+    The circuit utilizes $\mathfrak{C}_{EEG(M_{126932, 1}(\mathbb{F}_qP^2)).Enc}$ (\cref{fig:circuit:eegEnc}) as a building block.
     }
     \label{fig:circuit:encMEEG}
 \end{figure}
@@ -136,18 +139,18 @@ The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illus
     \caption{Circuit $\mathfrak{C}_{C}^{Enc}$ for asserting correct encryption of a ballot $b\in C$ when using the encryption scheme $EEG(TE_{126934,126930}(\mathbb{F}_q))$.
     Asserts that $EEG(TE_{126934, 126930}(\mathbb{F}_q)).Enc^{aux^{Enc}}(b, pk)=b'$.
     Here, we use a choice space $C\subseteq\mathbb{F}$.\cref{footnote:encryptionComponentwiseCircuit}
-    The circuit utilizes $\mathfrak{C}_{EEG(TE_{126934, 126930}(\mathbb{F}_q)).Enc}$ (\ref{fig:circuit:ppeegEnc}) as a building block.
+    The circuit utilizes $\mathfrak{C}_{EEG(TE_{126934, 126930}(\mathbb{F}_q)).Enc}$ (\cref{fig:circuit:ppeegEnc}) as a building block.
     }
     \label{fig:circuit:encTEPPEEG}
 \end{figure}
 
 \section{Choice Spaces $C$}
 \label{section:ourVotingSchemes:choiceSpaces}
-The choice space $C$ in a voting system $VS_C$ only influences the relation $R_C$ and by extension the \gls{zps} instantiation but not any other part of the voting scheme.
-As described in \cref{section:ourVotingSchemes:ballotValidity}, there is an algebraic function $r_C$ and a function $d_p$ for which $R_C=DR(QAP(R1CS(r_C)), d_p)$.
-Here, $r_C$ can be split into a part $r_C^{Enc}$ for ensuring correct encryption and a part $r_C^{Vot}$ for ensuring that a ballot $b$ is part of $C$.
-Since encryption is done component-wise, $r_C^{Enc}$ is only influenced by the dimensions of $C$.
-Therefore, to instantiate our voting scheme $VS$ with a new election type, we only need to define the choice space $C$ and the corresponding algebraic function $r_C^{Vot}$ for this election type.
+The choice space $C$ in a voting system $VS(C)$ only influences the relation $R_C$ and by extension the \gls{zps} instantiation but not any other part of the voting scheme.
+As described in \cref{section:ourVotingSchemes:ballotValidity}, there is an algebraic function $r_C$ and a function $d_p$ for which $R_C=DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$.
+Here, $r_C^{Ballot\text{-}Validity}$ can be split into a part $r_C^{Enc}$ for ensuring correct encryption and a part $r_C^{Vot}$ for ensuring that a ballot $b$ is part of $C$ (\cref{section:ourVotingSchemes:encryption}).
+Since encryption is done component-wise, $r_C^{Enc}$ is only influenced by the dimensions of $C$ \cref{footnote:encryptionComponentwiseCircuit}.
+Therefore, to instantiate our voting system $VS(C)$ for a new election type, we only need to define the choice space $C$ and the corresponding algebraic function $r_C^{Vot}$ for this election type.
 
 As in \cite{huber_zk-snarks_2025}, we cover a variety of election types ranging from simple Single-Vote to more complicated ranking-based types like Condorcet.
 
@@ -156,32 +159,29 @@ As in \cite{huber_zk-snarks_2025}, we cover a variety of election types ranging 
 In a Single-Vote election, a voter can choose from a fixed set of candidates. 
 Here, each voter can vote for at most one of the candidates.
 Therefore, it is also possible to abstain from the vote.
-The example voting system introduced in \cref{chap:votingschemes} is election of this type.
+The example voting system introduced in \cref{chap:votingschemes} is an election of this type.
 
 \begin{definition}[Single-Vote System]
-    Let $m\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
     Then, the corresponding Single-Vote choice space is defined as follows:
+    {\setlength{\mathindent}{2pt}
     \begin{align*}
-        C_{\text{Single}, m}=\left\{(b_0,\dots, b_{m-1})|\forall i\in\{0,\dots, m-1\}: b_i\in\{0,1\}\:\land\: \sum_{i=0}^{m-1}b_i\in\{0,1\}\right\}
+        C_{\text{Single}(cand)}= \left\{(b_0,\dots, b_{cand-1})\in \{0,1\}^{cand}\Bigg| \sum_{i=0}^{cand-1}b_i\in\{0,1\}\right\}
     \end{align*}
-    The relation $r_{C_{\text{Single}, m}}^{Vot}:\mathbb{F}_q^m\to\emptyset$ asserts that a given ballot $b\in\mathbb{F}_q^{m}$ is in the choice space.
-    To do so, the function asserts that all individual entries of $b$ are a bit and that the sum of all entries is a bit.
-    Formally, let $b=(b_0,\dots, b_{m-1})\in\mathbb{F}_q^m$. Then, $r_{C_{\text{Single}}, m}^{Vot}$ operates as shown in \cref{alg:singleVoteVoting}.
-
-    Here, the corresponding circuit $\mathfrak{C}_{C_{\text{Single}, m}}^{Vot}$ is satisfied by a ballot $b=(b_0,\dots, b_{m-1})\in\mathbb{F}_q^m$ if and only if $b\in C_{\text{Single}, m}$.
-    We can represent this circuit graphically as in \cref{fig:circuit:singleVoteVoting}.
-
-    The voting system based on the choice space $C_{\text{Singe}, m}$ is $VS_{C_{\text{Single}, m}}$.
+    }
+    
+    To assert choice space membership, we employ the relation $r_{C_{\text{Single}(cand)}}^{Vot}:\mathbb{F}_q^{cand}\to\emptyset$ (\cref{alg:singleVoteVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{Single}(cand)}}^{Vot}$ (\cref{fig:circuit:singleVoteVoting}).\\
+    Here, we assert that all individual entries of a ballot $b\in\mathbb{F}_q^{cand}$ are bits and that the sum of all entries is a bit. 
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Function $r_{\text{Single}, m}^{Vot}$ used to assert that a ballot $b$ is part of the choice space $C_{\text{Single, m}}$.}
+    \caption{Function $r_{C_{\text{Single}(cand)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Single(cand)}}$.}
     \label{alg:singleVoteVoting}
     \begin{algorithmic}
-    \Procedure{$r_{\text{Single}, m}^{Vot}$}{$b$}
-        \State $(b_0,\dots, b_{m-1}):=b$
+    \Procedure{$r_{C_{\text{Single}(cand)}}^{Vot}$}{$b$}
+        \State $(b_0,\dots, b_{cand-1}):=b$
         \State $sum\gets 0$
-        \For{$i\in\{0,\dots, m-1\}$}
+        \For{$i\in\{0,\dots, cand-1\}$}
             \State $r_{assert\text{-}Bit}(b_i)$
             \State $sum \gets sum + b_i$
         \EndFor
@@ -193,31 +193,480 @@ The example voting system introduced in \cref{chap:votingschemes} is election of
 \begin{figure}[h]
     \centering
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/singleVoteVoting.pdf}
-    \caption{Circuit $\mathfrak{C}_{\text{Single}, m}^{Vot}$, asserting that a ballot $b$ is part of the choice space $C_{\text{Single, m}}$.}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Single}(cand)}^{Vot}}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Single}(cand)}$.
+    Here, we use $\mathfrak{C}_{assert\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) as a building block.
+    }
     \label{fig:circuit:singleVoteVoting}
 \end{figure}
 
-Note that $\mathfrak{C}_{\text{Single}, 3}^{Vot}$ is equivalent to $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ in \cref{fig:circuit:threeVotModularity}.
-
-
+Note that $\mathfrak{C}_{C_{\text{Single}(3)}}^{Vot}$ is equivalent to $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ from \cref{fig:circuit:threeVotModularity}.
 
 \subsection{Multi-Vote}
+In a Multi-Vote election, a voter can choose from a fixed set of candidates. 
+In contrast to Single-Vote, each voter can allocate up to a maximum of $max$ votes among the candidates, where each candidate can receive at most $t$ votes.
+
+\begin{definition}[Multi-Vote System]
+    Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Let $max$ be the maximum number of votes each voter has and let $t$ be the maximum number of votes a voter can give a single candidate.
+    Then, the corresponding Multi-Vote choice space is defined as follows:
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{Multi}(cand, max, t)}=\left\{(b_0,\dots, b_{cand-1})\in \{0,\dots, t\}^{cand}\Bigg|\sum_{i=0}^{cand-1}b_i\in\{0,\dots, max\}\right\}
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{Multi}(cand, max, t)}}^{Vot}:\mathbb{F}_q^{cand}\to\emptyset$ (\cref{alg:multiVoteVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}}^{Vot}$ (\cref{fig:circuit:multiVoteVoting}).\\
+    Here, we assert that all individual entries of a ballot $b\in\mathbb{F}_q^{cand}$ are at most $t$ and that the sum of all entries is at most $max$.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{Multi}(cand, max, t)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Multi}(cand, max, t)}$.}
+    \label{alg:multiVoteVoting}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{Multi}(cand, max, t)}}^{Vot}$}{$b$}
+        \State $(b_0,\dots, b_{cand-1}):=b$
+        \State $sum\gets 0$
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \State $r_{assert\text{-}Leq}(b_i, t)$
+            \State $sum \gets sum + b_i$
+        \EndFor
+        \State $r_{assert\text{-}Leq}(sum, max)$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/multiVoteVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Multi}(cand, max, t)}$.
+    Here, we use $\mathfrak{C}_{assert\text{-}Leq}$ (\cref{fig:circuit:assertleq}) as a building block.
+    }
+    \label{fig:circuit:multiVoteVoting}
+\end{figure}
+
+We present two modifications of Multi-Vote that introduce novel choice spaces: Line-Vote and \gls{mwr}.
+Both of these were introduced by Huber et. al. \cite{huber_zk-snarks_2025}.
+Therefore, there are no specialized \gls{zkp} for these election types yet and developing them would be relatively complicated.
+On the other hand, our voting system can be easily adapted to Line-Vote and \gls{mwr}.
 
 \subsubsection{Line-Vote}
+In a Line-Vote election, a voter can choose from a fixed set of options.
+% Here, we can understand Line-Vote System $VS_{C_{Line\text{-}Vote(cand)}}$ as a Multi-Vote 
+As in Multi-Vote with $t=1$, each voter can give at most one vote to each of the options.
+The total amount of votes submitted by a voter is only limited by the number of options.
+However, as an additional restriction in Line-Vote, we require that all $1$-votes form a continuous line.
 
-\subsubsection{\gls{mwr}}
+Therefore, we can also interpret a Line-Vote system $VS_{C_{Line(cand)}}$ as the Multi-Vote system $VS_{C_{Multi(cand, cand, 1)}}$ with additionally enforcing that all $1$-votes form a continous line.
 
+\begin{definition}[Line-Vote System]
+    Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Then, the corresponding Line-Vote choice space is defined as follows:
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{Line}(cand)}=& \left\{(b_0,\dots, b_{cand-1})\in \{0,1\}^{cand}\Bigg|\right. \forall i, j \in \{0,\dots, cand-1\}:\\
+        & \quad \left.\vphantom{\Bigg|}(i<j\land b_i=b_j=1)\Rightarrow (\forall k\in\{i,\dots, j\}: b_k=1)\right\}
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{Line}(cand)}}^{Vot}:\mathbb{F}_q^{cand}\to\emptyset$ (\cref{alg:lineVoteVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{Line}(cand)}}^{Vot}$ (\cref{fig:circuit:lineVoteVoting}).\\
+    Here, we assert asserts that all individual entries of a ballot $b\in\mathbb{F}_q^{cand}$ are bits and that the number of times that a $1$-vote follows after a $0$-vote is at most $1$.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{Line}(cand)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Line}(cand)}$.}
+    \label{alg:lineVoteVoting}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{Line}(cand)}}^{Vot}$}{$b$}
+        \State $(b_0,\dots, b_{cand-1}):=b$
+        \State $ind\gets b_0$ \Comment $ind$ counts how often a $1$-vote follows after a $0$-vote
+        \State $r_{assert\text{-}Bit}(b_0)$
+        \For{$i\in\{1,\dots, cand-1\}$}
+            \State $r_{assert\text{-}Bit}(b_i)$
+            \State $ind \gets ind + (b_i-b_{i-1})\cdot b_i$ \Comment $(b_i-b_{i-1})\cdot b_i = \begin{cases}
+                1 \text{, if } b_{i-1}=0\land b_i=1\\
+                0 \text{, otherwise}
+            \end{cases}$
+        \EndFor
+        \State $r_{assert\text{-}Bit}(ind)$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/lineVoteVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Line}(cand)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Line}(cand)}$.
+    Here, we use $\mathfrak{C}_{assert\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) as a building block.
+    }
+    \label{fig:circuit:lineVoteVoting}
+\end{figure}
+
+\subsubsection{Multi-Vote with Rules}
+A \gls{mwr} election is a Multi-Vote election with additional constraints relating some of the votes in a ballot.
+As an example and for comparability with the implementation of Huber et. al. \cite{huber_zk-snarks_2025}, we require that the product of the second and third vote is equal to the first vote.
+This illustrates nicely that we can extend the existing Multi-Vote system easily by adding additional restrictions.
+
+\begin{definition}[Multi-Vote with Rules System]
+    Let $cand\geq 3$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Let $max$ be the maximum number of votes each voter has and let $t$ be the maximum number of votes a voter can give a single candidate.
+    Then, the corresponding \gls{mwr} choice space is defined as follows:
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{MWR}(cand, max, t)}=\left\{(b_0,\dots, b_{cand-1})\in C_{\text{Multi}(cand)}\Bigg| b_0=b_1\cdot b_2\right\}
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{MWR}(cand, max, t)}}^{Vot}:\mathbb{F}_q^{cand}\to\emptyset$ (\cref{alg:mwrVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}}^{Vot}$ (\cref{fig:circuit:mwrVoting}).\\
+    Here, we utilize $r_{C_{\text{Multi}(cand, max, t)}}$ (\cref{alg:multiVoteVoting}) and asserts that the first entry in a ballot equals the product of the second and third entry.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{MWR}(cand, max, t)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{MWR}(cand, max, t)}$.}
+    \label{alg:mwrVoting}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{MWR}(cand, max, t)}}^{Vot}$}{$b$}
+        \State $(b_0,\dots, b_{cand-1}):=b$
+        \State $r_{C_{\text{Multi}(cand, max, t)}}(b)$ \Comment Utilize existing Multi-Vote assertion (\cref{alg:multiVoteVoting})
+        \State $b_0\mbeq b_1\cdot b_2$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/mwrVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{MWR}(cand, max, t)}$.
+    Here, we use $\mathfrak{C}_{C_{\text{Multi}}(cand, max, t)}$ (\cref{fig:circuit:multiVoteVoting}) as a building block.
+    }
+    \label{fig:circuit:mwrVoting}
+\end{figure}
 
 \subsection{Borda Elections}
+In the Borda election methods, voters arrange the candidates in order of preference.
+The ballot is then computed from this ranking by assigning points to the candidates depending on how they are ranked.
+The better a candidate is ranked, the more points they receive in the ballot. 
+What \glqq better\grqq\ means in this context is defined formally in \cref{def:ranking}
+
+Note that secret ranking is not part of the ballot, but can sometimes greatly accelerate the choice space membership assertion.
+Therefore, it is provided to the circuit $\mathfrak{C}_C^{Vot}$ as the auxiliary voting information $aux_{Vot}$.
+
+\begin{definition}[Ranking]
+    \label{def:ranking}
+    Let $cand$ be the number of candidates in a voting system opertaing on the field $\mathbb{F}$
+    Then, a ranking in the same voting system is a list $r=(r_0,\dots, r_{cand-1})\in\mathbb{F}^{cand}$ with the following meaning:\\
+    $\forall i, j\in\{0,\dots cand-1\}$:
+    \begin{itemize}
+        \item $r_i > r_j\:\Rightarrow$ The candidate at position $i$ is \textit{ranked worse} than the candidate at position $j$.
+        \item $r_i = r_j\:\Rightarrow$ The candidate at position $i$ is \textit{ranked the same} than the candidate at position $j$.
+        \item $r_i > r_j\:\Rightarrow$ The candidate at position $i$ is \textit{ranked better} than the candidate at position $j$.
+    \end{itemize}
+\end{definition}
 
 \subsubsection{Pointlist-Borda}
+In a Pointlist-Borda election, as is common in Borda elections, a voter creates a ranking of the fixed set of candidates.
+Using this ranking, the candidates are then assigned points according to a fixed, ordered pointlist.
+Here, the highest ranked candidate receives the most points, the second-highest ranked candidate receives the secend-most points and so on until all points from the pointlist have been assigned.
+All remaining candidates receive $0$ points.
+This forms the submitted ballot of the voter.
 
-\subsubsection{\gls{bts}}
+Note that in this election type, we do not actually need the ranking to assert choice space membership efficiently.
+Assume, we have $cand$ many candidates and a pointlist of length $l$.
+In a valid ballot, for every entry in the pointlist, there is a candidate having this number of points assigned to them.
+Additionally, there are $cand-l$ many candidates receiving $0$ points.
 
+\begin{definition}[Pointlist-Borda System]
+    Let $\mathcal{L}=(p_0,\dots, p_{l-1})\in\mathbb{N}^l$ be a pointlist.
+    Let $cand\geq l$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Then, the corresponding Pointlist-Borda choice space is defined as follows:
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}=& \left\{(b_0,\dots, b_{cand-1})\in \mathbb{F}_q^{cand}\Bigg| (\forall p\in\mathcal{L}\exists i\in\{0,\dots, cand-1\}: b_i=p)\right.\\
+        &\quad\land \left. \vphantom{\Bigg|} |\{i\in \{0,\dots, cand-1\}|b_i=0\}|=cand-l\right\}
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}:\mathbb{F}_q^{cand}\times\mathbb{F}_q^{cand}\to\emptyset$ (\cref{alg:pointlistBordaVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$ (\cref{fig:circuit:pointlistBordaVoting}).\\
+    Here, we assert that all points in the pointlist occur exactly once in a ballot $b\in\mathbb{F}_q^{cand}$ and that there are $cand-l$ many votes that are $0$.
+    The ranking $r\in\mathbb{F}_q^{cand}$ that $b$ is computed from is not needed to assert choice space memebership efficiently.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$.
+    Here, we use $r_{occurences(l)}(b, v)$ \cref{alg:occurences} to count how often the value $v$ appears in $b=(b_0,\dots, b_{cand-1})$.
+    }
+    \label{alg:pointlistBordaVoting}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$}{$b, r$}
+        \State $(p_0,\dots, p_{l-1}):=\mathcal{L}$
+        \State $cand-l \mbeq r_{occurences(l)}(b, 0)$
+        \For{$i\in\{0,\dots, l-1\}$}
+            \State $1\mbeq r_{occurences(l)}(b, p_i)$
+        \EndFor
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/pointlistBordaVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{l}$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$.
+    Here, we use $\mathfrak{C}_{occurences(l)}$ \cref{fig:circuit:occurences} with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
+    }
+    \label{fig:circuit:pointlistBordaVoting}
+\end{figure}
+
+\subsubsection{Borda Tournament Style}
+In a \gls{bts} election, as is common in Borda elections, a voter creates a ranking of the fixed set of candidates.
+Using this ranking, the candidates are then assigned a fixed number of points for every candidate ranked worse than them and a different, fixed, and lower number of points for every candidate ranked the same as them.
+
+\begin{definition}[Borda Tournament Style System]
+    Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Let $ap$ be the number of points to be given to a candidate for every other candidate ranked worse than them.
+    Similarly, let $bp$ be the number of points to be given to a candidate for every other candidate ranked the same as them.
+    Then, the corresponding \gls{bts} choice space is defined as follows:
+    %\todo{Choice space definition}
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{BTS}(cand, ap, bp)}=& \left\{(b_0,\dots, b_{cand-1})\in \mathbb{F}_q^{cand}\Bigg| \right.\\
+        & \quad\exists (r_0,\dots, r_{cand-1})\in\mathbb{F}_q^{cand}\:\forall i\in\{0,\dots, cand-1\}:\\
+        & \quad\quad b_i=ap\cdot |\{j\in\{0,\dots, cand-1\}|r_j>r_i\}| \\
+        & \quad\quad \phantom{b_i=}\left. \vphantom{\Bigg|}+ bp\cdot |\{j\in\{0,\dots, cand-1\}\setminus\{i\}|r_j=r_i\}|\right\}
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}:\mathbb{F}_q^{cand}\times\mathbb{F}_q^{cand}\to\emptyset$ (\cref{alg:btsVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$ (\cref{fig:circuit:btsVoting}).\\
+    Here, we compute a ballot $b'$ from the ranking $r$ according to the parameters $ap$ and $bp$ using the function $r_{compute\text{-BTS}(cand, ap, bp)}:\mathbb{F}_q^{cand}\to\mathbb{F}_q^{cand}, r\mapsto b'$ (\cref{alg:btsComputeBallot}) and corresponding circuit $\mathfrak{C}_{compute\text{-BTS}(cand, ap, bp)}$ (\cref{fig:circuit:btsComputeBallot}).
+    Then, we assert that the computed ballot $b'$ equals the submitted ballot $b$.
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{BTS}(cand, ap, bp)}$.
+    Here, we use $r_{compute\text{-BTS}(cand, ap, bp)}$ (\cref{alg:btsComputeBallot}) to compute the ballot $b'$ corresponding to the ranking $r$.
+    }
+    \label{alg:btsVoting}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$}{$b, r$}
+        \State $b'\gets r_{compute\text{-BTS}(cand, ap, bp)}(r)$
+        \State $b'\mbeq b$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/btsVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{BTS}(cand, ap, bp)}$.
+    Here, we use $\mathfrak{C}_{compute\text{-BTS}(cand, ap, bp)}$ (\cref{fig:circuit:btsComputeBallot}) to compute the ballot $b'$ corresponding to $r$.
+    }
+    \label{fig:circuit:btsVoting}
+\end{figure}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{compute\text{-BTS}(cand, ap, bp)}$ used to compute the ballot $b'$ belonging to ranking $r$ in a \gls{bts} voting system with choice space $C_{\text{BTS}(cand, ap, bp)}$.
+    Here, we use $r_{count\text{-}greater}(r, r_i)$ (\cref{alg:countGreater}) and $r_{count\text{-}equal}(r, r_i)$ (\cref{alg:countEqual}) as auxiliary functions.
+    }
+    \label{alg:btsComputeBallot}
+    \begin{algorithmic}
+    \Procedure{$r_{compute\text{-BTS}(cand, ap, bp)}$}{$r$}
+        \State $(r_0,\dots, r_{cand-1}):=r$
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \State $n_{rw}\gets r_{count\text{-}greater}(r, r_i)$ \Comment Number of candidates ranked worse than candidate $i$
+            \State $n_{rs}\gets r_{count\text{-}equal}(r, r_i)$ \Comment Number of candidates ranked the same as candidate $i$
+            \State $b'_i\gets ap\cdot n_{rw} + bp\cdot (n_{rs} - 1)$ \Comment Subtract $bp$ points for candidate themself
+        \EndFor
+        \State $b'\gets (b'_0,\dots, b'_{cand-1})$
+        \State \Return $b'$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/btsComputeBallot.pdf}
+    \caption{Circuit $\mathfrak{C}_{compute\text{-BTS}(cand, ap, bp)}$, computing the ballot $b'$ belonging to ranking $r$ in a \gls{bts} voting system with choice space $C_{\text{BTS}(cand, ap, bp)}$.
+    Here, we use $\mathfrak{C}_{count\text{-}greater}$ (\cref{fig:circuit:countGreater}) and $\mathfrak{C}_{count\text{-}equal}$ (\cref{fig:circuit:countEqual}) as building blocks.
+    }
+    \label{fig:circuit:btsComputeBallot}
+\end{figure}
 
 \subsection{Condorcet Methods}
+Condorcet elections are ranking based.
+As in Borda elections, a user creates a ranking (\cref{def:ranking}) of $cand$ many candidates.
+The ballot is then a matrix $b\in\mathbb{F}_q^{cand\times cand}$ computed from this ranking.
+Here, the entry at position $(i,j)$ of the matrix is $1$ if candiate $i$ is ranked better than candidate $j$ and $0$ otherwise.
 
+For comparibility with the implementation of Huber et. al. \cite{huber_hicolasnuberballotsnarks_2024}, we implement a choice space membership assertion that does not use the ranking.
+However, by utilizing the ranking, we can greatly improve the efficiency of this assertion.
+Therefore, we implement this variant as well.
+
+\begin{definition}[Condorcet System]
+    Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
+    Then, the corresponding \gls{bts} choice space is defined as follows:
+    %\todo{Choice space definition}
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{Condorcet}(cand)}=& \left\{b=(b_{i,j})_{i,j\in\{0,\dots, cand-1\}}\in \{0,1\}^{cand\times cand}\Bigg| \right.\\
+        & \quad\exists (r_0,\dots, r_{cand-1})\in\mathbb{F}_q^{cand}\:\forall i, j\in\{0,\dots, cand-1\}:\\
+        & \quad\quad \left. \vphantom{\Bigg|} (r_i>r_j\Rightarrow b_{i,j}=0 \land b_{j,i} = 1)\:\land\:(r_i=r_j\Rightarrow b_{i,j}=b_{j,i}=0)\right\} \\
+        %& \quad\quad \left. \vphantom{\Bigg|}\land r_i=r_j\Rightarrow b_{i,j}=b_{j,i}=0\right\}
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{Condorcet}(cand)}}^{Vot}:\mathbb{F}_q^{cand\times cand}\times\mathbb{F}_q^{cand}\to\emptyset$ and corresponding circuit $\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$.\\
+    Here, we implement two options:
+    \begin{itemize}
+        \item Without using the ranking (\cref{alg:condorcetVotingNoRanking}, \cref{fig:circuit:condorcetVotingNoRanking}):
+        We assert that all entries of the submitted ballot $b$ are bits and that for $i\neq j$ also $b_{i,j}+b_{j,i}$ is a bit.
+        This covers the cases \glqq$r_i>r_j$\grqq\ and \glqq$r_j=r_i$\grqq\ from the choice space definition. 
+        Additionally, we need to show that $b$ belongs to a ranking $r$ in which transitivity holds.
+        We can achieve this by computing a check matrix $a=(a_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=(1-b_{i,j})_{i,j\in\{0,\dots cand-1\}}$ and asserting that $a_{i,j}\cdot a_{j,k}\cdot 1-b_{i,k}=0$ for all triples of distinc values $(i,j,k)\in\{0,\dots, cand-1\}^3$ \cite{huber_zk-snarks_2025}.
+        \item Utilizing the ranking (\cref{alg:condorcetVotingWithRanking}, \cref{fig:circuit:condorcetVotingWithRanking}): 
+        We compute a ballot $b'$ from the ranking $r$ using the function $r_{compute\text{-Condorcet}(cand)}:\mathbb{F}_q^{cand}\to\mathbb{F}_q^{cand\times cand}, r\mapsto b'$ (\cref{alg:condorcetComputeBallot}) and corresponding circuit $\mathfrak{C}_{compute\text{-Condorcet}(cand)}$ (\cref{fig:circuit:condorcetComputeBallot}).
+        Then, we assert that the computed ballot $b'$ equals the submitted ballot $b$.
+    \end{itemize}
+\end{definition}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{Condorcet}(cand)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand\times cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Condorcet}(cand)}$.
+    Here, we show the version that does not use the ranking $r$.
+    }
+    \label{alg:condorcetVotingNoRanking}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{Condorcet}(cand)}}^{Vot}$}{$b, r$}
+        \State $(b_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=b$
+        \Statex
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \For{$j\in\{0,\dots, cand-1\}$}
+                \State $r_{assert\text{-}Bit}(b_{i,j})$
+            \EndFor
+        \EndFor
+        \Statex
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \For{$j\in\{i+1,\dots, cand-1\}$}
+                \State $r_{assert\text{-}Bit}(b_{i,j} + b_{j,i})$
+            \EndFor
+        \EndFor
+        \Statex
+        \State $a=(a_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=(1-b_{i,j})_{i,j\in\{0,\dots cand-1\}}$ \Comment Check matrix
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \For{$j\in\{0,\dots, cand-1\}\setminus\{i\}$}
+                \For{$k\in\{0,\dots, cand-1\}\setminus\{i, j\}$}
+                    \State $a_{i, j}\cdot a_{j,k}\cdot (1-a_{i,k})\mbeq 0$
+                \EndFor
+            \EndFor
+        \EndFor
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/condorcetVotingNoRanking.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand\times cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Condorcet}(cand)}$.
+    Here, we use $\mathfrak{C}_{assert\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) as a building block.
+    }
+    \label{fig:circuit:condorcetVotingNoRanking}
+\end{figure}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{Condorcet}(cand)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand\times cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Condorcet}(cand)}$.
+    Here, we show the version that uses $r_{compute\text{-Condorcet}(cand)}$ (\cref{alg:condorcetComputeBallot}) to compute the ballot $b'$ corresponding to the ranking $r$.
+    }
+    \label{alg:condorcetVotingWithRanking}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{Condorcet}(cand)}}^{Vot}$}{$b, r$}
+        \State $b'\gets r_{compute\text{-Condorcet}(cand)}(r)$
+        \State $b'\mbeq b$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/condorcetVotingWithRanking.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Condorcet}(cand)}$.
+    Here, we use $\mathfrak{C}_{compute\text{-Condorcet}(cand)}$ (\cref{fig:circuit:condorcetComputeBallot}) to compute the ballot $b'$ corresponding to $r$.
+    }
+    \label{fig:circuit:condorcetVotingWithRanking}
+\end{figure}
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{compute\text{-Condorcet}(cand)}$ used to compute the ballot $b'$ belonging to ranking $r$ in a Condorcet voting system with choice space $C_{\text{Condorcet}(cand)}$.
+    %Here, we use $r_{is\text{-}greater}(r_i, r_j)$ (\cref{alg:isGreater}) and $r_{is\text{-}equal}(r_i, r_j)$ (\cref{alg:isEqual}) as auxiliary functions.
+    }
+    \label{alg:condorcetComputeBallot}
+    \begin{algorithmic}
+    \Procedure{$r_{compute\text{-Condorcet}(cand)}$}{$r$}
+        \State $(r_0,\dots, r_{cand-1}):=r$
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \State $b'_{i,i}\gets 0$ \Comment \parbox[t]{0.5\linewidth}{%
+            Entries on the diagonal are independent of $r$, we choose to assign $0$
+            }
+            \For{$j\in\{i+1,\dots, cand-1\}$}
+                %\State $rw\gets r_{is\text{-}greater}(r_i, r_j)$ \Comment \parbox[t]{0.5\linewidth}{%
+                %$1$ if candidate $i$ is ranked worse than candidate $j$, $0$ otherwise
+                %}
+                %\State $rs\gets r_{is\text{-}equal}(r_i, r_j)$ \Comment $1$ if candidates $i$ and $j$ are ranked the same, $0$ otherwise
+                \If{$r_i>r_j$} \Comment Candidate $i$ is ranked worse than candidate $j$
+                    \State $b'_{i,j}\gets 0$; $b'_{j,i}\gets 1$
+                \ElsIf{$r_i=r_j$} \Comment Candidates $i$ and $j$ are ranked the same
+                    \State $b'_{i,j}\gets 0$; $b'_{j,i}\gets 0$
+                \Else \Comment Candidate $i$ is ranked better than candidate $j$
+                    \State $b'_{i,j}\gets 1$; $b'_{j,i}\gets 0$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State $b'\gets (b'_{i,j})_{i,j\in\{0,\dots, cand-1\}}$
+        \State \Return $b'$
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/condorcetComputeBallot.pdf}
+    \caption{Circuit $\mathfrak{C}_{compute\text{-Condorcet}(cand)}$, computing the ballot $b'$ belonging to ranking $r$ in a Condorcet voting system with choice space $C_{\text{Condorcet}(cand)}$.
+    Here, we use $\mathfrak{C}_{is\text{-}greater}$ (\cref{fig:circuit:isGreater}), $\mathfrak{C}_{is\text{-}equal}$ (\cref{fig:circuit:isEqual}) and $\mathfrak{C}_{Switch\text{-}Case(c)}$ (\cref{fig:circuit:switchCase}) as building blocks.
+    }
+    \label{fig:circuit:condorcetComputeBallot}
+\end{figure}
 
 \subsection{Majority Judgment}
+In a Majority Judgment election, voters grade candidates independently by giving each candidate a grade from a predefined list of grades.
+Assume, there are $cand$ many candidates and $grades$ many grades. 
+Then, the submitted ballot of a voter is a matrix $b\in\mathbb{F}_q^{cand\times grades}$ where every row has exactly one $1$-entry in the column that corresponds to the grade given to that candidate.
+All other entries are $0$.
 
+\begin{definition}[Majority Judgment System]
+    Let $cand\in\mathbb{N}$ be the number of candidates, let $grades\in\mathbb{N}$ be the number of grades and let $\mathbb{F}_q$ be a field.
+    Then, the corresponding Majority Judgment choice space is defined as follows:
+    {\setlength{\mathindent}{2pt}
+    \begin{align*}
+        C_{\text{Majority-Judgment}(cand, grades)}=& \left\{b=(b_{i,j})_{i\in\{0,\dots, cand-1\}, j\in\{0,\dots, grades-1\}}\in \{0,1\}^{cand\times grades}\Bigg| \right.\\
+        &\quad\left.\vphantom{\Bigg|}\forall i\in\{0,\dots, cand-1\}: \sum_{j\in\{0,\dots, grades-1\}} b_{i,j}=1\right\}\\
+    \end{align*}
+    }
+    To assert choice space membership, we employ the relation $r_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}:\mathbb{F}_q^{cand}\times\mathbb{F}_q^{grades}\to\emptyset$ (\cref{alg:majorityJudgmentVoting}) and corresponding circuit $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$ (\cref{fig:circuit:majorityJudgmentVoting}).\\
+    Here, we assert that all entries in the ballot $b$ are bits and that in every row of $b$, the sum of all entries is $1$.
+\end{definition}
 
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Function $r_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand\times grades}$ is part of the choice space $C_{\text{Majority-Judgment}(cand, grades)}$.
+    Here, we use $r_{assert\text{-}Bit}$ as an auxiliary function.
+    }
+    \label{alg:majorityJudgmentVoting}
+    \begin{algorithmic}
+    \Procedure{$r_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$}{$b$}
+        \State $(b_{i,j})_{i\in\{0,\dots, cand-1\}, j\in\{0,\dots, grades-1\}}:=b$
+        \For{$i\in\{0,\dots, cand-1\}$}
+            \For{$j\in\{0,\dots, grades-1\}$}
+                \State $r_{assert\text{-}Bit}(b_{i,j})$
+            \EndFor
+            \State $1\mbeq \sum_{j=0}^{grades-1} b_{i,j}$
+        \EndFor
+    \EndProcedure
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ourVotingSchemes/majorityJudgmentVoting.pdf}
+    \caption{Circuit $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand\times grades}$ is part of the choice space $C_{\text{Majority-Judgment}(cand, grades)}$.
+    %Here, we use $\mathfrak{C}_{occurences(l)}$ \cref{fig:circuit:occurences} with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
+    }
+    \label{fig:circuit:majorityJudgmentVoting}
+\end{figure}
