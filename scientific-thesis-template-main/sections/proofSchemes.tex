@@ -513,7 +513,7 @@ For every \gls{r1cs} $R1CS$, there is a corresponding \gls{qap} $QAP(R1CS)$.
     \end{itemize}
 \end{definition}
 
-We can construct $QAP(R1CS)$ from $R1CS$ by executing the follwoing steps:
+We can construct $QAP(R1CS)$ from $R1CS$ by executing the following steps:
 \begin{enumerate}
     \item Choose $k$ distinct, invertible elements $m_1,\dots, m_k\in\mathbb{F}$, one for each constraint in $R1CS$.
     \item Compute the target polynomial $T$ as in \cref{def:qap}.
@@ -764,6 +764,7 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
 \end{itemize}
 
 \section{Instance and Witness}
+\label{section:proofSchemes:instanceAndWitness}
 In practical applications such as proving ballot validity, we need to be able to conduct the proof without revealing the secret ballot. 
 More generally, we need to be able to hide a part of the assignment to a circuit $\mathfrak{C}$ for a relation $r$ and still be able to provide the proof of correct circuit execution.
 
@@ -886,6 +887,7 @@ Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
 %However, it is currently not possible to show that the polynomial $P_S$ provided by a voter actually belongs to the assignment $S$.
 
 \section{Groth16 SNARKs}
+\label{section:proofSchemes:groth16}
 \glspl{snark} are a special form of the \glspl{zkp} we introduced in \cref{chap:votingschemes}.
 
 \begin{definition}[Succinct Non-Interactive Argument of Knowledge for Relation $R$]
@@ -1000,7 +1002,7 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     }
     \label{alg:verifyG16}
     \begin{algorithmic}
-    \Procedure{$Prove$}{$CRS, I, \pi$}
+    \Procedure{$Verify$}{$CRS, I, \pi$}
         \State $(g_1^A, g_1^C, g_2^B):=\pi;\:(W_1,\dots, W_{n_W}):=W$
         \State $g_1^I\gets \left(\textcolor{cyan}{g_1^\frac{\beta A_0(\tau)+\alpha B_0(\tau)+C_0(\tau)}{\gamma}}\right)\odot_{\mathbb{G}_1}\prod\limits_{j=1}^{n_I}\left(\textcolor{cyan}{g_1^\frac{\beta A_{p^{-1}(j)}(\tau)+\alpha B_{p^{-1}(j)}(\tau) + C_{p^{-1}(j)}(\tau)}{\delta}}\right)^{I_j}$
         \If{$e(g_1^A, g_2^B)=e(\textcolor{red}{g_1^\alpha}, \textcolor{olive}{g_2^\beta})\odot_{\mathbb{G}_T} e(g_1^I, \textcolor{green}{g_2^\gamma})\odot_{\mathbb{G}_T} e(g_1^C, \textcolor{violet}{g_2^\delta})$}

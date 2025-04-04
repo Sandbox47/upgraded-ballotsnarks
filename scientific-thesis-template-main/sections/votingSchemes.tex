@@ -186,7 +186,7 @@ Therefore, we need mechanisms to ensure the following:
 \end{enumerate}
 
 \section{Ensuring Correct Ballot Format and Correct Encryption of Ballots}
-In order to make sure that voters can only choose ballots from the choice space and then also encrypt exactly these ballots, we employ \glspl{zkp}. 
+To make sure that voters can only choose ballots from the choice space and then also encrypt exactly these ballots, we employ \glspl{zkp}. 
 
 The goal of \glspl{zkp} is to convince some party of the truth of a statement without revealing any confidential information to them.
 In our example, this would mean convincing the general public that the ballot a voter chose is part of the choice space and belongs to the encrypted ballot they submitted.
@@ -197,7 +197,12 @@ $\pi$ proves that the party who executed $Prove$ knows a corresponding witness $
 Anyone can verify the proof $\pi$ by running the verifying algorithm $Verify$ on $\pi$ and the instance $I$.
 
 In a voting scheme we use the \gls{zkp} $(Setup_C, Prove_C, Verify_C)$, where each voter $V$ runs the proving algorithm $Prove_C$ to obtain a \gls{zkp} $\pi_V$.
-Here, the witness is the plain ballot $b_V$ they chose and the instance is the corresponding encrypted ballot $b'_V$.
+Here, the witness is the plain ballot $b_V$ they chose and the instance is the corresponding encrypted ballot $b'_V$.\footnote{
+  \label{footnote:encryptedBallotInCircuit}
+  Note that it is also possible to compute the encrypted ballot $b'_V$ as part of the \gls{zkp} rather than providing it as an input for it.
+  However, both \gls{zkp} variants are equally efficient.
+  Since we can compute the encryption of a ballot efficiently before providing it as an input to the \gls{zkp} using SageMath \cite{todo}, we choose this variant for ease of explanation.
+}
 $\pi$ then proves that $b_V\in C$ and $Enc(b_V)=b'_V$.
 Finally, the member publishes the encrypted ballot $b'_V$ along with the \gls{zkp} $\pi_V$ to the PBB.
 

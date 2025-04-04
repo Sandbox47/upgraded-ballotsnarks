@@ -26,7 +26,90 @@
 ]{scrbook}
 \input{config}
 \usepackage{chngcntr} % Make footnote numbering continuous
+\usepackage{verbatim}
+\usepackage{fvextra}
+\usepackage{etoolbox} % For conditional bracket coloring
 
+\newcommand{\colorlevelone}{\color{orange}}
+\newcommand{\colorleveltwo}{\color{magenta}}
+\newcommand{\colorlevelthree}{\color{cyan}}
+
+\newcounter{bracketdepth}
+
+% Function to assign colors based on nesting level
+\newcommand{\colorbracket}[1]{%
+    \ifnum\value{bracketdepth}=0
+        {\colorlevelone #1}%
+    \else
+        \ifnum\value{bracketdepth}=1
+            {\colorleveltwo #1}%
+        \else
+            \ifnum\value{bracketdepth}=2
+                {\colorlevelthree #1}%
+            \fi
+        \fi
+    \fi
+}
+
+% Increment and decrement depth for each bracket type
+\newcommand{\increasebracketdepth}{\stepcounter{bracketdepth}}
+\newcommand{\decreasebracketdepth}{\addtocounter{bracketdepth}{-1}}
+
+% CIRCOM
+% Define Circom syntax highlighting
+\lstdefinelanguage{Circom}{
+    keywords={template, input, output, signal, pragma, component, public, var},
+    keywordstyle=\color{blue}\bfseries,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    commentstyle=\color{ForestGreen},
+    string=[b]",
+    stringstyle=\color{red},
+    sensitive=true,
+    literate=
+        %{for}{{\color{magenta}\bfseries for}}1
+        {<==}{{\color{teal}<==}}2
+        % Curly braces {}
+        {\{}{\colorbracket{\{}\increasebracketdepth}1
+        {\}}{\decreasebracketdepth\colorbracket{\}}}1
+        % Parentheses ()
+        %{(}{\colorbracket{(}\increasebracketdepth}1
+        %{\)}{\colorbracket{)}\decreasebracketdepth}1
+        % Square brackets []
+        {[}{\colorbracket{[}\increasebracketdepth}1
+        {]}{\decreasebracketdepth\colorbracket{]}}1
+}
+
+% Define Shell syntax highlighting
+\lstdefinelanguage{Shell}{
+    morekeywords={cd, ls, mkdir, rm, echo, grep, awk, sed, chmod, chown, export, source, node, circom, snarkjs},
+    keywordstyle=\color{blue}\bfseries,
+    comment=[l]{\#},
+    commentstyle=\color{ForestGreen},
+    string=[b]",
+    stringstyle=\color{red},
+    sensitive=true
+}
+
+% Define JSON syntax highlighting
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\small,
+    comment=[l]{//},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    morestring=[b]",
+    sensitive=true
+}
+
+% Configure the listings style
+\lstset{
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    breaklines=true,
+    tabsize=4,
+    frame=single,
+}
 
 \usepackage[
   title={Comparative Analysis of zk-SNARK Instantiations for Ensuring Ballot Validity},

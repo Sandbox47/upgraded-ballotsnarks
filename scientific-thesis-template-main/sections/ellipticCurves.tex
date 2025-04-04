@@ -763,7 +763,7 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ for computing $P^k$ according to $M\_Exp(P, k)$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$ where $k$ can be represented as a bitstring of fixed length $l$.
     We utilize circuits $\mathfrak{C}_{x}$ (\cref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{reverse}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\cref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\cref{fig:circuit:ladderYRecovery}) as building blocks.
-    The circuit $\mathfrak{C}_{reverse}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs and is illustrated in \cref{fig:circuit:reverse}.
+    The circuit $\mathfrak{C}_{reverse}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs.
     }
     \label{fig:circuit:montgomeryExp}
 \end{figure}
@@ -870,6 +870,7 @@ Thus, we can transform between these two representations freely.
 Additionally, it is typically quite simple to switch the two curves out for each other in most use cases such as our voting schemes.
 
 \begin{theorem}[Twisted Edwards-Montgomery Isomorphism]
+    \label{theorem:TEMIsomorphism}
     Let $TE_{a,d}(\mathbb{F})$ be a Twisted Edwards curve.
     Then, for $A:=\frac{4}{a-d}$ and $B:=\frac{2(a+d)}{a-d}$ \cite{least_authority_moonmath_2024}, the Montgomery curve $M_{A,B}(\mathbb{F})$ is isomorphic to $TE_{a,d}(\mathbb{F})$.
     We can transform from the Twisted Edwards to the Montgomery curve with the function $TE\_to\_M:TE_{a,d}(\mathbb{F})\to M_{A,B}(\mathbb{F})$. 
