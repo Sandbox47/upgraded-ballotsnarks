@@ -11,6 +11,8 @@ include "../expElGamal/assertEEG.circom";
 * Condorcet Election type defined in "zk-SNARKS for Ballot Validity: A Feasibility Study".
 */
 template assertCondorcetVotingWithoutRanking(n) {
+// template assertCondorcetVoting(bitsVotes, n) { // TESTING ONLY!!!
+    input signal ranking[n]; // For compatibility, but is not used here
     input signal ballot[n][n];
 
     // Assert that all entries are bits
@@ -122,6 +124,7 @@ template computeCondorcetBallot(n, maxValue) {
 * Parameters n, bitsVotes are defined the same as in computeCondorcetBallot.
 */
 template assertCondorcetVoting(bitsVotes, n) {
+// template assertCondorcetVotingWithRanking(bitsVotes, n) { // TESTING ONLY!!!
     input signal ranking[n];
     input signal ballot[n][n];
 
