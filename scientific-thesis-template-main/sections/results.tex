@@ -1,8 +1,74 @@
-\chapter{Results}
+\chapter{Results and Discussion}
 \label{chap:results}
 
+In the following, we present benchmarks for the ballot validity proofs in our voting schemes.
+Additionally, we present separate benchmarks for proving choice space membership and proving correct encryption.
+Here, we use SageMath to generate the inputs for the ballot validity circuits, Circom to implement the circuits and snarkjs to conduct the actual proofs (\cref{chap:software}).
+
+For every benchmarked circuit, we record the constraint count , $CRS$ size and $CRS$ generation time\footnote{
+    \label{footnote:crsBasedOnPtauFile}
+    Here, we create $CRS$ based on the same pregenerated file \UseVerb{ptau} for every circuit (\cref{section:software:snarkjsSetup}).
+},
+proving time and verification time.
+
+We compare our findings to the results obtained by Huber et. al. using libsnark \cite{huber_zk-snarks_2025}.\footnote{
+    \label{footnote:benchmarkSystem}
+    As in the work of Huber et. al., all our benchmarks were conducted on an ESPRIMO Q957 (64-bit, i5-7500T CPU @ 2.70GHz, 16 GB RAM).
+}
+
 \section{Asserting Encryption via $\mathfrak{C}_C^{Enc}$}
+\label{section:results:assertEncryption}
+The circuit $\mathfrak{C}_C^{Enc}$ is used to assert the a ballot $b$ corresponds to an encrypted ballot $b'$ where both $b$ and $b'$ are provided as inputs to the circuit (\cref{section:ourVotingSchemes:ballotValidity}).
+
+In their approach, Huber et. al. use an \gls{eeg} encryption scheme based on the Montgomery curve $M_{126932, 1}(\mathbb{F}_qP^2)$ to implement $\mathfrak{C}_{C}^{Enc}$ in libsanrk \cite{huber_zk-snarks_2025}.
+We implement the same option in Circom (\cref{fig:circuit:encMEEG}).
+Additionally, we implement $\mathfrak{C}_{C}^{Enc}$ using a \gls{ppeeg} encryption scheme based on the Twisted Edwards curve $TE_{126934, 126930}(\mathbb{F}_q)$ isomorphic to $M_{126932, 1}(\mathbb{F}_qP^2)$ (\cref{fig:circuit:encTEPPEEG}).
+
+Since ballots are encrypted componentwise, we benchmark the circuit $\mathfrak{C}_C^{Enc}$ for ballots with different numbers of entries.
+Additionally, the size of the circuit $\mathfrak{C}_C^{Enc}$ depends on the number of bits which we use to represent individual ballot entries.
+
+The results of our benchmarks are shown in \cref{fig:benchmarks:encryptionRes}.\footnote{
+    Note that using more than $250$ bits to represent ballots is not possible in our voting schemes.
+    We use group with order 
+    \begin{align*}
+        p=2736030358979909402780800718157159386074658810754251464600343418943805806723
+    \end{align*}
+    as the basis for our \gls{eeg} or \gls{ppeeg} encrpytion scheme.
+    Here, $p$ is a $251$-Bit number. 
+    Since we use $g^{v}$ for a generator $g$ to represent a ballot entry $v$ in those encryption schemes, we can use at most $250$ Bits to represent $v$ unambiguosly.
+
+    However, even using more than $32$ Bits to represent a ballot entry $v$ is infeasible in practice as decryption requires finding $v$ based on $g^v$.
+    This is hard according to the Discrete Logarithm problem if $v$ can assume a lot of different values.
+}
+
+Additionally, we can compare our results to those obtained by Huber et. al. as shown in \cref{fig:benchmarks:encryptionComp}.
+%Here, we limit our benchmarks to representing the ballot entries with $1, 16$ and $32$ Bits since those are also the cases Huber et. al. examined.
+
+\todo{Discussion}
 
 \section{Asserting Choice space membership via $\mathfrak{C}_C^{Vot}$}
+\label{section:results:asertVoting}
+The circuit $\mathbb{C}_C^{Vot}$ is used to assert that a ballot $b$ is part of the choice space $C$ (\cref{section:ourVotingSchemes:ballotValidity}).
+Here, the ballot $b$ and depending on the election type also a ranking $r=aux^{Vot}$ are provided as inputs to the circuit.
+%We use $32$ Bits to represent the individual ballot entries in every voting scheme.
+
+We benchmark the different election types for different numbers of candidates.
+
+The results of our benchmarks are shown in \cref{fig:benchmarks:votingRes}.
+Here, we split our findings into the results for election types in which the number of entries in a ballot scales linearly with the candidate count and the results for election types in which the number of entries in a ballot scales quadratically with the candidate count.
+
+Additionally, we can compare our results to those obtained by Huber et. al. as shown in \cref{fig:benchmarks:votingComp}.
+
+\todo{Discussion}
 
 \section{Asserting Ballot Validity via $\mathfrak{C}_C^{Ballot\text{-}Validity}$}
+\label{section:results:assertCombined}
+The circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ combines $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$ for complete proofs of ballot validity \cref{section:ourVotingSchemes:ballotValidity}.
+As in \cref{section:results:assertEncryption}, we use either a Montgomery Curve or the isomorphic Twisted Edwards curve for the encryption part.
+
+The results of our benchmarks are shown in \cref{fig:benchmarks:combinedRes}.
+As in \cref{section:results:assertVoting}, we split or findings into the results for election types with linearly many ballot entries and the results for election types with quadratically many ballot entries depending on the number of candidates.
+
+Additionally, we can compare our results to those obtained by Huber et. al. as shown in \cref{fig:benchmarks:combinedComp}.
+
+\todo{Discussion}

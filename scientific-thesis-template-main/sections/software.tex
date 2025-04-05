@@ -294,6 +294,7 @@ In our implementation, we used the \gls{zps} Groth16 operating over the elliptic
 The three different algorithms $Setup$, $Prove$ and $Verify$ of \glspl{g16snark} (\cref{section:proofSchemes:groth16}) are implemented seperately in snarkjs.
 
 \subsubsection{Setup}
+\label{section:software:snarkjsSetup}
 In $Setup$ (\cref{alg:setupG16}), we compute $CRS=(CRS_{\mathbb{G}_1}, CRS_{\mathbb{G}_2})$ for a \gls{r1cs} $R1CS_r$ based on a randomly chosen simulation trapdoor $st=(\alpha, \beta, \gamma, \delta, \tau)\in\mathbb{F}_q^5$.
 Note that all parameters 
 \begin{align*}
