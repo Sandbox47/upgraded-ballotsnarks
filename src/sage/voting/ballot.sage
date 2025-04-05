@@ -22,6 +22,8 @@ class Ballot():
         self.pk = self.eegPubKey.genTimesb
         self.powersOfg = self.g.genMultiples(bitsRand)
         self.powersOfpk = self.pk.genMultiples(bitsRand)
+        # self.powersOfg = None # TESTING ONLY!!!
+        # self.powersOfpk = None # TESTING ONLY!!!
 
         self.gr = self.encrypt(self.ballot, self.r, onlyFirst=True)
         self.gv_pkr = self.encrypt(self.ballot, self.r, onlySecond=True)
