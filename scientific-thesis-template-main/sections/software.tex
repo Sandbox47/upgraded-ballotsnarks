@@ -11,15 +11,15 @@ These proofs constitute a form of \gls{gpzkp} since we can derive a \gls{zkp} fo
 Previously, we defined circuits to assert ballot validity in our voting schemes (\cref{chap:ourVotingSchemes}).
 So far, we represented these circuits visually.
 However, to implement circuits and automatically derive a proof of correct circuit execution, we need to express them in a Circuit Language.
-In contrast to Huber et. al. \cite{huber_zk-snarks_2025}, who used libsnark \cite{todo}, we choose Circom \cite{noauthor_circom_2023} as the Circuit Language.
+In contrast to Huber et. al. \cite{huber_zk-snarks_2025}, who used libsnark \cite{madars_virza_scipr-lablibsnark_2025}, we choose Circom \cite{rodriguez_circom_2025} as the Circuit Language.
 Circom is adventageuos when compared to libsnark for multiple reasons:
 
 The main benefit is, that Circom is used purely to define circuits and to convert them to the corresponding \gls{r1cs} representation. 
 Therefore, we can choose any \gls{zps} that uses \glspl{r1cs} for the proofs of correct circuit execution.
-As we did in this thesis, Circom is most commonly used with the backend library snarkjs \cite{noauthor_iden3snarkjs_2025} and the \gls{zps} \gls{g16snark} \cite{groth_size_2016}.
-However, snarkjs also supports the \glspl{zps} PLONK \cite{todo} and FFLONK \cite{todo}.
-Moreover, using other backends such as arkworks \cite{todo} with other \gls{zps} such as marlin \cite{todo} and gemini \cite{todo} is also possible.
-libsnark on the other hand is an End-to-End \gls{zkp} system which implements \glspl{g16snark} and \glspl{snark} based on the approach by Ben-Sasson et. al. \cite{todo (snarks for von Neumann architecture)}.
+As we did in this thesis, Circom is most commonly used with the backend library snarkjs \cite{jordi_baylina_iden3snarkjs_2025} and the \gls{zps} \gls{g16snark} \cite{groth_size_2016}.
+However, snarkjs also supports the \glspl{zps} PLONK \cite{gabizon_plonk_2019} and FFLONK \cite{gabizon_fflonk_2021}.
+Moreover, using other backends such as arkworks \cite{yuncong_hu_arkworks_2025} with other \gls{zps} such as marlin \cite{chiesa_marlin_2019,pratyush_mishra_arkworks-rsmarlin_2025} and gemini \cite{bootle_gemini_2022} is also possible.
+libsnark on the other hand is an End-to-End \gls{zkp} system which implements \glspl{g16snark} and \glspl{snark} based on the approach by Ben-Sasson et. al. \cite{ben-sasson_succinct_2013}.
 
 Additionally, Circom provides higher-level primitives and easier syntax for defining circuits, leading to implementations that are easier to create, use and maintain than in libsnark.
 
@@ -215,7 +215,7 @@ and an exemplary ballot $b=(S_1^{in}, S_2^{in}, S_3^{in})=(1,0,1)$, we need to c
     "S_in" : [1, 0, 1]
 }\end{lstlisting}
 
-Additionally, we need to calculate values for the intermediate and output signals such that all constraints of the circuit are fulfilled. \cite{noauthor_circom_nodate}
+Additionally, we need to calculate values for the intermediate and output signals such that all constraints of the circuit are fulfilled. \cite{rodriguez_circom_2025}
 For this purpose, Circom provides a so-called \glqq Witness\grqq\ Generation procedure which assigns appropriate values to these signals.\footnote{
     \label{footnote:circomWitness}
     Note that the term \glqq Witness\grqq\ in the context of Circom \glqq Witness\grqq\ Generation is entirely separate from the term witness describing the private parts of an assignment to a circuit.
@@ -284,9 +284,9 @@ component main = division();
 
 \section{snarkjs}
 
-snarkjs \cite{noauthor_iden3snarkjs_2025} is used to create \glspl{zkp} for \glspl{r1cs}.
+snarkjs \cite{jordi_baylina_iden3snarkjs_2025} is used to create \glspl{zkp} for \glspl{r1cs}.
 We choose snarkjs since it is well integrated with Circom.
-Moreover, snarkjs supports multiple different \glspl{zps} (Groth16 \cite{groth_size_2016}, PLONK \cite{todo} and FFLONK\cite{todo}) and instantiation of these \glspl{zps} with multiple different elliptic curves such as \verb|BN254|\cite{todo} and \verb|BLS12-381|\cite{todo}.
+Moreover, snarkjs supports multiple different \glspl{zps} (Groth16 \cite{groth_size_2016}, PLONK \cite{gabizon_plonk_2019} and FFLONK\cite{gabizon_fflonk_2021}) and instantiation of these \glspl{zps} with multiple different elliptic curves such as \verb|BN254|\cite{jonathan_wang_bn254_2024} and \verb|BLS12-381|\cite{ben_edgington_bls12-381_2023}.
 This makes it a versatile choice for many different use cases.
 
 In our implementation, we used the \gls{zps} Groth16 operating over the elliptic curve \verb|BN254|.
@@ -317,15 +317,15 @@ For every circuit, we then only need to generate $CRS\text{-}R1CS_r$ and combine
 This can be very efficient compared to generating the full $CRS$ from scratch every time.
 
 \SaveVerb{ptau}|powersoftau.ptau|
-In snarkjs, $CRS\text{-}Universal$ is represented by a \verb|powersoftau.ptau| file, which is typically generated using a \gls{mpc} protocol with several contributions from different sources such as random beacons \cite{}.\footnote{
-    For our benchmarks, we used the pregenerated \protect\UseVerb{ptau} files from \cite{noauthor_iden3snarkjs_2025}. 
+In snarkjs, $CRS\text{-}Universal$ is represented by a \verb|powersoftau.ptau| file, which is typically generated using a \gls{mpc} protocol with several contributions from different sources such as random beacons \cite{nicolas_gailly_league_2025}.\footnote{
+    For our benchmarks, we used the pregenerated \protect\UseVerb{ptau} files from \cite{jordi_baylina_iden3snarkjs_2025}. 
     \todo{Is this insecure?}
 }
 To create $CRS\text{-}R1CS_r$, snarkjs uses \verb|powersoftau.ptau| and the $R1CS$ of a circuit in the form of an \verb|circuit.r1cs| file.
 Here, we typically perform another \gls{mpc} to contribute randomness from different sources to the $CRS\text{-}R1CS_r$.\footnote{
     For our benchmarks, we created the full $CRS$ directyl from $CRS\text{-}Universal$ without using any additional contributions.
     Note that this approach is insecure and should not be used in practice.
-    Therefore, we also implement the option to contribute randomness from the NIST 2.0 random beacon \cite{todo}.
+    Therefore, we also implement the option to contribute randomness from the NIST 2.0 random beacon \cite{computer_security_division_nist_2019}.
     However, this is disabled at the moment.
 }
 The final $CRS$ is then saved in a \verb|key.zkey| file and a subset of the $CRS$ needed to verify proofs is exported as \verb|verification_key.json|.
@@ -379,7 +379,7 @@ In case of ranking based voting methods, we also need the private ranking $aux^{
 
 In a real world voting system, a voter should only have to choose the ballot $b$ or, in case of ranking based voting schemes, the ranking $r$.
 The rest of the inputs required for the \gls{zkp} of ballot validity should be generated automatically.
-In our implementation, we employ SageMath \cite{todo} for this purpose.
+In our implementation, we employ SageMath \cite{matthias_koppe_sagemath_2025} for this purpose.
 SageMath is good choice since the encryption of ballots is defined utilizing finite fields and elliptic curves which are already implemented efficiently in SageMath.
 %Additionally, SageMath is based on Python which makes it easy to integrate into 
 

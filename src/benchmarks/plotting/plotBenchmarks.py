@@ -1,10 +1,11 @@
-import argparse
+import sys
 import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import json
 from scipy.interpolate import interp1d
+from sklearn.linear_model import LinearRegression
 
 def load_config(config_path):
     with open(config_path, "r") as f:
@@ -21,49 +22,81 @@ def load_and_filter_data(file_name, filter_variable, filter_value, x_name, y_nam
     y = df[y_name].values * scaling_factor
     return x, y
 
-def plot_data(entry):
+def plot_data_given_yLabel(entry, yLabel, output_path):
+    config = load_config("plotConfig.json")
+
     plt.figure(figsize=(8, 6))
     plt.xlabel(entry["xLabel"])
-    plt.ylabel(entry["yLabel"])
+    plt.ylabel(yLabel)
     plt.xlim(0, entry["xLimit"])
-    plt.ylim(0, entry["yLimit"])
-    plt.title(entry["label"])
+    # plt.ylim(0, entry["yLimit"])
+    labels = config["labels"]
+    plt.title(labels[yLabel] + entry["label"])
     
     for dataset in entry["dataSets"]:
+        mode = dataset["mode"]
+        if not(yLabel in config[mode]):
+            continue
+        modeConfig = config[mode][yLabel]
+
         file_name = dataset["fileName"]
         filter_variable = dataset.get("filterVariable")
         x_name = dataset["xNameData"]
-        y_name = dataset["yNameData"]
-        scaling_factor = dataset.get("scalingFactor", 1.0)
+        y_name = modeConfig["name"]
+        scaling_factor = modeConfig.get("scalingFactor", 1.0)
+        linestyle = dataset["linestyle"]
         
         for line in dataset["lines"]:
             filter_value = line.get("filterValue")
             color = line["color"]
-            linestyle = line["linestyle"]
             label = line["label"]
             
             x, y = load_and_filter_data(file_name, filter_variable, filter_value, x_name, y_name, scaling_factor)
             # plt.plot(x, y, color=color, linestyle=linestyle, label=label)
 
             # Interpolation
+            # if len(x) > 1:
+            #     interp_func = interp1d(x, y, kind='cubic', fill_value='extrapolate')
+            #     x_smooth = np.linspace(min(x), max(x), 300)  # Generate smooth x values
+            #     y_smooth = interp_func(x_smooth)
+            #     plt.plot(x_smooth, y_smooth, color=color, linestyle=linestyle, label=label)
+            # else:
+            #     plt.plot(x, y, color=color, linestyle=linestyle, label=label)  # Fallback if not enough points
+
+            # Plot data points
+            plt.scatter(x, y, color=color, s=10)
+
+            # Linear regression
             if len(x) > 1:
-                interp_func = interp1d(x, y, kind='cubic', fill_value='extrapolate')
-                x_smooth = np.linspace(min(x), max(x), 300)  # Generate smooth x values
-                y_smooth = interp_func(x_smooth)
-                plt.plot(x_smooth, y_smooth, color=color, linestyle=linestyle, label=label)
+                model = LinearRegression()
+                x_reshaped = x.reshape(-1, 1)
+                model.fit(x_reshaped, y)
+                y_pred = model.predict(x_reshaped)
+                plt.plot(x, y_pred, color=color, linestyle=linestyle, label=label)
             else:
-                plt.plot(x, y, color=color, linestyle=linestyle, label=label)  # Fallback if not enough points
+                plt.plot(x, y, color=color, linestyle=linestyle, label=label)  # Fallback
     
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))  # Move legend to the right
     plt.grid()
 
-    output_path = os.path.join("plots", f"{entry['plotPath']}.pdf")
     os.makedirs(os.path.dirname(output_path), exist_ok=True)  # Ensure the directory exists
     plt.savefig(output_path, format="pdf", bbox_inches='tight')  # Adjust bounding box for legend
     plt.close()
 
+def plot_data(entry):
+    config = load_config("plotConfig.json")
+    yLabels = config["yLabels"]
+    for yLabel in yLabels:
+        output_fileName = entry['plotPath'] + yLabel
+        output_path = os.path.join("plots", f"{output_fileName}.pdf")
+        plot_data_given_yLabel(entry, yLabel, output_path)
+
 def main():
-    config = load_config("plotSuite.json")
+    if len(sys.argv) < 2:
+        print("Usage: python plotBenchmarks.py <config_path>")
+        sys.exit(1)
+    config_path = sys.argv[1]
+    config = load_config(config_path)
     for entry in config:
         plot_data(entry)
 

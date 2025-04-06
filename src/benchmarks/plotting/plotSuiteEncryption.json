@@ -1,0 +1,238 @@
+[
+    {
+        "plotPath": "EncryptionMontgomery",
+        "xLabel": "$m$ ballot entries/ plaintexts",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Enc}$ with Montgomery Curve and EEG Encryption in Circom",
+
+        "dataSets": [
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../montgomeryProjective/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "filterValue": 1,
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit]"
+                    },
+                    {
+                        "filterValue": 16,
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits]"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits]"
+                    },
+                    {
+                        "filterValue": 64,
+                        "color": "red",
+                        "label": "$m$ Ciphertexts [64 bits]"
+                    },
+                    {
+                        "filterValue": 128,
+                        "color": "purple",
+                        "label": "$m$ Ciphertexts [128 bits]"
+                    },
+                    {
+                        "filterValue": 250,
+                        "color": "brown",
+                        "label": "$m$ Ciphertexts [250 bits]"
+                    }
+
+                ]
+            }
+        ]
+    },
+    {
+        "plotPath": "EncryptionTwistedEdwards",
+        "xLabel": "$m$ ballot entries/ plaintexts",
+        "xLimit": 1000,
+        "label": " for $\\mathfrak{C}_C^{Enc}$ with Twisted Edwards curve and PPEEG Encryption in Circom",
+
+        "dataSets": [
+            {
+                "mode": "CircomTwistedEdwards",
+                "fileName": "../twistedEdwards/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "filterValue": 1,
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit]"
+                    },
+                    {
+                        "filterValue": 16,
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits]"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits]"
+                    },
+                    {
+                        "filterValue": 64,
+                        "color": "red",
+                        "label": "$m$ Ciphertexts [64 bits]"
+                    },
+                    {
+                        "filterValue": 128,
+                        "color": "purple",
+                        "label": "$m$ Ciphertexts [128 bits]"
+                    },
+                    {
+                        "filterValue": 250,
+                        "color": "brown",
+                        "label": "$m$ Ciphertexts [250 bits]"
+                    }
+
+                ]
+            }
+        ]
+    },
+    {
+        "plotPath": "EncryptionLibsnark",
+        "xLabel": "$m$ ballot entries/ plaintexts",
+        "xLimit": 300,
+        "label": " for $\\mathfrak{C}_C^{Enc}$ with Montgomery curve and EEG Encryption in libsnark",
+
+        "dataSets": [
+            {
+                "mode": "libsnark",
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
+                "xNameData": "n_values",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
+                "xNameData": "n_values",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
+                "xNameData": "n_values",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits]"
+                    }
+                ]
+            }
+
+        ]
+    },
+    {
+        "plotPath": "EncryptionComparison",
+        "xLabel": "$m$ ballot entries/ plaintexts",
+        "xLimit": 300,
+        "label": " for $\\mathfrak{C}_C^{Enc}$",
+        "dataSets": [
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../montgomeryProjective/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "filterValue": 1,
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit]"
+                    },
+                    {
+                        "filterValue": 16,
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits]"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomTwistedEdwards",
+                "fileName": "../twistedEdwards/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "filterValue": 1,
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit]"
+                    },
+                    {
+                        "filterValue": 16,
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits]"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
+                "xNameData": "n_values",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit] with Montgomery curves in libsnark"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
+                "xNameData": "n_values",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits] with Montgomery curves in libsnark"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
+                "xNameData": "n_values",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits] with Montgomery curves in libsnark"
+                    }
+                ]
+            }
+        ]
+    }
+]

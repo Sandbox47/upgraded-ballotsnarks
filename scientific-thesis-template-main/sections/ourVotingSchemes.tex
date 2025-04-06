@@ -12,11 +12,6 @@ To show that our approach to voting schemes can be easily adapted to many differ
 
 \section{Ballot Validity Relation $R_C$}
 \label{section:ourVotingSchemes:ballotValidity}
-%\todo{
-%    Define complete ballot validity circuit using high-level components from the voting system in \cref{chap:votingschemes}.
-%    (And note that the decomposition relation based on this circuit is equivalent to the relation $R_C$ used in \cref{chap:votingschemes}.)
-%    Split into two relations $r_C^{enc}$ and $r_C^{vot}$.
-%}
 In \cref{chap:votingschemes}, $R_C$ is defined as the relation checking ballot validity.
 Here, $R_C$ gets a ballot $b$ and auxiliary information $aux=(aux^{Vot}, aux^{Enc})$ as a private witness.
 The public instance is the public key $pk$ of the encryption scheme and an encrypted ballot $b'$.
@@ -74,7 +69,7 @@ Then, $R_C=DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$.
 Assume, we have a ballot validity relation $R_C$ as introduced in \cref{chap:votingschemes}.
 Moreover, assume that $R_C$ is a decomposition relation $DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$ for the algebraic relation $r_C^{Ballot\text{-}Validity}$ as previously (\cref{section:ourVotingSchemes:ballotValidity}).
 Then, we use the \gls{g16snark} $GSNARK(R_C)=(Setup, Prove, Verify)$ based on paramters $param=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot, \cdot), g_1, g_2, \mathbb{F}_q)$ as $ZPS(R_C)$.
-We use the Barreto-Naehrig curve \verb|BN254| \cite{todo cite} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.  
+We use the Barreto-Naehrig curve \verb|BN254| \cite{jonathan_wang_bn254_2024} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.  
 This curve has the order 
 \begin{align*}
     \scriptstyle q = 21888242871839275222246405745257275088548364400416034343698204186575808495617
@@ -420,7 +415,6 @@ Using this ranking, the candidates are then assigned a fixed number of points fo
     Let $ap$ be the number of points to be given to a candidate for every other candidate ranked worse than them.
     Similarly, let $bp$ be the number of points to be given to a candidate for every other candidate ranked the same as them.
     Then, the corresponding \gls{bts} choice space is defined as follows:
-    %\todo{Choice space definition}
     {\setlength{\mathindent}{2pt}
     \begin{align*}
         C_{\text{BTS}(cand, ap, bp)}=& \left\{(b_0,\dots, b_{cand-1})\in \mathbb{F}_q^{cand}\Bigg| \right.\\
@@ -497,7 +491,6 @@ Therefore, we implement this variant as well.
 \begin{definition}[Condorcet System]
     Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
     Then, the corresponding \gls{bts} choice space is defined as follows:
-    %\todo{Choice space definition}
     {\setlength{\mathindent}{2pt}
     \begin{align*}
         C_{\text{Condorcet}(cand)}=& \left\{b=(b_{i,j})_{i,j\in\{0,\dots, cand-1\}}\in \{0,1\}^{cand\times cand}\Bigg| \right.\\

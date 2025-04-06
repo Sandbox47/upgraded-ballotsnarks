@@ -201,7 +201,7 @@ Here, the witness is the plain ballot $b_V$ they chose and the instance is the c
   \label{footnote:encryptedBallotInCircuit}
   Note that it is also possible to compute the encrypted ballot $b'_V$ as part of the \gls{zkp} rather than providing it as an input for it.
   However, both \gls{zkp} variants are equally efficient.
-  Since we can compute the encryption of a ballot efficiently before providing it as an input to the \gls{zkp} using SageMath \cite{todo}, we choose this variant for ease of explanation.
+  Since we can compute the encryption of a ballot efficiently before providing it as an input to the \gls{zkp} using SageMath \cite{matthias_koppe_sagemath_2025}, we choose this variant for ease of explanation.
 }
 $\pi$ then proves that $b_V\in C$ and $Enc(b_V)=b'_V$.
 Finally, the member publishes the encrypted ballot $b'_V$ along with the \gls{zkp} $\pi_V$ to the PBB.
@@ -353,7 +353,7 @@ However, to simplify things a little, we assume that the voting authority and th
       This means that, without modification, it is sometimes possible to change part of the instance and still obtain a valid proof even if we don't know the corresponding witness. \cite{novakovic_groth16_2022, baghery_another_2020}
       In the case of voting schemes, this means that a malicous voter might be able to submit an encrypted ballot withput knowing the corresponding plain ballot.
       To prevent this issue, we can modify Groth16 slightly by extending the relation $R_C$ to include an additional constraint on the instance that is always fulfilled.
-      This is already implemented in snarkjs \cite{noauthor_iden3snarkjs_2025}, which we use to generate proofs with Groth16. \cite{novakovic_groth16_2022}
+      This is already implemented in snarkjs \cite{jordi_baylina_iden3snarkjs_2025}, which we use to generate proofs with Groth16. \cite{novakovic_groth16_2022}
 
       %\todo{How do our ZKPs ensure this? In our version, can malicous voters not just copy the encrypted vote and zkp of other another voter? Do we need to include the ids of the voters in the instance of the ZKP?}
     }
@@ -371,7 +371,7 @@ However, to simplify things a little, we assume that the voting authority and th
     This function is used during tallying which is defined in \cref{alg:tally}.\footnote{\label{footnote:vaRegisterVoters} 
       $VA$ needs to know which voters $V$ are part of the election in order to retrieve their ballots from $PBB$ via $id_V$.
       In our system, we assume a fixed set of voters $\{V_0, \dots, V_{n-1}\}$ that $VA$ knows.
-      However, in a more flexible approach the $VA$ could register voters \cite{adida_electing_nodate}.
+      However, in a more flexible approach the $VA$ could register voters \cite{adida_electing_2009}.
     }
   \end{itemize}
 \end{definition}

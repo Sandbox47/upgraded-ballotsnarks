@@ -5,7 +5,7 @@ In our voting scheme, we use \gls{eeg} encryption for the ballots.
 All operations in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
 For a secure encryption, the \gls{ddh} assumption needs to hold on $\mathbb{G}$.
 Elliptic curves of a sufficiently large order $q$ are finite cyclic groups on which the \gls{ddh} assumption is believed to hold.
-Moreover, Elliptic curves are benefitial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{noauthor_case_2009}.
+Moreover, Elliptic curves are benefitial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{national_security_agency_case_2009}.
 
 Fundamentally, Elliptic curves are sets of points that satisfy certain equations \cite{least_authority_moonmath_2024}. 
 Here, a curve point consists of multiple elements from a so-called base field $\mathbb{F}_p$ of order $p$.
@@ -17,7 +17,7 @@ However, as we exclusively use Montgomery curves and Twisted Edwards curves, we 
 \section{Montgomery Curves}
 \label{section:ellipticCurves:montgomery}
 The most general form of Elliptic curves are so-called Short Weierstrass curves \cite{least_authority_moonmath_2024}.
-Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_nodate}.
+Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_1987}.
 We can transform any Montgomery curve into an isomorphic Short Weierstrass curve but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
 Overall, Montgomery curves are more limited than Short Weierstrass curves \cite{least_authority_moonmath_2024}.
 
