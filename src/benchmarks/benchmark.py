@@ -11,8 +11,8 @@ import re
 os.environ["NODE_OPTIONS"] = "--max-old-space-size=16384"
 
 # Ptau file
-# PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
-PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
+PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
+# PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
 
 BITS_RAND=255
 

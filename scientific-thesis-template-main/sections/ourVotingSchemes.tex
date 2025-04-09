@@ -506,7 +506,7 @@ Therefore, we implement this variant as well.
         We assert that all entries of the submitted ballot $b$ are bits and that for $i\neq j$ also $b_{i,j}+b_{j,i}$ is a bit.
         This covers the cases \glqq$r_i>r_j$\grqq\ and \glqq$r_j=r_i$\grqq\ from the choice space definition. 
         Additionally, we need to show that $b$ belongs to a ranking $r$ in which transitivity holds.
-        We can achieve this by computing a check matrix $a=(a_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=(1-b_{i,j})_{i,j\in\{0,\dots cand-1\}}$ and asserting that $a_{i,j}\cdot a_{j,k}\cdot 1-b_{i,k}=0$ for all triples of distinc values $(i,j,k)\in\{0,\dots, cand-1\}^3$ \cite{huber_zk-snarks_2025}.
+        We can achieve this by computing a check matrix $a=(a_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=(1-b_{i,j})_{i,j\in\{0,\dots cand-1\}}$ and asserting that $a_{i,j}\cdot a_{j,k}\cdot (1-b_{i,k})=0$ for all triples of distinc values $(i,j,k)\in\{0,\dots, cand-1\}^3$ \cite{huber_zk-snarks_2025}.
         \item Utilizing the ranking (\cref{alg:condorcetVotingWithRanking}, \cref{fig:circuit:condorcetVotingWithRanking}): 
         We compute a ballot $b'$ from the ranking $r$ using the function $r_{compute\text{-Condorcet}(cand)}:\mathbb{F}_q^{cand}\to\mathbb{F}_q^{cand\times cand}, r\mapsto b'$ (\cref{alg:condorcetComputeBallot}) and corresponding circuit $\mathfrak{C}_{compute\text{-Condorcet}(cand)}$ (\cref{fig:circuit:condorcetComputeBallot}).
         Then, we assert that the computed ballot $b'$ equals the submitted ballot $b$.

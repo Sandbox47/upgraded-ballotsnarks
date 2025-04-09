@@ -486,6 +486,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
         xAdd(x(Q), x(P), x(P\odot_M^{Pro}Q^{-1})) := x(P\odot_M^{Pro} Q)
     \end{align*}
     We can compute $xAdd$ as presented in \cref{alg:xAdd}.
+    We give a proof of correctness of $xAdd$ in \cref{proofs:xAdd}.\todo{Make proof in appendix}.
     The corresponding circuit $\mathfrak{C}_{xAdd}$ is illustrated in \cref{fig:circuit:xAdd}.
 \end{definition}
 
@@ -517,6 +518,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
         xDbl(x(P)) := x(P\odot_M^{Pro} P) = x(P^2)
     \end{align*}
     We can compute $xDbl$ as presented in \cref{alg:xDbl}.
+    We give a proof of correctness of $xDbl$ in \cref{proofs:xDbl}.\todo{Make proof in appendix}.
     The corresponding circuit $\mathfrak{C}_{xDbl}$ is illustrated in \cref{fig:circuit:xDbl}.
 \end{definition}
 
