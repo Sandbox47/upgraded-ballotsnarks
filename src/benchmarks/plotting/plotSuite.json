@@ -9,7 +9,7 @@
 
         "dataSets": [
             {
-                "fileName": "../montgomeryProjective/results/encryption/singleVote.csv",
+                "fileName": "../groth16_results/montgomeryProjective/results/encryption/singleVote.csv",
                 "filterVariable": "Number of Bits",
                 "xNameData": "nVotes",
                 "yNameData": "t_prove [ms]",
@@ -36,7 +36,7 @@
                 ]
             },
             {
-                "fileName": "../twistedEdwards/results/encryption/singleVote.csv",
+                "fileName": "../groth16_results/twistedEdwards/results/encryption/singleVote.csv",
                 "filterVariable": "Number of Bits",
                 "xNameData": "nVotes",
                 "yNameData": "t_prove [ms]",
@@ -63,7 +63,7 @@
                 ]
             },
             {
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
                 "xNameData": "n_values",
                 "yNameData": "Prove[s]",
                 "lines": [
@@ -75,7 +75,7 @@
                 ]
             },
             {
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
                 "xNameData": "n_values",
                 "yNameData": "Prove[s]",
                 "lines": [
@@ -87,7 +87,7 @@
                 ]
             },
             {
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
                 "xNameData": "n_values",
                 "yNameData": "Prove[s]",
                 "lines": [

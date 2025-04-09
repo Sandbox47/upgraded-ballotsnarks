@@ -7,7 +7,7 @@
         "CRS Size[MB]"
     ],
     "labels": {
-        "Constraints": "#Constraints",
+        "Constraints": "Constraints",
         "Setup[s]": "CRS generation times",
         "Prove[s]": "Proving times",
         "Verify[s]": "Verifying times",

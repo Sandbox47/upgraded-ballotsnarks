@@ -2,7 +2,8 @@ import json
 from JSON import JSONUtils
 
 class Test():
-    def __init__(self, testCircuit: str, ellipticCurve: str, name: str, bitsVotes: str, nCand: str, nCandName: str, additionalParams: list[tuple[str, int]]):
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, name: str, bitsVotes: str, nCand: str, nCandName: str, additionalParams: list[tuple[str, int]]):
+        self.snark = snark
         self.testCircuit = testCircuit
         self.ellipticCurve = ellipticCurve
         self.name = name
@@ -16,7 +17,7 @@ class Test():
         # command = "./benchmark.sh " + str(self.testCircuit) + " " + str(self.ellipticCurve) + " " + str(self.name) + " " + str(self.bitsVotes) + " " + str(self.nCandName) + "=" + str(self.nCand)
 
         # With python:
-        command = "python3 benchmark.py " + str(self.testCircuit) + " " + str(self.ellipticCurve) + " " + str(self.name) + " " + str(self.bitsVotes) + " " + str(self.nCandName) + "=" + str(self.nCand)
+        command = "python3 benchmark.py " + str(self.snark) + " " + str(self.testCircuit) + " " + str(self.ellipticCurve) + " " + str(self.name) + " " + str(self.bitsVotes) + " " + str(self.nCandName) + "=" + str(self.nCand)
 
         for param in self.additionalParams:
             command += " " + str(param[0]) + "=" + str(param[1]).replace(" ", "")
@@ -42,109 +43,109 @@ class Test():
 
     
 class SingleVoteTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
-        super().__init__(testCircuit, ellipticCurve, "singleVote", bitsVotes, nCand, "nVotes", [])
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
+        super().__init__(snark, testCircuit, ellipticCurve, "singleVote", bitsVotes, nCand, "nVotes", [])
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
-        return [SingleVoteTest(testCircuit, ellipticCurve, bitsVotes, nCand)]
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
+        return [SingleVoteTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand)]
     
 class PointlistBordaTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
-        super().__init__(testCircuit, ellipticCurve, "pointlistBorda", bitsVotes, nCand, "nCand", additionalParams)
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
+        super().__init__(snark, testCircuit, ellipticCurve, "pointlistBorda", bitsVotes, nCand, "nCand", additionalParams)
 
     @classmethod
     def generatePointlist(cls, length: int):
         return [points for points in range(length, 0, -1)]
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
         defaultPointlistLength = electionTypeConfig["defaultPointlistLength"]
         testCases = []
         if electionTypeConfig["doPointlistLengthEqualsChoicesCase"]:
             pointlistnCandLength = PointlistBordaTest.generatePointlist(nCand)
-            testCases.append(PointlistBordaTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("nPoints", nCand), ("orderedPoints", pointlistnCandLength)]))
+            testCases.append(PointlistBordaTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("nPoints", nCand), ("orderedPoints", pointlistnCandLength)]))
         if nCand >= defaultPointlistLength:
             pointlistDefaultLength = PointlistBordaTest.generatePointlist(defaultPointlistLength)
-            testCases.append(PointlistBordaTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("nPoints", defaultPointlistLength), ("orderedPoints", pointlistDefaultLength)]))
+            testCases.append(PointlistBordaTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("nPoints", defaultPointlistLength), ("orderedPoints", pointlistDefaultLength)]))
         return testCases
     
 class MultiVoteTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
-        super().__init__(testCircuit, ellipticCurve, "multiVote", bitsVotes, nCand, "nVotes", additionalParams)
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
+        super().__init__(snark, testCircuit, ellipticCurve, "multiVote", bitsVotes, nCand, "nVotes", additionalParams)
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
         maxChoices = electionTypeConfig["maxChoices"]
         if maxChoices == "calculated from nCand":
             maxChoices = 2*nCand # Default value
         maxVotesCand = electionTypeConfig["maxVotesCand"]
-        return [MultiVoteTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("maxVotesCand", maxVotesCand), ("maxChoices", maxChoices)])]
+        return [MultiVoteTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("maxVotesCand", maxVotesCand), ("maxChoices", maxChoices)])]
     
 class MultiVoteWithRulesTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
-        super().__init__(testCircuit, ellipticCurve, "multiVoteWithRules", bitsVotes, nCand, "nVotes", additionalParams)
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
+        super().__init__(snark, testCircuit, ellipticCurve, "multiVoteWithRules", bitsVotes, nCand, "nVotes", additionalParams)
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
         maxChoices = electionTypeConfig["maxChoices"]
         if maxChoices == "calculated from nCand":
             maxChoices = 2*nCand # Default value
         maxVotesCand = electionTypeConfig["maxVotesCand"]
         if nCand >= 3: # Need at least three entries to enforce the additional rule
-            return [MultiVoteWithRulesTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("maxVotesCand", maxVotesCand), ("maxChoices", maxChoices)])]
+            return [MultiVoteWithRulesTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("maxVotesCand", maxVotesCand), ("maxChoices", maxChoices)])]
         else:
             return []
     
 class MajorityJudgementTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
-        super().__init__(testCircuit, ellipticCurve, "majorityJudgement", bitsVotes, nCand, "nCand", additionalParams)
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
+        super().__init__(snark, testCircuit, ellipticCurve, "majorityJudgement", bitsVotes, nCand, "nCand", additionalParams)
 
     @classmethod
     def generatePointlist(cls, length: int):
         return [points for points in range(length, 0, -1)]
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
         defaultnGrades = electionTypeConfig["defaultNumberOfGrades"]
 
         testCases = []
         if electionTypeConfig["doNumberOfGradesEqualsCandsCase"]:
             nGrades = nCand
-            testCases.append(MajorityJudgementTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("nGrades", nGrades)]))
+            testCases.append(MajorityJudgementTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("nGrades", nGrades)]))
 
-        testCases.append(MajorityJudgementTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("nGrades", defaultnGrades)]))
+        testCases.append(MajorityJudgementTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("nGrades", defaultnGrades)]))
         return testCases
     
 class LineVoteTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
-        super().__init__(testCircuit, ellipticCurve, "lineVote", bitsVotes, nCand, "nVotes", [])
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
+        super().__init__(snark, testCircuit, ellipticCurve, "lineVote", bitsVotes, nCand, "nVotes", [])
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
-        return [LineVoteTest(testCircuit, ellipticCurve, bitsVotes, nCand)]
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
+        return [LineVoteTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand)]
     
 class CondorcetTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
-        super().__init__(testCircuit, ellipticCurve, "condorcet", bitsVotes, nCand, "nCand", [])
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
+        super().__init__(snark, testCircuit, ellipticCurve, "condorcet", bitsVotes, nCand, "nCand", [])
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
-        return [CondorcetTest(testCircuit, ellipticCurve, bitsVotes, nCand)]
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int):
+        return [CondorcetTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand)]
     
 class BordaTournamentStyleTest(Test):
-    def __init__(self, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
-        super().__init__(testCircuit, ellipticCurve, "bordaTournamentStyle", bitsVotes, nCand, "nVotes", additionalParams)
+    def __init__(self, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, additionalParams: list[tuple[str, int]]):
+        super().__init__(snark, testCircuit, ellipticCurve, "bordaTournamentStyle", bitsVotes, nCand, "nVotes", additionalParams)
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, bitsVotes: int, nCand: int, electionTypeConfig: dict):
         a = electionTypeConfig["a"]
         b = electionTypeConfig["b"]
-        testCases = [BordaTournamentStyleTest(testCircuit, ellipticCurve, bitsVotes, nCand, [("a", a), ("b", b)])]
+        testCases = [BordaTournamentStyleTest(snark, testCircuit, ellipticCurve, bitsVotes, nCand, [("a", a), ("b", b)])]
         return testCases
 
 class TestSuite():
-    def __init__(self, testConfig: dict, testCircuit: str):
+    def __init__(self, testConfig: dict, snark: str, testCircuit: str):
         self.testCircuit = testCircuit
         testSuiteData = testConfig["testSuite"]
         electionTypeConfigs = testConfig["electionTypeSpecificConfigs"]
@@ -159,16 +160,16 @@ class TestSuite():
             electionTypeConfig = electionTypeConfigs.get(electionType)
             for bitsVotes in self.bitsVotes:
                 for nCand in self.nCand:
-                    self.testCases += TestSuite.generateTestCases(testCircuit, self.ellipticCurve, electionType, bitsVotes, nCand, electionTypeConfig)
+                    self.testCases += TestSuite.generateTestCases(snark, testCircuit, self.ellipticCurve, electionType, bitsVotes, nCand, electionTypeConfig)
 
     @classmethod
-    def generateTestCases(cls, testCircuit: str, ellipticCurve: str, electionType: str, bitsVotes: int, nCand: int, electionTypeConfig: dict=None):
+    def generateTestCases(cls, snark: str, testCircuit: str, ellipticCurve: str, electionType: str, bitsVotes: int, nCand: int, electionTypeConfig: dict=None):
         testClassName = electionType[:1].upper() + electionType[1:] + "Test"
         testClass = globals()[testClassName]
         if electionTypeConfig == None:
-            testCases = testClass.generateTestCases(testCircuit, ellipticCurve, bitsVotes, nCand)
+            testCases = testClass.generateTestCases(snark, testCircuit, ellipticCurve, bitsVotes, nCand)
         else:
-            testCases = testClass.generateTestCases(testCircuit, ellipticCurve, bitsVotes, nCand, electionTypeConfig)
+            testCases = testClass.generateTestCases(snark, testCircuit, ellipticCurve, bitsVotes, nCand, electionTypeConfig)
         return testCases
     
     def toJSON(self):
@@ -180,9 +181,10 @@ def genTestSuites():
         testConfig = json.load(testConfigFile)
         testSuite = testConfig["testSuite"]
         testCircuits = testSuite["testCircuits"]
+        snark = testSuite["snark"]
 
         for testCircuit in testCircuits:
-            testSuite = TestSuite(testConfig, testCircuit)
+            testSuite = TestSuite(testConfig, snark, testCircuit)
             testSuiteJSONData = testSuite.toJSON()
 
             # Convert to JSON string with indentation

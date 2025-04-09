@@ -1,65 +1,16 @@
 [
     {
-        "name": "condorcet",
+        "name": "singleVote",
         "ellipticCurve": "montgomeryProjective",
         "bitsVotes": 32,
-        "nCand": 75,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=75"
+        "nVotes": 1,
+        "command": "python3 benchmark.py fflonk voting montgomeryProjective singleVote 32 nVotes=1"
     },
     {
-        "name": "condorcet",
+        "name": "singleVote",
         "ellipticCurve": "montgomeryProjective",
         "bitsVotes": 32,
-        "nCand": 100,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=100"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 125,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=125"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 150,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=150"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 175,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=175"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 200,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=200"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 250,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=250"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 300,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=300"
-    },
-    {
-        "name": "condorcet",
-        "ellipticCurve": "montgomeryProjective",
-        "bitsVotes": 32,
-        "nCand": 350,
-        "command": "python3 benchmark.py voting montgomeryProjective condorcet 32 nCand=350"
+        "nVotes": 2,
+        "command": "python3 benchmark.py fflonk voting montgomeryProjective singleVote 32 nVotes=2"
     }
 ]

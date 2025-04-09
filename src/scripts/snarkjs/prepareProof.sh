@@ -71,8 +71,8 @@ fi
 # echo "Verified zkey."
 
 # 22. Export the verification key
-snarkjs zkey export verificationkey "$FINAL_ZKEY_FILE" "${BASE_NAME}_verification_key.json"
-echo "Exported zkey."
+# snarkjs zkey export verificationkey "$FINAL_ZKEY_FILE" "${BASE_NAME}_verification_key.json"
+# echo "Exported zkey."
 
 
 # Next step would be to generate the proof

@@ -11,8 +11,8 @@ import re
 os.environ["NODE_OPTIONS"] = "--max-old-space-size=16384"
 
 # Ptau file
-PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
-# PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
+# PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
+PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
 
 BITS_RAND=255
 
@@ -47,13 +47,14 @@ def capitalize_first_letter(string):
 # Check for the required arguments
 def validate_args(args):
     if len(args) < 4:
-        print("Usage: script.py <mode> <ellipticCurve> <electionType> <nBits> key1=value1 key2=value2 ...")
+        print("Usage: script.py <snark> <mode> <ellipticCurve> <electionType> <nBits> key1=value1 key2=value2 ...")
+        print("Allowed values for <snark>: groth16, plonk, fflonk")
         print("Allowed values for <mode>: voting, encryption, combined")
         sys.exit(1)
 
 # Assign input arguments to variables
 def parse_arguments():
-    mode, elliptic_curve, election_type, n_bits, *kv_pairs = sys.argv[1:]
+    snark, mode, elliptic_curve, election_type, n_bits, *kv_pairs = sys.argv[1:]
     named_params = {}
     for arg in kv_pairs:
         if "=" in arg:
@@ -62,10 +63,10 @@ def parse_arguments():
         else:
             print(f"Error: Invalid argument '{arg}', expected key=value format.")
             sys.exit(1)
-    return mode, elliptic_curve, election_type, n_bits, named_params
+    return snark, mode, elliptic_curve, election_type, n_bits, named_params
 
-def prepare_directories(elliptic_curve, election_type):
-    base_path = Path(elliptic_curve) / election_type
+def prepare_directories(snark, elliptic_curve, election_type):
+    base_path = Path(snark) / elliptic_curve / election_type
     base_path.mkdir(parents=True, exist_ok=True)
     return base_path
 
@@ -103,7 +104,7 @@ def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n
 
     file_header = f"""
 pragma circom 2.2.1;
-include \"../../../../voting/{election_type}.circom\";
+include \"../../../../../voting/{election_type}.circom\";
     """
 
     template_method_signature = f"""
@@ -187,11 +188,11 @@ def create_sage_file(base_path, file_prefix, elliptic_curve, election_type, name
         f.write(f"""
 from sageImport import sage_import
 
-sage_import('../../../../sage/voting/ballot', fromlist=['Ballot'])
-sage_import('../../../../sage/voting/{election_type}', fromlist=['{capitalize_first_letter(election_type)}Ballot'])
-sage_import('../../../../sage/ellipticCurves/curve', fromlist=['CurvePoint'])
-sage_import('../../../../sage/ellipticCurves/Montgomery', fromlist=['MontgomeryAffinePoint', 'MontgomeryProjectivePoint'])
-sage_import('../../../../sage/ellipticCurves/TwistedEdwards', fromlist=['TwistedEdwardsPoint'])
+sage_import('../../../../../sage/voting/ballot', fromlist=['Ballot'])
+sage_import('../../../../../sage/voting/{election_type}', fromlist=['{capitalize_first_letter(election_type)}Ballot'])
+sage_import('../../../../../sage/ellipticCurves/curve', fromlist=['CurvePoint'])
+sage_import('../../../../../sage/ellipticCurves/Montgomery', fromlist=['MontgomeryAffinePoint', 'MontgomeryProjectivePoint'])
+sage_import('../../../../../sage/ellipticCurves/TwistedEdwards', fromlist=['TwistedEdwardsPoint'])
 
 Ballot.test({capitalize_first_letter(election_type)}Ballot, {capitalize_first_letter(elliptic_curve)}Point, {named_params_string})
         """)
@@ -220,12 +221,20 @@ def compile_circuit(base_path, file_prefix):
 # ========================================================================================================================
 # 5. Prepare proof
 
-def prepare_proof(base_path, file_prefix):
+def prepare_proof(snark, base_path, file_prefix):
     snarkjs_path = base_path / "snarkjsTestFiles"
     snarkjs_path.mkdir(exist_ok=True)
+
     start_time = time.time()
-    execute_shell_command(f"cd {snarkjs_path} && prepareProof.sh ../circomTestFiles/{file_prefix}.r1cs ../../../../scripts/ptau/{PTAU_FILE}")
+    if (snark == "groth16"):
+        print("HI")
+        execute_shell_command(f"cd {snarkjs_path} && prepareProof.sh ../circomTestFiles/{file_prefix}.r1cs ../../../../../scripts/ptau/{PTAU_FILE}")
+    elif (snark == "plonk" or snark == "fflonk"):
+        execute_shell_command(f"cd {snarkjs_path} && snarkjs {snark} setup ../circomTestFiles/{file_prefix}.r1cs ../../../../../scripts/ptau/{PTAU_FILE} {file_prefix}.zkey")
+
+    execute_shell_command(f"cd {snarkjs_path} && snarkjs zkey export verificationkey {file_prefix}.zkey {file_prefix}_verification_key.json")
     end_time = time.time()
+    
     t_prep = int((end_time - start_time) * 1000)
     zkey_file = snarkjs_path / f"{file_prefix}.zkey"
     if not zkey_file.exists():
@@ -238,10 +247,10 @@ def prepare_proof(base_path, file_prefix):
 # ========================================================================================================================
 # 6. Prove
 
-def prove(base_path, file_prefix):
+def prove(snark, base_path, file_prefix):
     snarkjs_path = base_path / "snarkjsTestFiles"
     start_time = time.time()
-    execute_shell_command(f"cd {snarkjs_path} && snarkjs groth16 prove {file_prefix}.zkey ../circomTestFiles/{file_prefix}_js/witness.wtns proof.json public.json")
+    execute_shell_command(f"cd {snarkjs_path} && snarkjs {snark} prove {file_prefix}.zkey ../circomTestFiles/{file_prefix}_js/witness.wtns proof.json public.json")
     end_time = time.time()
     t_prove = int((end_time - start_time) * 1000)
     print(f"Proof generated in {t_prove} milliseconds.")
@@ -250,10 +259,11 @@ def prove(base_path, file_prefix):
 # ========================================================================================================================
 # 7. Verify
 
-def verify_proof(base_path, file_prefix):
+def verify_proof(snark, base_path, file_prefix):
     snarkjs_path = base_path / "snarkjsTestFiles"
     start_time = time.time()
-    execute_shell_command(f"cd {snarkjs_path} && verifyProof.sh {file_prefix}_verification_key.json public.json proof.json")
+    execute_shell_command(f"cd {snarkjs_path} && snarkjs {snark} verify {file_prefix}_verification_key.json public.json proof.json")
+    # execute_shell_command(f"cd {snarkjs_path} && verifyProof.sh {file_prefix}_verification_key.json public.json proof.json")
     end_time = time.time()
     t_ver = int((end_time - start_time) * 1000)
     print(f"Verification completed in {t_ver} milliseconds.")
@@ -262,8 +272,8 @@ def verify_proof(base_path, file_prefix):
 # ========================================================================================================================
 # 8. Export results
 
-def export_results(elliptic_curve, mode, election_type, n_bits, named_params, non_linear_constraints, linear_constraints, crs_size, t_prep, t_prove, t_ver):
-    results_path = Path(elliptic_curve) / "results" / mode
+def export_results(snark, elliptic_curve, mode, election_type, n_bits, named_params, non_linear_constraints, linear_constraints, crs_size, t_prep, t_prove, t_ver):
+    results_path = Path(snark) / elliptic_curve / "results" / mode
     results_path.mkdir(parents=True, exist_ok=True)
     csv_file = results_path / f"{election_type}.csv"
     
@@ -294,16 +304,16 @@ def cleanup(base_path):
 
 def main():
     validate_args(sys.argv[1:])
-    mode, elliptic_curve, election_type, n_bits, named_params = parse_arguments()
-    base_path = prepare_directories(elliptic_curve, election_type)
+    snark, mode, elliptic_curve, election_type, n_bits, named_params = parse_arguments()
+    base_path = prepare_directories(snark, elliptic_curve, election_type)
     file_prefix = create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, named_params)
     create_sage_file(base_path, file_prefix, elliptic_curve, election_type, named_params)
     non_linear_constraints, linear_constraints = compile_circuit(base_path, file_prefix)
     constraints = non_linear_constraints + linear_constraints
-    t_prep, crs_size = prepare_proof(base_path, file_prefix)
-    t_prove = prove(base_path, file_prefix)
-    t_ver = verify_proof(base_path, file_prefix)
-    export_results(elliptic_curve, mode, election_type, n_bits, named_params, non_linear_constraints, linear_constraints, crs_size, t_prep, t_prove, t_ver)
+    t_prep, crs_size = prepare_proof(snark, base_path, file_prefix)
+    t_prove = prove(snark, base_path, file_prefix)
+    t_ver = verify_proof(snark, base_path, file_prefix)
+    export_results(snark, elliptic_curve, mode, election_type, n_bits, named_params, non_linear_constraints, linear_constraints, crs_size, t_prep, t_prove, t_ver)
     cleanup(base_path)
 
 if __name__ == "__main__":
