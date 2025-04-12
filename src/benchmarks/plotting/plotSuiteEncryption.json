@@ -1,6 +1,6 @@
 [
     {
-        "plotPath": "EncryptionMontgomery",
+        "plotPath": "encryption/Montgomery/EncryptionMontgomery",
         "xLabel": "$m$ ballot entries/ plaintexts",
         "xLimit": 600,
         "label": " for $\\mathfrak{C}_C^{Enc}$ with Montgomery Curve and EEG Encryption in Circom",
@@ -8,7 +8,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../montgomeryProjective/results/encryption/singleVote.csv",
+                "fileName": "../groth16_results/montgomeryProjective/results/encryption/singleVote.csv",
                 "filterVariable": "Number of Bits",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
@@ -49,7 +49,7 @@
         ]
     },
     {
-        "plotPath": "EncryptionTwistedEdwards",
+        "plotPath": "encryption/TwistedEdwards/EncryptionTwistedEdwards",
         "xLabel": "$m$ ballot entries/ plaintexts",
         "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Enc}$ with Twisted Edwards curve and PPEEG Encryption in Circom",
@@ -57,7 +57,7 @@
         "dataSets": [
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../twistedEdwards/results/encryption/singleVote.csv",
+                "fileName": "../groth16_results/twistedEdwards/results/encryption/singleVote.csv",
                 "filterVariable": "Number of Bits",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
@@ -98,7 +98,7 @@
         ]
     },
     {
-        "plotPath": "EncryptionLibsnark",
+        "plotPath": "encryption/libsnark/EncryptionLibsnark",
         "xLabel": "$m$ ballot entries/ plaintexts",
         "xLimit": 300,
         "label": " for $\\mathfrak{C}_C^{Enc}$ with Montgomery curve and EEG Encryption in libsnark",
@@ -106,7 +106,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
                 "xNameData": "n_values",
                 "linestyle": "solid",
                 "lines": [
@@ -118,7 +118,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
                 "xNameData": "n_values",
                 "linestyle": "solid",
                 "lines": [
@@ -130,7 +130,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
                 "xNameData": "n_values",
                 "linestyle": "solid",
                 "lines": [
@@ -143,15 +143,16 @@
 
         ]
     },
+
     {
-        "plotPath": "EncryptionComparison",
+        "plotPath": "encryption/Comparison/EncryptionComparison",
         "xLabel": "$m$ ballot entries/ plaintexts",
         "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Enc}$",
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../montgomeryProjective/results/encryption/singleVote.csv",
+                "fileName": "../groth16_results/montgomeryProjective/results/encryption/singleVote.csv",
                 "filterVariable": "Number of Bits",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
@@ -159,23 +160,23 @@
                     {
                         "filterValue": 1,
                         "color": "blue",
-                        "label": "$m$ Ciphertexts [1 bit] with Montgomery curves in Circom"
+                        "label": "$m$ Ciphertexts [1 bit, Montgomery, Circom]"
                     },
                     {
                         "filterValue": 16,
                         "color": "orange",
-                        "label": "$m$ Ciphertexts [16 bits] with Montgomery curves in Circom"
+                        "label": "$m$ Ciphertexts [16 bits, Montgomery, Circom]"
                     },
                     {
                         "filterValue": 32,
                         "color": "green",
-                        "label": "$m$ Ciphertexts [32 bits] with Montgomery curves in Circom"
+                        "label": "$m$ Ciphertexts [32 bits, Montgomery, Circom]"
                     }
                 ]
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../twistedEdwards/results/encryption/singleVote.csv",
+                "fileName": "../groth16_results/twistedEdwards/results/encryption/singleVote.csv",
                 "filterVariable": "Number of Bits",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
@@ -183,53 +184,53 @@
                     {
                         "filterValue": 1,
                         "color": "blue",
-                        "label": "$m$ Ciphertexts [1 bit] with Twisted Edwards curves in Circom"
+                        "label": "$m$ Ciphertexts [1 bit, Twisted Edwards, Circom]"
                     },
                     {
                         "filterValue": 16,
                         "color": "orange",
-                        "label": "$m$ Ciphertexts [16 bits] with Twisted Edwards curves in Circom"
+                        "label": "$m$ Ciphertexts [16 bits, Twisted Edwards, Circom]"
                     },
                     {
                         "filterValue": 32,
                         "color": "green",
-                        "label": "$m$ Ciphertexts [32 bits] with Twisted Edwards curves in Circom"
+                        "label": "$m$ Ciphertexts [32 bits, Twisted Edwards, Circom]"
                     }
                 ]
             },
             {
                 "mode": "libsnark",
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_1_bits.csv",
                 "xNameData": "n_values",
                 "linestyle": "solid",
                 "lines": [
                     {
                         "color": "blue",
-                        "label": "$m$ Ciphertexts [1 bit] with Montgomery curves in libsnark"
+                        "label": "$m$ Ciphertexts [1 bit, Montgomery, libsnark]"
                     }
                 ]
             },
             {
                 "mode": "libsnark",
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_16_bits.csv",
                 "xNameData": "n_values",
                 "linestyle": "solid",
                 "lines": [
                     {
                         "color": "orange",
-                        "label": "$m$ Ciphertexts [16 bits] with Montgomery curves in libsnark"
+                        "label": "$m$ Ciphertexts [16 bits, Montgomery, libsnark]"
                     }
                 ]
             },
             {
                 "mode": "libsnark",
-                "fileName": "../libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_exp_el_gamal_ciphertexts_32_bits.csv",
                 "xNameData": "n_values",
                 "linestyle": "solid",
                 "lines": [
                     {
                         "color": "green",
-                        "label": "$m$ Ciphertexts [32 bits] with Montgomery curves in libsnark"
+                        "label": "$m$ Ciphertexts [32 bits, Montgomery, libsnark]"
                     }
                 ]
             }

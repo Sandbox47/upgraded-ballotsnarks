@@ -2,10 +2,15 @@ import sys
 import os
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+import matplotlib as mpl
 import json
 from scipy.interpolate import interp1d
 from sklearn.linear_model import LinearRegression
+from numpy.polynomial.polynomial import Polynomial
+
+# mpl.rcParams['text.usetex'] = True
+# mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}'] #for \text command
 
 def load_config(config_path):
     with open(config_path, "r") as f:
@@ -17,9 +22,15 @@ def load_and_filter_data(file_name, filter_variable, filter_value, x_name, y_nam
     # print("CSV Columns:", df.columns)  # Debugging print
 
     if filter_variable:
-        df = df[df[filter_variable] == filter_value]
+        if '=' in filter_variable and filter_variable.count('=') == 1: #and filter_variable.replace('=', '').isidentifier():
+            col1, col2 = filter_variable.split('=')
+            df = df[df[col1] == df[col2]]
+        else:
+            df = df[df[filter_variable] == filter_value]
+
     x = df[x_name].values
     y = df[y_name].values * scaling_factor
+    # print(f"Y-Values: {y}")
     return x, y
 
 def plot_data_given_yLabel(entry, yLabel, output_path):
@@ -45,6 +56,7 @@ def plot_data_given_yLabel(entry, yLabel, output_path):
         y_name = modeConfig["name"]
         scaling_factor = modeConfig.get("scalingFactor", 1.0)
         linestyle = dataset["linestyle"]
+        interpolation_degree = dataset.get("interpolationDegree", 1)
         
         for line in dataset["lines"]:
             filter_value = line.get("filterValue")
@@ -66,14 +78,14 @@ def plot_data_given_yLabel(entry, yLabel, output_path):
             # Plot data points
             plt.scatter(x, y, color=color, s=10)
 
-            # Linear regression
-            if len(x) > 1:
-                model = LinearRegression()
-                x_reshaped = x.reshape(-1, 1)
-                model.fit(x_reshaped, y)
-                y_pred = model.predict(x_reshaped)
-                plt.plot(x, y_pred, color=color, linestyle=linestyle, label=label)
+            if len(x) > interpolation_degree:
+                # Polynomial regression of specified degree
+                coeffs = np.polyfit(x, y, interpolation_degree)
+                poly = np.poly1d(coeffs)
+                x_sorted = np.sort(x)
+                plt.plot(x_sorted, poly(x_sorted), color=color, linestyle=linestyle, label=label)
             else:
+                print(f"Interpolation not possible, {len(x)} <= {interpolation_degree}")
                 plt.plot(x, y, color=color, linestyle=linestyle, label=label)  # Fallback
     
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))  # Move legend to the right
@@ -87,8 +99,8 @@ def plot_data(entry):
     config = load_config("plotConfig.json")
     yLabels = config["yLabels"]
     for yLabel in yLabels:
-        output_fileName = entry['plotPath'] + yLabel
-        output_path = os.path.join("plots", f"{output_fileName}.pdf")
+        output_path = entry['plotPath'] + yLabel
+        output_path = os.path.join("plots", f"{output_path}.pdf")
         plot_data_given_yLabel(entry, yLabel, output_path)
 
 def main():

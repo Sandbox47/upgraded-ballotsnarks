@@ -1,0 +1,604 @@
+[
+    {
+        "plotPath": "voting/Circom/linear/VotingCircomLinear",
+        "xLabel": "$cand$ candidates",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Vot}$ in Circom",
+
+        "dataSets": [
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/singleVote.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "label": "$C=C_{Single(cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVote.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "orange",
+                        "label": "$C=C_{Multi(cand, 5, 2cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "green",
+                        "label": "$C=C_{MWR(cand, 5, 2cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/lineVote.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "red",
+                        "label": "$C=C_{Line(cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nPoints",
+                "lines": [
+                    {
+                        "filterValue": 10,
+                        "color": "purple",
+                        "label": "$C=C_{Pointlist-Borda(cand, 10, [10,9,\\dots, 1])}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nGrades",
+                "lines": [
+                    {
+                        "filterValue": 6,
+                        "color": "olive",
+                        "label": "$C=C_{Majority-Judgment(cand, 6)}$"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "plotPath": "voting/Circom/quadratic/VotingCircomQuadratic",
+        "xLabel": "$cand$ candidates",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Vot}$ in Circom",
+
+        "dataSets": [
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nPoints=nCand",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "brown",
+                        "label": "$C=C_{Pointlist-Borda(cand, cand, [cand,cand-1,\\dots, 1])}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "pink",
+                        "label": "$C=C_{BTS(cand, 2, 1)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "gray",
+                        "label": "$C=C_{Condorcet(cand)}$ (utilizing ranking)"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
+                "xNameData": "nCand",
+                "linestyle": "dotted",
+                "interpolationDegree": 3,
+                "lines": [
+                    {
+                        "color": "gray",
+                        "label": "$C=C_{Condorcet(cand)}$ (without ranking)"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nGrades=nCand",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "cyan",
+                        "label": "$C=C_{Majority-Judgment(cand, cand)}$"
+                    }
+                ]
+            }
+        ]
+    },
+
+
+
+
+
+
+    {
+        "plotPath": "voting/libsnark/linear/VotingLibsnarkLinear",
+        "xLabel": "$cand$ candidates",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Vot}$ in libsnark",
+
+        "dataSets": [
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "label": "$C=C_{Single(cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "orange",
+                        "label": "$C=C_{Multi(cand, 5, 2cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "green",
+                        "label": "$C=C_{MWR(cand, 5, 2cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_line-vote.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "red",
+                        "label": "$C=C_{Line(cand)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "purple",
+                        "label": "$C=C_{Pointlist-Borda(cand, 10, [10,9,\\dots, 1])}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "olive",
+                        "label": "$C=C_{Majority-Judgment(cand, 6)}$"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "plotPath": "voting/libsnark/quadratic/VotingLibsnarkQuadratic",
+        "xLabel": "$cand$ candidates",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Vot}$ in libsnark",
+
+        "dataSets": [
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "brown",
+                        "label": "$C=C_{Pointlist-Borda(cand, cand, [cand,cand-1,\\dots, 1])}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_borda_with_ties.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "pink",
+                        "label": "$C=C_{BTS(cand, 2, 1)}$"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_condorcet.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 3,
+                "lines": [
+                    {
+                        "color": "gray",
+                        "label": "$C=C_{Condorcet(cand)}$ (without ranking)"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "cyan",
+                        "label": "$C=C_{Majority-Judgment(cand, cand)}$"
+                    }
+                ]
+            }
+        ]
+    },
+
+
+
+
+
+
+    {
+        "plotPath": "voting/Comparison/linear/VotingComparisonLinear",
+        "xLabel": "$cand$ candidates",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Vot}$",
+
+        "dataSets": [
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "label": "$C=C_{Single(cand)}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "orange",
+                        "label": "$C=C_{Multi(cand, 5, 2cand)}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "green",
+                        "label": "$C=C_{MWR(cand, 5, 2cand)}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_line-vote.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "red",
+                        "label": "$C=C_{Line(cand)}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "purple",
+                        "label": "$C=C_{Pointlist-Borda(cand, 10, [10,9,\\dots, 1])}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "lines": [
+                    {
+                        "color": "olive",
+                        "label": "$C=C_{Majority-Judgment(cand, 6)}$ [libsnark]"
+                    }
+                ]
+            },
+
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/singleVote.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "blue",
+                        "label": "$C=C_{Single(cand)}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVote.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "orange",
+                        "label": "$C=C_{Multi(cand, 5, 2cand)}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "green",
+                        "label": "$C=C_{MWR(cand, 5, 2cand)}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/lineVote.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "color": "red",
+                        "label": "$C=C_{Line(cand)}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nPoints",
+                "lines": [
+                    {
+                        "filterValue": 10,
+                        "color": "purple",
+                        "label": "$C=C_{Pointlist-Borda(cand, 10, [10,9,\\dots, 1])}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nGrades",
+                "lines": [
+                    {
+                        "filterValue": 6,
+                        "color": "olive",
+                        "label": "$C=C_{Majority-Judgment(cand, 6)}$ [Circom]"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "plotPath": "voting/Comparison/quadratic/VotingComparisonQuadratic",
+        "xLabel": "$cand$ candidates",
+        "xLimit": 600,
+        "label": " for $\\mathfrak{C}_C^{Vot}$ in Circom",
+
+        "dataSets": [
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "brown",
+                        "label": "$C=C_{Pointlist-Borda(cand, cand, [cand,cand-1,\\dots, 1])}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_borda_with_ties.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "pink",
+                        "label": "$C=C_{BTS(cand, 2, 1)}$ [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_condorcet.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 3,
+                "lines": [
+                    {
+                        "color": "gray",
+                        "label": "$C=C_{Condorcet(cand)}$ (without ranking)  [libsnark]"
+                    }
+                ]
+            },
+            {
+                "mode": "libsnark",
+                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
+                "xNameData": "n_cand",
+                "linestyle": "solid",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "cyan",
+                        "label": "$C=C_{Majority-Judgment(cand, cand)}$  [libsnark]"
+                    }
+                ]
+            },
+
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nPoints=nCand",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "brown",
+                        "label": "$C=C_{Pointlist-Borda(cand, cand, [cand,cand-1,\\dots, 1])}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "pink",
+                        "label": "$C=C_{BTS(cand, 2, 1)}$ [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "gray",
+                        "label": "$C=C_{Condorcet(cand)}$ (utilizing ranking) [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
+                "xNameData": "nCand",
+                "linestyle": "dotted",
+                "interpolationDegree": 3,
+                "lines": [
+                    {
+                        "color": "gray",
+                        "label": "$C=C_{Condorcet(cand)}$ (without ranking) [Circom]"
+                    }
+                ]
+            },
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "xNameData": "nCand",
+                "linestyle": "dashed",
+                "filterVariable": "nGrades=nCand",
+                "interpolationDegree": 2,
+                "lines": [
+                    {
+                        "color": "cyan",
+                        "label": "$C=C_{Majority-Judgment(cand, cand)}$ [Circom]"
+                    }
+                ]
+            }
+        ]
+    }
+]
