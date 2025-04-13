@@ -145,6 +145,96 @@
     },
 
     {
+        "plotPath": "encryption/MontgomeryTwistedEdwards/EncryptionMontgomeryTwistedEdwards",
+        "xLabel": "$m$ ballot entries/ plaintexts",
+        "xLimit": 1000,
+        "label": " for $\\mathfrak{C}_C^{Enc}$ in Circom",
+
+        "dataSets": [
+            {
+                "mode": "CircomMontgomery",
+                "fileName": "../groth16_results/montgomeryProjective/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "linestyle": "dashed",
+                "lines": [
+                    {
+                        "filterValue": 1,
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit, Montgomery]"
+                    },
+                    {
+                        "filterValue": 16,
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits, Montgomery]"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits, Montgomery]"
+                    },
+                    {
+                        "filterValue": 64,
+                        "color": "red",
+                        "label": "$m$ Ciphertexts [64 bits, Montgomery]"
+                    },
+                    {
+                        "filterValue": 128,
+                        "color": "purple",
+                        "label": "$m$ Ciphertexts [128 bits, Montgomery]"
+                    },
+                    {
+                        "filterValue": 250,
+                        "color": "brown",
+                        "label": "$m$ Ciphertexts [250 bits, Montgomery]"
+                    }
+
+                ]
+            },
+            {
+                "mode": "CircomTwistedEdwards",
+                "fileName": "../groth16_results/twistedEdwards/results/encryption/singleVote.csv",
+                "filterVariable": "Number of Bits",
+                "xNameData": "nVotes",
+                "linestyle": "dotted",
+                "lines": [
+                    {
+                        "filterValue": 1,
+                        "color": "blue",
+                        "label": "$m$ Ciphertexts [1 bit, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 16,
+                        "color": "orange",
+                        "label": "$m$ Ciphertexts [16 bits, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 32,
+                        "color": "green",
+                        "label": "$m$ Ciphertexts [32 bits, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 64,
+                        "color": "red",
+                        "label": "$m$ Ciphertexts [64 bits, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 128,
+                        "color": "purple",
+                        "label": "$m$ Ciphertexts [128 bits, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 250,
+                        "color": "brown",
+                        "label": "$m$ Ciphertexts [250 bits, Twisted Edwards]"
+                    }
+
+                ]
+            }
+        ]
+    },
+
+    {
         "plotPath": "encryption/Comparison/EncryptionComparison",
         "xLabel": "$m$ ballot entries/ plaintexts",
         "xLimit": 1000,

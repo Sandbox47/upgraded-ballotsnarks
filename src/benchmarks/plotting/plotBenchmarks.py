@@ -79,11 +79,14 @@ def plot_data_given_yLabel(entry, yLabel, output_path):
             plt.scatter(x, y, color=color, s=10)
 
             if len(x) > interpolation_degree:
+                # print(f"election type: {label}, interpolation degree: {interpolation_degree}")
                 # Polynomial regression of specified degree
                 coeffs = np.polyfit(x, y, interpolation_degree)
                 poly = np.poly1d(coeffs)
-                x_sorted = np.sort(x)
-                plt.plot(x_sorted, poly(x_sorted), color=color, linestyle=linestyle, label=label)
+                # x_sorted = np.sort(x)
+                # plt.plot(x_sorted, poly(x_sorted), color=color, linestyle=linestyle, label=label)
+                x_dense = np.linspace(np.min(x), np.max(x), 300)  # Generate smooth range
+                plt.plot(x_dense, poly(x_dense), color=color, linestyle=linestyle, label=label)
             else:
                 print(f"Interpolation not possible, {len(x)} <= {interpolation_degree}")
                 plt.plot(x, y, color=color, linestyle=linestyle, label=label)  # Fallback
