@@ -1,0 +1,12 @@
+Election; # Constraints per Ballot Entry [libsnark]; Enc [libsnark]; Vot [libsnark]; # Constraints per Ballot Entry [circom, M]; Enc [circom, M]; Vot [circom, M];  # Constraints per Ballot Entry [circom, TE]; Enc [circom, TE]; Vot [circom, TE]
+$C_{Single(cand)}$; 
+$C_{Multi(cand, 2cand, 5)}$;
+$C_{MWR(cand, 2cand, 5)}$;
+$C_{Line(cand)}$;
+$C_{Pointlist\text{-}Borda(cand, 10, [10,9,\dots, 1])}$;
+$C_{BTS(cand, 2, 1)}$;
+$C_{Majority\text{-}Judgment(cand, 6)}$;
+$C_{Pointlist\text{-}Borda(cand, cand, [cand,cand-1,\dots, 1])}$;
+$C_{Condorcet(cand)}$ (without ranking);
+$C_{Condorcet(cand)}$ (utilizing ranking);
+$C_{Majority\text{-}Judgment(cand, cand)}$;

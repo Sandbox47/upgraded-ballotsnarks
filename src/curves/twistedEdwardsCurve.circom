@@ -107,4 +107,4 @@ template twistedEdwardsScalarMul(n, a, d) {
 
 // component main = ifThenElseTwistedEdwards();
 // component main = twistedEdwardsGroupLaw(8, 3);
-// component main = twistedEdwardsScalarMul(255, 8, 3);
+// component main = twistedEdwardsScalarMul(1, 8, 3);

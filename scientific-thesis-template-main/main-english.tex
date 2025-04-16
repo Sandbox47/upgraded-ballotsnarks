@@ -34,6 +34,43 @@
 \newcommand{\colorleveltwo}{\color{magenta}}
 \newcommand{\colorlevelthree}{\color{cyan}}
 
+% \newcommand{\splitcell}[4]{%
+%   \begin{tabular}{@{}c@{}}%
+%     #1\\%
+%     \begin{tikzpicture}
+%       \draw[fill=#2] (0,0) rectangle (#4,0.3);
+%       \draw[fill=#3] (#4,0) rectangle (1,0.3);
+%     \end{tikzpicture}%
+%   \end{tabular}%
+% }
+
+% \newcommand{\splitcell}[4]{%
+%   \begin{tabular}[c]{@{}p{0.9\linewidth}@{}} % Top part
+%     \centering #1 \\[-0.2em]
+%     \adjustbox{valign=t, minipage=1.1\linewidth, height=1.5ex}{%
+%       \begin{tikzpicture}
+%         \draw[fill=#2, draw=none] (0,0) rectangle (#4\linewidth,1);
+%         \draw[fill=#3, draw=none] (#4\linewidth,0) rectangle (\linewidth,1);
+%       \end{tikzpicture}
+%     }%
+%   \end{tabular}%
+% }
+
+\newcommand{\splitcell}[4]{%
+  \begin{varwidth}{\linewidth}
+    \vspace{0.2em}
+    \centering #1\\
+    \begin{tikzpicture}[x=\linewidth, y=2ex, baseline]
+      \draw[fill=#2, draw=none] (0,0) rectangle (#4,1);
+      \draw[fill=#3, draw=none] (#4,0) rectangle (1,1);
+    \end{tikzpicture}
+  \end{varwidth}
+}
+
+\newcolumntype{S}{m{3.2cm}}
+
+\newcommand{\splitcelldefault}[2]{\splitcell{#1}{blue}{yellow}{#2}}
+
 \newcounter{bracketdepth}
 
 % Function to assign colors based on nesting level
@@ -50,6 +87,10 @@
         \fi
     \fi
 }
+
+% \newcommand{\constdecomp}[2]{%
+%   
+% }
 
 % Increment and decrement depth for each bracket type
 \newcommand{\increasebracketdepth}{\stepcounter{bracketdepth}}

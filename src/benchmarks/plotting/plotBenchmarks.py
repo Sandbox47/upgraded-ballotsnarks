@@ -8,6 +8,7 @@ import json
 from scipy.interpolate import interp1d
 from sklearn.linear_model import LinearRegression
 from numpy.polynomial.polynomial import Polynomial
+from math import ceil
 
 # mpl.rcParams['text.usetex'] = True
 # mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}'] #for \text command
@@ -33,6 +34,61 @@ def load_and_filter_data(file_name, filter_variable, filter_value, x_name, y_nam
     # print(f"Y-Values: {y}")
     return x, y
 
+def plot_data_given_yLabel(entry, yLabel, ax):
+    config = load_config("plotConfig.json")
+    ax.set_xlabel(entry["xLabel"])
+    ax.set_ylabel(yLabel)
+    ax.set_xlim(0, entry["xLimit"])
+
+    labels = config["labels"]
+    ax.set_title(labels[yLabel] + entry["label"])
+
+    for dataset in entry["dataSets"]:
+        mode = dataset["mode"]
+        if not(yLabel in config[mode]):
+            continue
+        modeConfig = config[mode][yLabel]
+
+        file_name = dataset["fileName"]
+        filter_variable = dataset.get("filterVariable")
+        x_name = dataset["xNameData"]
+        y_name = modeConfig["name"]
+        scaling_factor = modeConfig.get("scalingFactor", 1.0)
+        linestyle = dataset["linestyle"]
+        interpolation_degree = dataset.get("interpolationDegree", 1)
+
+        for line in dataset["lines"]:
+            filter_value = line.get("filterValue")
+            color = line["color"]
+            label = line["label"]
+
+            x, y = load_and_filter_data(file_name, filter_variable, filter_value, x_name, y_name, scaling_factor)
+            ax.scatter(x, y, color=color, s=10)
+
+            if len(x) > interpolation_degree:
+                coeffs = np.polyfit(x, y, interpolation_degree)
+                poly = np.poly1d(coeffs)
+                x_dense = np.linspace(np.min(x), np.max(x), 300)
+                ax.plot(x_dense, poly(x_dense), color=color, linestyle=linestyle, label=label)
+
+                # if interpolation_degree == 1:
+                #     slope = coeffs[0]
+                #     label_with_slope = f"{label} (slope: {slope:.2e})"
+                #     ax.plot(x_dense, poly(x_dense), color=color, linestyle=linestyle, label=label_with_slope)
+                # elif interpolation_degree >= 2:
+                #     curvature = coeffs[0]  # leading coefficient for x^2
+                #     label_with_curvature = f"{label} (leading coef: {curvature:.2e})"
+                #     ax.plot(x_dense, poly(x_dense), color=color, linestyle=linestyle, label=label_with_curvature)
+                # else:
+                #     ax.plot(x_dense, poly(x_dense), color=color, linestyle=linestyle, label=label)
+
+            else:
+                ax.plot(x, y, color=color, linestyle=linestyle, label=label)
+
+    ax.grid()
+
+
+""""
 def plot_data_given_yLabel(entry, yLabel, output_path):
     config = load_config("plotConfig.json")
 
@@ -97,14 +153,59 @@ def plot_data_given_yLabel(entry, yLabel, output_path):
     os.makedirs(os.path.dirname(output_path), exist_ok=True)  # Ensure the directory exists
     plt.savefig(output_path, format="pdf", bbox_inches='tight')  # Adjust bounding box for legend
     plt.close()
+"""
 
 def plot_data(entry):
+    # config = load_config("plotConfig.json")
+    # yLabels = config["yLabels"]
+    # for yLabel in yLabels:
+    #     output_path = entry['plotPath'] + yLabel
+    #     output_path = os.path.join("plots", f"{output_path}.pdf")
+    #     plot_data_given_yLabel(entry, yLabel, output_path)
+
     config = load_config("plotConfig.json")
     yLabels = config["yLabels"]
-    for yLabel in yLabels:
-        output_path = entry['plotPath'] + yLabel
-        output_path = os.path.join("plots", f"{output_path}.pdf")
-        plot_data_given_yLabel(entry, yLabel, output_path)
+    n_plots = len(yLabels)
+    ncols = 2 if n_plots > 1 else 1
+    nrows = ceil(n_plots / ncols)
+
+    fig, axs = plt.subplots(nrows, ncols, figsize=(ncols * 6, nrows * 4))
+    axs = axs.flatten() if n_plots > 1 else [axs]
+
+    handles_labels = []
+    for i, yLabel in enumerate(yLabels):
+        plot_data_given_yLabel(entry, yLabel, axs[i])
+        handles_labels.append(axs[i].get_legend_handles_labels())
+
+    # Hide any unused subplot
+    for j in range(n_plots, len(axs)):
+        axs[j].axis('off')
+
+    # Collect all legend entries and remove duplicates
+    handles_dict = {}
+    for h_list, l_list in handles_labels:
+        for h, l in zip(h_list, l_list):
+            if l not in handles_dict:
+                handles_dict[l] = h
+
+    handles = list(handles_dict.values())
+    labels = list(handles_dict.keys())
+
+    if n_plots == 1:
+        fig.legend(handles, labels, loc='upper center', ncol=1, bbox_to_anchor=(0.5, 0))
+    elif n_plots % 2 == 0:
+        fig.subplots_adjust(bottom=0.15)
+        fig.legend(handles, labels, loc='lower center', ncol=3, bbox_to_anchor=(0.5, -0.04))
+    else:
+        # axs[-1].legend(handles, labels, loc='center left', bbox_to_anchor=(1.05, 0.5))
+        axs[-1].legend(handles, labels, loc='center', frameon=False)
+
+    fig.tight_layout(rect=[0, 0.08 if n_plots % 2 == 0 else 0, 1, 1], h_pad=1.5)
+
+    output_path = os.path.join("plots", f"{entry['plotPath']}_allMetrics.pdf")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path, format="pdf", bbox_inches='tight')
+    plt.close()
 
 def main():
     if len(sys.argv) < 2:
@@ -117,78 +218,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-def plot_from_csv(csv_file, x_var, y_var, group_var):
-    # Read the CSV file
-    df = pd.read_csv(csv_file, delimiter=';')
-
-    # Convert the group variable to a string for categorical grouping
-    df[group_var] = df[group_var].astype(str)
-
-    # Create the plot
-    plt.figure(figsize=(10, 6))
-
-    for group in df[group_var].unique():
-        subset = df[df[group_var] == group]
-        plt.plot(subset[x_var], subset[y_var], marker='o', label=f"{group} {group_var}")
-
-    plt.xscale('log') if df[x_var].max() / df[x_var].min() > 100 else None  # Use log scale if range is large
-    plt.yscale('log') if df[y_var].max() / df[y_var].min() > 100 else None  # Use log scale if range is large
-
-    plt.xlabel(x_var)
-    plt.ylabel(y_var)
-    plt.title(f"{y_var} vs {x_var} grouped by {group_var}")
-    plt.legend()
-    plt.grid(True, which="both", linestyle="--", linewidth=0.5)
-    plt.show()
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Plot benchmark data with flexible axes and grouping.")
-    parser.add_argument("csv_file", type=str, help="Path to the CSV file containing the benchmark data.")
-    parser.add_argument("x_var", type=str, help="Column name for x-axis variable.")
-    parser.add_argument("y_var", type=str, help="Column name for y-axis variable.")
-    parser.add_argument("group_var", type=str, help="Column name for grouping variable (separate lines).")
-
-    args = parser.parse_args()
-    
-    plot_from_csv(args.csv_file, args.x_var, args.y_var, args.group_var)
-"""

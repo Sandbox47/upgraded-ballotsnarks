@@ -1,6 +1,12 @@
 {
     "yLabels": [
         "Constraints",
+        "Prove[s]",
+        "CRS Size[MB]",
+        "Setup[s]"
+    ],
+    "yLabels_TEST": [
+        "Constraints",
         "Setup[s]",
         "Prove[s]",
         "Verify[s]",

@@ -158,5 +158,5 @@ template scalarMulProjectivePrecomputedExponents(n, A, B) {
 }
 */
 
-// component main = scalarMulProjective(255, 126932, 1);
+// component main = scalarMulProjective(32, 126932, 1);
 // component main = scalarMulAffine(255, 126932, 1);

@@ -6,6 +6,7 @@ include "affinePoint.circom";
 include "projectivePoint.circom";
 include "conversionsPointRepresentations.circom";
 include "../../libs/node_modules/circomlib/circuits/comparators.circom";
+include "../../libs/node_modules/circomlib/circuits/gates.circom";
 
 // ========================================================================================================================
 // OKEYA-SAKURAI-Y-RECOVERY
@@ -169,3 +170,5 @@ template yRecoveryProjective(A, B) {
 
     out <== ifThenElse.out;
 }
+
+// component main = okeyaSakuraiYRecoveryProjective(126932, 1);
