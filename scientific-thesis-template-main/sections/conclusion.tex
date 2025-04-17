@@ -8,3 +8,42 @@
     \item Using Twisted Edwards curves and PPEEG is hugely benefitial
     \item Using the ranking for condorcet methods voting circuit improves performance drastically but the improvement is negligible and dwarfed ba the encryption constraints.
 \end{itemize}
+
+In this work we used the \gls{g16snark} based on the \verb|BN-254| curve to show ballot validity in different election types.
+For this purpose, we implemented circuits $\mathfrak{C}_C^{Ballot\text{-}Validity}$ in Circom and conducted the proofs of ballot validity using snarkjs.
+Compared to the implementation of the same circuits by Huber et. al. in libsnark, our implementation performs better in most of the election types for most of the considered metrics.
+
+% We compared the performance of our implementation in Circom to the implementation of the same circuits by Huber et. al. in libsnark.
+The circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is composed of two circuits $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
+The former of these subcircuits asserts that a ballot in an election was encrypted correctly and the latter that the ballot is in the choice space $C$ of the election.
+
+For $\mathfrak{C}_C^{Enc}$, we implemented two variants: One uses the \gls{eeg} encryption scheme based on Montgomery curves and the other uses the \gls{ppeeg} encryption scheme based on Twisted Edwards curves.
+Here, the variant using Montgomery curves has a slightly lower constraint count than the implementation by Huber et. al, which also used Montgomery curves.
+The \gls{ppeeg} encryption scheme based on Twisted Edwards curves is introduced by us.
+By precomputing some inputs and utilizing the more efficient group arithmetic of twisted Edwards curves, we reduce the constraints needed for $\mathfrak{C}_C^{Enc}$ by more than half when compared to the implementation by Huber et. al. and our own implemetation with Montgomery curves.
+
+In coonstrast to $\mathfrak{C}_C^{Enc}$, $\mathfrak{C}_C^{Vot}$ depends directly on the choice space $C$ of the election and notjust the dimensions of $C$.
+Here, we implement $\mathfrak{C}_C^{Vot}$ for the election types Single-Vote, Multi-Vote and its variants \gls{mwr} and Line-Vote, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment.
+These are the same election types also covered by Huber et. al.
+Since our implementation mostly follows that of Huber et. al. we report the same constraints for Single-Vote as well as all Multi-Vote variants.
+For the Borda election types and Majority-Judgment, we report a reduction in constraints of up to $50\%$ when compared to the implementation by Huber et. al.
+This is partly due to differences in implementation and partly due to differences in the \gls{g16snark} frameworks snarkjs and libsnark, used by us and Huber et. al. respectively.
+Condorcet elections are a special case since we implement two different versions of $\mathfrak{C}_C^{Vot}$.
+One variant uses the same logic as the implementation by Huber et. al. and reduces the constraint count by about half.
+The other variant we implemented reduces the asymptotic constraint count from cubic to quadratic in the number of candidates for the election.
+
+For the combined circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$, the constraint count is dominated by the much more costly $\mathfrak{C}_C^{Enc}$ for any realistic number of candidates for most election types.
+Therefore, our implementation uses slightly less constraints compared to the implementation by Huber et. al. when using Montgomery curves and reduces the constraint by roughly half when using Twisted Edwards curves.
+In the case of \gls{bts}, Pointlist-Borda with as many points as candidates and the less efficient variant of Condorcet, the voting circuit $\mathfrak{C}_C^{Vot}$ uses asymptotically more constraints than $\mathfrak{C}_C^{Enc}$.
+However, in our tests, the portion of constraints contributed by $\mathfrak{C}_C^{Vot}$ remains managable even for very large candidate counts.
+
+In addition to the constraints, we also recoreded the proving times and $CRS$ sizes for the \glspl{zkp} over the circuits as Huber et. al. did.
+Furthermore, we recorded the $CRS$ generation times and the verification times of the \glspl{zkp}.
+All of these metrics are linearly dependent on the constraint count with the verification times being almost constant as expected for \glspl{g16snark}.
+For equal numbers of constraints, our implementation needs slightly more proving time than the implementation by Huber et. al.
+However, the $CRS$ sizes are significantls less in our implementation.
+The $CRS$ generation times can reach well over an hour for the circuits with up to $6$ million constraints that we tested.
+However, this should not be a problem in practice since $CRS$ will most likely be pregenerated and downloaded with the voting software in real-world applications.
+
+Overall, \todo{with the Twisted Ed. impl. we reach higher numbers of candidates than Huber etl al. for all election types while the \glspl{zkp} remain managable for real-world applications}
+(\todo{Or same amaoount of candidates as in Huber et. al, but lower constraint count and less of other metrics as well.})

@@ -348,12 +348,12 @@ However, to simplify things a little, we assume that the voting authority and th
       Showing that such a ballot exists is not enough, since then, replay attacks based on copying the votes and corresponding \glspl{zkp} of other voters would be very problematic \cite{mestel_how_2022}. 
       It is possible to combat replay attacks by rejecting duplicated ballots \cite{mestel_how_2022} however, this is beyond the scope of our work.
 
-      \todo{Is Malleability of Groth16 a problem if all instances are involved in the constraints?}
-      Note that even when direct replay attacks are not possible, the \gls{zps} we use (Groth16) itself is malleable. 
-      This means that, without modification, it is sometimes possible to change part of the instance and still obtain a valid proof even if we don't know the corresponding witness. \cite{novakovic_groth16_2022, baghery_another_2020}
-      In the case of voting schemes, this means that a malicous voter might be able to submit an encrypted ballot withput knowing the corresponding plain ballot.
-      To prevent this issue, we can modify Groth16 slightly by extending the relation $R_C$ to include an additional constraint on the instance that is always fulfilled.
-      This is already implemented in snarkjs \cite{jordi_baylina_iden3snarkjs_2025}, which we use to generate proofs with Groth16. \cite{novakovic_groth16_2022}
+      %\todo{Is Malleability of Groth16 a problem if all instances are involved in the constraints?}
+      %Note that even when direct replay attacks are not possible, the \gls{zps} we use (Groth16) itself is malleable. 
+      %This means that, without modification, it is sometimes possible to change part of the instance and still obtain a valid proof even if we don't know the corresponding witness. \cite{novakovic_groth16_2022, baghery_another_2020}
+      %In the case of voting schemes, this means that a malicous voter might be able to submit an encrypted ballot without knowing the corresponding plain ballot.
+      %To prevent this issue, we can modify Groth16 slightly by extending the relation $R_C$ to include an additional constraint on the instance that is always fulfilled.
+      %This is already implemented in snarkjs \cite{jordi_baylina_iden3snarkjs_2025}, which we use to generate proofs with Groth16. \cite{novakovic_groth16_2022}
 
       %\todo{How do our ZKPs ensure this? In our version, can malicous voters not just copy the encrypted vote and zkp of other another voter? Do we need to include the ids of the voters in the instance of the ZKP?}
     }

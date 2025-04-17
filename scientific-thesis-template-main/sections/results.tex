@@ -389,17 +389,26 @@ Our implementation produces exactly the same amount of constraints as the implem
 This is caused by the implementations being exectly the same as well.
 
 For Pointlist-Borda elections, our implementation uses roughly half the number of constraints compared to the implementation by Huber et. al.
-\todo{Why?}
+Since our implementation is very similar to that of Huber et. al., we attribute this difference in constraints to the differences between Circom and libsnark.
+When computing the \gls{r1cs} for a circuit, these ciruit languages \glqq flatten\grqq the circuit.
+In this process, a circuit can be chagned to reduce the number of constraints in the \gls{r1cs} without affecting the semantic of the ciruit.
+Therefore, one circuit may produce different constraint counts in Circom and in libsnark.
 
 In the other Borda variant, \gls{bts}, our implementation reduces the constraints by about $\%25.9$ when compared to the implementation of Huber et. al.
-\todo{Why?}
+Both implementations are very similar and use helper circuits $\mathfrak{C}_{count\text{-}greater}$ to count how many entries in the ranking are greater than the current one (\cref{fig:circuit:btsComputeBallot}).
+In these circuits, we need to compute whether one value $r_i$ in the ranking is greater than another value $r_j$ in the ranking.
+Our implementation uses the template circuit $\mathfrak{C}_{is\text{-}greater}$ from circomlib \cite{jordy_baylina_iden3circomlib_2025} (\cref{fig:todo}) which is built on arithmetic computations to the compare numbers.
+Huber et. al. use an implementation that requires us to compute the binary representation of a temporary signal in the circuit \cite{huber_hicolasnuberballotsnarks_2024}.
+We attribute the reduction of constraints mostly to this difference in implementation.
 
 For the election type Majority-Judgment, we report a reduction of constraints by about $14.3\%$ if we use a constant number of grades and therefore produce a linear amount of constraints.
 However, this improvement becomes negligible when using as many grades as there are candidate and therefore quadratically many constraints.
-\todo{Why?}
+Our implementation of $\mathfrak{C}_{C_{Majority\text{-}Judgment}(cand, grades)}$ is equivalent to that of Huber et. al. in libsnark.
+Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq procedures of Circom and libsnark, the same as for Pointlist-Borda elections.
 
-Finally, for Condorcet elections, we report a reduction of constraints of about half when not using the voting.
-\todo{Why?}
+Finally, for Condorcet elections, we report a reduction of constraints of about half when not using the ranking.
+Our implementation of $\mathfrak{C}_{C_{Condorcet(cand)}}^{Vot}$ is equivalent to that of Huber et. al. in libsnark from a constraint perspective.
+Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq procedures of Circom and libsnark, the same as for Pointlist-Borda elections and Majority-Judgment.
 However, in both cases the constraint count is cubic in the number of candidates.
 To improve on this, we introduced a version of condorcet that uses the voting (\cref{subsection:ourVotingSchemes:condorcet}).
 Here, we only need quadratically many constraints.
