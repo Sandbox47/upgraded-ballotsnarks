@@ -240,7 +240,7 @@ Then, computing $g^k$ naively is completely infeasible.
 A more efficient approach is the Square and Multiply method as introduced in chapter 9 of \cite{cohen_handbook_2005} which needs $\mathcal{O}(\log(k))$ applications of the group law.
 Here, we use the binary representation $(k_0,\dots, k_{l-1})$ of $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}$ to compute $g^k$:
 \begin{align*}
-    g^k&=g^{\left(\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}\right)} = \prod_{i=0}^{l-1} g^{k_i\cdot 2^{i}} = \prod_{i=0}^{l-2} \left(g^{2^{i}}\right)^{k_i}
+    g^k&=g^{\left(\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}\right)} = \prod_{i=0}^{l-1} g^{k_i\cdot 2^{i}} = \prod_{i=0}^{l-1} \left(g^{2^{i}}\right)^{k_i}
 \end{align*}
 This is benefitial, since we can compute $g^{2^i}$ by iterated squaring of $g$.
 

@@ -31,6 +31,28 @@ template ifThenElseTwistedEdwards() {
     out.y <== yIfThenElse.out;
 }
 
+template switchCaseTwistedEdwards(n) {
+    input TwistedEdwardsPoint in[n];
+    input signal cond[n];
+
+    output TwistedEdwardsPoint out;
+
+    component xSwitchCase = switchCase(n);
+    component ySwitchCase = switchCase(n);
+
+    for(var i = 0; i < n-1; i++) {
+        xSwitchCase.in[i] <== in[i].x;
+        ySwitchCase.in[i] <== in[i].y;
+        xSwitchCase.cond[i] <== cond[i];
+        ySwitchCase.cond[i] <== cond[i];
+    }
+    xSwitchCase.in[n-1] <== in[n-1].x;
+    ySwitchCase.in[n-1] <== in[n-1].y;
+    
+    out.x <== xSwitchCase.out;
+    out.y <== ySwitchCase.out;
+}
+
 template inftyTwistedEdwards() {
     output TwistedEdwardsPoint out;
     out.x <== 0;
@@ -104,6 +126,49 @@ template twistedEdwardsScalarMul(n, a, d) {
 
     out <== intermediateResults[n];
 }
+
+/**
+* Computes the m * P, where m=[m_0,m_1,\dots, m_{n-1}] is given as a representation to base "base" in LSB order. (For brevity, we use b to denote base here)
+* Here, m_i = [m_{i,0}, \dots, m_{i,b-1}] is a unary coding of m_i with m_{i,j} = 1 exactly if m_i = j
+* Furthermore, powersOfP provides 
+*   [   
+*       [e, 1*P, 2*1*P,\dots, (b-1)*1*P],
+*       [e, b*P, 2*b*P,\dots, (b-1)*b*P],
+*       [e, (b^2)*P, 2*(b^2)*P,\dots, (b-1)*(b^2)*P],
+*       \dots,
+*       [e, (b^{l-1})*P, 2*(b^{l-1})*P,\dots, (b-1)*(b^{n-1})*P]
+*   ]
+*
+* -> Minumum of constraints for base=5
+*/
+template twistedEdwardsScalarMulArbitraryBase(base, n, a, d) {
+    input TwistedEdwardsPoint powersOfP[n][base];
+    input signal m[n][base];
+
+    output TwistedEdwardsPoint out;
+
+    component infty = inftyTwistedEdwards();
+    TwistedEdwardsPoint intermediateResults[n+1];
+    intermediateResults[0] <== infty.out;
+    component adders[n];
+    component switchCase[n];
+
+    for(var i = 0; i < n; i++) {
+        switchCase[i] = switchCaseTwistedEdwards(base);
+        adders[i] = twistedEdwardsGroupLaw(a, d);
+
+        switchCase[i].in <== powersOfP[i];
+        switchCase[i].cond <== m[i];
+
+        adders[i].p1 <== intermediateResults[i];
+        adders[i].p2 <== switchCase[i].out;
+        intermediateResults[i+1] <== adders[i].out;
+    }
+
+    out <== intermediateResults[n];
+}
+
+
 
 // component main = ifThenElseTwistedEdwards();
 // component main = twistedEdwardsGroupLaw(8, 3);

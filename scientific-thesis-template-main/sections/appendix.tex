@@ -1,26 +1,11 @@
+\chapter{Used Symbols}
+
+\todo{Make usage of variables, etc. consistent throughout the thesis and explain every symbol here shortly.}
 
 \chapter{Preliminaries}
 
 \section{Algebra}
 We define groups and fields as in \cite{least_authority_moonmath_2024}.
-
-\begin{definition}[Finite Commutative Group]
-    
-\end{definition}
-
-In this work, we exclusively use finite commutative groups and will therefore refer to these simply as \glqq groups\grqq
-
-\begin{definition}[Cyclic group]
-    
-\end{definition}
-
-\begin{definition}[]
-    
-\end{definition}
-
-\begin{definition}[Field]
-    
-\end{definition}
 
 \begin{definition}[Bilinear Pairing \cite{least_authority_moonmath_2024}]
     \label{def:bilinearPairing}
@@ -43,15 +28,22 @@ In this work, we exclusively use finite commutative groups and will therefore re
     Here, $e_{\mathbb{G}_1}, e_{\mathbb{G}_2}$ and $e_{\mathbb{G}_3}$ denote the neutral elements of the respective groups.
 \end{definition}
 
-\section{Encryption Scheme}
+\section{Short Weierstrass Curves}
+
+\chapter{Full Groth16 SNARK example for $\mathfrak{C}_{3\text{-}vot}$}
 
 \chapter{Proofs}
+
+\chapter{PPEEG}
+\section{Montgomery Curves}
+
+\section{Twisted Edwards Curves, Arbitrary Basis for Exponent}
 
 \chapter{Circuits}
 \label{section:appendix:circuits}
 \todo{Write ;-)}
 
-\subsection{Utility Circuits}
+\section{Utility Circuits}
 \begin{itemize}
     \item $\mathfrak{C}_{Num2Bits}$
     \item $\mathfrak{C}_{If\text{-}Else(l)}$
@@ -62,20 +54,19 @@ In this work, we exclusively use finite commutative groups and will therefore re
     \item $\mathfrak{C}_{Switch\text{-}Case(c)}$
 \end{itemize}
 
-\subsection{Complete Circuit List}
+\section{Complete Circuit List}
 \todo{Each circuit with short description, reference to where it is defined (in the thesis, appendix or in circomlib), constraint count and corresponding name in circom implementation.}
 
-
-\chapter{Used Symbols}
-
-\todo{Make usage of variables, etc. consistent throughout the thesis and explain every symbol here shortly.}
 
 \chapter{Additional benchmarks}
 
 \todo{}
+\section{Groth16}
 \begin{itemize}
     \item Benchmarks for verification times
     \item Benchmarks of proving times, $CRS$ sizes and $CRS$ generation times for $\mathfrak{C}_C^{Ballot\text{-}Validity}$.
 \end{itemize}
+
+\section{PLONK and FFLONK}
 
 

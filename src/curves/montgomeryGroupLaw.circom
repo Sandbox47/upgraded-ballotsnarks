@@ -143,4 +143,4 @@ template addProjective(A, B) {
 }
 
 // component main = addAffine(126932, 1);
-component main = addProjective(126932, 1);
+// component main = addProjective(126932, 1);

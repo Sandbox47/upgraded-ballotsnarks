@@ -193,4 +193,96 @@ template assertEncMatrixTwistedEdwards(rows, columns, bitsPlain, bitsRand, a, d)
     }
 }
 
+// ========================================================================================================================
+// TWISTED EDWARDS with arbitrary base
+
+template assertEncTwistedEdwardsArbitraryBase(bitsPlain, bitsRand, base, a, d) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand][base]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand][base]; // Powers of public key, pk=g^b for some private b
+    input signal v[bitsPlain][base]; // Plaintext
+    input signal r[bitsRand][base]; // Randomness
+
+    // Test
+    input TwistedEdwardsPoint() gr;
+    input TwistedEdwardsPoint() gv_pkr;
+
+    component expElGamal;
+
+    expElGamal = expElGamalTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, a, d);
+    expElGamal.powersOfg <== powersOfg;
+    expElGamal.powersOfpk <== powersOfpk;
+    expElGamal.v <== v;
+    expElGamal.r <== r;
+
+    /**
+    log("test_gr:");
+    log("x:", gr.x);
+    log("y:", gr.y);
+    log("test_gv_pkr:");
+    log("x:", gv_pkr.x);
+    log("y:", gv_pkr.y);
+
+    log("enc_gr:");
+    log("x:", expElGamal.gr.x);
+    log("y:", expElGamal.gr.y);
+    log("enc_gv_pkr:");
+    log("x:", expElGamal.gv_pkr.x);
+    log("y:", expElGamal.gv_pkr.y);
+    log();
+
+    gr === expElGamal.gr;
+    gv_pkr === expElGamal.gv_pkr;
+    */
+}
+
+template assertEncVectorTwistedEdwardsArbitraryBase(entries, bitsPlain, bitsRand, base, a, d) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand][base]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand][base]; // Powers of public key, pk=g^b for some private b
+    input signal v[entries][bitsPlain][base]; // Plaintext
+    input signal r[entries][bitsRand][base]; // Randomness
+
+    // Test
+    input TwistedEdwardsPoint() gr[entries];
+    input TwistedEdwardsPoint() gv_pkr[entries];
+
+    component assertEnc[entries];
+
+    for(var i = 0; i < entries; i++) {
+        assertEnc[i] = assertEncTwistedEdwardsArbitraryBase(bitsPlain, bitsRand, base, a, d);
+        assertEnc[i].powersOfg <== powersOfg;
+        assertEnc[i].powersOfpk <== powersOfpk;
+        assertEnc[i].v <== v[i];
+        assertEnc[i].r <== r[i];
+        assertEnc[i].gr <== gr[i];
+        assertEnc[i].gv_pkr <== gv_pkr[i];
+    }
+}
+
+template assertEncMatrixTwistedEdwardsArbitraryBase(rows, columns, bitsPlain, bitsRand, base, a, d) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand][base]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand][base]; // Powers of public key, pk=g^b for some private b
+    input signal v[rows][columns][bitsPlain][base]; // Plaintext
+    input signal r[rows][columns][bitsRand][base]; // Randomness
+
+    // Test
+    input TwistedEdwardsPoint() gr[rows][columns];
+    input TwistedEdwardsPoint() gv_pkr[rows][columns];
+
+    component assertEnc[rows][columns];
+
+    for(var i = 0; i < rows; i++) {
+        for(var j = 0; j < columns; j++) {
+            assertEnc[i][j] = assertEncTwistedEdwardsArbitraryBase(bitsPlain, bitsRand, base, a, d);
+            assertEnc[i][j].powersOfg <== powersOfg;
+            assertEnc[i][j].powersOfpk <== powersOfpk;
+            assertEnc[i][j].v <== v[i][j];
+            assertEnc[i][j].r <== r[i][j];
+            assertEnc[i][j].gr <== gr[i][j];
+            assertEnc[i][j].gv_pkr <== gv_pkr[i][j];
+        }
+        
+    }
+}
+
 // component main = assertEncVector(100, 32, 255, 126932, 1);
+component main = assertEncTwistedEdwardsArbitraryBase(5, 14, 110, 126934, 126930);

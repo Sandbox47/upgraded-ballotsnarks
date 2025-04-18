@@ -1,28 +1,21 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
 
-\todo{}
-\begin{itemize}
-    \item Utilizing Circom and snarkjs in combination with groth16 snarks is a viable option for proving ballot validity.
-    \item Approach is versatile due to using GPZKPs
-    \item Using Twisted Edwards curves and PPEEG is hugely benefitial
-    \item Using the ranking for condorcet methods voting circuit improves performance drastically but the improvement is negligible and dwarfed ba the encryption constraints.
-\end{itemize}
-
 In this work we used the \gls{g16snark} based on the \verb|BN-254| curve to show ballot validity in different election types.
 For this purpose, we implemented circuits $\mathfrak{C}_C^{Ballot\text{-}Validity}$ in Circom and conducted the proofs of ballot validity using snarkjs.
 Compared to the implementation of the same circuits by Huber et. al. in libsnark, our implementation performs better in most of the election types for most of the considered metrics.
 
-% We compared the performance of our implementation in Circom to the implementation of the same circuits by Huber et. al. in libsnark.
 The circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is composed of two circuits $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
 The former of these subcircuits asserts that a ballot in an election was encrypted correctly and the latter that the ballot is in the choice space $C$ of the election.
+Note that for some election types covered here, there are more efficient specialized \glspl{zkp} that only work for that specific election type.
+However, using \glspl{gpzkp} for showing ballot validity makes the approach very versatile and easily extensible, since we only need to define $\mathfrak{C}_C^{Vot}$ to support a new election type.
 
-For $\mathfrak{C}_C^{Enc}$, we implemented two variants: One uses the \gls{eeg} encryption scheme based on Montgomery curves and the other uses the \gls{ppeeg} encryption scheme based on Twisted Edwards curves.
+We implemented two variatns of the circuit $\mathfrak{C}_C^{Enc}$: One uses the \gls{eeg} encryption scheme based on Montgomery curves and the other uses the \gls{ppeeg} encryption scheme based on Twisted Edwards curves.
 Here, the variant using Montgomery curves has a slightly lower constraint count than the implementation by Huber et. al, which also used Montgomery curves.
 The \gls{ppeeg} encryption scheme based on Twisted Edwards curves is introduced by us.
 By precomputing some inputs and utilizing the more efficient group arithmetic of twisted Edwards curves, we reduce the constraints needed for $\mathfrak{C}_C^{Enc}$ by more than half when compared to the implementation by Huber et. al. and our own implemetation with Montgomery curves.
 
-In coonstrast to $\mathfrak{C}_C^{Enc}$, $\mathfrak{C}_C^{Vot}$ depends directly on the choice space $C$ of the election and notjust the dimensions of $C$.
+In contrast to $\mathfrak{C}_C^{Enc}$, $\mathfrak{C}_C^{Vot}$ depends directly on the choice space $C$ of the election and notjust the dimensions of $C$.
 Here, we implement $\mathfrak{C}_C^{Vot}$ for the election types Single-Vote, Multi-Vote and its variants \gls{mwr} and Line-Vote, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment.
 These are the same election types also covered by Huber et. al.
 Since our implementation mostly follows that of Huber et. al. we report the same constraints for Single-Vote as well as all Multi-Vote variants.
@@ -36,14 +29,21 @@ For the combined circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$, the constrai
 Therefore, our implementation uses slightly less constraints compared to the implementation by Huber et. al. when using Montgomery curves and reduces the constraint by roughly half when using Twisted Edwards curves.
 In the case of \gls{bts}, Pointlist-Borda with as many points as candidates and the less efficient variant of Condorcet, the voting circuit $\mathfrak{C}_C^{Vot}$ uses asymptotically more constraints than $\mathfrak{C}_C^{Enc}$.
 However, in our tests, the portion of constraints contributed by $\mathfrak{C}_C^{Vot}$ remains managable even for very large candidate counts.
+For simple election tyes such as Single-Vote, where the number of ballot entries is the same as the number of candidates, our implementation allows us to compute Ballot-Validity proofs for up to $600$ candidates when using Montgomery curves and up to $1000$ candiddaates when using Twisted Edwards curves.
+However, for Majority-Judgment, the number of ballot entries is a constant multiple, in case we use a fixed number of grades (we opted for $6$), or the square of the number of candidates in case we use as many grades as there are candidates.
+Then, we reach up to $95$ and $23$ candidates respectively when using Montgomery curves and up to $150$ and $30$ candidates respectively, when using Twisted Edwards curves.
+This is more than sufficient for typical applications with $6$ to $10$ grades and only a few candidates \cite{balinski_election_2011}.
+Similarly, for Condorcet methods, where the number of ballot entries is the square of the candidate count, we reach up to $23$ candidates when using Montgomery curves and up to $30$ candidates when using Twisted Edwards curves.
+As for Majority-Judgment, this is sufficient for typical applications which rarely have more than $10$ candidates \cite{huber_zk-snarks_2025}.
 
-In addition to the constraints, we also recoreded the proving times and $CRS$ sizes for the \glspl{zkp} over the circuits as Huber et. al. did.
+In addition to the constraints, we also recorded the proving times and $CRS$ sizes for the \glspl{zkp} over the circuits as Huber et. al. did.
 Furthermore, we recorded the $CRS$ generation times and the verification times of the \glspl{zkp}.
 All of these metrics are linearly dependent on the constraint count with the verification times being almost constant as expected for \glspl{g16snark}.
 For equal numbers of constraints, our implementation needs slightly more proving time than the implementation by Huber et. al.
-However, the $CRS$ sizes are significantls less in our implementation.
-The $CRS$ generation times can reach well over an hour for the circuits with up to $6$ million constraints that we tested.
+This means that the proving times can reach close to $7$ minutes for the maximum of $6$ million constraints possible on our test system but remains much lower in most election types for any realisitc number of candidates.
+On the other hand, the $CRS$ sizes in our implementation are significantly less than those recorded by Huber et. al.
+Note that $CRS$ generation times can reach well over an hour for the circuits with up to $6$ million constraints that we tested.
 However, this should not be a problem in practice since $CRS$ will most likely be pregenerated and downloaded with the voting software in real-world applications.
 
-Overall, \todo{with the Twisted Ed. impl. we reach higher numbers of candidates than Huber etl al. for all election types while the \glspl{zkp} remain managable for real-world applications}
-(\todo{Or same amaoount of candidates as in Huber et. al, but lower constraint count and less of other metrics as well.})
+Overall, for the majority of supported election types, our Circom-based implementation allows Groth16 ballot validity proofs to be computed in a reasonable amount of time on standard PCs, even when handling a large number of candidates.
+Our implementation based on Twisted Edwards curves uses at least $55\%$ less constraints, produces at least $82\%$ smaller $CRS$ and needs at least $35\%$ less proving time across all election types when compared to the implementation by Huber et. al. caused almost exclusively by our implementation of $\mathfrak{C}_C^{Enc}$ with improvements to $\mathfrak{C}_C^{Vot}$ being negligible in most cases.

@@ -1,6 +1,33 @@
 \chapter{Introduction}
 
-In today's world, the necessity of secure e-voting schemes is undisputed. 
-In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the validity of their (encrypted) votes without revealing them. 
-One class of ZKPs that can be used to prove (essentially) arbitrary valid statements is the class of General Purpose Zero Knowledge proofs (GPZKPs). 
-For efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice in order to create such (GP)ZKPs.
+Homomorphic aggregation is a widely used method in secure electronic voting (e-voting) schemes. 
+In these schemes, a ballot submitted by a voter is typically represented as a vector or a matrix.
+Here, each entry represents a choice made by the voter, for instance whether a specific candidate receives a vote or not.
+Then, every entry is encrypted individually using an additively homomorphic encryption scheme like \gls{eeg}, resulting in a vector or matrix of ciphertexts. 
+These encrypted ballots are then aggregated by a voting authority and decrypted to obtain the final tally.
+
+To ensure the integrity of the tally, it is important that each encrypted ballot encodes a valid vote. 
+Otherwise, a malicious voter could manipulate the tally by submitting malicously chosen votes. 
+To prevent this, voters provide a zero knowledge proof (ZKP) of ballot validity.
+This proof shows that their encrypted vote lies within the set of allowed choices without revealing the actual vote.
+
+Traditionally, ZKPs for ballot validity are crafted specifically for certain election types, ballot formats, and encryption schemes. 
+Even though these specialized ZKPs are efficient, they usually can not be easily applied to new voting methods or ballot structures. 
+For more complex election types, such as Borda elections or Condorcet methods, specialized ZKPs become increasingly difficult to design and often impose significant efficiency trade-offs.
+
+As an alternative, we can use \glspl{gpzkp} one form of which are zk-\glspl{snark}.
+\glspl{gpzkp} can be employed to prove arbitrary statements as long as they can be expressed through as the correct execution of an arithmetic circuit. 
+Therefore, we can construct proofs of ballot validity by implementing appropriate arithmetic circuits.
+This approach is more flexible than specialized \glspl{zkp} and allows us to construct new voting schemes for novel ballot formats easily.
+
+The practicality of \gls{gpzkp} for ballots encrypted with \gls{eeg} has been explored by Huber et. al. \cite{huber_zk-snarks_2025}.
+In their work Huber et. al. implemented circuits showing ballot validity for the different election types Single-Vote, Multi-Vote and the variations Line-Vote and \gls{mwr}, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment in libsnark.
+The benchmark results obtained by Huber et. al. demonstrate that Groth16 based \glspl{zkp} can remain efficient even for complex choice spaces such as \gls{bts} or Condorcet methods.
+\todo{Finish talking about results from Huber et. al.}
+In this work, we implement the same approach as Huber et. al. in Circom 
+\todo{Introduce splitting into Enc., Vot. subciruits, present results for Montgomery curve implementation, Twisted Edwards implementation, improvements to voting circuits (especially for Condorcet)}
+
+
+We adapt and extend techniques used for Groth16 SNARKs to support various voting methods and ballot formats under EEG encryption. 
+Our implementation benchmarks demonstrate that Groth16-based ZKPs can remain efficient even for complex choice spaces. 
+This suggests that GPZKPs are not only a viable option but also a flexible tool for developing future-proof e-voting schmemes.

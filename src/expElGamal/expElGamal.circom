@@ -180,7 +180,7 @@ template expElGamalTwistedEdwards(bitsRand, bitsPlain, a, d) {
 
     component scalarMul_gv = twistedEdwardsScalarMul(bitsPlain, a, d);
     scalarMul_gv.m <== v;
-    for(var i=0; i < bitsPlain; i++) {
+    for(var i = 0; i < bitsPlain; i++) {
         scalarMul_gv.powersOfP[i] <== powersOfg[i];
     }
     TwistedEdwardsPoint() gv <== scalarMul_gv.out; // g^v
@@ -255,8 +255,120 @@ template expElGamalMatrixTwistedEdwards(bitsRand, bitsPlain, a, d, rows, columns
     }
 }
 
+// ========================================================================================================================
+// TWISTED EDWARDS with arbitrary base
+
+/**
+* Computes an exponential ElGamal ciphertext over a Twisted Edwards curve using base "base" to represent the randomness and the value to be encrypted. (For brevity, we use b to denote base here)
+* 
+* For given powers of a generator g
+*   [   
+*       [e, 1*g, 2*1*g,\dots, (b-1)*1*g],
+*       [e, b*g, 2*b*g,\dots, (b-1)*b*g],
+*       [e, (b^2)*g, 2*(b^2)*g,\dots, (b-1)*(b^2)*g],
+*       \dots,
+*       [e, (b^{l-1})*g, 2*(b^{l-1})*g,\dots, (b-1)*(b^{n-1})*g]
+*   ],
+* powers of a public key of the same format, plaintext v and randomness r, the ciphertext is (g^r, g^v*pk^r)
+* Here, we are using v and r in the following representation:
+*   v=[v_0,v_1,\dots, v_{n-1}] is given as a representation to base "base" in LSB order.
+*   Here, v_i = [v_{i,0}, \dots, v_{i,b-1}] is a unary coding of v_i with v_{i,j} = 1 exactly if v_i = j
+* 
+* NOTE: We are now switching from additive to multiplicative notation for the application of the Montgomery group law.
+* 
+* bitsRand and bitsPlain are the number of "bits" r and v can have at most.
+*/
+template expElGamalTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, a, d) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand][base]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand][base]; // Powers of public key, pk=g^b for some private b
+    input signal v[bitsPlain][base]; // Plaintext
+    input signal r[bitsRand][base]; // Randomness
+
+    output TwistedEdwardsPoint() gr; // g^r
+    output TwistedEdwardsPoint() gv_pkr; // g^v * pk^r
+
+    component scalarMul_gv = twistedEdwardsScalarMulArbitraryBase(base, bitsPlain, a, d);
+    scalarMul_gv.m <== v;
+    for(var i = 0; i < bitsPlain; i++) {
+        scalarMul_gv.powersOfP[i] <== powersOfg[i];
+    }
+    TwistedEdwardsPoint() gv <== scalarMul_gv.out; // g^v
+
+    component scalarMul_pkr = twistedEdwardsScalarMulArbitraryBase(base, bitsRand, a, d);
+    scalarMul_pkr.m <== r;
+    scalarMul_pkr.powersOfP <== powersOfpk;
+    TwistedEdwardsPoint() pkr <== scalarMul_pkr.out; // pk^r
+
+    component scalarMul_gr = twistedEdwardsScalarMulArbitraryBase(base, bitsRand, a, d);
+    scalarMul_gr.m <== r;
+    scalarMul_gr.powersOfP <== powersOfg;
+    gr <== scalarMul_gr.out;
+
+    component add_gv_pkr = twistedEdwardsGroupLaw(a, d);
+    add_gv_pkr.p1 <== gv;
+    add_gv_pkr.p2 <== pkr;
+    gv_pkr <== add_gv_pkr.out;
+}
+
+/**
+* Computes an exponential ElGamal ciphertext over a Twisted Edwards curve for each of the given inputs v with corresponding randomnesses r.
+* 
+* entires is the number of entries in the vector to be encrypted.
+*/
+template expElGamalVectorTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, a, d, entries) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand][base]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand][base]; // Powers of public key, pk=g^b for some private b
+    input signal v[entries][bitsPlain][base]; // Plaintext
+    input signal r[entries][bitsRand][base]; // Randomness
+
+    output TwistedEdwardsPoint() gr[entries];
+    output TwistedEdwardsPoint() gv_pkr[entries];
+
+    component expElGamal[entries];
+
+    for(var i = 0; i < entries; i++) {
+        expElGamal[i] = expElGamalTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, a, d);
+        expElGamal[i].powersOfg <== powersOfg;
+        expElGamal[i].powersOfpk <== powersOfpk;
+        expElGamal[i].v <== v[i];
+        expElGamal[i].r <== r[i];
+        gr[i] <== expElGamal[i].gr;
+        gv_pkr[i] <== expElGamal[i].gv_pkr;
+    }
+}
+
+/**
+* Computes an exponential ElGamal ciphertext over a Montgomery curve for each of the given inputs v with corresponding randomnesses r.
+* 
+* rows and columns are the number of rows and columns in the matrix of entries to be encrypted.
+*/
+template expElGamalMatrixTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, a, d, rows, columns) {
+    input TwistedEdwardsPoint() powersOfg[bitsRand][base]; // Powers of generator
+    input TwistedEdwardsPoint() powersOfpk[bitsRand][base]; // Powers of public key, pk=g^b for some private b
+    input signal v[rows][columns][bitsPlain][base]; // Plaintext
+    input signal r[rows][columns][bitsRand][base]; // Randomness
+
+    output TwistedEdwardsPoint() gr[rows][columns];
+    output TwistedEdwardsPoint() gv_pkr[rows][columns];
+
+    component expElGamal[rows];
+
+    for(var i = 0; i < rows; i++) {
+        expElGamal[i] = expElGamalVectorTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, a, d, columns);
+        expElGamal[i].powersOfg <== powersOfg;
+        expElGamal[i].powersOfpk <== powersOfpk;
+        expElGamal[i].v <== v[i];
+        expElGamal[i].r <== r[i];
+        gr[i] <== expElGamal[i].gr;
+        gv_pkr[i] <== expElGamal[i].gv_pkr;
+    }
+}
+
+
 // component main = expElGamalMontgomeryProjective(255, 32, 126932, 1);
 // component main = expElGamalVector(255, 32, 126932, 1, 100);
 // component main = expElGamalMatrix(255, 32, 126932, 1, 10, 10);
 
 // component main = expElGamalTwistedEdwards(255, 32, 126934, 126930);
+
+// component main = expElGamalTwistedEdwardsArbitraryBase(5, 110, 14, 126934, 126930);

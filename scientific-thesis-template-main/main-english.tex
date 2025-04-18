@@ -217,7 +217,26 @@
 %auch im Stil vom Inhaltsverzeichnis
 \section*{Abstract}
 
-<Short summary of the thesis>
+In today's world, the necessity of secure e-voting schemes is undisputed. 
+In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the validity of their (encrypted) votes without revealing them. 
+One class of ZKPs that can be used to prove (essentially) arbitrary valid statements are General Purpose ZKPs (GPZKPs) with Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) being one form often used in practice for efficiency reasons.
+% Here, for efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice.
+
+The feasability of GPZKPs for showing validity of ballots that are component-wise encrypted using Exponential ElGamal (EEG) ciphertexts in voting systems with arbitrary election types and ballot formats using Groth16-SNARKs \cite{groth_size_2016} has been shown by Huber et al. \cite{huber_zk-snarks_2025,huber_kryvos_2022}.
+To demonstrate the versatility of GPZKPs, the authors implemented ballot validity relations for the different election types Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, the ranked election types Pointlist-Borda and Borda Tournament Style, and Condorcet methods in libsnark and benchmarked their performance.
+
+We extend on this research by implementing ballot validity relations for the same circuits in Circom and generating the \glspl{zkp} using snarkjs.
+First, we follow the same approach as Huber et. al. for our implementation using EEG encryption instantiated with Montgomery curves for the encryption of individual ballot entries.
+
+Then, as our main contribution, we introduce a novel variant of EEG encrpytion: Precomputed Powers EEG (PPEEG). 
+By providing some precomputed powers of group elements to the encryption circuit, we reduce the computations needed for ZKPs of ballot validity.
+Additionally, we instantiate PPEEG encryption with Twisted Edwards curves rather than Montgomery curves reducing the computational effort further.
+
+Furthermore, we improve the performance of the election type specific computations in the ballot validity proofs for several election types, most notably for Condorcet methods.
+However, these improvements are negligible compared to the reduction of computational effort in the encryption part in most cases.
+
+Compared to the results by Huber et. al, we reduce the computational effort for the ballot validity proofs accross all election types by $35\%$ to $82\%$ depending on the metric.
+Moreover, we can compute ballot validity proofs for ballots with up to $1000$ votes on a standard PC which is sufficient for almost all real-world applications of any of the covered election types.
 
 \cleardoublepage
 

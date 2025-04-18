@@ -347,7 +347,6 @@ However, to simplify things a little, we assume that the voting authority and th
       It is important to show that a voter \textit{knows} the ballot $b\in C$. 
       Showing that such a ballot exists is not enough, since then, replay attacks based on copying the votes and corresponding \glspl{zkp} of other voters would be very problematic \cite{mestel_how_2022}. 
       It is possible to combat replay attacks by rejecting duplicated ballots \cite{mestel_how_2022} however, this is beyond the scope of our work.
-
       %\todo{Is Malleability of Groth16 a problem if all instances are involved in the constraints?}
       %Note that even when direct replay attacks are not possible, the \gls{zps} we use (Groth16) itself is malleable. 
       %This means that, without modification, it is sometimes possible to change part of the instance and still obtain a valid proof even if we don't know the corresponding witness. \cite{novakovic_groth16_2022, baghery_another_2020}
