@@ -173,3 +173,4 @@ template twistedEdwardsScalarMulArbitraryBase(base, n, a, d) {
 // component main = ifThenElseTwistedEdwards();
 // component main = twistedEdwardsGroupLaw(8, 3);
 // component main = twistedEdwardsScalarMul(1, 8, 3);
+// component main = twistedEdwardsScalarMulArbitraryBase(8, 85, 126934, 126930);
