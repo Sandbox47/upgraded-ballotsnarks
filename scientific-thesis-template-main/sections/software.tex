@@ -5,7 +5,7 @@ We use software to implement circuits, create proofs of correct circuit executio
 
 \section{Circom}
 
-In \cref{chap:gpzkp} we introduced \gls{zkp} of correct circuit execution over arithmetic circuits.
+In \cref{chap:gpzkp} we introduced \glspl{zkp} of correct circuit execution over arithmetic circuits.
 These proofs constitute a form of \gls{gpzkp} since we can derive a \gls{zkp} for any statement expressible inside a circuit.
 
 Previously, we defined circuits to assert ballot validity in our voting schemes (\cref{chap:ourVotingSchemes}).
@@ -23,9 +23,11 @@ libsnark on the other hand is an End-to-End \gls{zkp} system which implements \g
 
 Additionally, Circom provides higher-level primitives and easier syntax for defining circuits, leading to implementations that are easier to create, use and maintain than in libsnark.
 
+% Moreover, Circom is still being maintaines whereas libsnark 
+
 \subsection{Syntax}
 The syntax of Circom is similar to that of JavaScript.
-We explain the syntax using the circuit $\mathfrak{3\text{-}vot}$ \cref{fig:circuit:exampleVoting} as an example.
+We explain the syntax using the circuit $\mathfrak{C}_{3\text{-}vot}$ \cref{fig:circuit:exampleVoting} as an example.
 
 We define a circuit with the keyword \verb|template| and use a notation similar to JavaScript methods.
 Variables that participate in constraints are denoted with \verb|signal|.\footnote{
@@ -74,6 +76,7 @@ In addition to the circuit specific constructs, Circom supports most of the basi
 Furthermore, we can use \verb|var variable| for temporary variables whose computation does not add any constraints.\footnote{
     \label{footnote:tempVariablesInConstraints}
     It is possible to use temporary variables in constraints as long as no additional constraints are needed to compute them.
+    We see this in the next example in \cref{fig:circom:threeVot}.
 }
 Arrays are supported for both \verb|signal| and \verb|var|.
 Using these new constructs, we can simplify \verb|threeVot| as shown in \cref{fig:circom:threeVot}.
@@ -140,7 +143,7 @@ template threeVot() {
     isBit[3].in <== sum;
     S_out[3] <== isBit[3].out;
 }\end{lstlisting}
-    \caption{Implementation of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{3\text{-}vot}$ utilizing the $\mathfrak{C}_{is\text{-}Bit}$ template in Circom.}
+    \caption{Implementation of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{3\text{-}vot}$ utilizing the $\mathfrak{C}_{is\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) template in Circom.}
     \label{fig:circom:threeVotIsBit}
 \end{figure}
 
@@ -190,7 +193,7 @@ By assigning $3$ to \verb|n|, we can create an instantiation of \verb|vot| that 
 \end{lstlisting}
 
 In \cref{section:proofSchemes:instanceAndWitness}, we discussed how we can decompose an assignment to a circuit into a private witness and a public instance.
-In Circom, all inputs to a circuit are part of the instance by default but can be specified to be part of the instance by including them in a \verb|public| list when instantiating the circuit.
+In Circom, all inputs to a circuit are part of the witness by default but can be specified to be part of the instance by including them in a \verb|public| list when instantiating the circuit.
 All outputs of a circuit in Circom are part of the instance and cannot be made part of the witness.
 Therefore, the decomposition into instance and witness of $\mathfrak{C}_{3\text{-}vot}$ (\cref{fig:circuit:instanceWitnessRelationThreeVot}), where all inputs are part of the witness is the default in Circom.
 
@@ -202,7 +205,7 @@ Then, we can implement this in Circom as follows:
 \end{lstlisting}
 
 \subsection{Assignments and Circom \glqq Witness\grqq\ Generation}
-To create a proof of correct circuit execution, we first need convert the circuit to a corresponding \gls{r1cs} and assign values to all input, output and intermediate signals.
+To create a proof of correct circuit execution, we first need to convert the circuit to a corresponding \gls{r1cs} and assign values to all input, output and intermediate signals.
 Values for the input signals are provided in an \verb|input.json| file.
 For 
 \begin{lstlisting}[language=Circom]
@@ -215,16 +218,13 @@ and an exemplary ballot $b=(S_1^{in}, S_2^{in}, S_3^{in})=(1,0,1)$, we need to c
     "S_in" : [1, 0, 1]
 }\end{lstlisting}
 
-Additionally, we need to calculate values for the intermediate and output signals such that all constraints of the circuit are fulfilled. \cite{rodriguez_circom_2025}
+Additionally, we need to calculate values for the intermediate and output signals such that all constraints of the circuit are fulfilled \cite{rodriguez_circom_2025}.
 For this purpose, Circom provides a so-called \glqq Witness\grqq\ Generation procedure which assigns appropriate values to these signals.\footnote{
     \label{footnote:circomWitness}
-    Note that the term \glqq Witness\grqq\ in the context of Circom \glqq Witness\grqq\ Generation is entirely separate from the term witness describing the private parts of an assignment to a circuit.
+    Note that the term \glqq Witness\grqq\ in the context of Circom \glqq Witness\grqq\ Generation has a very different meaning compared to the term witness describing the private parts of an assignment to a circuit.
 }
 In the example \verb|component main = vot(3)|, the signals that still need to be assigned are the outputs \verb|S_out|.
-Here, the Circom \glqq Witness\grqq\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all contraints.\footnote{
-    Here, $-2$ depends on the chracteristic of the field $\mathbb{F}$ that represents the signals in Circom.
-    For a field $\mathbb{F}_q$ of prime order $q$, we have $-2=q-2$.
-}
+Here, the Circom \glqq Witness\grqq\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all contraints.\cref{footnote:fieldNegativeNumbers}
 Since the sum of all votes is $1+1=2$, $S_{out}^4=-2\neq 0$ and therefore, the ballot $(1,0,1)$ is not part of the choice space in our example voting scheme from \cref{chap:votingschemes}.
 
 Assume, we have a \verb|vot.circom| file with \verb|component main = vot(3)|.
@@ -318,8 +318,7 @@ This can be very efficient compared to generating the full $CRS$ from scratch ev
 
 \SaveVerb{ptau}|powersoftau.ptau|
 In snarkjs, $CRS\text{-}Universal$ is represented by a \verb|powersoftau.ptau| file, which is typically generated using a \gls{mpc} protocol with several contributions from different sources such as random beacons \cite{nicolas_gailly_league_2025}.\footnote{
-    For our benchmarks, we used the pregenerated \protect\UseVerb{ptau} files from \cite{jordi_baylina_iden3snarkjs_2025}. 
-    \todo{Is this insecure?}
+    For our benchmarks, we used the pregenerated \protect\UseVerb{ptau} files from \cite{jordi_baylina_iden3snarkjs_2025} which have been generated with many contributions from different sources.
 }
 To create $CRS\text{-}R1CS_r$, snarkjs uses \verb|powersoftau.ptau| and the $R1CS$ of a circuit in the form of an \verb|circuit.r1cs| file.
 Here, we typically perform another \gls{mpc} to contribute randomness from different sources to the $CRS\text{-}R1CS_r$.\footnote{

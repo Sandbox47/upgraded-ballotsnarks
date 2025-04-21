@@ -4,15 +4,20 @@
 In our voting scheme, we use \gls{eeg} encryption for the ballots.
 All operations in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
 For a secure encryption, the \gls{ddh} assumption needs to hold on $\mathbb{G}$.
-Elliptic curves of a sufficiently large order $q$ are finite cyclic groups on which the \gls{ddh} assumption is believed to hold.
+The elliptic curves we consider for our voting schemes are finite groups on which the \gls{ddh} assumption is believed to hold.
 Moreover, Elliptic curves are benefitial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{national_security_agency_case_2009}.
 
 Fundamentally, Elliptic curves are sets of points that satisfy certain equations \cite{least_authority_moonmath_2024}. 
 Here, a curve point consists of multiple elements from a so-called base field $\mathbb{F}_p$ of order $p$.
 For better distinction, we call the field $\mathbb{F}_q$ with elliptic curve order $q$ the scalar field of the elliptic curve.
 
+\SaveVerb{BN254}|BN254|
 Our introduction of elliptic curves largely parallels the one given in chapter 5 of \cite{least_authority_moonmath_2024}.
-However, as we exclusively use Montgomery curves and Twisted Edwards curves, we introduce them directly and do not introduce Short Weierstrass Curves seperately.
+However, as we exclusively use Montgomery curves and Twisted Edwards curves in the definitions of our ballot validity circuits, we introduce them directly and do not introduce Short Weierstrass Curves seperately.\footnote{
+    \label{footnote:shortWeierstrassForGroth16}
+    Note that the curve \UseVerb{BN254} we employ as a basis for the \gls{zps} Groth16 which is used to costruct the ballot validity proofs is a Short Weierstrass curve.
+    However, we do not implement any curve arithmetic of \UseVerb{BN254} inside circuits.
+}
 
 \section{Montgomery Curves}
 \label{section:ellipticCurves:montgomery}
@@ -101,7 +106,7 @@ To avoid the special point at infinity $\mathcal{O}$ there exists the projective
 \begin{definition}[Projective Point and Projective Plane]
     Let $(\mathbb{F}, +, \cdot)$ be a field. 
     We define $\mathbb{F}^*$ as the set of invertible elements in $\mathbb{F}$.
-    Let $(X, Y, Z)=\in\mathbb{F}^3$. 
+    Let $(X, Y, Z)\in\mathbb{F}^3$. 
     Then, the projective point corresponding to $(X, Y, Z)$ is defined as
     \begin{align*}
         [X:Y:Z] :=\{(k\cdot X, k\cdot Y, k\cdot Z)|k\in\mathbb{F}^*\}\text{.}
@@ -127,7 +132,7 @@ Using projective planes, we can define Montgomery Curves in their projective rep
         Here, $[0:1:0]$ corresponds to the point at infinity $\mathcal{O}$ of the affine form.
         \item The group law $\odot_M^{Pro}$:\\
         Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)$. 
-        To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding Affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
+        % To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding Affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
         Formally:
         {\setlength{\mathindent}{0pt}
         \begin{align*}
@@ -661,7 +666,7 @@ In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sa
     Note that the $OkSak\text{-}Y\text{-}Recovery$ returns the correct result $P^k=Q_{rec}=[X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]=[0:Y_{Q_{rec}}:0]=[0:1:0]$ as long as $Y_{Q_{rec}}\neq 0$.
     We introduce a normalization function $Norm\text{-}Projective$ which covers the edge case $Y_{Q_{rec}}=0$ and does not change any other projective coordinates.
     \begin{align*}
-        Norm\text{-}Projective:\{\mathbb{F}^3\}\to\{\mathbb{F}^3\}, [X:Y:Z]\to\begin{cases}
+        Norm\text{-}Projective:\mathbb{F}P^2\to\mathbb{F}P^2, [X:Y:Z]\to\begin{cases}
             \left[\frac{X}{Z}:\frac{Y}{Z}:1\right], &\:\text{if } Z\neq 0\\
             [0:1:0], &\:\text{otherwise}
         \end{cases}
@@ -785,7 +790,7 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
 \section{Twisted Edwards Curves}
 \label{section:ellipticCurves:twistedEdwards}
 
-A third class of elliptic curves besides Short Weierstrass and Montgomery curves are Twisted Edwards curves.
+An alternative representation of Montgomery curves are Twisted Edwards curves.
 
 As discussed in \cref{section:elGamalEncryption:precomputedPowers}, it can be benefitial to precompute powers of the public key elements $g$ and $h$ in \gls{eeg} if we want to encrypt many messages with the same public key.
 This leads to \gls{ppeeg} which was introduced in \cref{def:ppeeg}.
@@ -843,7 +848,7 @@ Note that this also requires the circuits $\mathfrak{C}_{Num2Bits}$ (\cref{fig:c
 $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ (\cref{fig:circuit:teIfElse}) is defined analogously to $\mathfrak{C}_{xIf\text{-}Else}$ (\cref{fig:circuit:xIfElse}).
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Exponentiation on Twisted Edwards curves. Used used to compute $P^k$ for $P\in TE_{a,d}(\mathbb{F})$ and $k\in\mathbb{N}$.
+    \caption{Exponentiation on Twisted Edwards curves. Used to compute $P^k$ for $P\in TE_{a,d}(\mathbb{F})$ and $k\in\mathbb{N}$.
     Here, $k$ can be represented as a bitstring of length $l$ and $P^{2^i}\:\forall i\in\{0,\dots, l-1\}$ are precomputed powers of $P$.}
     \label{alg:twistedEdwardsExp}
     \begin{algorithmic}

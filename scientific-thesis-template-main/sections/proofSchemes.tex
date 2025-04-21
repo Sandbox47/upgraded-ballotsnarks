@@ -89,7 +89,7 @@ Here, among other things, a voter needs to show that the ballot $b=(b_0,b_1,b_2)
 We can express this membership of the choice space by the function $r_{3\text{-}vot}$ defined in \cref{example:threeVot}.
 \begin{example}[Choice space membership for $3\text{-}vot$]
     \label{example:threeVot}
-    Let $(\mathbb{F},+,\cdot)$ be a finite field with $0,1\in\mathbb{F}$.
+    Let $(\mathbb{F},+,\cdot)$ be a finite field of sufficiently large chracteristic \cref{footnote:choiceSpaceSize} with $0,1\in\mathbb{F}$.
     Then, $r_{3\text{-}vot}$ is defined as:
     \begin{align*}
         r_{3\text{-}vot}:\mathbb{F}^3\to\mathbb{F}^4;\quad(S_1^{in},S_2^{in}, S_3^{in})\mapsto (S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
@@ -158,7 +158,7 @@ We can formalize these ideas with the concept circuit satisfiability.
         \forall i\in\{1,\dots, m\}\forall j\in\{1,\dots, n\}:\:S_i^{in},S_j^{out}\in\mathbb{F}
     \end{align*}
     We say that $S$ satisfies the circuit $\mathfrak{C}$ for $r$, if and only if $r(S_1^{in},\dots, S_{m}^{in})=(S_1^{out},\dots, S_{n}^{out})$.
-    % We call the circuit for $r$ satisfiable if there exists an assignment $S$ such that $S$ satisfies the circuit for $r$.
+    We call the $\mathfrak{C}$ satisfiable if there exists an assignment $S$ such that $S$ satisfies $\mathfrak{C}$.
     % We define the set of all assignments $S$ that satisfy $r$ as the language of $r$: $L_r\{S\in\mathbb{F}^{m+n}|S \text{ satisfies } r\}$.
     
     % Let $I=(I_1^{in}, \dots, I_{m}^{in}, I_1^{out},\dots, I_{n}^{out})$ be a partial assignment to $f$.
@@ -181,7 +181,11 @@ We can formalize these ideas with the concept circuit satisfiability.
 % 
 For instance, the assignment $(0,0,1,0,0,0,0)$ satisfies the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$ since $(0,0,1)\in C$.
 Therfore, the $\mathfrak{C}_{3\text{-}vot}$ is satisfiable.
-However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy $\mathfrak{C}_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.
+However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy $\mathfrak{C}_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.\footnote{
+    \label{footnote:fieldNegativeNumbers}
+    Here, $-2$ depends on the chracteristic of the field $\mathbb{F}$.
+    For a field $\mathbb{F}_q$ of prime order $q$, we have $-2=q-2$.
+}
 % Similarily, the circuit for $r_{3\text{-}vot}$ is satisfiable under the partial assignment $(\bot, \bot, 1, 0,0,0,0)$ but not under the partial assignment $(2,\bot, \bot, 0,0,0,0)$.
 
 % \todo{
@@ -194,7 +198,7 @@ However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy $\mathfrak{C}_{3\text
 
 \subsection{Asserts}
 
-In general, an assignment $(s_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out}):=(b_0, b_1, b_2, 0, 0, 0, 0)$ satisfies $\mathfrak{C}_{3\text{-}vot}$ if and only if $b=(b_0, b_1, b_2)\in C$.
+In general, an assignment $(S_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out}):=(b_0, b_1, b_2, 0, 0, 0, 0)$ satisfies $\mathfrak{C}_{3\text{-}vot}$ if and only if $b=(b_0, b_1, b_2)\in C$.
 Therefore, to assert that ballots are part of the choice space, we assign the constant $0$ to $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$.
 This creates a new circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ which operates only on the three input signals $S_1^{in}, S_2^{in}$ and $S_3^{in}$ and does not have any outputs.
 $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ is illustrated in \cref{fig:circuit:exampleAssertThreeVot}.
@@ -312,7 +316,7 @@ Using these circuits as components, the computation of $r_{3\text{-}vot}$ and $r
 The corresponding circuits $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ are presented in \cref{fig:circuit:threeVotModularity}.
 These circuits are exactly the same as the ones defined in \cref{fig:circuit:exampleVotingDef} and \cref{fig:circuit:exampleAssertThreeVot}, we have just grouped some of the internal structure as new circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ respectively.
 
-Note that we can not reuse the same circuit $\mathfrak{C}_{module}$ multiple times inside another circuit $\mathfrak{C}$.
+Note that we cannot reuse the same circuit $\mathfrak{C}_{module}$ multiple times inside another circuit $\mathfrak{C}$.
 Therefore, we use multiple sepearate instantiations of $\mathfrak{C}_{module}$ inside $\mathfrak{C}$.
 In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ in the definition of $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ respectively.
 
@@ -357,7 +361,17 @@ Fundamentally, \glspl{r1cs} are systems of equations of a specific format betwee
     Hence, $n$ is the number of variables involved in the \gls{r1cs} and $k$ is the number of equations or constraints of the system.
 \end{definition}
 
-Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit $\mathfrak{C}$ as a \gls{r1cs} $R1CS_r$, since we require that $r$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
+Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit $\mathfrak{C}$ as a \gls{r1cs} $R1CS_r$.
+We require that $r$ and $\mathfrak{C}$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
+%To derive the individual constraints in $R1CS_r$ from $\mathfrak{C}$, we first define, what we can compute from a set of signals without additional constraints and capture this concept as \glqq simple terms\grqq :
+%For a set of signals $S$, the simple terms over $S$ are defined as $simple\_terms(S):=\{c\cdot x|x\in S \land c \text{ constant}\}\cup\left\{\sum\limits_{i\in \{1,\dots, l\}} c_i\cdot x_i| S'\subseteq S, c_i\in\mathbb{F} \text{ constant }\forall i\in\right\}$
+Therefore, under the definition that all constants, all inputs and all intermediate signals in $\mathfrak{C}$ are \glqq primitives\grqq, we can derive the individual constraints in  $R1CS_r$ from $\mathfrak{C}$ using the following rules inductively:
+\begin{itemize}
+    \item Any computation $x\cdot y$, where $x$ and $y$ are sums of constant multiples of primitives is expressed as an additional constraint $tmp=x\cdot y$ where $tmp$ is an intermediate signal.
+    \item Any computation $x+y$, where the result is directly used as an output $S_{i}^{out}$ of $\mathfrak{C}$ is expressed as an additional constraint $S_{i}^{out}=x + y$.
+    \item Every other computation $x+y$ and $x\cdot y$ does not contribute additinal constraints.
+\end{itemize}
+% The process of converting $\mathfrak{C}$ into the corresponding \gls{r1cs} has 
 
 % For instance, we can represent $r_{3\text{-}fac}$ as an \gls{r1cs} as follows:\\
 % First, we need to rewrite the definition of $r_{3\text{-}fac}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot $.
@@ -404,13 +418,18 @@ Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}
 
 % As we can see, this \gls{r1cs} does represent $f_{3\text{-}fac}$.
 
-For instance, we can represent $r_{3\text{-}vot}$ as an \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ as follows:\\
-First, we need to rewrite the definition of $r_{3\text{-}vot}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot$.
-This process is also called flattening \cite{least_authority_moonmath_2024}. We get:
-\begin{align*}
-    S_4^{out}=(1-S_1^{in}-S_2^{in}-S_3^{in})\cdot (S_1^{in}+S_2^{in}+S_3^{in})
-\end{align*}
-Together with the compuations for $S_1^{out}$, $S_2^{out}$ and $S_3^{out}$ which remain unchanged, we have seven variables and four constraints.
+For instance, we can represent $r_{3\text{-}vot}$ and $\mathfrak{C}_{3\text{-}vot}$ as an \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ as follows:\\
+%First, we rewrite the definition of $r_{3\text{-}vot}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot$.
+%This process is also called flattening \cite{least_authority_moonmath_2024}. 
+%We get:
+By applying the rules, we get the following constraints:
+\begin{align}
+    S_1^{out} &=(1-S_1^{in})\cdot S_1^{in} \label{constraint1}\\
+    S_2^{out} &=(1-S_2^{in})\cdot S_2^{in} \label{constraint2}\\
+    S_3^{out} &=(1-S_3^{in})\cdot S_3^{in} \label{constraint3}\\
+    S_4^{out} &=(1-S_1^{in}-S_2^{in}-S_3^{in})\cdot (S_1^{in}+S_2^{in}+S_3^{in}) \label{constraint4}
+\end{align}
+In total, we have seven variables and four constraints.
 Therefore, we set $n=7$ and $k=4$ for the \gls{r1cs} and set the variables as follows:
 \begin{align*}
     (S_1,S_2,S_3,S_4,S_5,S_6,S_7) = (S_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
@@ -418,22 +437,22 @@ Therefore, we set $n=7$ and $k=4$ for the \gls{r1cs} and set the variables as fo
 
 Then, for the computation of $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$ we need to choose the constants $a_i^j, b_i^j, c_i^j$ for $i\in\{0,\dots, 7\}, j\in\{1,2,3,4\}$ as follows:
 \begin{align*}
-    \text{For } S_1^{out}:&&&&&&&&&&&&&&\\
+    \text{For } \text{ (\ref{constraint1})}:&&&&&&&&&&&&&&\\
     a_0^1=1 && a_1^1=-1 && a_2^1=0 && a_3^1=0 && a_4^1=0 && a_5^1=0 && a_6^1=0 && a_7^1=0\\
     b_0^1=0 && b_1^1=1 && b_2^1=0 && b_3^1=0 && b_4^1=0 && b_5^1=0 && b_6^1=0 && b_7^1=0\\
     c_0^1=0 && c_1^1=0 && c_2^1=0 && c_3^1=0 && c_4^1=1 && c_5^1=0 && c_6^1=0 && c_7^1=0\\
     &&&&&&&&&&&&&&\\
-    \text{For } S_2^{out}:&&&&&&&&&&&&&&\\
+    \text{For } \text{ (\ref{constraint2})}:&&&&&&&&&&&&&&\\
     a_0^2=1 && a_1^2=0 && a_2^2=-1 && a_3^2=0 && a_4^2=0 && a_5^2=0 && a_6^2=0 && a_7^2=0\\
     b_0^2=0 && b_1^2=0 && b_2^2=1 && b_3^2=0 && b_4^2=0 && b_5^2=0 && b_6^2=0 && b_7^2=0\\
     c_0^2=0 && c_1^2=0 && c_2^2=0 && c_3^2=0 && c_4^2=0 && c_5^2=1 && c_6^2=0 && c_7^2=0\\
     &&&&&&&&&&&&&&\\
-    \text{For } S_3^{out}:&&&&&&&&&&&&&&\\
+    \text{For } \text{ (\ref{constraint3})}:&&&&&&&&&&&&&&\\
     a_0^3=1 && a_1^3=0 && a_2^3=0 && a_3^3=-1 && a_4^3=0 && a_5^3=0 && a_6^3=0 && a_7^3=0\\
     b_0^3=0 && b_1^3=0 && b_2^3=0 && b_3^3=1 && b_4^3=0 && b_5^3=0 && b_6^3=0 && b_7^3=0\\
     c_0^3=0 && c_1^3=0 && c_2^3=0 && c_3^3=0 && c_4^3=0 && c_5^3=0 && c_6^3=1 && c_7^3=0\\
     &&&&&&&&&&&&&&\\
-    \text{For } S_4^{out}:&&&&&&&&&&&&&&\\
+    \text{For } \text{ (\ref{constraint4})}:&&&&&&&&&&&&&&\\
     a_0^4=1 && a_1^4=-1 && a_2^4=-1 && a_3^4=-1 && a_4^4=0 && a_5^4=0 && a_6^4=0 && a_7^4=0\\
     b_0^4=0 && b_1^4=1 && b_2^4=1 && b_3^4=1 && b_4^4=0 && b_5^4=0 && b_6^4=0 && b_7^4=0\\
     c_0^4=0 && c_1^4=0 && c_2^4=0 && c_3^4=0 && c_4^4=0 && c_5^4=0 && c_6^4=0 && c_7^4=1\\
@@ -501,9 +520,9 @@ For every \gls{r1cs} $R1CS$, there is a corresponding \gls{qap} $QAP(R1CS)$.
     Let $m_1,\dots, m_k$ be arbitrary, invertible and distinct elements of $\mathbb{F}$.
     Then, the \gls{qap} corresponding to the \gls{r1cs} $R1CS$ is defined as follows:
     \begin{align*}
-        QAP(R1CS)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
+        QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{n}\left\{\left(A_j, B_j, C_j\right)\right\} %\text{ with} T\in\mathbb{F}[x]\:\forall j\in\{0,\dots, n\} A_j,B_j,C_j\in\mathbb{F}[x]
     \end{align*}
-    Here, $T, A_j, B_j, C_j$ are polynomials over $\mathbb{F}$ with:
+    Here, $T, A_j, B_j, C_j\in\mathbb{F}[x]$ are polynomials over $\mathbb{F}$ with:
     \begin{itemize}
         \item $T(x):=\prod\limits_{l=1}^k(x-m_l)$ is a polynomial of degree $k$.
         \item $A_j, B_j, C_j$ are polynomials of degree $k-1$ defined by:
@@ -515,7 +534,10 @@ For every \gls{r1cs} $R1CS$, there is a corresponding \gls{qap} $QAP(R1CS)$.
 
 We can construct $QAP(R1CS)$ from $R1CS$ by executing the following steps:
 \begin{enumerate}
-    \item Choose $k$ distinct, invertible elements $m_1,\dots, m_k\in\mathbb{F}$, one for each constraint in $R1CS$.
+    \item Choose $k$ distinct, invertible elements $m_1,\dots, m_k\in\mathbb{F}$, one for each constraint in $R1CS$. \footnote{
+        \label{footnote:qapRootsOfUnity}
+        In practice, we typically use the $k$-th roots of unity $\{m_1,\dots, m_k\}=\{m\in\mathbb{F}| m^k=1\}$ for efficiency reasons. \cite{todo}
+    }
     \item Compute the target polynomial $T$ as in \cref{def:qap}.
     \item Use Lagrange's method of polynomial interpolation as described in section 3.3.4 of \cite{least_authority_moonmath_2024} to compute the polynomials $A_j, B_j$ and $C_j$ as in \cref{def:qap}.
     Here, we need to use the set $S_{A_j}:=\{(m_1,a_j^1),\dots, (m_k, a_j^k)\}$ as the (evaluation point, value)-pairs for the construction of $A_j$. 
@@ -532,7 +554,7 @@ Now we can follow the instructions outlined previously:
     \begin{align*}
         m_1=2,\:m_2=4,\:m_3=5,\:m_4=7
     \end{align*}
-    \item Then, we get the followng target polynomial:
+    \item Then, we get the following target polynomial:
     \begin{align*}
         T(x) &= (x-m_1)(x-m_2)(x-m_3)(x-m_4)\\
         &= (x-2)(x-4)(x-5)(x-7)\\
@@ -567,7 +589,7 @@ Now we can follow the instructions outlined previously:
     By Lagrange's interpolation we know that $A_4, A_5, A_6, A_7, B_0, B_4, B_5, B_6, B_7, C_0, C_1, C_2$ and $C_3$ are the zero polynomial since they are polynomials of degree $k-1=3$ and are $0$ on $4$ points.
     Using the process described in section 3.3.4 of \cite{least_authority_moonmath_2024} we can calculate the other polynomials.\\
     Let $P\in \{A,B,C\}$, $j\in \{0,\dots,7\}$. 
-    Let $p$ be the lower case equivalent of $P$. 
+    Let $p$ be the lower case equivalent of $P$ (i.e., $P=A\Rightarrow p=a,\:P=B\Rightarrow p=b,\:P=C\Rightarrow p=c$).
     Then we can compute the polynomial $P_j$ with $S_{P_j}=\{(m_1,p_j^1), (m_2, p_j^2), (m_3, p_j^3), (m_4, p_j^4)\}$ as follows:
     \begin{align*}
         P_j(x) &= p_j^1\cdot\frac{x-m_2}{m_1-m_2}\cdot\frac{x-m_3}{m_1-m_3}\cdot\frac{x-m_4}{m_1-m_4} 
@@ -591,10 +613,10 @@ Now we can follow the instructions outlined previously:
             +p_j^4\cdot \frac{x^3+2x^2+12x+12}{4}
     \end{align*}
     \begin{align*}
-        \phantom{P_j(x)}&=p_j^1\cdot 3\cdot (x^3+10x^2+5x+3) &&\quad \text{Since } 9^{-1}=3\\
-            &\phantom{=} + p_j^2\cdot 11\cdot(x^3+12x^2+7x+8) &&\quad \text{Since } 6^{-1}=11\\
-            &\phantom{=} + p_j^3\cdot 2\cdot(x^3+11x+9) &&\quad \text{Since } 7^{-1}=2\\
-            &\phantom{=} + p_j^4\cdot 10\cdot(x^3+2x^2+12x+12) &&\quad \text{Since } 4^{-1}=10
+        \phantom{P_j(x)}&=p_j^1\cdot 3\cdot (x^3+10x^2+5x+3) &&\quad \text{Since } 9^{-1}\mod 13=3\\
+            &\phantom{=} + p_j^2\cdot 11\cdot(x^3+12x^2+7x+8) &&\quad \text{Since } 6^{-1}\mod 13=11\\
+            &\phantom{=} + p_j^3\cdot 2\cdot(x^3+11x+9) &&\quad \text{Since } 7^{-1}\mod 13=2\\
+            &\phantom{=} + p_j^4\cdot 10\cdot(x^3+2x^2+12x+12) &&\quad \text{Since } 4^{-1}\mod 13=10
     \end{align*}
     \begin{align*}
         \phantom{P_j(x)}&=p_j^1\cdot (3x^3+4x^2+2x+9) + p_j^2\cdot (11x^3+2x^2+12x+10)\\
@@ -721,7 +743,7 @@ We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satis
         QAP(R1CS)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
     \end{align*}
     be the corresponding \gls{qap}.\\
-    Let $S=(S_1,\dots, S_n)$ be an assignment to $R1CS$.
+    Let $S=(S_1,\dots, S_n)\mathbb{F}^n$ be an assignment to $R1CS$.
     We compute a polynomial $P_S$ as follows:
     \begin{align*}
         P_S:=\left(A_0+\sum_{j=0}^{n}S_j\cdot A_j\right)\cdot\left(B_0+\sum_{j=0}^{n}S_j\cdot B_j\right)-\left(C_0+\sum_{j=0}^{n}S_j\cdot C_j\right)
@@ -763,13 +785,32 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
     }
 \end{itemize}
 
+Note that the satisfiability definitions of circuits implies the satisfiability definition of \glspl{r1cs} and \glspl{qap} in the sense that for every assignment that satisfies the circuit, there is an extended assignment, where values are assigned to the intermediate signals as well, that satisfies the \gls{r1cs} and the \gls{qap} as presented in \cref{theorem:satisfiabilityEquality}.
+\begin{theorem}
+    \label{theorem:satisfiabilityEquality}
+    Let $(\mathbb{F}, +, \cdot )$ be a finite field.
+    Let $r:\mathbb{F}^m\to \mathbb{F}^n$ be an algebraic function and $\mathfrak{C}$ be the corresponding algebraic circuit.
+    Let $R1CS_r$ be the corresponding \gls{r1cs} and let $QAP(R1CS_r)$ be the corresponding \gls{qap} with $s$ additional intermediate signals.
+    Without loss of generality, assume that the order of assignments to $\mathfrak{C}$ is preserved by $R1CS_r$ and $QAP(R1CS_r)$ and the additinal intermediate signals are added as a suffix.\footnote{
+        \label{footnote:assignmentOrderDoesNotMatter}
+        Intuitively, the order of the assignments to a \gls{r1cs} and corresponding \gls{qap} does not matter since we can just swap where the different signals from an assignment are being used in the two representations.
+    }
+
+    Let $S=(S_1^{in},\dots, S_m^{in}, S_1^{out}, \dots, S_n^{out})$ be an assignment that satisfies $\mathfrak{C}$.
+    Then, there are signals $S_1\in\mathbb{F},\dots, S_s\in\mathbb{F}$ such that $S'=(S_1^{in},\dots, S_m^{in}, S_1^{out}, \dots, S_n^{out}, S_1,\dots, S_s)$ satisfies $R1CS_r$ and $QAP(R1CS_r)$.
+\end{theorem}
+
+We will not prove this theorem here formally.
+However, intuitively, the intermediate signals $S_1,\dots, S_s$ can be computed from $S_1^{in},\dots, S_m^{in}$ in the same way as in $\mathfrak{C}$.
+
 \section{Instance and Witness}
 \label{section:proofSchemes:instanceAndWitness}
 In practical applications such as proving ballot validity, we need to be able to conduct the proof without revealing the secret ballot. 
+This is captured by the zero knowledge characteristic of ballot validity proofs in the voting schemes introduced in \cref{chap:votingschemes}.
 More generally, we need to be able to hide a part of the assignment to a circuit $\mathfrak{C}$ for a relation $r$ and still be able to provide the proof of correct circuit execution.
 
 For this purpose, we split an assignment to the circuit for $r$ into an instance and a witness part. 
-As outlined in \cref{chap:votingschemes}, the instance is public and the witness is private.
+As outlined in \cref{chap:votingschemes}, the instance is public and the witness is private and proving the relation between them is the goal of the \gls{zps} (\cref{def:zpsForR}) in our voting schemes.
 
 We can formalize this concept as a Decomposition Relation.
 
@@ -782,7 +823,7 @@ We can formalize this concept as a Decomposition Relation.
     For $R1CS_r$ and $QAP(R1CS_r)$, assignments have more entries if intermediate signals are required to conform to the \gls{r1cs} and \gls{qap} format.
     The set of all assignments to any of the representations $r$, $R1CS_r$ and $QAP(R1CS_r)$ is therefore $\mathcal{A}=\mathbb{F}^{m+n+s}$,where $s\in\mathbb{N}$ is the number of intermediate signals required.
     
-    To decompose an assignment $S\in\mathcal{A}$ into an assignment $(I,W)\in\mathcal{I}\times\mathcal{W}$, we employ a bijective function $d_p$ based on a permutation $p:\{0,\dots, m+n+s\}\to\{0,\dots, n_I + n_W\}$ with $p(0):=0$. \footnote{\label{footnote:decompRelationPermutation}
+    To decompose an assignment $S\in\mathcal{A}$ into an assignment $(I,W)\in\mathcal{I}\times\mathcal{W}$, we employ a bijective function $d_p$ based on a permutation $p:\{0,\dots, m+n+s\}\to\{0,\dots, n_I + n_W\}$ ($m+n+s=n_I+n_W$) with $p(0):=0$. \footnote{\label{footnote:decompRelationPermutation}
         To understand how $p$ helps to map between instance-witness decomposition and normal assignments, consider the following:
         Let $S=(S_1,\dots, S_{m+n+s})$ be an assignment, and let $(I,W)=((I_1,\dots, I_u), (W_1,\dots, W_v))$ be the corresponding decomposed assignment, where the signals $S$ have each been assigned to instance $I$ or witness $W$.
         If $I_j$ corresponds to $S_i$ , then $p(i):=j$ and consequently $p^{-1}(j)=i$.
@@ -794,10 +835,10 @@ We can formalize this concept as a Decomposition Relation.
     }
     \begin{align*}
         &d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W},\\
-        &\quad d_p(S)=d_p((S_1,\dots, S_{m+n+s})):=(I,W)=((I_1,\dots,I_u),(W_1,\dots, W_v))\\
+        &\quad d_p(S)=d_p((S_1,\dots, S_{m+n+s})):=(I,W)=((I_1,\dots,I_{n_I}),(W_1,\dots, W_{n_W}))\\
         &\text{where}\\
-        &\forall j\in\{1,\dots,u\}:\:I_j=S_{p^{-1}(j)}\\
-        &\forall j\in\{1,\dots, v\}:\: W_j=S_{p^{-1}(u+j)}
+        &\forall j\in\{1,\dots,{n_I}\}:\:I_j=S_{p^{-1}(j)}\\
+        &\forall j\in\{1,\dots,{n_W}\}:\: W_j=S_{p^{-1}({n_I}+j)}
     \end{align*}
     How $p$ and $d_p$ are used to decompose assignments is also visualized in \cref{fig:decompositionPerm}.
     % The decomposition $(I,W)$ of an assignment $S=(S_1,\dots, S_{m+n+s})$ is then defined as
@@ -811,10 +852,10 @@ We can formalize this concept as a Decomposition Relation.
     The decomposition relation $DR(rep, d_p)$ where $rep\in\{r,R1CS_r, QAP(R1CS_r)\}$ is then a relation defined as
     \begin{align*}
         &DR(rep, d_p): \mathcal{I}\times\mathcal{W}\to\{0,1\}, \\
-        &\quad DR(rep,d_p)(I, W)=DR(rep, d_p)((I_1,\dots, I_u), (W_1,\dots, W_v))\\
+        &\quad DR(rep,d_p)(I, W)=DR(rep, d_p)((I_1,\dots, I_{n_I}), (W_1,\dots, W_{n_W}))\\
         &\phantom{\quad DR(rep,d_p)(I, W)}=\begin{cases}
             %1, \quad \text{if } p(I, W) \text{ satisfies } rep\\
-            1, \quad \text{if } d_p^{-1}((I_1,\cdots, I_u), (W_1,\dots, W_v)) \text{ satisfies } rep\\
+            1, \quad \text{if } d_p^{-1}((I_1,\cdots, I_{n_I}), (W_1,\dots, W_{n_W})) \text{ satisfies } rep\\
             0, \quad \text{otherwise}
         \end{cases}
     \end{align*}
@@ -826,7 +867,7 @@ We can formalize this concept as a Decomposition Relation.
 \begin{figure}[h]
     \centering
         \includegraphics[scale=0.9]{graphics/proofSchemes/DecompositionPerm.pdf}
-    \caption{Decomposition of a signal $S=(S_1,\dots, S_{m+n+s})$ into instance and witness $(I, W)=((I_1,\dots, I_u),(W_1,\dots, W_v))$ as performed by $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$ using permutation $p$.}
+    \caption{Decomposition of a signal $S=(S_1,\dots, S_{m+n+s})$ into instance and witness $(I, W)=((I_1,\dots, I_{n_I}),(W_1,\dots, W_{n_W}))$ as performed by $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$ using permutation $p$.}
     \label{fig:decompositionPerm}
 \end{figure}
 
@@ -881,7 +922,7 @@ Let $DR(QAP(R1CS_{r_{3\text{-}vot}}), d_p)$ be defined analogously to $DR(r_{3\t
 To prove that a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ without revealing it, a voter can create the assignment $S=d_p^{-1}((0,0,0,0),(b_0,b_1,b_2))=(b_0,b_1,b_2,0,0,0,0)$ to $QAP(R1CS_{r_{3\text{-}vot}})$ and compute the corresponding polynomial $P_S$.
 If $P_S$ is divisible by the target polynomial $T$ of $QAP(R1CS_{r_{3\text{-}vot}})$, we know that the assignment $S$ satisfies $QAP(R1CS_{r_{3\text{-}vot}})$.
 Therefore, $DR(QAP(R1CS_{r_{3\text{-}vot}}), d_p)(I,W)=1$ and the ballot $b$ is valid.
-However, we do not learn what the ballot $b$ is.
+However, we do not learn what the ballot $b$ is which is what the zero-knowledge property of our voting scheme definition states.
 Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
 
 %However, it is currently not possible to show that the polynomial $P_S$ provided by a voter actually belongs to the assignment $S$.
@@ -898,7 +939,7 @@ Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
         There is no further interaction between the two parties.
     }
     \begin{itemize}
-        \item Succinctness: The size of the $\pi=Prove(CRS, I, W)$ is shorter than the witness $W$. \cite{least_authority_moonmath_2024}
+        \item Succinctness: The size of the $\pi=Prove(CRS, I, W)$ is small and $Verify(CRS, I, \pi)$ is easy to compute. \cite{groth_size_2016}
         \item Argument: The soundness property defined in \cref{def:zpsForR} holds only if $Prove$ is polynomially bound. \cite{least_authority_moonmath_2024}
     \end{itemize}
 \end{definition}

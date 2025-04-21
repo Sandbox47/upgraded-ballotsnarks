@@ -2,7 +2,7 @@
 \label{chap:ourVotingSchemes}
 
 The voting schemes we use, are built from the concepts introduced in the Chapters \ref{chap:gpzkp}, \ref{chap:elGamalEncryption} and \ref{chap:ellipticCurves}.
-Recall, that we introduced a voting scheme as the following seve-tuple in \cref{chap:votingschemes}:
+Recall, that we introduced a voting scheme as the following seven-tuple in \cref{chap:votingschemes}:
 \begin{align*}
     VS=(C, \mathcal{S}, ZPS(R_C), Setup, \{V_0, \dots, V_{n-1}, VA\})
 \end{align*}
@@ -22,7 +22,7 @@ As presented earlier, $R_C$ outputs $1$ if and only if two checks are fulfilled:
 \end{itemize}
 In order to compute a \gls{zkp} for these checks, we need to express them inside a circuit.
 The algebraic function asserting $b\in C$ is called $r_C^{Vot}$ and the corresponding circuit is $\mathfrak{C}_C^{Vot}$.
-How we can compute $r_C^{Vot}$ is highly dependent on the choice space $C$ and therefore also the election type.
+The process of computing $r_C^{Vot}$ is highly dependent on the choice space $C$ and therefore also the election type.
 Thus, we will define this in detail for the different election types in \cref{section:ourVotingSchemes:choiceSpaces}.
 
 For the assertion $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$ we create an algebraic function $r_C^{Enc}$ and corresponding circuit $\mathfrak{C}_C^{Enc}$.
@@ -54,7 +54,7 @@ The corresponding circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is presented
     Input is \textcolor{witnessorange}{witness} and \textcolor{instanceblue}{instance}. 
     The witness consists of a ballot $b$ and auxiliary information $aux=(aux^{Vot}, aux^{Enc})$.
     $aux^{Enc}$ is typically the randomness needed for encrypting the individual ballot entries. 
-    Whether we need $aux^{Vot}$ and which format it takes depends on the choice space $C$.
+    The necessity of $aux^{Vot}$ and its format depend on the choice space $C$.
     The instance consists of an encrypted ballot $b'$ and the public key $pk$.
     $\mathfrak{C}^{Ballot\text{-}Validity}$ asserts $b\in C$ via $\mathfrak{C}_C^{Vot}$ and $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$ via $\mathfrak{C}_C^{Enc}$.
     }
@@ -66,10 +66,16 @@ Then, $R_C=DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$.
 
 \section{Zero Knowledge Proof System $ZPS(R_C)$}
 \label{section:ourVotingSchemes:zps}
+
+% \SaveVerb{BN254}|BN254|
 Assume, we have a ballot validity relation $R_C$ as introduced in \cref{chap:votingschemes}.
 Moreover, assume that $R_C$ is a decomposition relation $DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$ for the algebraic relation $r_C^{Ballot\text{-}Validity}$ as previously (\cref{section:ourVotingSchemes:ballotValidity}).
 Then, we use the \gls{g16snark} $GSNARK(R_C)=(Setup, Prove, Verify)$ based on paramters $param=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot, \cdot), g_1, g_2, \mathbb{F}_q)$ as $ZPS(R_C)$.
-We use the Barreto-Naehrig curve \verb|BN254| \cite{jonathan_wang_bn254_2024} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.  
+We use the Barreto-Naehrig curve \verb|BN254| \cite{jonathan_wang_bn254_2024} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.
+\footnote{
+    \label{footnote:bn254IsSW}
+    Note that \UseVerb{BN254} is a Short Weierstrass curveand therefore of a curve type that was not introduced in \cref{chap:ellipticCurves}.
+}
 This curve has the order 
 \begin{align*}
     \scriptstyle q = 21888242871839275222246405745257275088548364400416034343698204186575808495617
@@ -102,7 +108,7 @@ Either, we use the Montgomery Curve $M_{126932, 1}(\mathbb{F}_qP^2)$ or the isom
     To avoid operating in this small subgroup, we actually choose the subgroup with order $p$ as the basis for \gls{eeg} encryption.
     Since all operations are defined the same as in the full group $M_{126932, 1}(\mathbb{F}_qP^2)$ or $TE_{126934, 126930}(\mathbb{F}_q)$, we abstract away from the details here.
 }
-This curve is an instantiation of Curve25519 \cite{curve25519}.
+This curve is an instantiation of Curve25519 \cite{yung_curve25519_2006} and provides about $125$-bit security \cite{kosba_cc_2015}.
 Huber et. al. \cite{huber_zk-snarks_2025} used the Montgomery Curve in their implementation.
 However, as discussed in \cref{chap:ellipticCurves}, Twisted Edwards Curves can offer more efficient group exponentiation if we provide a list of powers of the element to exponentiate.
 
@@ -251,6 +257,11 @@ The total amount of votes submitted by a voter is only limited by the number of 
 However, as an additional restriction in Line-Vote, we require that all $1$-votes form a continuous line.
 
 Therefore, we can also interpret a Line-Vote system $VS_{C_{Line(cand)}}$ as the Multi-Vote system $VS_{C_{Multi(cand, cand, 1)}}$ with additionally enforcing that all $1$-votes form a continous line.
+\footnote{
+    \label{footnote:lineVoteAsMultiVoteInefficient}
+    Note using $\mathfrak{C}_{C_{Multi(cand, cand, 1)}}^{Vot}$ in the definition of $\mathfrak{C}_{C_{Line(cand)}}$ would be inefficint.
+    The assertions that the individual votes are $\leq 1$ can be replaced with bit assertions as we did in our implementation of $\mathfrak{C}_{C_{Line(cand)}}$.
+}
 
 \begin{definition}[Line-Vote System]
     Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
@@ -337,9 +348,11 @@ This illustrates nicely that we can extend the existing Multi-Vote system easily
 In the Borda election methods, voters arrange the candidates in order of preference.
 The ballot is then computed from this ranking by assigning points to the candidates depending on how they are ranked.
 The better a candidate is ranked, the more points they receive in the ballot. 
-What \glqq better\grqq\ means in this context is defined formally in \cref{def:ranking}
+Intuitively, the candidate with the lowest score in a ranking is ranked best.
+This concept is defined formally in \cref{def:ranking}.
 
-Note that secret ranking is not part of the ballot, but can sometimes greatly accelerate the choice space membership assertion.
+Note that the secret ranking is not part of the ballot, but only the corresponding points.
+However, the ranking can sometimes greatly accelerate the choice space membership assertion.
 Therefore, it is provided to the circuit $\mathfrak{C}_C^{Vot}$ as the auxiliary voting information $aux_{Vot}$.
 
 \begin{definition}[Ranking]
@@ -355,16 +368,16 @@ Therefore, it is provided to the circuit $\mathfrak{C}_C^{Vot}$ as the auxiliary
 \end{definition}
 
 \subsubsection{Pointlist-Borda}
-In a Pointlist-Borda election, as is common in Borda elections, a voter creates a ranking of the fixed set of candidates.
+In a Pointlist-Borda election, a voter creates a ranking of the fixed set of candidates.
 Using this ranking, the candidates are then assigned points according to a fixed, ordered pointlist.
-Here, the highest ranked candidate receives the most points, the second-highest ranked candidate receives the secend-most points and so on until all points from the pointlist have been assigned.
+Here, the highest ranked candidate receives the most points, the second-highest ranked candidate receives the second-most points and so on until all points from the pointlist have been assigned.
 All remaining candidates receive $0$ points.
 This forms the submitted ballot of the voter.
 
 Note that in this election type, we do not actually need the ranking to assert choice space membership efficiently.
 Assume, we have $cand$ many candidates and a pointlist of length $l$.
 In a valid ballot, for every entry in the pointlist, there is a candidate having this number of points assigned to them.
-Additionally, there are $cand-l$ many candidates receiving $0$ points.
+Since we allow that there are more candidates than points in the pointlist, there are also $cand-l$ many candidates receiving $0$ points.
 
 \begin{definition}[Pointlist-Borda System]
     Let $\mathcal{L}=(p_0,\dots, p_{l-1})\in\mathbb{N}^l$ be a pointlist.
@@ -407,7 +420,7 @@ Additionally, there are $cand-l$ many candidates receiving $0$ points.
 \end{figure}
 
 \subsubsection{Borda Tournament Style}
-In a \gls{bts} election, as is common in Borda elections, a voter creates a ranking of the fixed set of candidates.
+In a \gls{bts} election, a voter creates a ranking of the fixed set of candidates.
 Using this ranking, the candidates are then assigned a fixed number of points for every candidate ranked worse than them and a different, fixed, and lower number of points for every candidate ranked the same as them.
 
 \begin{definition}[Borda Tournament Style System]
