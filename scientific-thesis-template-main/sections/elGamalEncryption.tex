@@ -253,7 +253,7 @@ Here, we use the binary representation $(k_0,\dots, k_{l-1})$ of $k=\sum\limits_
 This is benefitial, since we can compute $g^{2^i}$ by iterated squaring of $g$.
 
 The algorithm $FastExp(g, k)$ to compute $g^k$ in $\mathbb{G}$ with the Square and Multiply approach is presented in \cref{alg:fastExp}.
-Here, we use the function $Num2Bits(k)$ to compute the \gls{lsb} binary representation $(k_0,\dots,k_{l-1})$ of $k$, with $k=\sum\limits_{i=0}^{l-1}k_i2^i$.
+Here, we use the function $r_{Num2Bits(l)}(k)$ to compute the \gls{lsb} binary representation $(k_0,\dots,k_{l-1})$ of $k$, with $k=\sum\limits_{i=0}^{l-1}k_i2^i$.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Algorithm $FastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
@@ -262,7 +262,7 @@ Here, we use the function $Num2Bits(k)$ to compute the \gls{lsb} binary represen
     \begin{algorithmic}
     \Procedure{$FastExp$}{$g, k$}
         \State $y\gets e_\mathbb{G}$ \Comment $e_\mathbb{G}$ is the neutral element of $\mathbb{G}$
-        \State $(k_0, \dots, k_{l-1})\gets Num2Bits(k)$
+        \State $(k_0, \dots, k_{l-1})\gets r_{Num2Bits(l)}(k)$
         \For{$i=l-1$ \textbf{ down to } $0$}
             \State $y\gets y^2=y\odot_\mathbb{G} y$
             \If{$k_i=1$}
@@ -286,7 +286,7 @@ This approach, using precomputed powers of the element to compute $g^k$, is defi
     \begin{algorithmic}
     \Procedure{$PrecomputedPowersFastExp$}{$(g^{2^0}, \dots, g^{2^{l-1}}), k$}
         \State $y\gets e_\mathbb{G}$ \Comment $e_\mathbb{G}$ is the neutral element of $\mathbb{G}$
-        \State $(k_0, \dots, k_{l-1})\gets Num2Bits(k)$ \Comment \gls{lsb} binary representation of $k$
+        \State $(k_0, \dots, k_{l-1})\gets r_{Num2Bits(l)}(k)$ \Comment \gls{lsb} binary representation of $k$
         \For{$i=0$ \textbf{ to } $l-1$}
             \If{$k_i=1$}
                 \State $y\gets g^{2^i}\odot_\mathbb{G} y$
@@ -297,7 +297,7 @@ This approach, using precomputed powers of the element to compute $g^k$, is defi
     \end{algorithmic}
 \end{Algorithmus}
 
-To represent $PrecomputedPowersFastExp$ as a circuit, we need additional circuits $\mathfrak{C}_{Num2Bits}$ (\cref{fig:circuit:numBits}) to compute $Num2Bits(k)$ and $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ to enable branching.
+To represent $PrecomputedPowersFastExp$ as a circuit, we need additional circuits $\mathfrak{C}_{Num2Bits(l)}$ (\cref{section:appendix:num2Bits}) to compute $r_{Num2Bits(l)}(k)$ and $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ to enable branching.
 %$Num2Bits$ is a standard template and preimplemented in the circuit language Circom we use here \cite{circomlib}.
 $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ depends on the choice of $\mathbb{G}$.
 Therefore, we will use it as a black box circuit as shown in \cref{fig:circuit:groupIfElse} for now.

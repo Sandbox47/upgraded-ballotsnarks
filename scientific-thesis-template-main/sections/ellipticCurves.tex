@@ -172,7 +172,7 @@ Using projective planes, we can define Montgomery Curves in their projective rep
 \end{Algorithmus}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ and $P_1\neq P_2^{-1}$.}
+    \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, $P_1\neq P_2$ and $P_1\neq P_2^{-1}$.}
     \label{alg:chordRuleProjectiveMontgomery}
     \begin{algorithmic}
     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
@@ -180,7 +180,7 @@ Using projective planes, we can define Montgomery Curves in their projective rep
         \State $H\gets X_2Z_1-X_1Z_2$
         \State $X'\gets BI^2HZ_1Z_2-(AZ_1Z_2+X_1Z_2+X_2Z_1)H^3$
         \State $Y'\gets -BI^3Z_1Z_2+(AZ_1Z_2+2X_1Z_2+X_2Z_1)IH^2-Y_1Z_2H^3$
-        \State $Z'\gets H^3Z^2$
+        \State $Z'\gets H^3Z_1Z_2$
         \State \Return $[X':Y':Z']$
     \EndProcedure
     \end{algorithmic}
@@ -493,7 +493,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
         xAdd(x(Q), x(P), x(P\odot_M^{Pro}Q^{-1})) := x(P\odot_M^{Pro} Q)
     \end{align*}
     We can compute $xAdd$ as presented in \cref{alg:xAdd}.
-    We give a proof of correctness of $xAdd$ in \cref{proofs:xAdd}.\todo{Make proof in appendix}.
+    A proof of correctness of $xAdd$ is presented in in section 4.5 of \cite{bernstein_montgomery_2017}.
     The corresponding circuit $\mathfrak{C}_{xAdd}$ is illustrated in \cref{fig:circuit:xAdd}.
 \end{definition}
 
@@ -525,7 +525,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
         xDbl(x(P)) := x(P\odot_M^{Pro} P) = x(P^2)
     \end{align*}
     We can compute $xDbl$ as presented in \cref{alg:xDbl}.
-    We give a proof of correctness of $xDbl$ in \cref{proofs:xDbl}.\todo{Make proof in appendix}.
+    A proof of correctness of $xDbl$ is presented in section 4.4 of \cite{bernstein_montgomery_2017}.
     The corresponding circuit $\mathfrak{C}_{xDbl}$ is illustrated in \cref{fig:circuit:xDbl}.
 \end{definition}
 
@@ -758,7 +758,7 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \label{alg:montgomeryExponentiation}
     \begin{algorithmic}
     \Procedure{$M\_Exp$}{$P, k$}
-        \State $(k_0,\dots, k_{l-1})\gets Num2Bits(k)$
+        \State $(k_0,\dots, k_{l-1})\gets r_{Num2Bits(l)}(k)$
         \State $(x(P^k), x(P^{k+1}))\gets  Montgomery\text{-}Ladder(x(P), (k_0,\dots,k_{l-1}))$
         \State $P^k\gets Ladder\text{-}Y\text{-}Recovery(P, x(P^k), x(P^{k+1}))$
         \State \Return $P^k$
@@ -771,8 +771,8 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \includegraphics[scale=.7]{graphics/ellipticCurves/MontgomeryExp.pdf}
     \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ for computing $P^k$ according to $M\_Exp(P, k)$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$ where $k$ can be represented as a bitstring of fixed length $l$.
-    We utilize circuits $\mathfrak{C}_{x}$ (\cref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{reverse}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\cref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\cref{fig:circuit:ladderYRecovery}) as building blocks.
-    The circuit $\mathfrak{C}_{reverse}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs.
+    We utilize circuits $\mathfrak{C}_{x}$ (\cref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits(l)}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{reverse(l)}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\cref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\cref{fig:circuit:ladderYRecovery}) as building blocks.
+    The circuit $\mathfrak{C}_{reverse(l)}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs.
     }
     \label{fig:circuit:montgomeryExp}
 \end{figure}
@@ -844,7 +844,7 @@ The group exponentiation with precomputed powers of the element to exponentiate 
 \end{definition}
 
 The circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ corresponding to $TE\_PPFExp$ is an instantiation of the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\cref{fig:circuit:ppfexp}) where we choose $\mathbb{G}:=TE_{a,d}(\mathbb{G})$.
-Note that this also requires the circuits $\mathfrak{C}_{Num2Bits}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ (\cref{fig:circuit:teGroupLaw}) and $\mathfrak{C}_{TE_{a,d}(\mathbb{F}\_If\text{-}Else)}$ as building blocks.
+Note that this also requires the circuits $\mathfrak{C}_{Num2Bits(l)}$ (\cref{section:appendix:num2Bits}), $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ (\cref{fig:circuit:teGroupLaw}) and $\mathfrak{C}_{TE_{a,d}(\mathbb{F}\_If\text{-}Else)}$ as building blocks.
 $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ (\cref{fig:circuit:teIfElse}) is defined analogously to $\mathfrak{C}_{xIf\text{-}Else}$ (\cref{fig:circuit:xIfElse}).
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX

@@ -53,3 +53,22 @@
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{example}{Example}[section]
+% \newtheorem{proposition}{proposition}[section]
+% \newtheorem{example}{Example}[section]
+
+\newcommand{\propositionheader}{\textit{\textbf{Proposition: }}}
+\newcommand{\proofheader}{\textit{\textbf{Proof: }}}
+
+\newenvironment{proposition}{
+  \par\medskip
+  \noindent\textit{\textbf{Proposition: }}
+}{
+  \par\medskip
+}
+
+\newenvironment{proof}{
+  \par\medskip
+  \noindent\textit{\textbf{Proof: }}
+}{
+  \hfill$\square$\par\medskip
+}
