@@ -1,0 +1,150 @@
+\chapter{Proofs}
+
+\section*{Correctness of $xAdd$}
+\label{proof:xAdd}
+
+\begin{proposition}
+    \begin{align*}
+        \forall P, Q\in M_{A,B}(\mathbb{F}P^2)\text{ with } P\neq Q:\: xAdd(x(Q), x(P), x(P\odot_M^{Pro} Q^{-1})) = x(P\odot_M^{Pro} Q)
+    \end{align*}
+\end{proposition}
+\begin{proof}
+    Let $P, Q\in M_{A, B}(\mathbb{F}P^2)$ with $P\neq Q$.\\
+    Set $[X_P:Y_P:Z_P]:=P$, $[X_Q:Y_Q:Z_Q]:=Q$, $[X_{\odot^{-1}}:Y_{\odot^{-1}}:Z_{\odot^{-1}}]:=P\odot_M^{Pro} Q^{-1}$, $[X_{xAdd}:Z_{xAdd}]:=xAdd(x(Q), x(P), x(P\odot_M^{Pro} Q^{-1}))$, $[X_\odot:Z_\odot]:=x(P\odot_M^{Pro} Q)$
+    Then:
+    \begin{enumerate}
+        \item Case: $P=[0:1:0]$\\
+        Then, $Q\neq [0:1:0]$, $P\odot_M^{Pro} Q^{-1}=Q^{-1}=[X_Q:-Y_Q:Z_Q]$ and $x(P)=[1:0]$.
+        Therefore, $X_{\odot^{-1}}=X_Q$ and $Z_{\odot^{-1}}=Z_Q$.
+        We get $x(P\odot_M^{Pro} Q)=x(Q)=[X_Q:Z_Q]$ and
+        \begin{align*}
+            X_{xAdd} &= Z_{\odot^{-1}}\left((1-0)(X_Q+Z_Q) + (1+0)(X_Q-Z_Q)\right)^2= Z_{\odot^{-1}}4X_Q^2 = 4X_QZ_Q\cdot X_Q\\
+            Z_{xAdd} &= X_{\odot^{-1}}\left((1-0)(X_Q+Z_Q) - (1+0)(X_Q-Z_Q)\right)^2= X_{\odot^{-1}}4Z_Q^2 = 4X_QZ_Q\cdot Z_Q\\
+        \end{align*}
+        With $4X_QZ_Q\neq 0$, we have:
+        \begin{align*}
+            xAdd(x(Q), x(P), x(P\odot_M^{Pro} Q^{-1})) = [X_{xAdd}:Z_{xAdd}] = [4X_QZ_Q\cdot X_Q: 4X_QZ_Q\cdot Z_Q] = [X_Q:Z_Q] = x(P\odot_M^{Pro} Q)
+        \end{align*}
+        \item Case $Q=[0:1:0]$\\
+        Then, $P\neq [0:1:0]$, $P\odot_M^{Pro} Q^{-1}=P$ and $x(Q)=[1:0]$.
+        Therefore, $X_{\odot^{-1}}=X_P$ and $Z_{\odot^{-1}}=Z_P$.
+        We get $x(P\odot_M^{Pro} Q)=x(P)=[X_P:Z_P]$ and
+        \begin{align*}
+            X_{xAdd} &= Z_{\odot^{-1}}\left((X_P-Z_P)(1+0) + (X_P+Z_P)(1-0)\right)^2= Z_{\odot^{-1}}4X_P^2 = 4X_PZ_P\cdot X_P\\
+            Z_{xAdd} &= X_{\odot^{-1}}\left((X_P-Z_P)(1+0) - (X_P+Z_P)(1-0)\right)^2= X_{\odot^{-1}}4Z_P^2 = 4X_PZ_P\cdot Z_P\\
+        \end{align*}
+        With $4X_PZ_P\neq 0$, we have:
+        \begin{align*}
+            xAdd(x(Q), x(P), x(P\odot_M^{Pro} Q^{-1})) = [X_{xAdd}:Z_{xAdd}] = [4X_PZ_P\cdot X_P: 4X_PZ_P\cdot Z_P] = [X_P:Z_P] = x(P\odot_M^{Pro} Q)
+        \end{align*}
+        \item Case: $Q=P^{-1}$\\
+        Then, $Q=[X_P:-Y_P:Z_P]$, and $x(Q)=[X_P:Z_P]=x(P)$.
+        We get $x(P\odot_M^{Pro} Q)=x([0:1:0])=[1:0]$ and
+        \begin{align*}
+            X_{xAdd} &= Z_{\odot^{-1}}\left((X_P-Z_P)(X_P+Z_P) + (X_P+Z_P)(X_P-Z_P)\right)^2= Z_{\odot^{-1}}(2\cdot (X_P^2-Z_P^2))^2 = Z_{\odot^{-1}}\cdot 4(X_P^2-Z_P^2)^2\\
+            Z_{xAdd} &= X_{\odot^{-1}}\left((X_P-Z_P)(X_P+Z_P) - (X_P+Z_P)(X_P-Z_P)\right)^2= X_{\odot^{-1}}\cdot 0 = 0\\
+        \end{align*}
+        We know that $Z_P\neq 0 \:\Rightarrow X_P\neq 0 \lor P=[0:0:1]$.
+        $P=[0:0:1]$ is not possible in our case since then $Q=P^{-1}=[0:-0:1]=P$. 
+        Therefore, $Z_{\odot^{-1}}\cdot 4(X_P^2-Z_P^2)^2\neq 0$, and we have:
+        \begin{align*}
+            xAdd(x(Q), x(P), x(P\odot_M^{Pro} Q^{-1})) = [X_{xAdd}:Z_{xAdd}] = [Z_{\odot^{-1}}\cdot 4(X_P^2-Z_P^2)^2\cdot X_P: Z_{\odot^{-1}}\cdot 4(X_P^2-Z_P^2)^2\cdot 0] = [1:0] = x(P\odot_M^{Pro} Q)
+        \end{align*}
+        \item Case: $P\neq [0:1:0]$, $Q\neq[0:1:0]$ and $Q\neq P^{-1}$\\
+        With $Q^{-1}=[X_Q:-Y_Q:Z_Q]$, we get
+        \begin{align*}
+            X_\odot &= B*(Y_Q*Z_P-Y_P*Z_Q)^2*(X_Q*Z_P-X_P*Z_Q)*Z_P*Z_Q-(A*Z_P*Z_Q+X_P*Z_Q+X_Q*Z_P)*(X_Q*Z_P-X_Q*Z_Q)^3\\
+            &= (X_Q*Z_P - X_P*Z_Q)*(Y_Q*Z_P - Y_P*Z_Q)^2*B*Z_P*Z_Q - (A*Z_P*Z_Q + X_Q*Z_P + X_P*Z_Q)*(X_Q*Z_P - X_Q*Z_Q)^3\\
+            &= -A*X_Q^3*Z_P^4*Z_Q + B*X_Q*Y_Q^2*Z_P^4*Z_Q + 3*A*X_Q^3*Z_P^3*Z_Q^2 - 2*B*X_Q*Y_P*Y_Q*Z_P^3*Z_Q^2 - B*X_P*Y_Q^2*Z_P^3*Z_Q^2 - 3*A*X_Q^3*Z_P^2*Z_Q^3 + B*X_Q*Y_P^2*Z_P^2*Z_Q^3 + 2*B*X_P*Y_P*Y_Q*Z_P^2*Z_Q^3 + A*X_Q^3*Z_P*Z_Q^4 - B*X_P*Y_P^2*Z_P*Z_Q^4 - X_Q^4*Z_P^4 - X_P*X_Q^3*Z_P^3*Z_Q + 3*X_Q^4*Z_P^3*Z_Q + 3*X_P*X_Q^3*Z_P^2*Z_Q^2 - 3*X_Q^4*Z_P^2*Z_Q^2 - 3*X_P*X_Q^3*Z_P*Z_Q^3 + X_Q^4*Z_P*Z_Q^3 + X_P*X_Q^3*Z_Q^4\\
+            &= -A*X_Q^3*Z_P^4*Z_Q + X_Q*Z_P^4*(X_Q^3+A*X_Q^2*Z_Q + X_Q*Z_Q^2) + 3*A*X_Q^3*Z_P^3*Z_Q^2 - 2*B*X_Q*Y_P*Y_Q*Z_P^3*Z_Q^2 - X_P*Z_P^3*Z_Q*(X_Q^3+A*X_Q^2*Z_Q + X_Q*Z_Q^2) - 3*A*X_Q^3*Z_P^2*Z_Q^3 + X_Q*Z_P*Z_Q^3*(X_P^3+A*X_P^2*Z_P + X_P*Z_P^2) + 2*B*X_P*Y_P*Y_Q*Z_P^2*Z_Q^3 + A*X_Q^3*Z_P*Z_Q^4 - X_P*Z_Q^4*(X_P^3+A*X_P^2*Z_P + X_P*Z_P^2) - X_Q^4*Z_P^4 - X_P*X_Q^3*Z_P^3*Z_Q + 3*X_Q^4*Z_P^3*Z_Q + 3*X_P*X_Q^3*Z_P^2*Z_Q^2 - 3*X_Q^4*Z_P^2*Z_Q^2 - 3*X_P*X_Q^3*Z_P*Z_Q^3 + X_Q^4*Z_P*Z_Q^3 + X_P*X_Q^3*Z_Q^4\\
+            \\
+            Z_\odot &= (X_Q*Z_P - X_P*Z_Q)^3*Z_P*Z_Q\\
+            &= X_Q^3*Z_P^4*Z_Q - 3*X_P*X_Q^2*Z_P^3*Z_Q^2 + 3*X_P^2*X_Q*Z_P^2*Z_Q^3 - X_P^3*Z_P*Z_Q^4
+        \end{align*}
+
+
+        \begin{align*}
+            X_{xAdd} &= Z_{\odot^{-1}}\left((X_P-Z_P)(X_Q+Z_Q) + (X_P+Z_P)(X_Q-Z_Q)\right)^2\\
+            &= Z_{\odot^{-1}}\left(X_PX_Q+X_PZ_Q-Z_PX_Q-Z_PZ_Q + X_PX_Q-X_PZ_Q+Z_PX_Q-Z_PZ_Q\right)^2\\
+            &= Z_{\odot^{-1}}\left(2X_PX_Q-2Z_PZ_Q\right)^2\\
+            Z_{xAdd} &= X_{\odot^{-1}}\left((X_P-Z_P)(X_Q+Z_Q) - (X_P+Z_P)(X_Q-Z_Q)\right)^2\\
+            &= X_{\odot^{-1}}\left(X_PX_Q+X_PZ_Q-Z_PX_Q-Z_PZ_Q - (X_PX_Q-X_PZ_Q+Z_PX_Q-Z_PZ_Q)\right)^2\\
+            &= X_{\odot^{-1}}\left(2X_PZ_Q-2Z_PX_Q\right)^2\\
+        \end{align*}
+        and 
+        \begin{align*}
+            X_\odot \overset{\text{Chord Rule}}&{=} B(Y_QZ_P-Y_PZ_Q)^2(X_QZ_PX_PZ_Q)Z_PZ_Q - (AZ_PZ_Q+X_PZ_Q+X_QZ_P)(X_QZ_P-X_PZ_Q)^3\\
+            &= 2B^2YZ^3\cdot\left((3X^2+2AXZ+Z^2)^2 - 4BY^2Z\cdot(AZ+2X)\right)\\
+            \overset{\substack{\text{Proj. M. Curve:}\\BY^2Z=X^3+AX^2Z+XZ^2}}&{=} 2B^2YZ^3\cdot\left((3X^2+2AXZ+Z^2)^2 - 4(X^3+AX^2Z+XZ^2)\cdot(AZ+2X)\right)\\
+            &= 2B^2YZ^3\cdot\\
+        \end{align*}
+        \begin{align*}
+            Z_2 \overset{\text{Tangent Rule}}&{=} (2BYZ)^3Z^2\\
+            &= 2B^2YZ^3\cdot BY^2Z\cdot 4Z\\
+            \overset{\substack{\text{Proj. M. Curve:}\\BY^2Z=X^3+AX^2Z+XZ^2}}&{=} 2B^2YZ^3\cdot (X^3+AX^2Z+XZ^2)\cdot 4Z\\
+            &= 2B^2YZ^3\cdot 4XZ\cdot\left(X^2+AXZ + Z^2\right)\\
+            &= 2B^2YZ^3\cdot 4XZ\cdot\left(X^2 - 2XZ + Z^2 + 2XZ + AXZ\right)\\
+            &= 2B^2YZ^3\cdot 4XZ\cdot\left((X-Z)^2 + (A+2)XZ\right)\\
+            &= 2B^2YZ^3\cdot Z_{xDbl}
+        \end{align*}
+        With $2B^2YZ^3\neq 0$ (since $P\neq[0:1:0]$), we can conclude:
+        \begin{align*}
+            x(P) = [X_2:Z_2] = [2B^2YZ^3\cdot X_{xDbl}:2B^2YZ^3\cdot Z_{xDbl}]=[X_{xDbl}:Z_{xDbl}]= xDbl(x(P))
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\section*{Correctness of $xDbl$}
+\label{proof:xDbl}
+
+\begin{proposition}
+    \begin{align*}
+        \forall P\in M_{A,B}(\mathbb{F}P^2):\: xDbl(x(P)) = x(P^2)
+    \end{align*}
+\end{proposition}
+\begin{proof}
+    Let $P\in M_{A, B}(\mathbb{F}P^2)$.\\
+    Set $[X:Y:Z]:=P$, $[X_{xDbl}:Z_{xDbl}]:=xDbl(x(P))$, $[X_\odot:Z_\odot]:=x(P^2)$
+    Then:
+    \begin{enumerate}
+        \item Case: $P=[0:1:0]$\\
+        We get $x(P^2)=x([0:1:0])=[1:0]$ and
+        \begin{align*}
+            X_{xDbl} &= (1+0)^2(1-0)^2=1\\
+            Z_{xDbl} &= 4\cdot 1\cdot 0\cdot\left((1-0)^2+\left(\frac{A+2}{4}(4\cdot 1\cdot 0)\right)\right) = 0
+        \end{align*}
+        Therefore, we have $x(P^2)=xDbl(x(P))$
+        \item Case: $P\neq[0:1:0]$\\
+        With $x(P)=[X:Z]$ we get
+        \begin{align*}
+            X_{xDbl} &= (X+Z)^2(X-Z)^2\\
+            Z_{xDbl} &= 4XZ\cdot\left((X-Z)^2+\left(\frac{A+2}{4}\cdot 4XZ\right)\right) = 4XZ\cdot\left((X-Z)^2+\left((A+2)XZ\right)\right)
+        \end{align*}
+        and 
+        \begin{align*}
+            X_\odot \overset{\text{Tangent Rule}}&{=} B(3X^2+2AXZ+Z^2)^2\cdot 2BYZZ^2 - (AZ^2+2XZ)(2BYZ)^3\\
+            &= 2B^2YZ^3\cdot\left((3X^2+2AXZ+Z^2)^2 - 4BY^2Z\cdot(AZ+2X)\right)\\
+            \overset{\substack{\text{Proj. M. Curve:}\\BY^2Z=X^3+AX^2Z+XZ^2}}&{=} 2B^2YZ^3\cdot\left((3X^2+2AXZ+Z^2)^2 - 4(X^3+AX^2Z+XZ^2)\cdot(AZ+2X)\right)\\
+            &= 2B^2YZ^3\cdot\\
+            &\quad\left(9X^4 + 6X^2AXZ + 3X^2Z^2 + 6X^2AXZ + 4A^2X^2Z^2 + 2AXZ^3 + 3X^2Z^2\right.\\
+            &\quad\left. + 2AXZ^3 + Z^4 - 4AX^3Z - 8X^4 - 4A2X^2Z^2 - 8AX^3Z - 4AXZ^3 - 8X^2Z^2\right)\\
+            &= 2B^2YZ^3\cdot\left(X^4-X^2Z^2+Z^4\right)\\
+            &= 2B^2YZ^3\cdot(X^2-Z^2)^2\\
+            &= 2B^2YZ^3\cdot(X+Z)^2(X-Z)^2\\
+            &= 2B^2YZ^3\cdot X_{xDbl}
+        \end{align*}
+        \begin{align*}
+            Z_\odot \overset{\text{Tangent Rule}}&{=} (2BYZ)^3Z^2\\
+            &= 2B^2YZ^3\cdot BY^2Z\cdot 4Z\\
+            \overset{\substack{\text{Proj. M. Curve:}\\BY^2Z=X^3+AX^2Z+XZ^2}}&{=} 2B^2YZ^3\cdot (X^3+AX^2Z+XZ^2)\cdot 4Z\\
+            &= 2B^2YZ^3\cdot 4XZ\cdot\left(X^2+AXZ + Z^2\right)\\
+            &= 2B^2YZ^3\cdot 4XZ\cdot\left(X^2 - 2XZ + Z^2 + 2XZ + AXZ\right)\\
+            &= 2B^2YZ^3\cdot 4XZ\cdot\left((X-Z)^2 + (A+2)XZ\right)\\
+            &= 2B^2YZ^3\cdot Z_{xDbl}
+        \end{align*}
+        With $2B^2YZ^3\neq 0$ (since $P\neq[0:1:0]$), we can conclude:
+        \begin{align*}
+            x(P) = [X_\odot:Z_\odot] = [2B^2YZ^3\cdot X_{xDbl}:2B^2YZ^3\cdot Z_{xDbl}]=[X_{xDbl}:Z_{xDbl}]= xDbl(x(P))
+        \end{align*}
+    \end{enumerate}
+\end{proof}

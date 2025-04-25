@@ -367,7 +367,11 @@ We require that $r$ and $\mathfrak{C}$ can be expressed using just the basic fie
 %For a set of signals $S$, the simple terms over $S$ are defined as $simple\_terms(S):=\{c\cdot x|x\in S \land c \text{ constant}\}\cup\left\{\sum\limits_{i\in \{1,\dots, l\}} c_i\cdot x_i| S'\subseteq S, c_i\in\mathbb{F} \text{ constant }\forall i\in\right\}$
 Therefore, under the definition that all constants, all inputs and all intermediate signals in $\mathfrak{C}$ are \glqq primitives\grqq, we can derive the individual constraints in  $R1CS_r$ from $\mathfrak{C}$ using the following rules inductively:
 \begin{itemize}
-    \item Any computation $x\cdot y$, where $x$ and $y$ are sums of constant multiples of primitives is expressed as an additional constraint $tmp=x\cdot y$ where $tmp$ is an intermediate signal.
+    \item Any computation $x\cdot y$, where $x$ and $y$ are sums of constant multiples of primitives is expressed as an additional constraint $tmp=x\cdot y$ where $tmp$ is an intermediate signal.\footnote{
+        \label{footnote:intermediateSignalsInCircuit}
+        Note that it is possible too include intermediate signals in the circuit definition directly.
+        However, to simplify and to match our definition of algebraic functions, we abstract away from the details here and do not include them in the assignments for circuits.
+    }
     \item Any computation $x+y$, where the result is directly used as an output $S_{i}^{out}$ of $\mathfrak{C}$ is expressed as an additional constraint $S_{i}^{out}=x + y$.
     \item Every other computation $x+y$ and $x\cdot y$ does not contribute additinal constraints.
 \end{itemize}
@@ -507,6 +511,9 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
         \left(1-1-1-0\right)\cdot \left(0+1+1\right) = -2 \neq \left(0\right)\\
     \end{align*}
 \end{itemize}
+
+In general, a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ if and only if $(b_0,b_1,b_2,0,0,0,0)$ satisfies $R1CS_{r_{3\text{-}vot}}$.
+Therefore, we can use $R1CS_{r_{3\text{-}vot}}$ to show membership of the choice space in a similar fashion to how we used $\mathfrak{C}_{3\text{-}vot}$.
 
 \section{Quadratic Arithmetic Programs}
 To use \glspl{r1cs} in \glspl{gpzkp}, we need to transform them into another different representation, namely \glspl{qap}.
@@ -715,21 +722,21 @@ Now we can follow the instructions outlined previously:
 
 Putting everything together, we get $QAP(R1CS_{r_{3\text{-}vot}})$ as follows (when using $\mathbb{F}_{13}$ as the base field):
 \begin{align*}
-    QAP(R1CS_{r_{3\text{-}vot}}) &= \left\{T, \left\{A_0, B_0, C_0\right\}, \left\{A_1, B_1, C_1\right\}, \left\{A_2, B_2, C_2\right\}, \left\{A_3, B_3, C_3\right\},\right.\\
-    &\phantom{=}\left.\left\{A_4, B_4, C_4\right\}, \left\{A_5, B_5, C_5\right\}, \left\{A_6, B_6, C_6\right\}, \left\{A_7, B_7, C_7\right\}\right\}
+    QAP(R1CS_{r_{3\text{-}vot}}) &= \left\{T, (A_0, B_0, C_0), (A_1, B_1, C_1), (A_2, B_2, C_2), (A_3, B_3, C_3),\right.\\
+    &\phantom{=}\left.(A_4, B_4, C_4), (A_5, B_5, C_5), (A_6, B_6, C_6), (A_7, B_7, C_7)\right\}
 \end{align*}
 \begin{align*}
     \phantom{QAP(R1CS_{r_{3\text{-}vot}})}&= \Bigl\{x^4+8x^3+11x^2+6x+7,
 \end{align*}
 \begin{align*}
-    \phantom{QAP(R1CS_{r_{3\text{-}vot}})}&\phantom{=bl} \{1,&& 0,&& 0\}, &&\\
-    &\phantom{=bl} \{2x^2 + 8x + 1,&& 11x^2 + 5x + 12,&& 0\},&&\\
-    &\phantom{=bl} \{5x^3 + 4x^2 + 11x,&& 8x^3 + 9x^2 + 2x,&& 0\},&&\\
-    &\phantom{=bl} \{x^3 + 6x^2 + x + 5,&& 12x^3 + 7x^2 + 12x + 8,&& 0\},&&\\
-    &\phantom{=bl} \{0,&& 0,&& 3x^3 + 4x^2 + 2x + 9\},&&\\
-    &\phantom{=bl} \{0,&& 0,&& 11x^3 + 2x^2 + 12x + 10\},&&\\
-    &\phantom{=bl} \{0,&& 0,&& 2x^3 + 9x + 5\},&&\\
-    &\phantom{=bl} \{0,&& 0,&& 10x^3 + 7x^2 + 3x + 3\}&&\Bigr\}\\
+    \phantom{QAP(R1CS_{r_{3\text{-}vot}})}&\phantom{=bl} (1,&& 0,&& 0), &&\\
+    &\phantom{=bl} (2x^2 + 8x + 1,&& 11x^2 + 5x + 12,&& 0),&&\\
+    &\phantom{=bl} (5x^3 + 4x^2 + 11x,&& 8x^3 + 9x^2 + 2x,&& 0),&&\\
+    &\phantom{=bl} (x^3 + 6x^2 + x + 5,&& 12x^3 + 7x^2 + 12x + 8,&& 0),&&\\
+    &\phantom{=bl} (0,&& 0,&& 3x^3 + 4x^2 + 2x + 9),&&\\
+    &\phantom{=bl} (0,&& 0,&& 11x^3 + 2x^2 + 12x + 10),&&\\
+    &\phantom{=bl} (0,&& 0,&& 2x^3 + 9x + 5),&&\\
+    &\phantom{=bl} (0,&& 0,&& 10x^3 + 7x^2 + 3x + 3)&&\Bigr\}\\
 \end{align*}
 
 We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satisfiability.
@@ -740,10 +747,10 @@ We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satis
     Let $a_j^i,b_j^i,c_j^i\in\mathbb{F}$ be constants from $\mathbb{F}$ for every index $i\in\{0,\dots, n\}$ and $j\in\{0,\dots, k\}$.
     Let $R1CS$ be the corresponding \gls{r1cs} as in \cref{def:r1cs} and 
     \begin{align*}
-        QAP(R1CS)=\left\{T\in\mathbb{F}[x],\left\{A_j, B_j, C_j\in \mathbb{F}[x]\right\}_{j=0}^{n}\right\}
+        QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{n}\left\{\left(A_j, B_j, C_j\right)\right\}
     \end{align*}
     be the corresponding \gls{qap}.\\
-    Let $S=(S_1,\dots, S_n)\mathbb{F}^n$ be an assignment to $R1CS$.
+    Let $S=(S_1,\dots, S_n)\in\mathbb{F}^n$ be an assignment to $R1CS$.
     We compute a polynomial $P_S$ as follows:
     \begin{align*}
         P_S:=\left(A_0+\sum_{j=0}^{n}S_j\cdot A_j\right)\cdot\left(B_0+\sum_{j=0}^{n}S_j\cdot B_j\right)-\left(C_0+\sum_{j=0}^{n}S_j\cdot C_j\right)
@@ -785,8 +792,11 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
     }
 \end{itemize}
 
-Note that the satisfiability definitions of circuits implies the satisfiability definition of \glspl{r1cs} and \glspl{qap} in the sense that for every assignment that satisfies the circuit, there is an extended assignment, where values are assigned to the intermediate signals as well, that satisfies the \gls{r1cs} and the \gls{qap} as presented in \cref{theorem:satisfiabilityEquality}.
-\begin{theorem}
+As for $R1CS_{r_{3\text{-}vot}}$, a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ if and only if $(b_0,b_1,b_2,0,0,0,0)$ satisfies $QAP(R1CS_{r_{3\text{-}vot}})$.
+Therefore, we can use $QAP(R1CS_{r_{3\text{-}vot}})$ to show membership of the choice space in a similar fashion to how we used $\mathfrak{C}_{3\text{-}vot}$.
+
+In general, the satisfiability definitions of circuits implies the satisfiability definition of \glspl{r1cs} and \glspl{qap} in the sense that for every assignment that satisfies the circuit, there is an extended assignment, where values are assigned to the intermediate signals as well, that satisfies the \gls{r1cs} and the \gls{qap} as presented in \cref{theorem:satisfiabilityEquality}.
+\begin{theorem}[Satisfiability Definitions Relation]
     \label{theorem:satisfiabilityEquality}
     Let $(\mathbb{F}, +, \cdot )$ be a finite field.
     Let $r:\mathbb{F}^m\to \mathbb{F}^n$ be an algebraic function and $\mathfrak{C}$ be the corresponding algebraic circuit.
@@ -939,8 +949,13 @@ Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
         There is no further interaction between the two parties.
     }
     \begin{itemize}
-        \item Succinctness: The size of the $\pi=Prove(CRS, I, W)$ is small and $Verify(CRS, I, \pi)$ is easy to compute. \cite{groth_size_2016}
-        \item Argument: The soundness property defined in \cref{def:zpsForR} holds only if $Prove$ is polynomially bound. \cite{least_authority_moonmath_2024}
+        \item Succinctness: The size of the $\pi=Prove(CRS, I, W)$ and the time needed to compute $Verify(CRS, I, \pi)$ are both polynomially bound \footnote{
+            \label{footnote:securityParameterSuccinctness}
+            Here, "polynomially bound" means polynomially bound with regard to the security parameter $\lambda$ \cite{groth_size_2016}.
+            A security parameter $\lambda$ is used to define the security level of cryptographic constructions.
+        }\cite{groth_size_2016}.
+        \item Argument: The soundness property defined in \cref{def:zpsForR} only has to hold if $Prove$ is polynomially bound\cref{footnote:securityParameterSuccinctness} \cite{least_authority_moonmath_2024}.
+        \item Note that this slightly weakens our definition from \cref{def:zpsForR}
     \end{itemize}
 \end{definition}
 
@@ -954,7 +969,7 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     Let $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ be an algebraic function.
     Let 
     \begin{align*}
-        QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}
+        QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{m+n+s}\left\{\left(A_j, B_j, C_j\right)\right\}
     \end{align*}
     be a \gls{qap} corresponding to $r$.
     We denote the number of constraints in $QAP(R1CS_r)$ by $k:=deg(T)$.
@@ -972,10 +987,21 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     Here, the different components used in the algorithms are colored to see where they are being used, similarly as in \cite{huber_zk-snarks_2025}.
 \end{definition}
 
+The zero-knowledge property of \glspl{zps} can be defined formally for \glspl{g16snark}.
+In their work, Groth \cite{groth_size_2016} introduced an additional algorithm $Sim(CRS, I, (\alpha,\beta,\gamma,\delta,\tau))$ which produces a forged proof $\pi'$ for $I$.
+A detailed definition of $Sim$ is presented in \cite{groth_size_2016} and also in Appendix B of \cite{huber_zk-snarks_2025}.
+Here, $Sim$ uses the common reference string $CRS$ of the \gls{g16snark}, an instance $I$ and the simulation trapdoor $(\alpha, \beta, \delta, \gamma, \tau)$ but does not receive a witness $W$.
+Based on this algorithm, the zero-knowledge property of \glspl{g16snark} can be defined as follows \cite{groth_size_2016}:
+Let $CRS$ be a common reference string and let $I\in\mathcal{I}$ and $W\in\mathcal{W}$.% such that $I$ and $W$ are related, i.e. $DR(QAP(R1CS_r), d_p)=1$.
+Then, any adversary cannot distinguish the proofs $\pi:=Prove(CRS, I, W)$ and $\pi':=Sim(CRS, I, (\alpha, \beta, \gamma, \delta, \tau))$.
+In other words, the proofs $\pi$ and $\pi'$ do not reveal anything about the witness $W$.
+
+Proofs of Soundness, Completeness, Succinctness and the Argument and Zero-Knowledge properties of \glspl{g16snark} are presented in \cite{groth_size_2016}.
+
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Procedure to setup the \gls{zps} $GSNARK(DR(QAP(R1CS_r), d_p))$ based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
     Here, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
-    Additionally, $QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
+    Additionally, $QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{n}\left\{\left(A_j, B_j, C_j\right)\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
     }
     \label{alg:setupG16}
     \begin{algorithmic}
@@ -995,7 +1021,7 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     \caption{Procedure to compute a proof for a \gls{g16snark} using a $CRS$ as computed by \cref{alg:setupG16}, instance $I$ and witness $W$.
     Here, the \gls{g16snark} $GSNARK(DR(QAP(R1CS_r), d_p))$ is based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
     Moreover, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
-    Additionally, $QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
+    Additionally, $QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{m+n+s}\left\{\left(A_j, B_j, C_j\right)\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
     }
     \label{alg:proveG16}
     \begin{algorithmic}
@@ -1039,7 +1065,7 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     \caption{Procedure to verify a proof $\pi$ as computed in \cref{alg:setupG16} in a \gls{g16snark} using a $CRS$ as computed by \cref{alg:setupG16} and instance $I$.
     Here, the \gls{g16snark} $GSNARK(DR(QAP(R1CS_r), d_p))$ is based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
     Moreover, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
-    Additionally, $QAP(R1CS_r)=\left\{T\in\mathbb{F}_q[x],\left\{A_j, B_j, C_j\in \mathbb{F}_q[x]\right\}_{j=0}^{m+n+s}\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
+    Additionally, $QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{m+n+s}\left\{\left(A_j, B_j, C_j\right)\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
     }
     \label{alg:verifyG16}
     \begin{algorithmic}

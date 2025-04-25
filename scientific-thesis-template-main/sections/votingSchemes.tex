@@ -298,7 +298,12 @@ However, to simplify things a little, we assume that the voting authority and th
   \begin{align*}
     ZPS(R)=(Setup, Prove, Verify)\text{.}
   \end{align*}
-  The zero-knowledge property of the proof system states the following: If a party runs $Verify(CRS, I, \pi)$ successfully, they don't learn anything about the witness $W$ corresponding to $I$ other than that the party who created $\pi=Prove(CRS, I, W)$ knows $W$.
+  The zero-knowledge property of the proof system states the following: If a party runs $Verify(CRS, I, \pi)$ successfully, they don't learn anything about the witness $W$ corresponding to $I$ other than that the party who created $\pi=Prove(CRS, I, W)$ knows $W$\footnote{
+    \label{footnote:differentZKDefs}
+    Note that the formal definition of the zero-knowledge property depends on the chosen type of \gls{zps}.
+    Therefore, we will introduce this in a bit more detail later, when we define the \gls{g16snark} \cite{groth_size_2016} which is the \gls{zps} we use.
+  }.
+
   Furthermore, any zero knowledge proof system is required to be both sound and complete \cite{least_authority_moonmath_2024}:
   \begin{itemize}
     \item Soundness: If an instance $I$ and a witness $W$ are related, then 

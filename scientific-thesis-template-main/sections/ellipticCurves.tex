@@ -420,7 +420,7 @@ Group exponentiation is defined as follows:
     \forall P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\forall k\in\mathbb{N}:\quad P^k:=\underbrace{P\odot_{M}^{Pro}\dots\odot_{M}^{Pro}P}_{k \text{ times}}
 \end{align*}
 However, computing $P^k=[X_k:Y_k:Z_k]$ by iteratively using the group law $\odot_{M}^{Pro}$ $k-1$ times is computationally expensive as discussed in \cref{section:elGamalEncryption:precomputedPowers}.
-Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018} based on $FastExp$ presented in \cref{alg:fastExp}.
+Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018,montgomery_speeding_1987} based on $FastExp$ presented in \cref{alg:fastExp}.
 This algorithm requires $\mathcal{O}(\log_2(k))$ many iterations to compute the coordinates $X_k$ and $Z_k$ of $P^k$ from the coordinates $X$ and $Z$ of $P$.
 Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_k$ from the last two iterations of the Montgomery Ladder.
 

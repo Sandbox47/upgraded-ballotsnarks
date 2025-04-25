@@ -21,6 +21,21 @@ template threeVot() {
 }
 
 /**
+* Circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$.
+*/
+template assertThreeVot() {
+    input signal S_1_in;
+    input signal S_2_in;
+    input signal S_3_in;
+
+    0 === S_1_in*(1-S_1_in);
+    0 === S_2_in*(1-S_2_in);
+    0 === S_3_in*(1-S_3_in);
+
+    0 === (S_1_in + S_2_in + S_3_in)*(1-S_1_in-S_2_in-S_3_in);
+}
+
+/**
 * Circuit $\mathfrak{C}_{3\text{-}vot}$.
 */
 /*
@@ -114,4 +129,5 @@ template division() {
 
 //component main = vot(3);
 //component main {public [S_in]}= vot(3);
-component main = division();
+// component main = division();
+component main = assertThreeVot();

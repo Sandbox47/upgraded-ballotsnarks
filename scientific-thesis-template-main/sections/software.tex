@@ -72,6 +72,33 @@ template threeVot() {
     \label{fig:circom:naiveThreeVot}
 \end{figure}
 
+As introduced earlier (\cref{chap:gpzkp}), $\mathfrak{C}_{3\text{-}vot}$ is used to indicate whether a ballot $b=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0), (0,0,1), (0,1,0), (1,0,0)\}$.
+If this is the case, the circuit will produce the outputs $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})=(0,0,0,0)$.
+To use the circuit to assert that a ballot is in $C$, we need to enforce $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})\mbeq(0,0,0,0)$.
+We call this modified circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ (\cref{chap:gpzkp}) and can define this in Circom as \verb|assertThreeVot| (\cref{fig:circom:assertThreeVot}).
+However, to explain the core concepts of Circom, we continue with $\mathfrak{C}_{3\text{-}vot}$ for the rest of this section.
+
+\begin{figure}[h]
+    \centering
+    \captionsetup{type=listing}
+    \begin{lstlisting}[language=Circom]
+pragma circom 2.2.1;
+
+template assertThreeVot() {
+    input signal S_1_in;
+    input signal S_2_in;
+    input signal S_3_in;
+
+    0 === S_1_in*(1-S_1_in);
+    0 === S_2_in*(1-S_2_in);
+    0 === S_3_in*(1-S_3_in);
+
+    0 === (S_1_in + S_2_in + S_3_in)*(1 - S_1_in - S_2_in - S_3_in);
+}\end{lstlisting}
+    \caption{Implementation of $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ in Circom.}
+    \label{fig:circom:assertThreeVot}
+\end{figure}
+
 In addition to the circuit specific constructs, Circom supports most of the basic programming constructs from JavaScript such as functions, branching and loops.
 Furthermore, we can use \verb|var variable| for temporary variables whose computation does not add any constraints.\footnote{
     \label{footnote:tempVariablesInConstraints}
