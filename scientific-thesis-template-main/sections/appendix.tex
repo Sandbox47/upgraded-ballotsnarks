@@ -33,10 +33,131 @@ We define groups and fields as in \cite{least_authority_moonmath_2024}.
 % \chapter{Full Groth16 SNARK example for $\mathfrak{C}_{3\text{-}vot}$}
 
 \chapter{PPEEG}
+
 \section{Montgomery Curves}
 \todo{Make (constraint) comparison of Square and Multiply with normal group operations compared to Montgomery ladder with xAdd, xDbl.}
 
-\section{Twisted Edwards Curves, Arbitrary Base for Exponent}
+\section{Arbitrary Bases for Exponent}
+\label{section:appendix:ppeegArbitraryBase}
+
+As discussed in \cref{chap:elGamalEncryption}, the main computational effort and therefore also the majority of constraints are caused by the group exponentiations $g^y, h^y$ and $g^m$, when computing an \gls{eeg} ciphertext $(g^y, h^y\odot_\mathbb{G} g^m)$ where $y\probgets\{0,\dots, n-1\}$.
+In \gls{ppeeg}, we reduce the effort to compute exponentiations $g^k$ with $k=\sum_{i=0}^{l-1}k_i$ by precomputing powers $\left(g^{2^i}\right)_{i=0}^{l-1}$ and employing the equivalence
+\begin{align*}
+    g^k=g^{\left(\sum_{i=0}^{l-1}k_i\cdot 2^i\right)}=\Pi_{i=0}^{l-1}g^{k_i\cdot 2^i}=\Pi_{i=0}^{l-1}\left(g^{2^i}\right)^{k_i}\text{.}
+\end{align*}
+
+Here, we utilized the binary representation $(k_0,\dots, k_{l-1})$ of the exponent $k$. 
+We can generalize this concept to arbitrary bases for the representation of the exponent.
+Assume, we have a base $base$ representation $k=\sum_{i=0}^{l'-1}k_i\cdot b^i$ (with $l'=\lceil\log_{base}(2)\cdot l\rceil$) of $k$ and want to compute $g^k$.
+Additionally, we represent each digit $k_i$ of the base $base$ representation of $k$ as an array of binary indicators $(k_{i,0},\dots, k_{i,base-1})\in\{0,1\}^{base}$.
+Here, we have $\forall j\in\{0,\dots, base-1\}: k_{i,j}=1\Leftrightarrow k_i=j$.
+In other words, if $k_i=j$, then the entry at position $j$ in the indicator array is $1$ and all other entries are $0$.
+For example, for $k=8=3\cdot 5^0+1\cdot 5^1=(3,1)=(k_0, k_1)$ we would get $(0,0,0,1,0)$ for $k_0$ and $(0,1,0,0,0)$ for $k_1$.
+
+Based on this, we can employ a similar equivalence as before:
+\begin{align*}
+    g^k=g^{\left(\sum_{i=0}^{l'-1}k_i\cdot base^i\right)}=\Pi_{i=0}^{l'-1}g^{k_i\cdot base^i}=\Pi_{i=0}^{l'-1} \left(\Pi_{j=0}^{base-1} \left(g^{j\cdot base^i}\right)^{k_{i,j}}\right)
+\end{align*}
+
+Using this, we can extend $PrecomputedPowersFastExp$ (\cref{alg:fastExpPrecomputedPowers}) to \\$PrecomputedPowersFastExp_{base}$ as shown in \cref{alg:ppfexpArbBase} with the corresponding circuit shown in \cref{fig:circuit:ppfexpArbBase}.
+
+\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+    \caption{Algorithm $PrecomputedPowersFastExp_{base}$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
+    Here, $k$ is provided as a representation to base $base$ of length $l$: $\left(k_{i,j}\right)_{i\in\{0,\dots, l-1\},j\in\{0,\dots, base-1\}}\in\{0,1\}^{l\times base}$ with $k=\sum_{i=0}^{l-1}\sum_{j=0}^{base-1} k_{i,j}\cdot j\cdot base^{i}$ and $\forall i\in\{0,\dots, l-1\}\exists! j:k_{i,j}=1$.
+    Furthermore, $\left(g^{j\cdot base^i}\right)_{i\in\{0,\dots, l-1\}, j\in\{0,\dots, base-1\}}$ are precomputed powers of $g$.}
+    \label{alg:ppfexpArbBase}
+    \begin{algorithmic}
+    \State \textbf{procedure} $PrecomputedPowersFastExp_{base} \Bigg(\left(g^{j\cdot base^i}\right)_{i\in\{0,\dots, l-1\}, j\in\{0,\dots, base-1\}}, $
+        \Statex \hspace{9cm}%
+        $\left(k_{i,j}\right)_{i\in\{0,\dots, l-1\},j\in\{0,\dots, base-1\}}\Bigg)$
+        \begin{algorithmic}            
+        \State $y\gets e_\mathbb{G}$ \Comment $e_\mathbb{G}$ is the neutral element of $\mathbb{G}$
+        \For{$i=0$ \textbf{ to } $l-1$}
+            \For{$j=0$ \textbf{ to }$base-1$}
+                \If{$k_{i,j}=1$}
+                    \State $y\gets g^{j\cdot base^i}\odot_\mathbb{G} y$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return $y$
+        \end{algorithmic}    
+    \State \hspace*{-\algorithmicindent}\textbf{end procedure}
+    \end{algorithmic}
+\end{Algorithmus}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{graphics/appendix/PPFExp_ArbitraryBase.pdf}
+    \caption{Circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ for computing $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
+    Here, $k$ is provided as a representation to base $base$ of length $l$: $\left(k_{i,j}\right)_{i\in\{0,\dots, l-1\},j\in\{0,\dots, base-1\}}\in\{0,1\}^{l\times base}$ with $k=\sum_{i=0}^{l-1}\sum_{j=0}^{base-1} k_{i,j}\cdot j\cdot base^{i}$ and $\forall i\in\{0,\dots, l-1\}\exists! j:k_{i,j}=1$.
+    Furthermore, $\left(g^{j\cdot base^i}\right)_{i\in\{0,\dots, l-1\}, j\in\{0,\dots, base-1\}}$ are precomputed powers of $g$.
+    Moreover, we use $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ as a building block to select which power of $g$ to multiply with the current intermediate result.
+    $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ depends on the choice of $\mathbb{G}$ and is defined for Twisted Edwards curves later on.
+    }
+    \label{fig:circuit:ppfexpArbBase}
+\end{figure}
+
+By providing $k$ in the representation to base $base$ where the individual digits are stored as indicator arrays, we reduce the number of constraint required in the circuit.
+Otherwise, we would have to compute this representation in the circuit itself or use more complicated logic, both of which would require more constraints.
+
+For base $2$, $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ works very similarly to $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\cref{alg:fastExpPrecomputedPowers}).
+The only differences are that we provide $k$ as a list of indicator arrays for $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ whereas we provide it as a number to $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ and that we switch the order of the group law application and the selection of the result in each iteration.
+
+Next, we want to determine the optimal base $base$ that yields the smallest constraint count for $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$.
+For this purpose, we introduce a cost function $cost_\mathbb{G}(base)$ which calculates the number of constraints per "Bit-Equivalent" $\log_{base}(2)$.
+We employ this normalization since a a number that can be represented with $255$ bits can also be represented with $\Big\lceil \frac{255}{\log_2(base)}\Big\rceil$ digits in base $base$.
+For instance, we need $\Big\lceil \frac{255}{\log_2(5)}\Big\rceil=110$ digits to represent a $255$ bit number in base $5$.
+Furthermore, the cost is influenced by the number of constraint needed for the group law $\mathfrak{C}_\mathbb{G}\_\odot$ and the group switch case $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$.
+We deonte the constraint counts for the individual circuits by $constraints(\mathfrak{C}_\mathbb{G}\_\odot)$ and $constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)})$.
+Putting everything together, we get 
+\begin{align*}
+    cost\mathbb{G}(base) = \frac{constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}) + constraints(\mathfrak{C}_\mathbb{G}\_\odot)}{log_2(base)}\text{.}
+\end{align*}
+
+As before, we use Twisted Edwards curves as the group $\mathbb{G}$ since the group law $\mathfrak{C}_\mathbb{G}\_\odot$ requires less constraints compared to the group law for Montgomery Curves.
+Additionally, Twisted Edwards curves have only two coordinates whereas Montgomery Curves have three coordinates, which means that $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ uses less constraints as well.
+Specifically, with $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(c)}$ as presented in \cref{fig:circuit:teSwitchCase}, we get $constraints(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(base)})=2\cdot(base-1)$ and $constraints(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot})=7$.
+Then, \begin{align*}
+    cost_\mathbb{TE_{a,d}(\mathbb{F})}= \frac{2\cdot(base-1) + 7}{\log_2(base)}
+\end{align*}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{graphics/appendix/TESwitchCase.pdf}
+    \caption{Circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(c)}$ implementing $Switch\text{-}Case$ between $c$ elements $P_0^v,\dots, P_{c-1}^v\in TE_{a,d}(\mathbb{F})$.
+    Here, we use $\mathfrak{C}_{Switch\text{-}Case(base, 2)}$ (\cref{fig:circuit:switchCaseGen}) as a building block.
+    }
+    \label{fig:circuit:teSwitchCase}
+\end{figure}
+
+Some results for $cost_\mathbb{TE_{a,d}(\mathbb{F})}$ are presented in \cref{tab:teArbBase} along with constraint counts for $\mathfrak{C}_{TE_{a,d}\_PPFExp_{base}}$ when used to calculate $g^k$ with a $255$ bit exponent $k$.
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{|l|l|ccccccc|}
+        \hline
+        \multicolumn{2}{|l|}{$base$}                                                                                       & $2$    & $3$    & $4$    & \boldmath$5$    & $6$    & $7$    & $8$    \\ \hline
+        \multicolumn{2}{|l|}{$cost_{TE_{a,d}(\mathbb{F})}(base)$}                                                          & $9$    & $6.94$ & $6.5$  & \boldmath$6.46$ & $6.58$ & $6.77$ & $7$    \\ \hline\hline
+        \multicolumn{2}{|l|}{Digits needed for $255$ bit exponent}                                                         & $255$  & $161$  & $128$  & \boldmath$110$  & $99$   & $91$   & $85$   \\ \hline
+        \multirow{2}{*}{\shortstack{Constraints with \\$255$ bit exponent}} & $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$        & $2291$ & $1767$ & $1660$ & \boldmath$1646$ & $1679$ & $1725$ & $1781$ \\ \cline{2-9}
+                                                             & $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$               & $2546$ & NaN    & NaN    & NaN             & NaN    & NaN    & NaN    \\ \hline
+        \end{tabular}
+    \renewcommand{\arraystretch}{1.0}
+    \caption{Constraint analysis of $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$ for different choices of $base$.
+    }
+    \label{tab:teArbBase}
+\end{table}
+
+We can conclude that $base=5$ is optimal for $\mathbb{G}=TE_{a,d}(\mathbb{F})$.
+Note that choosing base $base$ requires us to precompute $\frac{base-1}{\log_2(base)}$ times as many powers of $g$ as in the circuit $\mathfrak{C}_{\mathbb{G}\_}$.
+For our choice $base=5$ this means that we need to precompute $\frac{4}{\log_2(5)}=1.72$ times as many powers of $g$ as before.
+However, this is a sensible tradeoff since these computations are typically not executed by the voter but rather the election organizers.
+Furthermore, as before, we can share the precomputed powers of $g$ among all instantiations of $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ in a ballot validity circuit.
+
+While we did implement $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$ in Circom, it would be interesting to build a new version of \gls{ppeeg} using this.
+Furthermore, one could integrate this with the rest of the ballot validity circuits and implement the correponding SageMath component which generates the required powers of $g$ and the indicator based representations of the exponet $k$.
+After obtaining benchmarks for this new implementation, one could compare the results to the results we obtained and examine whether this variant yields the expected constraint reductions in the full ballot validity circuits.
 
 \chapter{Circuits}
 \label{section:appendix:circuits}
@@ -45,19 +166,19 @@ We define groups and fields as in \cite{least_authority_moonmath_2024}.
 \section{Utility Circuits}
 We use several utility circuits as modlues inside the ballot validity circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$.
 
-\subsection{$reverse$}
+\subsection{$Reverse$}
 \label{section:appendix:reverse}
 To reduce visual clutter it is sometimes benefitial to reverse the order of inputs to a circuit.
 Therefore, we use, \begin{align*}
-    r_{reverse(l)}:\mathbb{F}^l\to\mathbb{F}^l, (x_0,\dots,x_{l-1})\to (x_{l-1}, \dots, x_0)
+    r_{Reverse(l)}:\mathbb{F}^l\to\mathbb{F}^l, (x_0,\dots,x_{l-1})\mapsto (x_{l-1}, \dots, x_0)
 \end{align*}
-and the corresponding circuit $\mathfrak{C}_{reverse(l)}$ \cref{fig:circuit:reverse}.
-Note that $\mathfrak{C}_{reverse(l)}$ does not need any constraints and we use it purely for convenience.
+and the corresponding circuit $\mathfrak{C}_{Reverse(l)}$ \cref{fig:circuit:reverse}.
+Note that $\mathfrak{C}_{Reverse(l)}$ does not need any constraints and we use it purely for convenience.
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.7]{graphics/appendix/reverse.pdf}
-    \caption{Circuit $\mathfrak{C}_{reverse(l)}$ to reverse the order of $l$ signals.}
+    \caption{Circuit $\mathfrak{C}_{Reverse(l)}$ to reverse the order of $l$ signals.}
     \label{fig:circuit:reverse}
 \end{figure}
 
@@ -65,7 +186,7 @@ Note that $\mathfrak{C}_{reverse(l)}$ does not need any constraints and we use i
 \label{section:appendix:isEqual}
 In many cases, we need to compute whether two signals $x$ and $y$ are equal.
 Therefore, we use, \begin{align*}
-    r_{If\text{-}Equal}:\mathbb{F}^2\to\mathbb{F}, (x,y)\to \begin{cases}
+    r_{If\text{-}Equal}:\mathbb{F}^2\to\mathbb{F}, (x,y)\mapsto \begin{cases}
         1,\quad \text{if } x=y\\
         0,\quad\text{otherwise}
     \end{cases}
@@ -80,12 +201,12 @@ In our implementation, we use the template \verb|IsEqual| from the file \verb|co
     \label{fig:circuit:isEqual}
 \end{figure}
 
-\subsection{$If\text{-}Else(l)$}
+\subsection{$If\text{-}Else$}
 \label{section:appendix:ifElse}
 Branching is very important for most use cases.
 Often, the result of a computation depends on a condition.
 For this purpse, we use, \begin{align*}
-    r_{If\text{-}Else(l)}:&\mathbb{F}^l\times \mathbb{F}^l\times\mathbb{F}\to\mathbb{F}^l, (v_{else},v_{if}, cond)\to \begin{cases}
+    r_{If\text{-}Else(l)}:&\mathbb{F}^l\times \mathbb{F}^l\times\mathbb{F}\to\mathbb{F}^l, (v_{else},v_{if}, cond)\mapsto \begin{cases}
         v_{else},\quad \text{if } cond=0\\
         v_{if},\quad\text{if } cond=1\\
         undefined,\quad\text{otherwise}
@@ -95,7 +216,7 @@ For this purpse, we use, \begin{align*}
         v_{if} & = (v_0^{if}, \dots, v_{l-1}^{if})
     \end{matrix}
 \end{align*}
-and the corresponding circuit $\mathfrak{C}_{If\text{-}Else}$ \cref{fig:circuit:ifElse}.
+and the corresponding circuit $\mathfrak{C}_{If\text{-}Else(l)}$ \cref{fig:circuit:ifElse}.
 
 \begin{figure}[h]
     \centering
@@ -105,37 +226,84 @@ and the corresponding circuit $\mathfrak{C}_{If\text{-}Else}$ \cref{fig:circuit:
     \label{fig:circuit:ifElse}
 \end{figure}
 
-\subsection{$Switch\text{-}Case(c)$}
+\subsection{$Switch\text{-}Case$}
 \label{section:appendix:switchCase}
 Branching is very important for most use cases.
 Often, the result of a computation depends on a condition that can take several different values with a default value if none of the allowed values are chosen.
 For this purpse, we use, \begin{align*}
-    r_{Switch\text{-}Case(c)}:&\mathbb{F}^c\times \mathbb{F}^{c-1}, \\
-    &(v, cond)\to \begin{cases}
+    &r_{Switch\text{-}Case(c)}:\mathbb{F}^c\times \mathbb{F}^{c-1}, \\
+    &\quad(v, cond)\mapsto v_res:=\begin{cases}
         v_{i},\quad \text{if } cond_i=1 \land \forall j\in\{0,\dots,c-2\}\setminus\{i\}: cond_j=0\\
-        v_{def},\quad\text{if } \forall i\in\{0,\dots, c-2\}:c_i=0\\
+        v_{def},\quad\text{if } \forall i\in\{0,\dots, c-2\}:cond_i=0\\
         undefined,\quad\text{otherwise}
     \end{cases} \\
-    &\quad\text{with }\quad\begin{matrix}
+    &\quad\quad\text{with }\quad\begin{matrix}
         v &= (v_0, \dots, v_{c-2}, v_{def})\\
         cond & = (cond_0, \dots, cond_{c-2})
     \end{matrix}
 \end{align*}
-and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case}$ \cref{fig:circuit:switchCase}.
+and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c)}$ \cref{fig:circuit:switchCase}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.7]{graphics/appendix/switchCase.pdf}
-    \caption{Circuit $\mathfrak{C}_{Switch\text{-}Case(l)}$ which outputs the selected value from $v$ depending on $cond$.
+    \caption{Circuit $\mathfrak{C}_{Switch\text{-}Case(c)}$ which outputs the selected value from $v$ depending on $cond$.
     Note that the circuit can produce arbitrary outputs if \\$cond\notin\left\{(cond_0,\dots, cond_{c-2})\in\{0,1\}^{c-1}\Bigg|\sum_{i=0}^{c-2}cond_i\in\{0,1\}\right\}$.}
     \label{fig:circuit:switchCase}
+\end{figure}
+
+We can also generalize $Switch\text{-}Case$ to be used when values are tuples with multiple entries.
+For this purpose, we use \begin{align*}
+    &r_{Switch\text{-}Case(c, l)}:(\mathbb{F}^l)^c\times \mathbb{F}^{c-1}, \\
+    &\quad(v, cond)\mapsto v_res:=\begin{cases}
+        (v_{i,0}, \dots, v_{i,l-1}),\quad \text{if } cond_i=1 \land \forall j\in\{0,\dots,c-2\}\setminus\{i\}: cond_j=0\\
+        (v_{def,0}, \dots, v_{def,l-1}),\quad\text{if } \forall i\in\{0,\dots, c-2\}:cond_i=0\\
+        undefined,\quad\text{otherwise}
+    \end{cases} \\
+    &\quad\quad\text{with }\quad\begin{matrix}
+        v &= ((v_{0,0}, \dots, v_{0,l-1}), \dots, (v_{c-2, 0}, \dots, v_{c-2,l-1}), (v_{def,0},\dots, v_{def, l-1}))\\
+        cond & = (cond_0, \dots, cond_{c-2})
+    \end{matrix}
+\end{align*}
+and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ \cref{fig:circuit:switchCaseGen}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{graphics/appendix/switchCaseGen.pdf}
+    \caption{Circuit $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ which outputs the selected value from $v$ depending on $cond$.
+    Here, we use $\mathfrak{C}_{Switch\text{-}Case(c)}$ (\cref{fig:circuit:switchCase}) as a building block.
+    Note that the circuit can produce arbitrary outputs if \\$cond\notin\left\{(cond_0,\dots, cond_{c-2})\in\{0,1\}^{c-1}\Bigg|\sum_{i=0}^{c-2}cond_i\in\{0,1\}\right\}$.}
+    \label{fig:circuit:switchCaseGen}
+\end{figure}
+
+\subsection{$Safe\text{-}Division$}
+\label{section:appendix:safeDivision}
+We introduced the circuit $\mathfrak{C}_{Division}$ to compute $\frac{x}{y}$ for two inputs $x$ and $y$ earlier (\cref{fig:circuit:division}).
+However, this is problematic if $y=0$.
+In such cases, we typically do not use the result of the division circuit, for instace because it is the input for a not enabled branch of $\mathfrak{C}_{Switch\text{-}Case(c)}$.
+Despite this, we need to be able to handle the case $y=0$ since, in a circuit, all computations are always executed.
+For this purpose, we use \begin{align*}
+    r_{Division\text{-}Safe}:\mathbb{F}^2\to\mathbb{F}, (x,y)\mapsto res:=\begin{cases}
+        x,\quad \text{if } y=0\\
+        \frac{x}{y},\quad \text{otherwise}
+    \end{cases}
+\end{align*}
+and the corresponding circuit $\mathfrak{C}_{Safe\text{-}Division}$ \cref{fig:circuit:safeDivision}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{graphics/appendix/safeDivision.pdf}
+    \caption{Circuit $\mathfrak{C}_{Safe\text{-}Division}$ to compute $\frac{x}{y}$ if $y\neq 0$ and $x$ otherwise.
+    Here, we use $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}), $\mathfrak{C}_{If\text{-}Else(1)}$ (\cref{fig:circuit:ifElse}) and $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as building blocks.
+    }
+    \label{fig:circuit:safeDivision}
 \end{figure}
 
 \subsection{$Num2Bits$}
 \label{section:appendix:num2Bits}
 In many cases, we need to compute the binary representation of a number $k$.
 For this purpose, we use \begin{align*}
-    r_{Num2Bits(l)}:\mathbb{F}\to\mathbb{F}^l, k\to (k_0,\dots, k_{l-1}) \text{ with } k=\sum_{i=0}^{l-1} k_i\cdot 2^i
+    r_{Num2Bits(l)}:\mathbb{F}\to\mathbb{F}^l, k\mapsto (k_0,\dots, k_{l-1}) \text{ with } k=\sum_{i=0}^{l-1} k_i\cdot 2^i
 \end{align*}
 and the corresponding circuit $\mathfrak{C}_{Num2Bits(l)}$ \cref{fig:circuit:num2Bits}.
 In our implementation, we use the template \verb|Num2Bits(l)| from the file \verb|bitify.circom| in the circomlib library \cite{jordy_baylina_iden3circomlib_2025}.
@@ -147,16 +315,163 @@ In our implementation, we use the template \verb|Num2Bits(l)| from the file \ver
     \label{fig:circuit:num2Bits}
 \end{figure}
 
+\subsection{Comparisons}
+\label{section:appendix:comparisons}
+for a lot of use cases, we need to determine the ordering of values relative to each other.
+In our implementation, we mainly use this in the circuit $\mathfrak{C}_C^{Vot}$ asserting choice space membership for some election types.
 
-\begin{itemize}
-    \item $\mathfrak{C}_{Num2Bits}$
-    \item $\mathfrak{C}_{If\text{-}Else(l)}$
-    \item $\mathfrak{C}_{Is\text{-}Equal}$
-    \item $\mathfrak{C}_{division}$
-    \item $\mathfrak{C}_{assert\text{-}Leq}$
-    \item $\mathfrak{C}_{occurences}$ for $r_{occurences(l)}(b, v)$ to count how often $v$ appears in $b=(b_0,\dots, b_{l-1})$
-    \item $\mathfrak{C}_{Switch\text{-}Case(c)}$
-\end{itemize}
+For this purpose, we use \begin{align*}
+    & r_{Is\text{-}Less}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
+        1,\quad\text{if } x < test
+        0,\quad\text{otherwise}
+    \end{cases}\\
+    & r_{Is\text{-}Leq}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
+        1,\quad\text{if } x \leq test
+        0,\quad\text{otherwise}
+    \end{cases}\\
+    & r_{Is\text{-}Greater}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
+        1,\quad\text{if } x > test
+        0,\quad\text{otherwise}
+    \end{cases}\\
+    & r_{Is\text{-}Geq}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
+        1,\quad\text{if } x \geq test
+        0,\quad\text{otherwise}
+    \end{cases}\\
+\end{align*}
+and the corresponding circuits $\mathfrak{C}_{Is\text{-}Less}$, $\mathfrak{C}_{Is\text{-}Leq}$, $\mathfrak{C}_{Is\text{-}Greater}$ and $\mathfrak{C}_{Is\text{-}Geq}$ (\cref{fig:circuit:comparisons}).
+In our implementations, we use the templates \verb|LessThan(n)|, \verb|LessEqThan(n)|, \verb|GreaterThan(n)| and \verb|GreaterEqThan(n)| from the file \verb|comparators.circom| in the circomlib library \cite{jordy_baylina_iden3circomlib_2025}.
+Note that the parameter $n$ denotes the number of bits the binary representations of $x$ and $test$ can have at most. 
+We use a sufficiently large $n$ everywhere in our implementation and abstract away from this detail.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/IsLess.pdf}
+        \caption{Circuit $\mathfrak{C}_{Is\text{-}Less}$ to compute $x<test$.}
+        \label{fig:circuit:isLess}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/IsLeq.pdf}
+        \caption{Circuit $\mathfrak{C}_{Is\text{-}Leq}$ to compute $x<test$.}
+        \label{fig:circuit:isLeq}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/IsGreater.pdf}
+        \caption{Circuit $\mathfrak{C}_{Is\text{-}Greater}$ to compute $x>test$.}
+        \label{fig:circuit:isGreater}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/IsGeq.pdf}
+        \caption{Circuit $\mathfrak{C}_{Is\text{-}Geq}$ to compute $x\geq test$.}
+        \label{fig:circuit:isGeq}
+    \end{subfigure}
+    \caption{Circuits to compute comparisons between two signals $x$ and $test$.}
+    \label{fig:circuit:comparisons}
+\end{figure}
+
+Since we use the comparison circuits typically in connection with asserting ballot validity, we need the assert variants of the circuits as well.
+For this purpose, we use \begin{align*}
+    \forall Comp\in\{Less, Leq, Greater, Geq\}: r_{Assert\text{-}Comp}:\mathbb{F}^2\to\mathbb{F}, \text{with}    
+\end{align*}
+\begin{algorithmic}
+    \Procedure{$r_{Assert\text{-}Comp}$}{$x,test$}
+        \State $1\mbeq r_{Is\text{-}Comp}(x,test)$
+    \EndProcedure
+\end{algorithmic}
+and the corresponding circuits $\mathfrak{C}_{Assert\text{-}Less}$, $\mathfrak{C}_{Assert\text{-}Leq}$, $\mathfrak{C}_{Assert\text{-}Greater}$ and $\mathfrak{C}_{Assert\text{-}Geq}$ (\cref{fig:circuit:assertComparisons}).
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/AssertLess.pdf}
+        \caption{Circuit $\mathfrak{C}_{Assert\text{-}Less}$ to assert $x<test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Less}$ (\cref{fig:circuit:isLess}) as a building block.
+        }
+        \label{fig:circuit:assertLess}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/AssertLeq.pdf}
+        \caption{Circuit $\mathfrak{C}_{Assert\text{-}Leq}$ to assert $x<test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Leq}$ (\cref{fig:circuit:isLeq}) as a building block.
+        }
+        \label{fig:circuit:assertLeq}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/AssertGreater.pdf}
+        \caption{Circuit $\mathfrak{C}_{Assert\text{-}Greater}$ to assert $x>test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Greater}$ (\cref{fig:circuit:isGreater}) as a building block.
+        }
+        \label{fig:circuit:assertGreater}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/AssertGeq.pdf}
+        \caption{Circuit $\mathfrak{C}_{Assert\text{-}Geq}$ to assert $x\geq test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Geq}$ (\cref{fig:circuit:isGeq}) as a building block.
+        }
+        \label{fig:circuit:assertGeq}
+    \end{subfigure}
+    \caption{Circuits to assert that signal $x$ is in the desired relation with signal $test$.}
+    \label{fig:circuit:assertComparisons}
+\end{figure}
+
+\subsection{Counting}
+\label{section:appendix:counting}
+In some use cases, we need to count the number of times a value with some specific property occurs in a list of values.
+In our implementation we make use of this in the circuit $\mathfrak{C}_C^{Vot}$ asserting choice space membership for some election types.
+
+For this purpose, we use \begin{align*}
+    & r_{Count\text{-}Equal(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i=test\}|\\
+    & r_{Count\text{-}Less(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i=test\}|\\
+    & r_{Count\text{-}Greater(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i=test\}|\\
+\end{align*}
+and the corresponding circuits $\mathfrak{C}_{Count\text{-}Equal}$, $\mathfrak{C}_{Count\text{-}Less}$ and $\mathfrak{C}_{Count\text{-}Greater}$ (\cref{fig:circuit:counting}).
+Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text{-}Greater(l)}$ count how many values in a list of length $l$ are equal to a test value $test$.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/CountEqual.pdf}
+        \caption{Circuit $\mathfrak{C}_{Count\text{-}Equal}(l)$ to count how many values in $(v_0,\dots, v_{l-1})$ are equal to $test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}) as a building block.
+        }
+        \label{fig:circuit:countEqual}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/CountLess.pdf}
+        \caption{Circuit $\mathfrak{C}_{Count\text{-}Less}(l)$ to count how many values in $(v_0,\dots, v_{l-1})$ are smaller than $test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Less}$ (\cref{fig:circuit:isLess}) as a building block.
+        }
+        \label{fig:circuit:countLess}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.7]{graphics/appendix/CountGreater.pdf}
+        \caption{Circuit $\mathfrak{C}_{Count\text{-}Greater}(l)$ to count how many values in $(v_0,\dots, v_{l-1})$ are greater than $test$.
+        Here, we use $\mathfrak{C}_{Is\text{-}Greater}$ (\cref{fig:circuit:isGreater}) as a building block.
+        }
+        \label{fig:circuit:countGreater}
+    \end{subfigure}
+    \caption{Circuits to count how many values in a list of length $l$ have the desired relation with a test value $test$.}
+    \label{fig:circuit:counting}
+\end{figure}
 
 \section{Complete Circuit List}
 \todo{Each circuit with short description, reference to where it is defined (in the thesis, appendix or in circomlib), constraint count and corresponding name in circom implementation.}

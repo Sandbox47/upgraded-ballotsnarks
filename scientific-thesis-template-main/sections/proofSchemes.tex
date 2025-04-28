@@ -188,42 +188,34 @@ However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy $\mathfrak{C}_{3\text
 }
 % Similarily, the circuit for $r_{3\text{-}vot}$ is satisfiable under the partial assignment $(\bot, \bot, 1, 0,0,0,0)$ but not under the partial assignment $(2,\bot, \bot, 0,0,0,0)$.
 
-% \todo{
-%     Introduce concept of fixed input/ output values.
-%     Introduce modularity of circuits.
-%     Represent circuit $r_{3\text{-}vot}$ based on multiple $r_{assert-bit}$ circuits.
-%     %Define complete ballot validity circuit using high-level components from the voting system in \cref{chap:votingschemes}.
-%     %(And note that the decomposition relation based on this circuit is equivalent to the relation $R_C$ used in \cref{chap:votingschemes}.)
-% }
-
 \subsection{Asserts}
 
 In general, an assignment $(S_1^{in}, S_2^{in}, S_3^{in}, S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out}):=(b_0, b_1, b_2, 0, 0, 0, 0)$ satisfies $\mathfrak{C}_{3\text{-}vot}$ if and only if $b=(b_0, b_1, b_2)\in C$.
 Therefore, to assert that ballots are part of the choice space, we assign the constant $0$ to $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$.
-This creates a new circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ which operates only on the three input signals $S_1^{in}, S_2^{in}$ and $S_3^{in}$ and does not have any outputs.
-$\mathfrak{C}_{assert\text{-}3\text{-}vot}$ is illustrated in \cref{fig:circuit:exampleAssertThreeVot}.
-An assignment $(S_1^{in}, S_2^{in}, S_3^{in})$ satisfies $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ if and only if $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})\in C$.
+This creates a new circuit $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ which operates only on the three input signals $S_1^{in}, S_2^{in}$ and $S_3^{in}$ and does not have any outputs.
+$\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ is illustrated in \cref{fig:circuit:exampleAssertThreeVot}.
+An assignment $(S_1^{in}, S_2^{in}, S_3^{in})$ satisfies $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ if and only if $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})\in C$.
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=.7]{graphics/proofSchemes/ExampleAssertVoting.pdf}
-    \caption{Circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$, asserting that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$.}
+    \caption{Circuit $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$, asserting that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$.}
     \label{fig:circuit:exampleAssertThreeVot}
 \end{figure}
 
 %To represent asserting circuits as algebraic functions, we need to account for the event that 
-The algebraic function $r_{assert\text{-}3\text{-}vot}$ corresponding to $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ is then defined as:
+The algebraic function $r_{Assert\text{-}3\text{-}vot}$ corresponding to $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ is then defined as:
 \begin{align*}
-    r_{assert\text{-}3\text{-}vot}:\mathbb{F}^3\to\emptyset; \quad\text{with } r_{assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in}) \text{ as in \cref{alg:assertThreeVot}}
+    r_{Assert\text{-}3\text{-}vot}:\mathbb{F}^3\to\emptyset; \quad\text{with } r_{Assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in}) \text{ as in \cref{alg:assertThreeVot}}
 \end{align*}
-The computation of $r_{assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in})$ is possible if and only if $b=(b_0, b_1, b_2)=(S_1^{in}, S_2^{in}, S_3^{in})\in C$.
+The computation of $r_{Assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in})$ is possible if and only if $b=(b_0, b_1, b_2)=(S_1^{in}, S_2^{in}, S_3^{in})\in C$.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Function $r_{assert\text{-}3\text{-}vot}$ used to assert that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
-    $r_{assert\text{-}3\text{-}vot}$ returns nothing if this is the case. Otherwise, the computation of $r_{assert\text{-}3\text{-}vot}$ results in an error.}
+    \caption{Function $r_{Assert\text{-}3\text{-}vot}$ used to assert that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
+    $r_{Assert\text{-}3\text{-}vot}$ returns nothing if this is the case. Otherwise, the computation of $r_{Assert\text{-}3\text{-}vot}$ results in an error.}
     \label{alg:assertThreeVot}
     \begin{algorithmic}
-    \Procedure{$r_{assert\text{-}3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
+    \Procedure{$r_{Assert\text{-}3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
         \State $0\mbeq (1-S_1^{in})\cdot S_1^{in}$
         \State $0\mbeq (1-S_2^{in})\cdot S_2^{in}$
         \State $0\mbeq (1-S_3^{in})\cdot S_3^{in}$ \Comment Assert that the individual ballots are bits.
@@ -236,7 +228,7 @@ The computation of $r_{assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in})
 \subsection{Modularity}
 
 In many cases, we need the same functionality at multiple places in an algebraic function $r$ and its corresponding circuit $\mathfrak{C}$.
-For instance, in $r_{3\text{-}vot}$ and $r_{assert\text{-}3\text{-}vot}$, this applies to the computation needed to check whether a signal is a bit.
+For instance, in $r_{3\text{-}vot}$ and $r_{Assert\text{-}3\text{-}vot}$, this applies to the computation needed to check whether a signal is a bit.
 $(1-S)\cdot S$ and $(1-S)\cdot S\mbeq 0$ respectively is used for all individual votes $b_0,b_1,b_2$ in a ballot $b$ and for the sum of all votes $b_0+b_1+b_2$.
 We can now capture the function to check that a signal is a bit inside another algebraic relation $r_{is\text{-}Bit}$:
 \begin{align*}
@@ -246,18 +238,18 @@ We can now capture the function to check that a signal is a bit inside another a
     \end{cases}
 \end{align*}
 
-Similarly, we can capture the assertion that signals are bits in an algebraic relation $r_{assert\text{-}Bit}$.
+Similarly, we can capture the assertion that signals are bits in an algebraic relation $r_{Assert\text{-}Bit}$.
 Here, we can already reuse our definition of $r_{is\text{-}Bit}$:
 \begin{align*}
-    r_{assert\text{-}Bit}:\mathbb{F}\to\emptyset, \text{ with}%r_{assert\text{-}Bit}(S_1^{in}):=\left(r_{is\text{-}Bit}(S_1^{in})\mbeq 0\right)
+    r_{Assert\text{-}Bit}:\mathbb{F}\to\emptyset, \text{ with}%r_{assert\text{-}Bit}(S_1^{in}):=\left(r_{is\text{-}Bit}(S_1^{in})\mbeq 0\right)
 \end{align*}
 \begin{algorithmic}
-    \Procedure{$r_{assert\text{-}Bit}$}{$S_1^{in}$}
+    \Procedure{$r_{Assert\text{-}Bit}$}{$S_1^{in}$}
         \State $0\mbeq r_{is\text{-}Bit}(S_1^{in})$
     \EndProcedure
 \end{algorithmic}
 
-The corresponding circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ are presented in \cref{fig:circuit:bitModularity}.
+The corresponding circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{Assert\text{-}Bit}$ are presented in \cref{fig:circuit:bitModularity}.
 
 \begin{center}
     \begin{figure}[h]
@@ -275,12 +267,12 @@ The corresponding circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{ass
             %\label{fig:circuit:exampleVotingShort}
         \end{subfigure}
         \hfill
-        \caption{Circuit $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ to check and assert whether a signal is a Bit.}
+        \caption{Circuit $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{Assert\text{-}Bit}$ to check and assert whether a signal is a Bit.}
         \label{fig:circuit:bitModularity}
     \end{figure}
 \end{center}
 
-Using these circuits as components, the computation of $r_{3\text{-}vot}$ and $r_{assert\text{-}3\text{-}vot}$ can be reformulated as presented in \cref{alg:threeVot_components} and \cref{alg:assertThreeVot_components} respectively.
+Using these circuits as components, the computation of $r_{3\text{-}vot}$ and $r_{Assert\text{-}3\text{-}vot}$ can be reformulated as presented in \cref{alg:threeVot_components} and \cref{alg:assertThreeVot_components} respectively.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Function $r_{3\text{-}vot}$ used to check whether a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
@@ -299,26 +291,26 @@ Using these circuits as components, the computation of $r_{3\text{-}vot}$ and $r
 \end{Algorithmus}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Function $r_{assert\text{-}3\text{-}vot}$ used to assert that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
-    $r_{assert\text{-}3\text{-}vot}$ returns nothing if this is the case. Otherwise, the computation of $r_{assert\text{-}3\text{-}vot}$ results in an error. Using $r_{assert\text{-}Bit}$.}
+    \caption{Function $r_{Assert\text{-}3\text{-}vot}$ used to assert that a ballot $b=(b_0,b_1,b_2)=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0),(1,0,0),(0,1,0),(0,0,1)\}$. 
+    $r_{Assert\text{-}3\text{-}vot}$ returns nothing if this is the case. Otherwise, the computation of $r_{Assert\text{-}3\text{-}vot}$ results in an error. Using $r_{Assert\text{-}Bit}$.}
     \label{alg:assertThreeVot_components}
     \begin{algorithmic}
-    \Procedure{$r_{assert\text{-}3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
-        \State $r_{assert\text{-}Bit}(S_1^{in})$
-        \State $r_{assert\text{-}Bit}(S_2^{in})$
-        \State $r_{assert\text{-}Bit}(S_3^{in})$ \Comment Assert that the individual ballots are bits.
+    \Procedure{$r_{Assert\text{-}3\text{-}vot}$}{$S_1^{in}, S_2^{in}, S_3^{in}$}
+        \State $r_{Assert\text{-}Bit}(S_1^{in})$
+        \State $r_{Assert\text{-}Bit}(S_2^{in})$
+        \State $r_{Assert\text{-}Bit}(S_3^{in})$ \Comment Assert that the individual ballots are bits.
         \State $tmp \gets  S_1^{in}+S_2^{in}+S_3^{in}$
-        \State $r_{assert\text{-}Bit}(tmp)$ \Comment Assert that the sum of all ballots is a bit.
+        \State $r_{Assert\text{-}Bit}(tmp)$ \Comment Assert that the sum of all ballots is a bit.
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
 
-The corresponding circuits $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ are presented in \cref{fig:circuit:threeVotModularity}.
-These circuits are exactly the same as the ones defined in \cref{fig:circuit:exampleVotingDef} and \cref{fig:circuit:exampleAssertThreeVot}, we have just grouped some of the internal structure as new circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ respectively.
+The corresponding circuits $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ are presented in \cref{fig:circuit:threeVotModularity}.
+These circuits are exactly the same as the ones defined in \cref{fig:circuit:exampleVotingDef} and \cref{fig:circuit:exampleAssertThreeVot}, we have just grouped some of the internal structure as new circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{Assert\text{-}Bit}$ respectively.
 
 Note that we cannot reuse the same circuit $\mathfrak{C}_{module}$ multiple times inside another circuit $\mathfrak{C}$.
 Therefore, we use multiple sepearate instantiations of $\mathfrak{C}_{module}$ inside $\mathfrak{C}$.
-In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{assert\text{-}Bit}$ in the definition of $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ respectively.
+In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{Assert\text{-}Bit}$ in the definition of $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ respectively.
 
 \begin{center}
     \begin{figure}[h]
@@ -332,7 +324,7 @@ In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$
         \begin{subfigure}{.48\textwidth}
             \centering
             \includegraphics[scale=.7]{graphics/proofSchemes/assertThreeVotModular.pdf}
-            \caption{Circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ for the function $r_{assert{-}3\text{-}vot}$ using instantiations of $\mathfrak{C}_{assert\text{-}Bit}$.}
+            \caption{Circuit $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ for the function $r_{Assert{-}3\text{-}vot}$ using instantiations of $\mathfrak{C}_{Assert\text{-}Bit}$.}
             %\label{fig:circuit:exampleVotingShort}
         \end{subfigure}
         \hfill
@@ -543,7 +535,7 @@ We can construct $QAP(R1CS)$ from $R1CS$ by executing the following steps:
 \begin{enumerate}
     \item Choose $k$ distinct, invertible elements $m_1,\dots, m_k\in\mathbb{F}$, one for each constraint in $R1CS$. \footnote{
         \label{footnote:qapRootsOfUnity}
-        In practice, we typically use the $k$-th roots of unity $\{m_1,\dots, m_k\}=\{m\in\mathbb{F}| m^k=1\}$ for efficiency reasons. \cite{todo}
+        In practice, we typically use the $k$-th roots of unity $\{m_1,\dots, m_k\}=\{m\in\mathbb{F}| m^k=1\}$ for efficiency reasons. \cite{dunkelman_families_2022}
     }
     \item Compute the target polynomial $T$ as in \cref{def:qap}.
     \item Use Lagrange's method of polynomial interpolation as described in section 3.3.4 of \cite{least_authority_moonmath_2024} to compute the polynomials $A_j, B_j$ and $C_j$ as in \cref{def:qap}.
@@ -955,7 +947,7 @@ Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
             A security parameter $\lambda$ is used to define the security level of cryptographic constructions.
         }\cite{groth_size_2016}.
         \item Argument: The soundness property defined in \cref{def:zpsForR} only has to hold if $Prove$ is polynomially bound\cref{footnote:securityParameterSuccinctness} \cite{least_authority_moonmath_2024}.
-        \item Note that this slightly weakens our definition from \cref{def:zpsForR}
+        Note that this slightly weakens our previous definition.
     \end{itemize}
 \end{definition}
 

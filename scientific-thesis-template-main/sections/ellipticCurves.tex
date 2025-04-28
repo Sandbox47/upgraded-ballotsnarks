@@ -15,14 +15,14 @@ For better distinction, we call the field $\mathbb{F}_q$ with elliptic curve ord
 Our introduction of elliptic curves largely parallels the one given in chapter 5 of \cite{least_authority_moonmath_2024}.
 However, as we exclusively use Montgomery curves and Twisted Edwards curves in the definitions of our ballot validity circuits, we introduce them directly and do not introduce Short Weierstrass Curves seperately.\footnote{
     \label{footnote:shortWeierstrassForGroth16}
-    Note that the curve \UseVerb{BN254} we employ as a basis for the \gls{zps} Groth16 which is used to costruct the ballot validity proofs is a Short Weierstrass curve.
+    Note that we employ the curve \UseVerb{BN254} as a basis for the \gls{zps} Groth16 which is used to costruct the ballot validity proofs.
+    This curve is a Short Weierstrass curve without an isomorphic Montgomery Curve equivalent.
     However, we do not implement any curve arithmetic of \UseVerb{BN254} inside circuits.
 }
 
 \section{Montgomery Curves}
 \label{section:ellipticCurves:montgomery}
 
-\todo{Circuit for projective group law}
 The most general form of Elliptic curves are so-called Short Weierstrass curves \cite{least_authority_moonmath_2024}.
 Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_1987}.
 We can transform any Montgomery curve into an isomorphic Short Weierstrass curve but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
@@ -36,7 +36,22 @@ Even if we do not provide precomputed powers of $g$, Montgomery curves still all
 As in \cite{least_authority_moonmath_2024} we introduce elliptic curves first in their affine representation and then in their projective representation.
 Later on, we use both representations in the voting schemes.
 
+For a given prime field $(\mathbb{F}, +, \cdot)$, affine coordinates are elements from the set $\mathbb{F}^2\cup\{\mathcal{O}\}$.
+Here, $\mathcal{O}$ is the so-called \glqq point at infinity\grqq.
+To translate this definition of affine coordinates to algebraic circuits, we need to be able to distinguish the point at infinity from elements of $\mathbb{F}^2$ and need to represent every element with the same number of signals.
+Therfore, in algebraic circuits, we add a third field $i$ to every affine point which indicates whether the point is $\mathcal{O}$.
+More formally, we map a point $P\in \mathbb{F}^2\cup\{\mathcal{O}\}$ to its algebraic circuit eqivalent as follows:
+\begin{align*}
+    P\mapsto\begin{cases}
+        (x, y, 1)&\quad\text{if } P=(x,y)\in\mathbb{F}^2\\
+        (0,0,0)&\quad\text{if } P=\mathcal{O}
+    \end{cases}
+\end{align*}
+
+Elliptic curves such as the Montgomery curve are defined as groups over $\mathbb{F}\cup\{\mathcal{O}\}$.
+
 \begin{definition}[Affine Montgomery Curve]
+    \label{def:affineMontgomeryCurve}
     Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$.
     Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\mod p\neq4$.
     Then, the corresponding Affine Montgomery curve is the group $(M_{A,B}(\mathbb{F}), \odot_M^{Aff})$, with:
@@ -45,7 +60,6 @@ Later on, we use both representations in the voting schemes.
         \begin{align*}
             M_{A,B}(\mathbb{F})=\{(x,y)\in\mathbb{F}\times\mathbb{F}|B\cdot y^2=x^3+A\cdot x^2+x\}\cup \{\mathcal{O}\}
         \end{align*}
-        Here, $\mathcal{O}$ is the so-called \glqq point at infinity\grqq.
         \item The group law $\odot_M^{Aff}$:\\
         Let $P_1, P_2\in M_{A,B}(\mathbb{F})$.
         Then:
@@ -55,14 +69,16 @@ Later on, we use both representations in the voting schemes.
                 P_1, &\quad\text{if } P_2=\mathcal{O}\\
                 P_2, &\quad\text{if } P_1=\mathcal{O}\\
                 \mathcal{O}, &\quad\text{if } P_1=(x, y) \text{ and } P_2=(x, -y)\\
-                TangentRule(x,y), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
-                ChordRule(x_1, y_1, x_2, y_2), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
+                Tangent\text{-}Rule(x,y), &\quad\text{if } P_1=P_2=(x,y)=:P \text{ and } y\neq 0\\
+                Chord\text{-}Rule(x_1, y_1, x_2, y_2), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
                 %\left(\left(\frac{3x^2+a}{2y}\right)^2-2x, \left(\frac{3x^2+a}{2y}\right)\cdot\left(x-\left(\left(\frac{3x^2+a}{2y}\right)^2-2x\right)\right)-y\right), &\quad\text{if } P_1=P_2=(x,y) \text{ and } y\neq 0\\
                 %\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2, \left(\frac{y_2-y_1}{x_2-x_1}\right)\cdot\left(x_1-\left(\left(\frac{y_2-y_1}{x_2-x_2}\right)^2-x_1-x_2\right)\right)-y_1\right), &\quad\text{otherwise, with } P_1=(x_1, y_1), P_2=(x_2, y_2)
             \end{cases}
         \end{align*}
         }
-        $TangentRule$ and $ChordRule$ are defined in \cref{alg:tangentRuleAffineMontgomery} and \cref{alg:chordRuleAffineMontgomery}.
+        $Tangent\text{-}Rule$ and $Chord\text{-}Rule$ are defined in \cref{alg:tangentRuleAffineMontgomery} and \cref{alg:chordRuleAffineMontgomery}.
+        The corresponding circuits $\mathfrak{C}_{Tangent\text{-}Rule}$ and $\mathfrak{C}_{Chord\text{-}Rule}$ are presented in Figures \ref{fig:circuit:tangentRuleAffineMontgomery} and \ref{fig:circuit:chordRuleAffineMontgomery}.
+        The circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F})\_\odot}$ to compute the full group law $P_1\odot_M^{Aff} P_2$ is illustrated in \cref{fig:circuit:groupLawAffineMontgomery}.
     \end{itemize}
     The neutral element of $M_{A,B}(\mathbb{F})$ is $\mathcal{O}$.
     For $P\in M_{A,B}(\mathbb{F})$, the inverse element $P^{-1}$ is defined as $P^{-1}:=\begin{cases}
@@ -72,35 +88,67 @@ Later on, we use both representations in the voting schemes.
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Affine Tangent Rule used to compute $P\odot_M^{Aff} P$ where $P=(x,y)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.}
+    \caption{Tangent Rule used to compute $P_\odot:=P\odot_M^{Aff} P$ where $P=(x,y)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.}
     \label{alg:tangentRuleAffineMontgomery}
     \begin{algorithmic}
-    \Procedure{$TangentRule$}{$x,y$}
+    \Procedure{$Tangent\text{-}Rule$}{$x,y$}
+        \State $(x,y):=P$
         \State $tmp \gets  \frac{3x^2+2Ax+1}{2By}$
-        \State $x' \gets  tmp^2\cdot B-2x-A$
-        \State $y'\gets  tmp\cdot (x-x')-y$
-        \State \Return $(x', y')$
+        \State $x_\odot \gets  tmp^2\cdot B-2x-A$
+        \State $y_\odot \gets  tmp\cdot (x-x_\odot)-y$
+        \State \Return $(x_\odot, y_\odot)$
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Affine Chord Rule used to compute $P_1\odot_M^{Aff} P_2$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.}
+    \caption{Chord Rule used to compute $P_\odot:=P_1\odot_M^{Aff} P_2$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.}
     \label{alg:chordRuleAffineMontgomery}
     \begin{algorithmic}
-    \Procedure{$ChordRule$}{$x_1,y_1, x_2, y_2$}
+    \Procedure{$Chord\text{-}Rule$}{$x_1,y_1,x_2,y_2$}
+        \State $(x_1,y_1):=P_1;\: (x_2,y_2):=P_2$
         \State $tmp \gets  \frac{y_2-y_1}{x_2-x_1}$
-        \State $x' \gets  tmp^2\cdot B-x_1-x_2-A$
-        \State $y'\gets  tmp\cdot (x_1-x')-y_1$
-        \State \Return $(x', y')$
+        \State $x_\odot \gets  tmp^2\cdot B-x_1-x_2-A$
+        \State $y_\odot\gets  tmp\cdot (x_1-x_\odot)-y_1$
+        \State \Return $(x_\odot, y_\odot)$
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
 
-%\subsection{Affine and Projective Coordinates}
-%To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ellipticCurves/TangentRule.pdf}
+    \caption{Circuit $\mathfrak{C}_{Tangent\text{-}Rule}$ for computing $Tangent\text{-}Rule(P)$ with $P=(x,y)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.
+    Here, we use $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as a building block.
+    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    }
+    \label{fig:circuit:tangentRuleAffineMontgomery}
+\end{figure}
 
-\subsection{Projective Montgomery Form}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ellipticCurves/ChordRule.pdf}
+    \caption{Circuit $\mathfrak{C}_{Chord\text{-}Rule}$ for computing $Chord\text{-}Rule(P_1, P_2)$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.
+    Here, we use $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as a building block.
+    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    }
+    \label{fig:circuit:chordRuleAffineMontgomery}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ellipticCurves/GroupLawAffineMontgomery.pdf}
+    \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F})\_\odot}$ for computing $P_1\odot_M^{Aff}P_2$ with $P_1, P_2\in M_{A,B}(\mathbb{F})$.
+    Here, we use $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}), $\mathfrak{C}_{If\text{-}Else}$ (\cref{fig:circuit:isEqual}), $\mathfrak{C}_{Switch\text{-}Case(4, 3)}$ (\cref{fig:circuit:switchCaseGen}), $\mathfrak{C}_{Tangent\text{-}Rule}$ (\cref{fig:circuit:tangentRuleAffineMontgomery}) and $\mathfrak{C}_{Chord\text{-}Rule}$ (\cref{fig:circuit:chordRuleAffineMontgomery}) as building blocks.
+    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    We combine the first two cases from \cref{def:affineMontgomeryCurve} as the output of $\mathfrak{C}_{If\text{-}Else}$, which outputs $P_1$ if $P_2=\mathcal{O}$ and $P_2$ if $P_1=\mathcal{O}$.
+    }
+    \label{fig:circuit:groupLawAffineMontgomery}
+\end{figure}
+
+\subsection{Affine and Projective Coordinates}
+\label{sec:coordinateTranformation}
+
 To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
 
 \begin{definition}[Projective Point and Projective Plane]
@@ -117,79 +165,8 @@ To avoid the special point at infinity $\mathcal{O}$ there exists the projective
     \end{align*}
 \end{definition}
 
-Using projective planes, we can define Montgomery Curves in their projective representation as groups of projective points.
-
-\begin{definition}[Projective Montgomery Curve]
-    Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$. 
-    Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\neq4 \mod p$.
-    Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
-    Then, the corresponding Projective Montgomery curve is the group $(M_{A,B}(\mathbb{F}P^2), \odot_M^{Pro})$, with:
-    \begin{itemize}
-        \item The set of points $M_{A,B}(\mathbb{F}P^2)$:
-        \begin{align*}
-            M_{A,B}(\mathbb{F}P^2)=\{[X:Y:Z]\in\mathbb{F}P^2|B\cdot Y^2\cdot Z=X^3+A\cdot X^2\cdot Z+X\cdot Z^2\}
-        \end{align*}
-        Here, $[0:1:0]$ corresponds to the point at infinity $\mathcal{O}$ of the affine form.
-        \item The group law $\odot_M^{Pro}$:\\
-        Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)$. 
-        % To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding Affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
-        Formally:
-        {\setlength{\mathindent}{0pt}
-        \begin{align*}
-            %P_1\odot_M^{Pro} P_2 = I(I^{-1}(P_1)\odot_M^{Aff}I^{-1}(P_2))
-            P_1\odot_M^{Pro} P_2 =\begin{cases}
-                P_1, &\quad\text{if } P_2=[0:1:0]\\
-                P_2, &\quad\text{if } P_1=[0:1:0]\\
-                [0:1:0], &\quad\text{if } [X_1:Y_1:Z_1]\\
-                &\quad\phantom{\text{if }}\:=[X_2:-Y_2:Z_2]\\
-                TangentRule([X_1:Y_1:Z_1]), &\quad\text{if } P_1=P_2 \text{ and } Y_1\neq 0\\
-                ChordRule([X_1:Y_1:Z_1], [X_2:Y_2:Z_2]), &\quad\text{otherwise}
-            \end{cases}
-        \end{align*}
-        }
-        $TangentRule$ and $ChordRule$ are defined in \cref{alg:tangentRuleProjectiveMontgomery} and \cref{alg:chordRuleProjectiveMontgomery}.
-        Here, we follow the implementation from \cite{farashahi_faster_2024}.
-        % Here, $I$ converts points from affine representation to projective representation, and $I^{-1}$ executes the reverse conversion.
-        % $I$ and $I^{-1}$ are introduced in \cref{sec:coordinateTranformation}.
-    \end{itemize}
-    The neutral element of $M_{A,B}(\mathbb{F}P^2)$ is $[0:1:0]$.
-    For $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P)$, the inverse element $P^{-1}$ is defined as $P^{-1}:=[X:-Y:Z]$.
-\end{definition}
-
-\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Projective Tangent Rule used to compute $P\odot_M^{Pro} P$ where $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$.}
-    \label{alg:tangentRuleProjectiveMontgomery}
-    \begin{algorithmic}
-    \Procedure{$TangentRule$}{$[X:Y:Z]$}
-        \State $I\gets 3X^2+2AXZ+Z^2$
-        \State $H\gets 2BYZ$
-        \State $X'\gets BI^2HZ^2-(AZ^2+2XZ)H^3$
-        \State $Y'\gets -BI^3Z^2+(AZ^2+3XZ)IH^2-YZH^3$
-        \State $Z'\gets H^3Z^2$
-        \State \Return $[X':Y':Z']$
-    \EndProcedure
-    \end{algorithmic}
-\end{Algorithmus}
-
-\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, $P_1\neq P_2$ and $P_1\neq P_2^{-1}$.}
-    \label{alg:chordRuleProjectiveMontgomery}
-    \begin{algorithmic}
-    \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
-        \State $I\gets Y_2Z_1-Y_1Z_2$
-        \State $H\gets X_2Z_1-X_1Z_2$
-        \State $X'\gets BI^2HZ_1Z_2-(AZ_1Z_2+X_1Z_2+X_2Z_1)H^3$
-        \State $Y'\gets -BI^3Z_1Z_2+(AZ_1Z_2+2X_1Z_2+X_2Z_1)IH^2-Y_1Z_2H^3$
-        \State $Z'\gets H^3Z_1Z_2$
-        \State \Return $[X':Y':Z']$
-    \EndProcedure
-    \end{algorithmic}
-\end{Algorithmus}
-
-\subsection{Transforming between Projective and Affine Coordinates}
-\label{sec:coordinateTranformation}
 As mentioned earlier, we will use both the projective and affine representation of elliptic curves in our voting schemes.
-Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(\mathbb{F})$ to a corresponding projective elliptic curve $M_{A,B}(\mathbb{F}P^2)$ and vice versa.
+Therefore, we need to be able to convert from affine coordinates to corresponding projective coordinates and vice versa.
 
 \begin{definition}[Coordinate Transformation]
     \label{def:coordinateTransformation}
@@ -209,7 +186,154 @@ Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(
             \mathcal{O}, \quad\text{otherwise}
         \end{cases}
     \end{align*}
+    The circuits to compute $\mathfrak{C}_{I}$ and $\mathfrak{C_{I^{-1}}}$ are presented in Figures \ref{fig:circuit:affToProj} and \ref{fig:circuit:projToAff} respectively.
 \end{definition}
+
+Note that this conversion is independent of the elliptic curve type.
+For instance, it works the same for Montgomery curves and for Short Weierstrass curves.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ellipticCurves/AffToProj.pdf}
+    \caption{Circuit $\mathfrak{C}_{I}$ for computing $P_{Pro}:=I(P_{Aff})$ with $P_{Aff}\in M_{A,B}(\mathbb{F})$.
+    Here, we use $\mathfrak{C}_{If\text{-}Else(3)}$ (\cref{fig:circuit:ifElse}) as a building block.
+    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    }
+    \label{fig:circuit:affToProj}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ellipticCurves/ProjToAff.pdf}
+    \caption{Circuit $\mathfrak{C}_{I^{-1}}$ for computing $P_{Aff}:=I^{-1}(P_{Pro})$ with $P_{Pro}=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
+    Here, we use $\mathfrak{C}_{Safe\text{-}Division}$ (\cref{fig:circuit:safeDivision}) and $\mathfrak{C}_{If\text{-}Else(3)}$ (\cref{fig:circuit:ifElse}) as building blocks.
+    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    Also note, that we cannot use $\mathfrak{C}_{Division}$ here, since $\frac{X}{Z}$ and $\frac{Y}{Z}$ are not computable if $Z=0$.
+    }
+    \label{fig:circuit:projToAff}
+\end{figure}
+
+\subsection{Projective Montgomery Form}
+% To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
+% 
+% \begin{definition}[Projective Point and Projective Plane]
+%     Let $(\mathbb{F}, +, \cdot)$ be a field. 
+%     We define $\mathbb{F}^*$ as the set of invertible elements in $\mathbb{F}$.
+%     Let $(X, Y, Z)\in\mathbb{F}^3$. 
+%     Then, the projective point corresponding to $(X, Y, Z)$ is defined as
+%     \begin{align*}
+%         [X:Y:Z] :=\{(k\cdot X, k\cdot Y, k\cdot Z)|k\in\mathbb{F}^*\}\text{.}
+%     \end{align*}
+%     The projective plane of $\mathbb{F}$ is defined as
+%     \begin{align*}
+%         \mathbb{F}P^2:=\{[X:Y:Z]|(X,Y,Z)\in\mathbb{F}^3 \text{ and } (X, Y, Z)\neq (0,0,0)\}\text{.}
+%     \end{align*}
+% \end{definition}
+
+Using projective planes, we can define Montgomery Curves in their projective representation as groups of projective points.
+
+\begin{definition}[Projective Montgomery Curve]
+    Let $(\mathbb{F}, +, \cdot)$ be a prime field of order $p>3$. 
+    Let $A, B\in\mathbb{F}$ be two field elements with $B\neq 0$ and $A^2\neq4 \mod p$.
+    Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
+    Then, the corresponding Projective Montgomery curve is the group $(M_{A,B}(\mathbb{F}P^2), \odot_M^{Pro})$, with:
+    \begin{itemize}
+        \item The set of points $M_{A,B}(\mathbb{F}P^2)$:
+        \begin{align*}
+            M_{A,B}(\mathbb{F}P^2)=\{[X:Y:Z]\in\mathbb{F}P^2|B\cdot Y^2\cdot Z=X^3+A\cdot X^2\cdot Z+X\cdot Z^2\}
+        \end{align*}
+        Here, $[0:1:0]$ corresponds to the point at infinity $\mathcal{O}$ of the affine form.
+        \item The group law $\odot_M^{Pro}$:\\
+        Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)$. 
+        To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
+        Formally:
+        {\setlength{\mathindent}{0pt}
+        \begin{align*}
+            P_1\odot_M^{Pro} P_2 = I(I^{-1}(P_1)\odot_M^{Aff}I^{-1}(P_2))
+            % P_1\odot_M^{Pro} P_2 =\begin{cases}
+            %     P_1, &\quad\text{if } P_2=[0:1:0]\\
+            %     P_2, &\quad\text{if } P_1=[0:1:0]\\
+            %     [0:1:0], &\quad\text{if } [X_1:Y_1:Z_1]\\
+            %     &\quad\phantom{\text{if }}\:=[X_2:-Y_2:Z_2]\\
+            %     TangentRule([X_1:Y_1:Z_1]), &\quad\text{if } P_1=P_2 \text{ and } Y_1\neq 0\\
+            %     ChordRule([X_1:Y_1:Z_1], [X_2:Y_2:Z_2]), &\quad\text{otherwise}
+            % \end{cases}
+        \end{align*}
+        }
+        The circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_\odot}$ to compute $P_1\odot_M^{Pro} P_2$ is illustrated in \cref{fig:circuit:groupLawProjectiveMontgomery}.
+        % $TangentRule$ and $ChordRule$ are defined in \cref{alg:tangentRuleProjectiveMontgomery} and \cref{alg:chordRuleProjectiveMontgomery}.
+        % Here, we follow the implementation from \cite{farashahi_faster_2024}.
+        % Here, $I$ converts points from affine representation to projective representation, and $I^{-1}$ executes the reverse conversion.
+        % $I$ and $I^{-1}$ are introduced in \cref{sec:coordinateTranformation}.
+    \end{itemize}
+    The neutral element of $M_{A,B}(\mathbb{F}P^2)$ is $[0:1:0]$.
+    For $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P)$, the inverse element $P^{-1}$ is defined as $P^{-1}:=[X:-Y:Z]$.
+\end{definition}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/ellipticCurves/GroupLawProjectiveMontgomery.pdf}
+    \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_\odot}$ for computing $P_1\odot_M^{Proj}P_2$ with $P_1, P_2\in M_{A,B}(\mathbb{F}P^2)$.
+    Here, we use $\mathfrak{C}_{I^{-1}}$ (\cref{fig:circuit:projToAff}), $\mathfrak{C}_{I}$ (\cref{fig:circuit:affToProj}) and $\mathfrak{C}_{M_{A,B}(\mathbb{F})\_\odot}$ (\cref{fig:circuit:groupLawAffineMontgomery}) as building blocks.
+    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    }
+    \label{fig:circuit:groupLawProjectiveMontgomery}
+\end{figure}
+
+% \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Tangent Rule used to compute $P\odot_M^{Pro} P$ where $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$.}
+%     \label{alg:tangentRuleProjectiveMontgomery}
+%     \begin{algorithmic}
+%     \Procedure{$TangentRule$}{$[X:Y:Z]$}
+%         \State $I\gets 3X^2+2AXZ+Z^2$
+%         \State $H\gets 2BYZ$
+%         \State $X'\gets BI^2HZ^2-(AZ^2+2XZ)H^3$
+%         \State $Y'\gets -BI^3Z^2+(AZ^2+3XZ)IH^2-YZH^3$
+%         \State $Z'\gets H^3Z^2$
+%         \State \Return $[X':Y':Z']$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+% 
+% \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+%     \caption{Projective Chord Rule used to compute $P_1\odot_M^{Pro} P_2$ where $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, $P_1\neq P_2$ and $P_1\neq P_2^{-1}$.}
+%     \label{alg:chordRuleProjectiveMontgomery}
+%     \begin{algorithmic}
+%     \Procedure{$ChordRule$}{$[X_1:Y_1:Z_1], [X_2:Y_2:Z_2]$}
+%         \State $I\gets Y_2Z_1-Y_1Z_2$
+%         \State $H\gets X_2Z_1-X_1Z_2$
+%         \State $X'\gets BI^2HZ_1Z_2-(AZ_1Z_2+X_1Z_2+X_2Z_1)H^3$
+%         \State $Y'\gets -BI^3Z_1Z_2+(AZ_1Z_2+2X_1Z_2+X_2Z_1)IH^2-Y_1Z_2H^3$
+%         \State $Z'\gets H^3Z_1Z_2$
+%         \State \Return $[X':Y':Z']$
+%     \EndProcedure
+%     \end{algorithmic}
+% \end{Algorithmus}
+
+% \subsection{Transforming between Projective and Affine Coordinates}
+% \label{sec:coordinateTranformation}
+% As mentioned earlier, we will use both the projective and affine representation of elliptic curves in our voting schemes.
+% Therefore, we need to be able to convert from an affine elliptic curve $M_{A,B}(\mathbb{F})$ to a corresponding projective elliptic curve $M_{A,B}(\mathbb{F}P^2)$ and vice versa.
+% 
+% \begin{definition}[Coordinate Transformation]
+%     \label{def:coordinateTransformation}
+%     Let $(\mathbb{F}, +, \cdot)$ be a finite field of order $q$ with $q>3$. 
+%     % Let $a,b\in \mathbb{F}$ with $4a^2 + 27b^2\neq 0$. 
+%     Let $\mathbb{F}P^2$ be the projective plane of $\mathbb{F}$.
+%     Then, the function $I:\mathbb{F}^2\cup\{\mathcal{O}\}\to\mathbb{F}P^2$ converts points from affine representation to projective representation.
+%     Consequently, $I^{-1}:\mathbb{F}P^2\to\mathbb{F}^2\cup\{\mathcal{O}\}$ converts points from projective representation to affine representation.
+%     Here, we define:
+%     \begin{align*}
+%         I(P) &:= \begin{cases}
+%             [x:y:1], \quad\text{if } P\neq\mathcal{O}, \text{ with } P=(x,y)\\
+%             [0:1:0], \quad\text{otherwise}
+%         \end{cases}\\
+%         I^{-1}([X:Y:Z]) &:= \begin{cases}
+%             \left(\frac{X}{Z}, \frac{Y}{Z}\right), \quad\text{if } Z\neq 0\\
+%             \mathcal{O}, \quad\text{otherwise}
+%         \end{cases}
+%     \end{align*}
+% \end{definition}
 
 %Note that this conversion works the same for Short Weierstrass elliptic curves and Montgomery Curves which are introduced next.
 
@@ -553,7 +677,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
 
 \subsubsection{The Montgomery Ladder}
 \label{section:ellipticCurves:montgomeryLadder}
-The Montgomery Ladder is based on the Square and Multiply approach presented earlier in \cref{alg:fastExp}.
+The Montgomery Ladder is based on the Square and Multiply approach presented earlier in \cref{alg:fastExp} and was presented first by Montgomery \cite{montgomery_speeding_1987}.
 Analogously to Square and Multiply, we can compute exponentiations $P^k$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$.
 However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^k)$ based on $x(P)$. 
 The Montgomery Ladder Algorithm computes $x(P^k)$ along with $x(P^{k+1})$ which we need later on to recover the $Y$ coordinate of $P^k$.
@@ -601,13 +725,14 @@ A proof of correctness of the $Montgomery\text{-}Ladder$ is given in section 4.1
     \includegraphics[scale=.7]{graphics/ellipticCurves/MontgomeryLadder.pdf}
     \caption{Circuit $\mathfrak{C}_{Montgomery\text{-}Ladder}$ for computing $x(P^k), x(P^{k+1})$ according to $Montgomery\text{-}Ladder(x(P), (k_0,\dots, k_{l-1}))$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$ and $(k_0,\dots, k_{l-1})$ is the binary representation of $k=\sum\limits_{i=0}^{l-1}k_i2^i$.
+    Furthermore, we use $\mathfrak{C}_{xDbl}$ (\cref{fig:circuit:xDbl}), $\mathfrak{C}_{xAdd}$ (\cref{fig:circuit:xAdd}) and $\mathfrak{C}_{xIf\text{-}Else}$ (\cref{fig:circuit:xIfElse}) as building blocks.
     }
     \label{fig:circuit:montgomeryLadder}
 \end{figure}
 
 \newpage
 
-Note that this is not the standard version of the Montgomery Ladder but slightly changed and originally intendended for constant-time execution \cite{costello_montgomery_2018}.
+Note that this is not the standard version of the Montgomery Ladder but slightly changed and originally intendended for constant-time execution \cite{costello_montgomery_2018,montgomery_speeding_1987}.
 In the standard version of the Montgomery Ladder algorithm, we require the most significant bit of the exponent $k_{l-1}$ to be $1$. 
 However, this means that the length of the bitstring representing $k$ changes based on the exponent $k$.
 When we implement the Montgomery Ladder in a ciruit for our voting scheme this is problematic.
@@ -650,7 +775,7 @@ A proof of this theorem can be found in section B in the Appendix of \cite{goos_
     \includegraphics[scale=.7]{graphics/ellipticCurves/OkSakYRecovery.pdf}
     \caption{Circuit $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$ for computing $Q_{rec}=[X_{Q_{rec}}:Y_{Q_{rec}}:Z_{Q_{rec}}]$ according to $OkSak\text{-}Y\text{-}Recovery(P, x(Q), x(P\odot_M^{Pro}))$.
     Here, $P=[X_P:Y_P:Z_P],P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$, with $Y_P\neq 0$.
-    The circuit $\mathfrak{C}_{division}$ (\cref{fig:circuit:division}) is used to compute output $\frac{x}{y}$ for inputs $x$ and $y$.
+    Furthermore, we use $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as a building block.
     }
     \label{fig:circuit:okSakYRecovery}
 \end{figure}
@@ -686,7 +811,9 @@ In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sa
     \includegraphics[scale=.7]{graphics/ellipticCurves/NormProjective.pdf}
     \caption{Circuit $\mathfrak{C}_{Norm\text{-}Projective}$ for computing $P_{norm}:=Norm\text{-}Projective(P)$.
     Here, $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
-    The circuit $\mathfrak{C}_{Pro\_If\text{-}Else}$ (\cref{fig:circuit:proIfElse}) implements branching for projective points.
+    Furthermore, we use $\mathfrak{C}_{Safe\text{-}Division}$ (\cref{fig:circuit:safeDivision}), $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}) and $\mathfrak{C}_{Pro\_If\text{-}Else}$ (\cref{fig:circuit:proIfElse}) as building blocks.
+    % The circuit $\mathfrak{C}_{Pro\_If\text{-}Else}$ (\cref{fig:circuit:proIfElse}) implements branching for projective points.
+    Note, that we cannot use $\mathfrak{C}_{Division}$ here, since $\frac{X}{Z}$ and $\frac{Y}{Z}$ are not computable if $Z=0$.
     }
     \label{fig:circuit:normProjective}
 \end{figure}
@@ -736,6 +863,7 @@ We mostly follow the implementation in \cite{huber_hicolasnuberballotsnarks_2024
     \includegraphics[scale=.7]{graphics/ellipticCurves/LadderYRecovery.pdf}
     \caption{Circuit $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ for computing $P_{rec}^k$ according to $Ladder\text{-}Y\text{-}Recovery(P, x(P^k), x(P^{k+1}))$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$ where $k$ can be represented as a bitstring of length $l$.
+    Furthermore, we use $\mathfrak{C}_{OkSakYRecovery}$ (\cref{fig:circuit:okSakYRecovery}), $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}), $\mathfrak{C}_{Pro\_If\text{-}Else}$ (\cref{fig:circuit:proIfElse}) and $\mathfrak{C}_{Norm\text{-}Projective}$ (\cref{fig:circuit:normProjective}) as building blocks.
     }
     \label{fig:circuit:ladderYRecovery}
 \end{figure}
@@ -771,8 +899,8 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
     \includegraphics[scale=.7]{graphics/ellipticCurves/MontgomeryExp.pdf}
     \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ for computing $P^k$ according to $M\_Exp(P, k)$.
     Here, $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$ where $k$ can be represented as a bitstring of fixed length $l$.
-    We utilize circuits $\mathfrak{C}_{x}$ (\cref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits(l)}$ (\cref{fig:circuit:numBits}), $\mathfrak{C}_{reverse(l)}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\cref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\cref{fig:circuit:ladderYRecovery}) as building blocks.
-    The circuit $\mathfrak{C}_{reverse(l)}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs.
+    We utilize circuits $\mathfrak{C}_{x}$ (\cref{fig:circuit:quotientMap}), $\mathfrak{C}_{Num2Bits(l)}$ (\cref{fig:circuit:num2Bits}), $\mathfrak{C}_{Reverse(l)}$, $\mathfrak{C}_{Montgomery\text{-}Ladder}$ (\cref{fig:circuit:montgomeryLadder}) and $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ (\cref{fig:circuit:ladderYRecovery}) as building blocks.
+    The circuit $\mathfrak{C}_{Reverse(l)}$ (\cref{fig:circuit:reverse}) just reverses the order of the individual inputs.
     }
     \label{fig:circuit:montgomeryExp}
 \end{figure}
@@ -824,6 +952,7 @@ As with Montgomery Curves, we introduce Twisted Edwards curves similarly to \cit
     \centering
     \includegraphics[scale=.7]{graphics/ellipticCurves/TEGroupLaw.pdf}
     \caption{Circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ computing $P_1\odot_{TE}P_2$ for $P_1, P_2\in TE_{a,d}(\mathbb{F})$.
+    Here, we use $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as a building block.
     }
     \label{fig:circuit:teGroupLaw}
 \end{figure}
@@ -876,7 +1005,7 @@ $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ (\cref{fig:circuit:teIfEls
 \subsection{Isomorphism with Montgomery Curves}
 For every Twisted Edwards curve, there is an isomorphic Montgomery curve and vice versa.
 Thus, we can transform between these two representations freely.
-Additionally, it is typically quite simple to switch the two curves out for each other in most use cases such as our voting schemes.
+Additionally, it is straightforward to replace one representation with the other in most use cases such as for our voting schemes.
 
 \begin{theorem}[Twisted Edwards-Montgomery Isomorphism]
     \label{theorem:TEMIsomorphism}

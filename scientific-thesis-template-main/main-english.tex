@@ -98,6 +98,17 @@
 \newcommand{\increasebracketdepth}{\stepcounter{bracketdepth}}
 \newcommand{\decreasebracketdepth}{\addtocounter{bracketdepth}{-1}}
 
+% New definitions
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+\algnewcommand\Assert[1]{\State \algorithmicassert(#1)}%
+% New "environments"
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
 %\SaveVerb{BN254}|BN254|
 
 % CIRCOM
@@ -221,19 +232,21 @@
 %auch im Stil vom Inhaltsverzeichnis
 \section*{Abstract}
 
-In today's world, the necessity of secure e-voting schemes is undisputed. 
+As e-voting schemes become increasingly prevalent, ensuring their security becomes very important.
 In many cases, Zero Knowledge Proofs (ZKPs) are used to allow users to prove the validity of their (encrypted) votes without revealing them. 
-One class of ZKPs that can be used to prove (essentially) arbitrary valid statements are General Purpose ZKPs (GPZKPs) with Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) being one form often used in practice for efficiency reasons.
+One class of ZKPs that can be used to prove (essentially) arbitrary valid statements are General Purpose ZKPs (GPZKPs).
+Here, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are a type of GPZKPs often used in practice for efficiency reasons as voters are usually resource constrained.
 % Here, for efficiency reasons, Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) are often used in practice.
 
-The feasability of GPZKPs for showing validity of ballots that are component-wise encrypted using Exponential ElGamal (EEG) ciphertexts in voting systems with arbitrary election types and ballot formats using Groth16-SNARKs \cite{groth_size_2016} has been shown by Huber et al. \cite{huber_zk-snarks_2025,huber_kryvos_2022}.
+A typical form of encrypting ballots in e-voting schemes is Exponential ElGamal (EEG) encryption.
+The feasability of GPZKPs for showing validity of ballots that are component-wise encrypted using EEG ciphertexts in voting systems with arbitrary election types and ballot formats using Groth16-SNARKs \cite{groth_size_2016} has been shown by Huber et al. \cite{huber_zk-snarks_2025}.
 To demonstrate the versatility of GPZKPs, the authors implemented ballot validity relations for the different election types Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, the ranked election types Pointlist-Borda and Borda Tournament Style, and Condorcet methods in libsnark and benchmarked their performance.
 
-We extend on this research by implementing ballot validity relations for the same circuits in Circom and generating the \glspl{zkp} using snarkjs.
+We extend on this research by implementing ballot validity relations for the same election types in Circom and generating the ZKPs using snarkjs.
 First, we follow the same approach as Huber et. al. for our implementation using EEG encryption instantiated with Montgomery curves for the encryption of individual ballot entries.
 
-Then, as our main contribution, we introduce a novel variant of EEG encrpytion: Precomputed Powers EEG (PPEEG). 
-By providing some precomputed powers of group elements to the encryption circuit, we reduce the computations needed for ZKPs of ballot validity.
+Then, as our main contribution, we introduce a novel variant of computing EEG ciphertexts: Precomputed Powers EEG (PPEEG). 
+By providing some precomputed powers of group elements to the encryption, we reduce the computations needed for ZKPs of ballot validity.
 Additionally, we instantiate PPEEG encryption with Twisted Edwards curves rather than Montgomery curves reducing the computational effort further.
 
 Furthermore, we improve the performance of the election type specific computations in the ballot validity proofs for several election types, most notably for Condorcet methods.
@@ -247,7 +260,29 @@ Moreover, we can compute ballot validity proofs for ballots with up to $1000$ vo
 %Solely for German courses of study
 \section*{Kurzfassung}
 
-<Kurzfassung der Arbeit>
+Mit der zunehmenden Verbreitung von E-Voting-Systemen wird es immer wichtiger, die Sicherheit in diesen Sytemen zu gewährleisten.
+In vielen Fällen werden Zero Knowledge Proofs (ZKPs) verwendet, um Wählern die Möglichkeit zu geben, die Gültigkeit ihrer (verschlüsselten) Stimmen zu beweisen, ohne sie preiszugeben. 
+Eine Klasse von ZKPs, die zum Beweis von (fast) beliebigen gültigen Aussagen verwendet werden können, sind General Purpose ZKPs (GPZKPs).
+Da Wähler in der Regel nur über begrenzte Ressourcen verfügen, werden in der Praxis oft Zero-Knowledge Succinct Non-interactive Arguments of Knowledge (zk-SNARKs) eingesetzt, welche eine Subform von GPZKPs sind.
+
+Eine typische Form der Verschlüsselung von Stimmzetteln in E-Voting-Systemen ist Exponential ElGamal (EEG) Verschlüsselung.
+Huber et. al. \cite{huber_zk-snarks_2025} haben mittels des Groth16-SNARKs \cite{groth_size_2016} gezeigt, dass GPZKPs eine valide Option für den Nachweis der Gültigkeit von Stimmzetteln sind, die komponentenweise mit EEG-Chiffretexten verschlüsselt sind.
+Diese Beweise haben die Autoren für Wahlsysteme mit beliebigen Wahltypen und Stimmzettelformaten in der Praxis durchgeführt.
+Um die Vielseitigkeit von GPZKPs zu demonstrieren, implementierten die Autoren Relationen in libsnark, um die Gültigkeit von Stimmzetteln für die verschiedenen Wahltypen zu zeigen: Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, die Ranglisten-Wahltypen Pointlist-Borda und Borda Tournament Style sowie Condorcet-Methoden.
+Anschließend, vergleichen sie die Performance der ZKP-Berechnung zwischen den verschiedenen Wahltypen.
+
+Wir bauen auf dieser Forschung auf, indem wir die Relationen für Stimmzettelgültigkeit für dieselben Wahltypen in Circom implementieren und ZKPs mit snarkjs erzeugen.
+Zunächst folgen wir hier demselben Ansatz wie Huber et. al. und verwenden Montgomery-Kurven für die EEG-Verschlüsselung der einzelnen Stimmzettel.
+
+Als Hauptbeitrag unserer Arbeit führen wir eine neue Variante zur Berechnung von EEG-Chiffretexten ein: Precomputed Powers EEG (PPEEG). 
+Hierbei verringern wir die Berechnungen, die für ZKPs der Stimmzettelgültigkeit erforderlich sind, indem wir der Verschlüsselung einige vorberechnete Potenzen von Gruppenelementen zur Verfügung stellen.
+Außerdem verwenden wir bei der PPEEG-Verschlüsselung Twisted-Edwards-Kurven statt Montgomery-Kurven, was den Rechenaufwand weiter verringert.
+
+Darüber hinaus reduzieren wir die wahltypspezifischen Berechnungen in den Beweisen der Stimmzettelgültigkeit für mehrere Wahltypen, insbesondere für Condorcet-Verfahren.
+Diese Verbesserungen sind jedoch in den meisten Fällen vernachlässigbar im Vergleich zu der Verringerung des Rechenaufwands im Verschlüsselungsteil.
+
+Im Vergleich zu den Ergebnissen von Huber et. al. reduzieren wir den Rechenaufwand für den Beweis der Stimmzettelgültigkeit, abhängig von der Metrik, über alle Wahltypen hinweg um $35\%$ bis $82\%$.
+Darüber hinaus können wir Beweise für Stimmzettelgültigkeit mit bis zu $1000$ Stimmen auf einem Standard-PC berechnen, was für fast alle realen Anwendungen der behandelten Wahltypen ausreichend ist.
 
 \cleardoublepage
 
@@ -367,7 +402,7 @@ Moreover, we can compute ballot validity proofs for ballots with up to $1000$ vo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{sections/introduction.tex}
-\input{sections/relatedWork.tex}
+% \input{sections/relatedWork.tex}
 % \input{sections/contributions.tex}
 \input{sections/votingSchemes.tex}
 \input{sections/proofSchemes.tex}

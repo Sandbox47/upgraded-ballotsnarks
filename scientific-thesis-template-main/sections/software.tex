@@ -22,8 +22,7 @@ Moreover, using other backends such as arkworks \cite{yuncong_hu_arkworks_2025} 
 libsnark on the other hand is an End-to-End \gls{zkp} system which implements \glspl{g16snark} and \glspl{snark} based on the approach by Ben-Sasson et. al. \cite{ben-sasson_succinct_2013}.
 
 Additionally, Circom provides higher-level primitives and easier syntax for defining circuits, leading to implementations that are easier to create, use and maintain than in libsnark.
-
-% Moreover, Circom is still being maintaines whereas libsnark 
+Moreover, Circom is still being maintaines whereas libsnark does not support recent recent proof systems and there are no new features being added to it.
 
 \subsection{Syntax}
 The syntax of Circom is similar to that of JavaScript.
@@ -75,7 +74,7 @@ template threeVot() {
 As introduced earlier (\cref{chap:gpzkp}), $\mathfrak{C}_{3\text{-}vot}$ is used to indicate whether a ballot $b=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0), (0,0,1), (0,1,0), (1,0,0)\}$.
 If this is the case, the circuit will produce the outputs $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})=(0,0,0,0)$.
 To use the circuit to assert that a ballot is in $C$, we need to enforce $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})\mbeq(0,0,0,0)$.
-We call this modified circuit $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ (\cref{chap:gpzkp}) and can define this in Circom as \verb|assertThreeVot| (\cref{fig:circom:assertThreeVot}).
+We call this modified circuit $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ (\cref{chap:gpzkp}) and can define this in Circom as \verb|assertThreeVot| (\cref{fig:circom:assertThreeVot}).
 However, to explain the core concepts of Circom, we continue with $\mathfrak{C}_{3\text{-}vot}$ for the rest of this section.
 
 \begin{figure}[h]
@@ -95,7 +94,7 @@ template assertThreeVot() {
 
     0 === (S_1_in + S_2_in + S_3_in)*(1 - S_1_in - S_2_in - S_3_in);
 }\end{lstlisting}
-    \caption{Implementation of $\mathfrak{C}_{assert\text{-}3\text{-}vot}$ in Circom.}
+    \caption{Implementation of $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ in Circom.}
     \label{fig:circom:assertThreeVot}
 \end{figure}
 
@@ -273,7 +272,7 @@ node generate_witness.js vot.wasm input.json witness.wtns   # Create instantiati
 
 In the previous example, Circom \glqq Witness\grqq\ generation is equivalent to circuit execution.
 However, in general, Circom \glqq Witness\grqq generation is more powerful since it is used to \textit{find} values such that the constraints are satisfied.
-We can make use of this for the utility circuit $\mathfrak{C}_{division}$ (\cref{fig:circuit:division}) which computes $\frac{x}{y}$ for inputs $x$ and $y$.
+We can make use of this for the utility circuit $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) which computes $\frac{x}{y}$ for inputs $x$ and $y$.
 The corresponding circom implementation is shown in \cref{fig:circom:division}.
 Here, Circom \glqq Witness\grqq\ generation is employed to find a value $out$ such that the $out\cdot y=x$ which is equivalent to $out=\frac{x}{y}$.
 Achieving the same result with pure circuit execution would be more complicated.
@@ -283,7 +282,7 @@ Achieving the same result with pure circuit execution would be more complicated.
     \begin{minipage}{.48\textwidth}
         \centering
         \includegraphics[scale=.7]{graphics/software/division.pdf}
-        \caption{Circuit $\mathfrak{C}_{division}$ for computing $\frac{x}{y}$ from $x$ and $y$.}
+        \caption{Circuit $\mathfrak{C}_{Division}$ for computing $\frac{x}{y}$ from $x$ and $y$.}
         \label{fig:circuit:division}
     \end{minipage}
     \hfill
@@ -304,12 +303,13 @@ template division() {
 
 component main = division();
 \end{lstlisting}
-    \caption{Implementation of $\mathfrak{C}_{division}$ in Circom.}
+    \caption{Implementation of $\mathfrak{C}_{Division}$ in Circom.}
     \label{fig:circom:division}
     \end{minipage}
 \end{figure}
 
 \section{snarkjs}
+\label{section:software:snarkjs}
 
 snarkjs \cite{jordi_baylina_iden3snarkjs_2025} is used to create \glspl{zkp} for \glspl{r1cs}.
 We choose snarkjs since it is well integrated with Circom.
@@ -344,7 +344,7 @@ For every circuit, we then only need to generate $CRS\text{-}R1CS_r$ and combine
 This can be very efficient compared to generating the full $CRS$ from scratch every time.
 
 \SaveVerb{ptau}|powersoftau.ptau|
-In snarkjs, $CRS\text{-}Universal$ is represented by a \verb|powersoftau.ptau| file, which is typically generated using a \gls{mpc} protocol with several contributions from different sources such as random beacons \cite{nicolas_gailly_league_2025}.\footnote{
+In snarkjs, $CRS\text{-}Universal$ is represented by a \verb|powersoftau.ptau| file, which is typically generated using a \gls{mpc} protocol with several contributions from different sources such as random beacons \cite{nicolas_gailly_league_2025,popper_powers--tau_2024,bowe_scalable_2017}.\footnote{
     For our benchmarks, we used the pregenerated \protect\UseVerb{ptau} files from \cite{jordi_baylina_iden3snarkjs_2025} which have been generated with many contributions from different sources.
 }
 To create $CRS\text{-}R1CS_r$, snarkjs uses \verb|powersoftau.ptau| and the $R1CS$ of a circuit in the form of an \verb|circuit.r1cs| file.
@@ -400,13 +400,15 @@ snarkjs groth16 verify verification_key.json public.json proof.json
 
 \section{SageMath}
 When proving ballot validity, a voter needs to submit the ballot $b$ they chose to a \gls{zps}.
-However, to construct the proof, we also require the corresponding encrpyted ballot $b'$ as well as the public key $pk$ and the randomness $aux^{enc}$ that was used in the computation of $b$.
+However, to construct the proof, we also require the corresponding encrpyted ballot $b'$ as well as the public key $pk$ and the randomness $aux^{Enc}$ that was used in the computation of $b$.
 In case of ranking based voting methods, we also need the private ranking $aux^{Vot}=r$ chosen by the voter to construct the ballot.
 
 In a real world voting system, a voter should only have to choose the ballot $b$ or, in case of ranking based voting schemes, the ranking $r$.
 The rest of the inputs required for the \gls{zkp} of ballot validity should be generated automatically.
 In our implementation, we employ SageMath \cite{matthias_koppe_sagemath_2025} for this purpose.
 SageMath is good choice since the encryption of ballots is defined utilizing finite fields and elliptic curves which are already implemented efficiently in SageMath.
+However, SageMath is not designed for cryptographic purposes and might be susceptible to generic attack strategies such as Side-Channel attacks.
+Therefore, our implementations in SageMath should not be used in practice without thorough security analysis beforehand.
 %Additionally, SageMath is based on Python which makes it easy to integrate into 
 
 In most election types, the voters directly choose their ballots as part of the voting procedure.
@@ -442,3 +444,7 @@ We can also visualize this procedure as illustrated in \cref{fig:sage:groupLaw}.
 \end{figure}
 
 With SageMath, we can then compute both $pk$ and $b'$ utilizing the conversion mechanism and the built-in Short Weeierstrass arithmetic.
+
+Furthermore, a large part of our benchmarking scripts are written in SageMath.
+In addition to the use cases above, we employ SageMath here to generate random ballots in the different election types we consider.
+Then, we use SageMath to create the \verb|input.json| files holding the inputs for our implementation of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ in Circom.

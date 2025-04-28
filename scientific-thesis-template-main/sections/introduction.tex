@@ -17,7 +17,7 @@ For example, Helios 2.0 \cite{adida_electing_2009} and Belenios \cite{cortier_be
 Here, a valid ballot contains as many votes as there are candidates to choose from. 
 Each of the individual votes has to be $0$ or $1$ and voters can select at most one candidate in total meaning that the sum of all individual votes is also required to be $0$ or $1$.
 Helios 2.0 and Belenios implement ballot validity \gls{zkp} based on disjunctive Chaum-Pedersen proofs \cite{chaum_wallet_1993,desmedt_proofs_1994}, which show that each encrypted ballot corresponds to a valid plain ballot. 
-These proofs are composed of individual proofs for each encrypted vote and an additional proof verifying that the aggregated tally can be decrypted to a legal tally in the election.
+These proofs are composed of individual proofs for each encrypted vote verifying that the corresponding plain vote is a bit and an additional proof verifying that the sum of all plain votes in a ballot is a bit.
 
 It is possible to extend this approach to Multi-Vote, where each voter can distribute multiple votes among the candidates with each candidate receiving up to some maximum of votes \cite{adida_electing_2009,cortier_belenios_2019,gaudry_zk_2017}.
 However, Chaum-Pedersen proofs over larger plaintext sets grow inefficient quickly with range-proofs \cite{morais_survey_2019} being a more practical alternative.
@@ -44,17 +44,47 @@ Nevertheless, the proofs of ballot validity remain practical even for complex ch
 
 \section*{Contributions}
 In this work, we implement the same approach as Huber et. al. in Circom and use snarkjs to generate the \glspl{zkp}.
-Additionally, we try to reduce the computational effort needed for the ballot validity proofs by redevolping parts of the corresponding circuits.
+Additionally, we reduce the computational effort needed for the ballot validity proofs by redevolping parts of the corresponding circuits.
 Asserting ballot validity can be split into asserting that the encrypted ballot submitted by a voter belongs to the plain ballot they chose and asserting that the chosen plain ballot is within the set of allowed choices.
 
 % For the majority of covered election types, the computational effort needed to assert that the encrypted ballot submitted by a voter belongs to the plain ballot they chose far exceeds the effort needed to assert that the chosen plain ballot is within the set of allowed choices.
-To improve on the computational effort needed to assert correct encryption, we introduce \gls{ppeeg} encryption, a novel variant of \gls{eeg} encryption.
+To improve on the computational effort needed to assert correct encryption, we introduce \gls{ppeeg} encryption, a novel variant of computing \gls{eeg} ciphertexts.
 Since encrypting a ballot in \gls{eeg} comes down almost exclusively to exponentiating group elements, we aim to reduce the computational effort needed for the corresponding circuit by precomputing some powers of the group element to exponentiate.
 These precomputed powers are then combined within the new exponentiation circuit depending on the concrete choice of exponent.
-Moreover, we explore the use of Twisted Edwards curves as the basis group for the newly introduced encyption scheme \gls{ppeeg}.
-This choice could be adventageuos compared to Montgomery curves used previously by Huber et. al. as the basis for \gls{eeg} encryption since the group law requires significantly less computations for Twisted Edwards curves compared to Montgomery curves.
+Moreover, we explore the use of Twisted Edwards curves as the basis group for \gls{ppeeg}.
+This choice is adventageuos compared to Montgomery curves used previously by Huber et. al. as the basis for \gls{eeg} encryption since the group law requires significantly less computations for Twisted Edwards curves compared to Montgomery curves.
+Note that changing from a Montgomery Curve to a Twisted Edwards curve and vice versa does not influence the security of encryption since both curves can be instantiated to representat the same algebraic group.
 
 Furthermore, we try to reduce the computational effort for asserting that a chosen ballot is within the allowed set of choices.
 However, since the computational effort needed to assert correct encryption far exceeds the effort needed to assert membership of the set of allowed choices in most cases, we reuse the implementations from Huber et. al. for most election types here.
 
 Finally, we benchmark our implementations of ballot validity circuits and compare the results to those obtained by Huber et. al.
+With the improvements to \gls{eeg}, we manage to reduce the constraint count, an important and system independent metric for measuring computational effort, by more than $50\%$ for the circuit asserting correct encryption.
+Furthermore, we manage to reduce the constraint count for asserting membership of the set of allowed choices by up to $50\%$ for some of the considered election types.
+These efficience gains also allow us to extend the benchmarks from at most $300$ ballot entries in the implementation by Huber et. al. \cite{huber_zk-snarks_2025} to up to $1000$ ballot entries in our implemenation.
+
+\section*{Overview}
+
+This work can be subdivided into six parts:
+\begin{enumerate}
+    \item First, we give an introduction to voting schemes and discuss several security aspects of them.
+    Most importantly, we introduce the concept of ballot validity in detail and propose \glspl{gpzkp} as one method of asserting this.
+    Additionally, we show how ballot validity can be placed in the context of voting schemes.
+    \item Next, we present the algebraic constructions used to create \glspl{gpzkp}. 
+    Here, we introduce algebraic functions and algebraic circuits.
+    Then, we show how algebraic circuits can be represented by \glspl{r1cs} and how we can transform those to \glspl{qap}.
+    Additionally, we show how a \glspl{g16snark} use \glspl{qap} as a basis to create \glspl{gpzkp}.
+    \item After that, we cover the circuits used to show correct encryption of ballots.
+    Here, we explain \gls{eeg} encryption and introduce \gls{ppeeg} encryption as a slight modification of this.
+    Then, we present Montgomery curves and Twisted Edwards curves as the basis groups for \gls{eeg} and \gls{ppeeg}.
+    \item Then, we show how the voting schemes introduced previously can be instantiated to cover the different election types.
+    Here, we use \gls{g16snark} instantiated with the \verb|BN254| curve as the \gls{zps} operating over the \gls{eeg} or \gls{ppeeg} based circuits to assert correct encryption of ballots.
+    Additionally, we instantiate \gls{eeg} and \gls{ppeeg} with a subgroup of a Curve25519 instantiation as the Montgomery or Twisted Edwards curve.
+    Furthermore, to assert that a submitted ballot was chosen from the allowed set of choices, we introduce different circuits for the different election types.
+    We cover the election types Single-Vote, Multi-Vote and the variations Line-Vote and \gls{mwr}, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment.
+    \item At the end, we briefly cover the Software we used for our implementations.
+    Here, we used Circom to create the circuits, snarkj to compute the \glspl{zkp} and SageMath for utilities, benchmarking setup and testing.
+    \item Finally, we present our results, discuss them and draw a conclusion.
+    Furthermore, we give brief outlook on possible further work.
+\end{enumerate}
+

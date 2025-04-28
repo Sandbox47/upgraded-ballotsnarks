@@ -21,6 +21,11 @@ proving time and verification time\footnote{
     Therefore, we do not compare the verification times in more detail.
 }.
 
+Note that the proof sizes obtained with our implementation are constant, since we use \glspl{g16snark}.
+As introduced in \cref{alg:proveG16}, Groth16 proofs always consist of three elements $(g_1^A,g_1^C,g_2^B)$.
+These are stored in a \verb|proof.json| file by snarkjs as presented in \cref{section:software:snarkjs} which takes up $806$ bytes.
+Therefore, we will not consider proof sizes further in our results.
+
 We compare our findings to the results obtained by Huber et. al. using libsnark \cite{huber_zk-snarks_2025}.\footnote{
     \label{footnote:noCompForCRSGenerationTimes}
     Note that Huber et. al. did not record $CRS$ generation times.
@@ -28,6 +33,15 @@ We compare our findings to the results obtained by Huber et. al. using libsnark 
     However, in practical applications of voting schemes, the $CRS$ for $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ would likely be included in the voting software or be publicly accessible.
     Specifically, such a software would either include multiple $CRS$ for some selected election types with specified parameters or publish this information to their \gls{pbb}.
     Then, the $CRS$ generation times are irrelevant.
+}\footnote{
+    \label{footnote:plottingMethod}
+    We plot our results and the result by Huber et. al. as the individual data points recorded.
+    Additionally, we use regression polynomials of suitable degrees to show overall trends.
+}\footnote{
+    \label{footnote:resultsFromImplementation}
+    Note that the constraint counts we present for the implementation by Huber et. al. were obtained from their implementation.
+    While this matches the constraints they reported in their work for the most part, some constraint counts are slightly different.
+    Most notably, the constraint count for $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ with a $255$ bit exponent is given as $5084$ in their paper whereas we obtained $5593$ constraints using their implementation.
 }
 
 As in the work of Huber et. al., all our benchmarks were conducted on an ESPRIMO Q957 ($64$-bit, i5-7500T CPU @ 2.70GHz, $16$GB RAM).
@@ -35,7 +49,7 @@ As in the work of Huber et. al., all our benchmarks were conducted on an ESPRIMO
 We observed that the $CRS$ generation phase and the $16$GB of RAM are the main limiting factor.
 This allows us to compute \glspl{g16snark} over circuits with roughly $6$ million times at most.
 Therefore, computing and verifying \glspl{g16snark} over a circuit with an even higher constraint count could be possible on our test system if the $CRS$ for this circuit is provided.
-However, even with a $6$ million constraint limit, proving times reach $400$s and $CRS$ sizes reach $3.6$GB which is at the limit for most practical applications of voting schemes. \todo{Is it? Find reference.}
+However, even with a $6$ million constraint limit, proving times reach $400$s and $CRS$ sizes reach $3.6$GB which is at the limit for most practical applications of voting schemes running on standard PCs.
 
 \section{Asserting Encryption via $\mathfrak{C}_C^{Enc}$}
 \label{section:results:assertEncryption}
@@ -141,14 +155,21 @@ However, we also tested our implementation with up to $250$ bits per ballot entr
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/encryption/Comparison/EncryptionComparison_allMetrics.pdf}
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/encryption/Comparison/EncryptionComparison_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/results/EncryptionComparison_allMetrics.pdf}
     \caption{Number of constraints, proving times and $CRS$ sizes needed for the \gls{g16snark} over for $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves in Circom and using Montgomery curves in libsnark.\cref{footnote:noCompForCRSGenerationTimes}}
     \label{fig:plots:Circom_libsnark_Enc}
 \end{figure}
 
 Due to the componentwise encryption of ballots, the constraint count scales perfectly linear with the number of entries $m$ in a ballot.
 Note that the encryption of an individual ballot entry $v$ using \gls{eeg} or \gls{ppeeg} encryption is dominated by the three group exponentiations $g^r$, $g^v$ and $pk^r$, where $r\probgets \{0,\dots, q\}$.
-In particular, we report constraint counts for the circuits $\mathfrak{C}_{\mathbb{G}\_Exp}$ and $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ respectively as shown in \cref{tab:theoreticalConstraintCounts}.
+In particular, we report constraint counts for the circuits $\mathfrak{C}_{\mathbb{G}\_Exp}$ and $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ respectively as shown in \cref{tab:theoreticalConstraintCounts}.\footnote{
+    \label{footnote:libsnarkMontgomeryLadderWrong}
+    Note that the implementation of $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ we presented earlier (\cref{fig:circuit:montgomeryExp}) is quite different from the implementation by Huber et. al.
+    Huber et. al. assumed that the leading bit of the exponent is always $1$ which is not the case.
+    Furthermore, Huber et. al. provided the exponent in binary representation whereas we compute this representation in the circuit.
+    Additionally, the 
+}
 
 \begin{table}[h]
     \centering
@@ -163,17 +184,17 @@ In particular, we report constraint counts for the circuits $\mathfrak{C}_{\math
         \hline
         Bits & \multicolumn{3}{c|}{Constraint count} \\
         \hline
-        $1$  & \todo{} & $87$ & $6$\\
-        $16$ & \todo{} & $372$ & $156$\\
-        $32$ & \todo{} & $676$ & $316$\\
+        $1$  & $5$ & $87$ & $6$\\
+        $16$ & $335$ & $372$ & $156$\\
+        $32$ & $687$ & $676$ & $316$\\
         \hline
-        $255$ & $5084$ & $4913$ & $2546$\\
+        $255$ & $5593$ & $4913$ & $2546$\\
         \hline
     \end{tabular}
     \caption{Number of constraints needed to compute group exponentiation of an element $x$ represented with several different numbers of bits. 
     Note that to compute the \gls{eeg} or \gls{ppeeg} encryption of a ballot entry $v$, that is represented by $nBits$ Bits, we need to compute three exponentiations $g^v$, $g^r$ and $pk^r$.
     Here, $r\probgets \{0,\dots, q\}$ is a $255$ bit value for our choice of the base field $\mathbb{F}_q$.
-    Therefore, we need to compute two exponentiations with $255$ bits and one exponentiation with $nBits$ bits.
+    Therefore, we need to compute two exponentiations with $255$ bits and one exponentiation with $nBits$ bits.\cref{footnote:libsnarkMontgomeryLadderWrong}
     }
     \label{tab:theoreticalConstraintCounts}
 \end{table}
@@ -207,14 +228,17 @@ The findings shown in \cref{fig:plots:Circom_libsnark_Enc} can also be summarize
 \end{table}
 
 Our implementation with Montgomery curves uses roughly $13.1\%$ less constraints than the implementation of Huber et. al. as shown in \cref{tab:encryptionResults}.
-This can attributed partly to slightly different implementations of the exponentiation circuit $\mathfrak{C}_{\mathbb{G}\_Exp}$ for Montgomery curves in Circom and in libsnark.
+Additionally, we report more constraints for $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ with small bit sizes for the exponent but roughly $12.2\%$ less constraints with large bit sizes for the exponent (\cref{tab:theoreticalConstraintCounts}).
+This can be attributed partly to different implementations of the exponentiation circuit $\mathfrak{C}_{\mathbb{G}\_Exp}$ for Montgomery curves in Circom and in libsnark.
 While Huber et. al. use the projective and affine representation of Montgomery points in their implementation, we use only the projective representation.
 This affects some of the subcircuits in $\mathfrak{C}_{M_{126932, 1}(\mathbb{F}_qP^2)\_Exp}$ such as the Okeya-Sakurai Y-Recovery circuit $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$.
 Here, we report $11$ constraints whereas Huber et. al. report $39$ constraints.
 Additionally, the circuit $\mathfrak{C}_{M_{126932, 1}(\mathbb{F}_qP^2)\_\odot}$ we use to compute the group law for the Montgomery curve needs $44$ constraints in our implmentation whereas Huber et. al. reported $86$ constraints.
-In addition to the exponentiations $g^r, g^v$ and $pk^r$, this also influences the computation of the second entry in the ciphertext $Enc(v, pk)=(g^r, g^v \odot_M^{Pro} pk^r)$.
+Furthermore, Huber et. al. assumed that the leading bit of the exponent is always $1$ which is not the case.
+Finally, Huber et. al. provided the exponent in binary representation whereas we compute this representation in the circuit.
+In addition to the exponentiations $g^r, g^v$ and $pk^r$, the difference in constraint counts also influences the computation of the second entry in the ciphertext $Enc(v, pk)=(g^r, g^v \odot_M^{Pro} pk^r)$.
 The $6$ million constraint limit of our test machine is reached for for about $600$ ballot entries.
-Our implementation with Twisted Edwards curves needs roughly $55.6\%$ less constraints than the implementation with Montgomery curves by Huber et. al. as shown in \cref{tab:plots:encryptionResults}.
+Our implementation with Twisted Edwards curves needs roughly $55.6\%$ less constraints than the implementation with Montgomery curves by Huber et. al. as shown in \cref{tab:encryptionResults}.
 This can be attributed to the fundamental difference between the \gls{eeg} and \gls{ppeeg} encryption scheme (\cref{chap:elGamalEncryption}).
 The reduction in constraints compared to the implementation with Montgomery curves allows us to extend the benchmarks up to $1000$ ballot entries before hitting the $6$ million constraint limit of our test machine.
 
@@ -237,12 +261,15 @@ Similarly to the proving times there is a jump in $CRS$ sizes at $150$, $300$ an
 However, this is less pronounced than for the proving times and we contribute it to the snarkjs implementation of the Groth16 setup algorithm \cite{jordi_baylina_iden3snarkjs_2025}.
 
 Lastly, the $CRS$ generation times are about $70\%$ lower in our implementation using Twisted Edwards curves compared to using Montgomery curves.
-This can be partly attributed to the lower constraint count of the Twisted Edwards implementation. \todo{This still leaves $20\%$ unaccounted for. What is the reason for this?}
-Note that the $CRS$ generation times reach well over $1$h which is infeasible to compute for an individual voter. 
-However, in case of pre-generated $CRS$ which are downloaded together with the voting software, this is not a problem. \cref{footnote:noCompForCRSGenerationTimes}
+Most of this improvement can be attributed to the lower constraint count of the Twisted Edwards implementation. %\todo{This still leaves $20\%$ unaccounted for. What is the reason for this?}
+Note that $CRS$ generation times reach well over $1$h.
+However, in practice, $CRS$ will not be generated by a single voter.
+Instead, one option is that the election organizers generate $CRS$ before the election and include this in the voting software.
+% This which is infeasible to compute for an individual voter. 
+In this case, high $CRS$ generation times are not a problem. \cref{footnote:noCompForCRSGenerationTimes}
 
 \section{Asserting Choice space membership via $\mathfrak{C}_C^{Vot}$}
-\label{section:results:asertVoting}
+\label{section:results:assertVoting}
 The circuit $\mathbb{C}_C^{Vot}$ is used to assert that a ballot $b$ is part of the choice space $C$ (\cref{section:ourVotingSchemes:ballotValidity}).
 Here, the ballot $b$ and depending on the election type also a ranking $r=aux^{Vot}$ are provided as inputs to the circuit.
 %We use $32$ Bits to represent the individual ballot entries in every voting scheme.
@@ -271,7 +298,8 @@ The connection of the different metrics to the constraint count was discussed in
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/linear/VotingComparisonLinear_allMetrics.pdf}
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/linear/VotingComparisonLinear_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/results/VotingComparisonLinear_allMetrics.pdf}
     \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over for $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
     \label{fig:plots:Circom_libsnark_Vot_Linear}
 \end{figure}
@@ -341,7 +369,8 @@ The connection of the different metrics to the constraint count was discussed in
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/results/VotingComparisonQuadratic_allMetrics.pdf}
     \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over for $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales quadratically with the candidate count.}
     \label{fig:plots:Circom_libsnark_Vot_Quadratic}
 \end{figure}
@@ -395,7 +424,7 @@ Therefore, one circuit may produce different constraint counts in Circom and in 
 In the other Borda variant, \gls{bts}, our implementation reduces the constraints by about $\%25.9$ when compared to the implementation of Huber et. al.
 Both implementations are very similar and use helper circuits $\mathfrak{C}_{count\text{-}greater}$ to count how many entries in the ranking are greater than the current one (\cref{fig:circuit:btsComputeBallot}).
 In these circuits, we need to compute whether one value $r_i$ in the ranking is greater than another value $r_j$ in the ranking.
-Our implementation uses the template circuit $\mathfrak{C}_{is\text{-}greater}$ from circomlib \cite{jordy_baylina_iden3circomlib_2025} (\cref{fig:todo}) which is built on arithmetic computations to the compare numbers.
+Our implementation uses the template circuit $\mathfrak{C}_{Is\text{-}Greater}$ from circomlib \cite{jordy_baylina_iden3circomlib_2025} (\cref{fig:circuit:isGreater}) which is built mostly on arithmetic computations to the compare numbers.
 Huber et. al. use an implementation that requires us to compute the binary representation of a temporary signal in the circuit \cite{huber_hicolasnuberballotsnarks_2024}.
 We attribute the reduction of constraints mostly to this difference in implementation.
 
@@ -431,23 +460,28 @@ However, the remaining results are also presented in \cref{todo}. \todo{Make in 
 \begin{figure}[h]
     \centering
     \begin{minipage}{.48\textwidth}
-        \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/CombinedComparisonBorda_allMetrics.pdf}
     \end{minipage}
     \hfill
     \begin{minipage}{.48\textwidth}
-        \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Multi/CombinedComparisonMulti_allMetrics.pdf}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Multi/CombinedComparisonMulti_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/Multi/CombinedComparisonMulti_allMetrics.pdf}
     \end{minipage}
     \\
     \begin{minipage}{.48\textwidth}
-        \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Single/CombinedComparisonSingle_allMetrics.pdf}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Single/CombinedComparisonSingle_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/Single/CombinedComparisonSingle_allMetrics.pdf}
     \end{minipage}
     \hfill
     \begin{minipage}{.48\textwidth}
-        \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Condorcet/CombinedComparisonCondorcet_allMetrics.pdf}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Condorcet/CombinedComparisonCondorcet_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/Condorcet/CombinedComparisonCondorcet_allMetrics.pdf}
     \end{minipage}
     \\
     \begin{minipage}{.48\textwidth}
-        \includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/MajorityJudgment/CombinedComparisonMajorityJudgment_allMetrics.pdf}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/MajorityJudgment/CombinedComparisonMajorityJudgment_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/MajorityJudgment/CombinedComparisonMajorityJudgment_allMetrics.pdf}
     \end{minipage}
     \caption{Number of constraints needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark.}
     \label{fig:plots:Combined}
@@ -455,7 +489,7 @@ However, the remaining results are also presented in \cref{todo}. \todo{Make in 
 
 As presented previously, the circuit $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ is a combination of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
 Therefore, the constaint count of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is always the sum of the constraint counts of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
-From the results presented in \cref{section:results:assertEncryption} and \cref{section:results:asseertVoting} we can conclude that the constraints contributed by $\mathfrak{C}_C^{Vot}$ are negligible compared to the constraints generated by $\mathfrak{C}_C^{Enc}$.
+From the results presented in \cref{section:results:assertEncryption} and \cref{section:results:assertVoting} we can conclude that the constraints contributed by $\mathfrak{C}_C^{Vot}$ are negligible compared to the constraints generated by $\mathfrak{C}_C^{Enc}$.
 However, to evaluate in detail what portions of the total constraint count are contributeded by which circuit, we compute how many constraints are needed in the different elections per ballot entry.
 Then, we compare this to how many constraint are needed for the pure encryption of a $1$ bit or $32$ bit ballot entry since we use $1$ or $32$ bits to represent the individual ballot entries in all elections.
 We use the constraint count for the largest candidate count available to compute the constraints needed per ballot entry in an election.\footnote{
@@ -480,37 +514,39 @@ The results of this are shown in \cref{tab:combinedResults}.
         \hline
                                                                                                                                                       & Lang. $\to$                                & \multicolumn{2}{c|}{\textit{libsnark}}                           & \multicolumn{4}{c|}{Circom, snarkjs}                                      \\ \hline
                                                                                                                                                       & Curve $\to$                                & \multicolumn{4}{c|}{Montgomery}                                                                           & \multicolumn{2}{c|}{Twisted Ed.} \\ \hline
-        \multirow{2}{*}{Constraints of $\mathfrak{C}_C^{Enc}$ [$1$ ballot entry]}                                                                     & \multicolumn{1}{c|}{$1$ bit}               & \multicolumn{2}{c|}{$11509$}                                     & \multicolumn{2}{c|}{$9966$}            & \multicolumn{2}{c|}{$5105$}      \\
-                                                                                                                                                      & \multicolumn{1}{c|}{$32$ bits}             & \multicolumn{2}{c|}{$12222$}                                     & \multicolumn{2}{c|}{$10555$}           & \multicolumn{2}{c|}{$5415$}      \\ \hline
+        \multirow{2}{*}{Constraints of $\mathfrak{C}_C^{Enc}$ [$1$ ballot entry]}                                                                     & \multicolumn{1}{c|}{$1$ bit}               & \multicolumn{2}{c|}{$11503$}                                     & \multicolumn{2}{c|}{$9966$}            & \multicolumn{2}{c|}{$5105$}      \\
+                                                                                                                                                      & \multicolumn{1}{c|}{$32$ bits}             & \multicolumn{2}{c|}{$12216$}                                     & \multicolumn{2}{c|}{$10555$}           & \multicolumn{2}{c|}{$5415$}      \\ \hline
         \multirow{2}{*}{Choice Space}                                                                                                                 & \# Ballot                                  & \multicolumn{6}{c|}{Constraints per Ballot Entry}                                                                         \\
                                                                                                                                                       & Entries                                    & \multicolumn{6}{c|}{(+ ratio between $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$)}                                                                                                                        \\ \hline\hline
-        \multirow{2}{*}{$C_{Single(cand)}$}                                                                                                           & \multirow{14}{*}{$cand$}                   & \multicolumn{2}{c|}{$11510$}                                     & \multicolumn{2}{c|}{$10556$}           & \multicolumn{2}{c|}{$5416$}      \\
+        \multirow{2}{*}{$C_{Single(cand)}$}                                                                                                           & \multirow{14}{*}{$cand$}                   & \multicolumn{2}{c|}{$11504$}                                     & \multicolumn{2}{c|}{$10556$}           & \multicolumn{2}{c|}{$5416$}      \\
                                                                                                                                                       &                                            & $1.000$              & \multicolumn{1}{c|}{$0.000$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{Multi(cand, 2cand, 5)}$}                                                                                                  &                                            & \multicolumn{2}{c|}{$12249$}                                     & \multicolumn{2}{c|}{$10588$}           & \multicolumn{2}{c|}{$5448$}      \\
-                                                                                                                                                      &                                            & $0.998$              & \multicolumn{1}{c|}{$0.002$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $0.994$         & $0.006$        \\ \cline{1-1} \cline{3-8} 
-        \multirow{2}{*}{$C_{MWR(cand, 2cand, 5)}$}                                                                                                    &                                            & \multicolumn{2}{c|}{\textcolor{red}{$11865$}}                    & \multicolumn{2}{c|}{$10588$}           & \multicolumn{2}{c|}{$5448$}      \\
-                                                                                                                                                      &                                            &                      & \multicolumn{1}{c|}{}                     & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $0.994$         & $0.006$        \\ \cline{1-1} \cline{3-8} 
-        \multirow{2}{*}{$C_{Line(cand)}$}                                                                                                             &                                            & \multicolumn{2}{c|}{\textcolor{red}{$11505$}}                    & \multicolumn{2}{c|}{$10557$}           & \multicolumn{2}{c|}{$5417$}      \\
-                                                                                                                                                      &                                            &                      & \multicolumn{1}{c|}{}                     & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \cline{1-1} \cline{3-8} 
+                                                                                                                                                      &                                            & $0.997$              & \multicolumn{1}{c|}{$0.003$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $0.994$         & $0.006$        \\ \cline{1-1} \cline{3-8} 
+        \multirow{2}{*}{$C_{MWR(cand, 2cand, 5)}$}                                                                                                    &                                            & \multicolumn{2}{c|}{$12249$*}                                    & \multicolumn{2}{c|}{$10588$}           & \multicolumn{2}{c|}{$5448$}      \\
+                                                                                                                                                      &                                            & $0.997$              & \multicolumn{1}{c|}{$0.003$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $0.994$         & $0.006$        \\ \cline{1-1} \cline{3-8} 
+        \multirow{2}{*}{$C_{Line(cand)}$}                                                                                                             &                                            & \multicolumn{2}{c|}{$11505$}                                     & \multicolumn{2}{c|}{$10557$}           & \multicolumn{2}{c|}{$5417$}      \\
+                                                                                                                                                      &                                            & $1.000$              & \multicolumn{1}{c|}{$0.000$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{PB(cand, 10, [10,9,\dots, 1])}$}                                                                                          &                                            & \multicolumn{2}{c|}{$12260$}                                     & \multicolumn{2}{c|}{$10577$}           & \multicolumn{2}{c|}{$5437$}      \\
-                                                                                                                                                      &                                            & $0.997$              & \multicolumn{1}{c|}{$0.003$}              & $0.998$ & \multicolumn{1}{c|}{$0.002$} & $0.996$         & $0.004$        \\ \cline{1-1} \cline{3-8} 
+                                                                                                                                                      &                                            & $0.996$              & \multicolumn{1}{c|}{$0.004$}              & $0.998$ & \multicolumn{1}{c|}{$0.002$} & $0.996$         & $0.004$        \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{PB(cand, cand, [cand,cand-1,\dots, 1])}$\cref{footnote:votEncLinearInBallotEntries}}                                      &                                            & \multicolumn{2}{c|}{$13421$}                                     & \multicolumn{2}{c|}{$11557$}           & \multicolumn{2}{c|}{$6917$}      \\
                                                                                                                                                       &                                            & $0.910$              & \multicolumn{1}{c|}{$0.090$}              & $0.912$ & \multicolumn{1}{c|}{$0.088$} & $0.783$         & $0.217$        \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{BTS(cand, 2, 1)}$\cref{footnote:votEncLinearInBallotEntries}}                                                             &                                            & \multicolumn{2}{c|}{$17000$}                                     & \multicolumn{2}{c|}{$14755$}           & \multicolumn{2}{c|}{$10815$}     \\
                                                                                                                                                       &                                            & $0.719$              & \multicolumn{1}{c|}{$0.281$}              & $0.715$ & \multicolumn{1}{c|}{$0.285$} & $0.500$         & $0.500$        \\ \hline\hline
-        \multirow{2}{*}{$C_{Majority\text{-}Judgment(cand, 6)}$}                                                                                      & \multirow{2}{*}{$6cand$}                   & \multicolumn{2}{c|}{\textcolor{red}{$11504$}}                    & \multicolumn{2}{c|}{$10556$}           & \multicolumn{2}{c|}{$5416$}      \\
-                                                                                                                                                      &                                            &                      & \multicolumn{1}{c|}{}                     & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \hline\hline
+        \multirow{2}{*}{$C_{Majority\text{-}Judgment(cand, 6)}$}                                                                                      & \multirow{2}{*}{$6cand$}                   & \multicolumn{2}{c|}{$11504$}                                     & \multicolumn{2}{c|}{$10556$}           & \multicolumn{2}{c|}{$5416$}      \\
+                                                                                                                                                      &                                            & $1.000$              & \multicolumn{1}{c|}{$0.000$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \hline\hline
         \multirow{2}{*}{$C_{Cond.(cand)}$ (without ranking) \cref{footnote:votEncLinearInBallotEntries}}                                              & \multirow{6}{*}{$cand^2$}                  & \multicolumn{2}{c|}{$11788$}                                     & \multicolumn{2}{c|}{NaN}               & \multicolumn{2}{c|}{NaN}         \\
                                                                                                                                                       &                                            & $0.976$              & \multicolumn{1}{c|}{$0.024$}              &         & \multicolumn{1}{c|}{}        &                 &                \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{Cond.(cand)}$ (utilizing ranking)}                                                                                        &                                            & \multicolumn{2}{c|}{NaN}                                         & \multicolumn{2}{c|}{$10572$}           & \multicolumn{2}{c|}{$5432$}      \\
                                                                                                                                                       &                                            &                      & \multicolumn{1}{c|}{}                     & $0.998$ & \multicolumn{1}{c|}{$0.002$} & $0.997$         & $0.003$        \\ \cline{1-1} \cline{3-8} 
-        \multirow{2}{*}{$C_{Majority\text{-}Judgment(cand, cand)}$}                                                                                   &                                            & \multicolumn{2}{c|}{\textcolor{red}{$11504$}}                    & \multicolumn{2}{c|}{$10556$}           & \multicolumn{2}{c|}{$5416$}      \\
-                                                                                                                                                      &                                            &                      & \multicolumn{1}{c|}{}                     & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \hline
+        \multirow{2}{*}{$C_{Majority\text{-}Judgment(cand, cand)}$}                                                                                   &                                            & \multicolumn{2}{c|}{$11504$}                                     & \multicolumn{2}{c|}{$10556$}           & \multicolumn{2}{c|}{$5416$}      \\
+                                                                                                                                                      &                                            & $1.000$              & \multicolumn{1}{c|}{$0.000$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \hline
     \end{tabular}
     \renewcommand{\arraystretch}{1.0}
     \caption{Constraints needed by $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ per ballot entry.
-    For ever entry in the \glqq Constraints per Ballot Entry \grqq\ column, we also show which portion of those constraints is needed for $\mathfrak{C}_C^{Enc}$ on the left and which portion is needed for $\mathfrak{C}_C^{Vot}$ on the right.
-    Note that we use $C_{PB}$ to denote $C_{Pointlist\text{-}Borda}$ and $C_{Cond.}$ to denote $C_{Condorcet}$.
+    For every entry in the \glqq Constraints per Ballot Entry \grqq\ column, we also show which portion of those constraints is needed for $\mathfrak{C}_C^{Enc}$ on the left and which portion is needed for $\mathfrak{C}_C^{Vot}$ on the right.
+    Note that we use $C_{PB}$ to denote $C_{Pointlist\text{-}Borda}$ and $C_{Cond.}$ to denote $C_{Condorcet}$.\\
+    *For \gls{mwr}, the constraint count listed here is theoretical as the actual constraint count per ballot entry obtained by Huber et. al. was $11865$ (calculated from the result for $300$ candidates).
+    This does not fit together with the $12216$ constraints we need to purely encrypt a ballot entry.
     }
     \label{tab:combinedResults}
 \end{table}
