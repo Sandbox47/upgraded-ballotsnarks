@@ -2,7 +2,7 @@
     {
         "plotPath": "voting/Circom/linear/VotingCircomLinear",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$ in Circom",
 
         "dataSets": [
@@ -87,7 +87,7 @@
     {
         "plotPath": "voting/Circom/quadratic/VotingCircomQuadratic",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$ in Circom",
 
         "dataSets": [
@@ -169,7 +169,7 @@
     {
         "plotPath": "voting/libsnark/linear/VotingLibsnarkLinear",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$ in libsnark",
 
         "dataSets": [
@@ -250,7 +250,7 @@
     {
         "plotPath": "voting/libsnark/quadratic/VotingLibsnarkQuadratic",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$ in libsnark",
 
         "dataSets": [
@@ -317,7 +317,7 @@
     {
         "plotPath": "voting/Comparison/linear/VotingComparisonLinear",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$",
 
         "dataSets": [
@@ -645,7 +645,7 @@
     {
         "plotPath": "voting/Circom/VotingCircom",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$ in Circom",
 
         "dataSets": [
@@ -803,7 +803,7 @@
     {
         "plotPath": "voting/libsnark/VotingLibsnark",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$ in libsnark",
 
         "dataSets": [
@@ -942,7 +942,7 @@
     {
         "plotPath": "voting/Comparison/VotingComparison",
         "xLabel": "$cand$ candidates",
-        "xLimit": 600,
+        "xLimit": 1000,
         "label": " for $\\mathfrak{C}_C^{Vot}$",
 
         "dataSets": [

@@ -169,7 +169,7 @@ def plot_data(entry):
     ncols = 2 if n_plots > 1 else 1
     nrows = ceil(n_plots / ncols)
 
-    fig, axs = plt.subplots(nrows, ncols, figsize=(ncols * 6, nrows * 4))
+    fig, axs = plt.subplots(nrows, ncols, figsize=(ncols * 6, nrows * 5.5))
     axs = axs.flatten() if n_plots > 1 else [axs]
 
     handles_labels = []
@@ -195,7 +195,7 @@ def plot_data(entry):
         fig.legend(handles, labels, loc='upper center', ncol=1, bbox_to_anchor=(0.5, 0))
     elif n_plots % 2 == 0:
         fig.subplots_adjust(bottom=0.15)
-        fig.legend(handles, labels, loc='lower center', ncol=3, bbox_to_anchor=(0.5, -0.04))
+        fig.legend(handles, labels, loc='lower center', ncol=3, bbox_to_anchor=(0.5, 0.02))
     else:
         # axs[-1].legend(handles, labels, loc='center left', bbox_to_anchor=(1.05, 0.5))
         axs[-1].legend(handles, labels, loc='center', frameon=False)
@@ -214,6 +214,7 @@ def main():
     config_path = sys.argv[1]
     config = load_config(config_path)
     for entry in config:
+        print("Plotting entry")
         plot_data(entry)
 
 if __name__ == "__main__":

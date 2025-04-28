@@ -261,6 +261,21 @@
                         "filterValue": 32,
                         "color": "green",
                         "label": "$m$ Ciphertexts [32 bits, Montgomery, Circom]"
+                    },
+                    {
+                        "filterValue": 64,
+                        "color": "red",
+                        "label": "$m$ Ciphertexts [64 bits, Montgomery]"
+                    },
+                    {
+                        "filterValue": 128,
+                        "color": "purple",
+                        "label": "$m$ Ciphertexts [128 bits, Montgomery]"
+                    },
+                    {
+                        "filterValue": 250,
+                        "color": "brown",
+                        "label": "$m$ Ciphertexts [250 bits, Montgomery]"
                     }
                 ]
             },
@@ -285,6 +300,21 @@
                         "filterValue": 32,
                         "color": "green",
                         "label": "$m$ Ciphertexts [32 bits, Twisted Edwards, Circom]"
+                    },
+                    {
+                        "filterValue": 64,
+                        "color": "red",
+                        "label": "$m$ Ciphertexts [64 bits, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 128,
+                        "color": "purple",
+                        "label": "$m$ Ciphertexts [128 bits, Twisted Edwards]"
+                    },
+                    {
+                        "filterValue": 250,
+                        "color": "brown",
+                        "label": "$m$ Ciphertexts [250 bits, Twisted Edwards]"
                     }
                 ]
             },

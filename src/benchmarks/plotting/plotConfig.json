@@ -3,7 +3,8 @@
         "Constraints",
         "Prove[s]",
         "CRS Size[MB]",
-        "Setup[s]"
+        "Setup[s]",
+        "Verify[s]"
     ],
     "yLabels_TEST": [
         "Constraints",

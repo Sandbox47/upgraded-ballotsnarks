@@ -32,7 +32,7 @@ We define groups and fields as in \cite{least_authority_moonmath_2024}.
 
 % \chapter{Full Groth16 SNARK example for $\mathfrak{C}_{3\text{-}vot}$}
 
-\chapter{PPEEG}
+\chapter{Precomputed Powers Fast Exponentiation}
 
 \section{Montgomery Curves}
 \todo{Make (constraint) comparison of Square and Multiply with normal group operations compared to Montgomery ladder with xAdd, xDbl.}
@@ -161,7 +161,6 @@ After obtaining benchmarks for this new implementation, one could compare the re
 
 \chapter{Circuits}
 \label{section:appendix:circuits}
-\todo{Write ;-)}
 
 \section{Utility Circuits}
 We use several utility circuits as modlues inside the ballot validity circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$.
@@ -479,10 +478,91 @@ Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text
 
 \chapter{Additional benchmarks}
 
-\todo{}
-\begin{itemize}
-    \item Benchmarks for verification times
-    \item Benchmarks of proving times, $CRS$ sizes and $CRS$ generation times for $\mathfrak{C}_C^{Ballot\text{-}Validity}$.
-\end{itemize}
+In \cref{chap:results}, we presented and discussed the results of our benchmarks for $\mathfrak{C}_C^{Enc}$, $\mathfrak{C}_C^{Vot}$ and $\mathfrak{C}_C^{Ballot\text{-}Validity}$.
+Here, we only presented data that was needed to compare our the performance of our implementations in Circom to the implementation by Huber et. al. in libsnark \cite{huber_zk-snarks_2025}.
+For instance, we omitted the verification times in all plots. 
+For completeness, we present the full results we obtained here.
+
+\section{Asserting Correct Encryption with $\mathfrak{C}_C^{Enc}$}
+In the results presented in \cref{section:results:assertEncryption}, we omitted the verification times and only showed the results for $1$, $16$ and $32$ bit ballot entries.
+Now we include the verification times and cover ballot entries up to $250$ bit as presented in \cref{fig:plots:Enc_complete}.\cref{footnote:bitLimitEnc}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/encryption/Comparison/EncryptionComparison_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/EncryptionComparison_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves in Circom and using Montgomery curves in libsnark.}
+    \label{fig:plots:Enc_complete}
+\end{figure}
+
+\section{Asserting Choice Space Membership with $\mathfrak{C}_C^{Vot}$}
+In the results presented in \cref{section:results:assertEncryption}, we omitted the verification times.
+Now, we include the verification times.
+As before, we split the results into those where the constraint count grows linearly with the candidate count $cand$ and those where the constraint count grows faster than linearly with the candidate count $cand$.
+The complete results are presented in \cref{fig:plots:Vot_Linear_Complete} and \cref{fig:plots:Vot_Quadratic_Complete}.
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/linear/VotingComparisonLinear_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/VotingComparisonLinear_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
+    \label{fig:plots:Vot_Linear_Complete}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/VotingComparisonQuadratic_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales more than linearly with the candidate count.}
+    \label{fig:plots:Vot_Quadratic_Complete}
+\end{figure}
+
+\section{Asserting Ballot Validity with $\mathfrak{C}_C^{Ballot\text{-}Validity}$}
+In the results presented in \cref{section:results:assertEncryption}, we only showed the constraint counts.
+Now, we also present the proving times, $CRS$ sizes, $CRS$ generation times and verification times.
+As before, we present our results seperately for every election type or family of election types to make the plots less cluttered.
+The complete results are presented in \cref{fig:plots:Combined_Borda_Complete}, \cref{fig:plots:Combined_Multi_Complete}, \cref{fig:plots:Combined_Single_Complete}, \cref{fig:plots:Combined_Condorcet_Complete} and \cref{fig:plots:Combined_MajorityJudgment_Complete}.
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/CombinedComparisonBorda_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark where $C\in\{C_{Pointlist\text{-}Borda(cand, 10, [10,9,\dots, 1])}, C_{Pointlist\text{-}Borda(cand, cand, [cand, cand-1,\dots, 1])}, C_{BTS(cand, 2, 1)}\}$.}
+    \label{fig:plots:Combined_Borda_Complete}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/CombinedComparisonMulti_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark where $C\in\{C_{Multi(cand, 2cand, 5)}, C_{MWR(cand, 2cand, 5)}, C_{Line(cand)}\}$.}
+    \label{fig:plots:Combined_Multi_Complete}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/CombinedComparisonSingle_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark where $C=C_{Single(cand)}$.}
+    \label{fig:plots:Combined_Single_Complete}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/CombinedComparisonCondorcet_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark where $C=C_{Condorcet(cand)}$.}
+    \label{fig:plots:Combined_Condorcet_Complete}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/appendix/CombinedComparisonMajorityJudgment_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark where $C\in\{C_{Majority\text{-}Judgment(cand, 6)}, C_{Majority\text{-}Judgment(cand, cand)}\}$.}
+    \label{fig:plots:Combined_MajorityJudgment_Complete}
+\end{figure}
 
 \chapter{Reproducibility}
+
+\todo{}
