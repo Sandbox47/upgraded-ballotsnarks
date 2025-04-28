@@ -1,6 +1,6 @@
 {
     "testSuite": {
-        "snark": "fflonk",
+        "snark": "groth16",
         "ellipticCurve": "montgomeryProjective",
         "ellipticCurves_TEST": [
             "twistedEdwards",

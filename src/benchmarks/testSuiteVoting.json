@@ -4,13 +4,13 @@
         "ellipticCurve": "montgomeryProjective",
         "bitsVotes": 32,
         "nVotes": 1,
-        "command": "python3 benchmark.py fflonk voting montgomeryProjective singleVote 32 nVotes=1"
+        "command": "python3 benchmark.py groth16 voting montgomeryProjective singleVote 32 nVotes=1"
     },
     {
         "name": "singleVote",
         "ellipticCurve": "montgomeryProjective",
         "bitsVotes": 32,
         "nVotes": 2,
-        "command": "python3 benchmark.py fflonk voting montgomeryProjective singleVote 32 nVotes=2"
+        "command": "python3 benchmark.py groth16 voting montgomeryProjective singleVote 32 nVotes=2"
     }
 ]
