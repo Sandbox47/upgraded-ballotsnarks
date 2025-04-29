@@ -154,7 +154,7 @@ Since encryption is done component-wise, $r_C^{Enc}$ is only influenced by the d
 Therefore, to instantiate our voting system $VS(C)$ for a new election type, we only need to define the choice space $C$ and the corresponding algebraic function $r_C^{Vot}$ for this election type.
 
 As in \cite{huber_zk-snarks_2025}, we cover a variety of election types ranging from simple Single-Vote to more complicated ranking-based types like Condorcet.
-
+% We compare the constraint counts of $\mathfrak{C}_C^{Vot}$ for the different choice spaces $C$ in \cref{tab:votingContraints}.
 
 \subsection{Single-Vote}
 In a Single-Vote election, a voter can choose from a fixed set of candidates. 
@@ -196,6 +196,7 @@ The example voting system introduced in \cref{chap:votingschemes} is an election
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/singleVoteVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Single}(cand)}^{Vot}}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Single}(cand)}$.
     Here, we use $\mathfrak{C}_{Assert\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) as a building block.
+    $\mathfrak{C}_{C_{\text{Single}(cand)}^{Vot}}$ needs $cand + 1$ constraints.
     }
     \label{fig:circuit:singleVoteVoting}
 \end{figure}
@@ -240,6 +241,7 @@ In contrast to Single-Vote, each voter can allocate up to a maximum of $max$ vot
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/multiVoteVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Multi}(cand, max, t)}$.
     Here, we use $\mathfrak{C}_{Assert\text{-}Leq}$ (\cref{fig:circuit:assertLeq}) as a building block.
+    $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}^{Vot}}$ needs $(l+1)\cdot cand + \lceil\log_2(cand)\rceil + l + 1$ constraints if the ballot entries are represented with $l$ bits.
     }
     \label{fig:circuit:multiVoteVoting}
 \end{figure}
@@ -259,7 +261,7 @@ However, as an additional restriction in Line-Vote, we require that all $1$-vote
 Therefore, we can also interpret a Line-Vote system $VS_{C_{Line(cand)}}$ as the Multi-Vote system $VS_{C_{Multi(cand, cand, 1)}}$ with additionally enforcing that all $1$-votes form a continous line.
 \footnote{
     \label{footnote:lineVoteAsMultiVoteInefficient}
-    Note using $\mathfrak{C}_{C_{Multi(cand, cand, 1)}}^{Vot}$ in the definition of $\mathfrak{C}_{C_{Line(cand)}}$ would be inefficint.
+    Note, that using $\mathfrak{C}_{C_{Multi(cand, cand, 1)}}^{Vot}$ in the definition of $\mathfrak{C}_{C_{Line(cand)}}$ would be inefficint.
     The assertions that the individual votes are $\leq 1$ can be replaced with bit assertions as we did in our implementation of $\mathfrak{C}_{C_{Line(cand)}}$.
 }
 
@@ -301,6 +303,7 @@ Therefore, we can also interpret a Line-Vote system $VS_{C_{Line(cand)}}$ as the
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/lineVoteVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Line}(cand)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Line}(cand)}$.
     Here, we use $\mathfrak{C}_{Assert\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) as a building block.
+    $\mathfrak{C}_{C_{\text{Line}(cand)}^{Vot}}$ needs $2\cdot cand$ constraints.
     }
     \label{fig:circuit:lineVoteVoting}
 \end{figure}
@@ -340,6 +343,7 @@ This illustrates nicely that we can extend the existing Multi-Vote system easily
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/mwrVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{MWR}(cand, max, t)}$.
     Here, we use $\mathfrak{C}_{C_{\text{Multi}}(cand, max, t)}$ (\cref{fig:circuit:multiVoteVoting}) as a building block.
+    $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}^{Vot}}$ needs $(l+1)\cdot cand + \lceil\log_2(cand)\rceil + l + 2$ constraints if the ballot entries are represented with $l$ bits.
     }
     \label{fig:circuit:mwrVoting}
 \end{figure}
@@ -415,6 +419,7 @@ Since we allow that there are more candidates than points in the pointlist, ther
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/pointlistBordaVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{l}$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$.
     Here, we use $\mathfrak{C}_{Count\text{-}Equal(l)}$ (\cref{fig:circuit:countEqual}) with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
+    $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}^{Vot}}$ needs $2\cdot cand\cdot(l+1)$ constraints.
     }
     \label{fig:circuit:pointlistBordaVoting}
 \end{figure}
@@ -459,6 +464,8 @@ Using this ranking, the candidates are then assigned a fixed number of points fo
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/btsVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{BTS}(cand, ap, bp)}$.
     Here, we use $\mathfrak{C}_{Compute\text{-BTS}(cand, ap, bp)}$ (\cref{fig:circuit:btsComputeBallot}) to compute the ballot $b'$ corresponding to $r$.
+    $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}^{Vot}}$ needs $cand\cdot (2\cdot cand + cand\cdot (\lceil\log_2(cand)\rceil + 1))$ constraints if we limit the ranking values to the range $\{0,\dots, cand\}$.
+    This is still sufficient to express arbitrary rankings of $cand$ many candidates.
     }
     \label{fig:circuit:btsVoting}
 \end{figure}
@@ -565,6 +572,7 @@ Therefore, we implement this variant as well.
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/condorcetVotingNoRanking.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand\times cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Condorcet}(cand)}$.
     Here, we use $\mathfrak{C}_{Assert\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) as a building block.
+    In this version, $\mathfrak{C}_{C_{\text{Condorcet}(cand)}^{Vot}}$ needs $cand^2 + \frac{cand\cdot(cand-1)}{2} + 2\cdot cand\cdot(cand-1)\cdot(cand-2)$ constraints.
     }
     \label{fig:circuit:condorcetVotingNoRanking}
 \end{figure}
@@ -587,6 +595,9 @@ Therefore, we implement this variant as well.
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/condorcetVotingWithRanking.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Condorcet}(cand)}$.
     Here, we use $\mathfrak{C}_{Compute\text{-Condorcet}(cand)}$ (\cref{fig:circuit:condorcetComputeBallot}) to compute the ballot $b'$ corresponding to $r$.
+    In this version and our implementation in Circom, $\mathfrak{C}_{C_{\text{Condorcet}(cand)}^{Vot}}$ needs $\frac{cand\cdot(cand-1)}{2}\cdot (l + 3)$ constraints when the values in the ranking have at most $l$ bits.
+    Note that it is also possible to implement the circuit with $\frac{cand\cdot (cand-1)}{2}\cdot (\lceil \log_2(cand)\rceil + 3)$ constraints if we limit the ranking values to the range $\{0,\dots, cand\}$.
+    This is still sufficient to express arbitrary rankings of $cand$ many candidates.
     }
     \label{fig:circuit:condorcetVotingWithRanking}
 \end{figure}
@@ -627,7 +638,7 @@ Therefore, we implement this variant as well.
     \centering
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/condorcetComputeBallot.pdf}
     \caption{Circuit $\mathfrak{C}_{Compute\text{-Condorcet}(cand)}$, computing the ballot $b'$ belonging to ranking $r$ in a Condorcet voting system with choice space $C_{\text{Condorcet}(cand)}$.
-    Here, we use $\mathfrak{C}_{is\text{-}greater}$ (\cref{fig:circuit:isGreater}), $\mathfrak{C}_{is\text{-}equal}$ (\cref{fig:circuit:isEqual}) and $\mathfrak{C}_{Switch\text{-}Case(c)}$ (\cref{fig:circuit:switchCase}) as building blocks.
+    Here, we use $\mathfrak{C}_{Is\text{-}Greater}$ (\cref{fig:circuit:isGreater}), $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}) and $\mathfrak{C}_{Switch\text{-}Case(c)}$ (\cref{fig:circuit:switchCase}) as building blocks.
     }
     \label{fig:circuit:condorcetComputeBallot}
 \end{figure}
@@ -674,6 +685,7 @@ All other entries are $0$.
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/majorityJudgmentVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand\times grades}$ is part of the choice space $C_{\text{Majority-Judgment}(cand, grades)}$.
     %Here, we use $\mathfrak{C}_{occurences(l)}$ \cref{fig:circuit:occurences} with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
+    $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}^{Vot}}$ needs $cand\cdot grades$ constraints.
     }
     \label{fig:circuit:majorityJudgmentVoting}
 \end{figure}

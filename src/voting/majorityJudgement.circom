@@ -45,3 +45,5 @@ template assertMajorityJudgementWithRangeChecksVoting(nCand, nGrades) {
         assertGrade[i].test <== nGrades;
     }
 }
+
+// component main = assertMajorityJudgementVoting(1, 20,20);

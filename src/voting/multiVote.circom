@@ -35,3 +35,6 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
     assertSumLtEq.in <== sum;
     assertSumLtEq.test <== maxChoices;
 }
+
+//component main = assertMultiVoteVoting(32, );
+//component main = assertLtEq(3);

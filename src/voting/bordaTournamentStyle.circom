@@ -97,3 +97,7 @@ template assertBordaTournamentStyleVoting(bitsVotes, nVotes, a, b) {
 
     ballot === computeBallot.out;
 }
+
+// component main = assertBordaTournamentStyleVoting(32, 10, 2, 1);
+// component main = countGreater(30);
+// component main = countEqual(30);

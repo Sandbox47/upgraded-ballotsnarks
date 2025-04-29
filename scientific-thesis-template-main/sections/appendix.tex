@@ -32,12 +32,11 @@ We define groups and fields as in \cite{least_authority_moonmath_2024}.
 
 % \chapter{Full Groth16 SNARK example for $\mathfrak{C}_{3\text{-}vot}$}
 
-\chapter{Precomputed Powers Fast Exponentiation}
+\chapter{PPFExp with Arbitrary Base for Exponent}
 
-\section{Montgomery Curves}
-\todo{Make (constraint) comparison of Square and Multiply with normal group operations compared to Montgomery ladder with xAdd, xDbl.}
-
-\section{Arbitrary Bases for Exponent}
+% \section{Montgomery Curves}
+% \todo{Make (constraint) comparison of Square and Multiply with normal group operations compared to Montgomery ladder with xAdd, xDbl.}
+%\section{Arbitrary Bases for Exponent}
 \label{section:appendix:ppeegArbitraryBase}
 
 As discussed in \cref{chap:elGamalEncryption}, the main computational effort and therefore also the majority of constraints are caused by the group exponentiations $g^y, h^y$ and $g^m$, when computing an \gls{eeg} ciphertext $(g^y, h^y\odot_\mathbb{G} g^m)$ where $y\probgets\{0,\dots, n-1\}$.
@@ -142,7 +141,7 @@ Some results for $cost_\mathbb{TE_{a,d}(\mathbb{F})}$ are presented in \cref{tab
         \multicolumn{2}{|l|}{Digits needed for $255$ bit exponent}                                                         & $255$  & $161$  & $128$  & \boldmath$110$  & $99$   & $91$   & $85$   \\ \hline
         \multirow{2}{*}{\shortstack{Constraints with \\$255$ bit exponent}} & $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$        & $2291$ & $1767$ & $1660$ & \boldmath$1646$ & $1679$ & $1725$ & $1781$ \\ \cline{2-9}
                                                              & $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$               & $2546$ & NaN    & NaN    & NaN             & NaN    & NaN    & NaN    \\ \hline
-        \end{tabular}
+    \end{tabular}
     \renewcommand{\arraystretch}{1.0}
     \caption{Constraint analysis of $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$ for different choices of $base$.
     }
@@ -451,6 +450,7 @@ Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text
         \label{fig:circuit:countEqual}
     \end{subfigure}
     \\
+    \vspace{0.5cm}
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[scale=0.7]{graphics/appendix/CountLess.pdf}

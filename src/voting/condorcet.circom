@@ -41,6 +41,7 @@ template assertCondorcetVotingWithoutRanking(n) {
     // 1. If a_ji = 0 and a_kj = 0, then a_ki = 0
     // 2. If a_ji = a_ij = 0 and a_kj = a_jk = 0, then a_ki = a_ik = 0
     // We are using the check matrix approach presented in "zk-SNARKS for Ballot Validity: A Feasibility Study" to assert this property.
+
     signal checkMatrix[n][n];
     for(var i = 0; i < n; i++) {
         for(var j = 0; j < n; j++) {
@@ -69,7 +70,7 @@ template assertCondorcetVotingWithoutRanking(n) {
 * Computes the corresponding Condorcet ballot to the ranking. (Since the values on the diagonal have no function, we assume, that those are zero.)
 * maxValue is the maximal Value any entry in the ranking should have.
 */
-template computeCondorcetBallot(n, maxValue) {
+template computeCondorcetBallot(n, maxValueBits) {
     input signal ranking[n];
 
     output signal out[n][n]; // ballot
@@ -80,7 +81,7 @@ template computeCondorcetBallot(n, maxValue) {
     component computeEntryJI[n][n];
     signal tmp[n][n];
 
-    var maxValueBits = numBits(maxValue);
+    var test = numBits(n);
 
     for(var i = 0; i < n; i++) {
         for(var j = i; j < n; j++) {
@@ -128,9 +129,9 @@ template assertCondorcetVoting(bitsVotes, n) {
     input signal ranking[n];
     input signal ballot[n][n];
 
-    var maxValue = 2**bitsVotes;
+    // var maxValue = 2**bitsVotes;
 
-    component computeBallot = computeCondorcetBallot(n, maxValue);
+    component computeBallot = computeCondorcetBallot(n, bitsVotes);
     computeBallot.ranking <== ranking;
     signal computedBallot[n][n] <== computeBallot.out;
 
@@ -154,3 +155,8 @@ template assertCondorcetVoting(bitsVotes, n) {
     }
     
 }
+
+// component main = assertCondorcetVotingWithoutRanking(5);
+// component main = assertCondorcetVoting(32, 20);
+// component main = IsEqual();
+// component main = GreaterThan(32);

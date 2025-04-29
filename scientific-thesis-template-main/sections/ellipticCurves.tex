@@ -39,7 +39,7 @@ Later on, we use both representations in the voting schemes.
 For a given prime field $(\mathbb{F}, +, \cdot)$, affine coordinates are elements from the set $\mathbb{F}^2\cup\{\mathcal{O}\}$.
 Here, $\mathcal{O}$ is the so-called \glqq point at infinity\grqq.
 To translate this definition of affine coordinates to algebraic circuits, we need to be able to distinguish the point at infinity from elements of $\mathbb{F}^2$ and need to represent every element with the same number of signals.
-Therfore, in algebraic circuits, we add a third field $i$ to every affine point which indicates whether the point is $\mathcal{O}$.
+Therefore, in algebraic circuits, we add a third field $i$ to every affine point which indicates whether the point is $\mathcal{O}$.
 More formally, we map a point $P\in \mathbb{F}^2\cup\{\mathcal{O}\}$ to its algebraic circuit eqivalent as follows:
 \begin{align*}
     P\mapsto\begin{cases}
@@ -544,7 +544,9 @@ Group exponentiation is defined as follows:
     \forall P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)\forall k\in\mathbb{N}:\quad P^k:=\underbrace{P\odot_{M}^{Pro}\dots\odot_{M}^{Pro}P}_{k \text{ times}}
 \end{align*}
 However, computing $P^k=[X_k:Y_k:Z_k]$ by iteratively using the group law $\odot_{M}^{Pro}$ $k-1$ times is computationally expensive as discussed in \cref{section:elGamalEncryption:precomputedPowers}.
-Therfore, we utilize the Montgomery Ladder algorithm \cite{costello_montgomery_2018,montgomery_speeding_1987} based on $FastExp$ presented in \cref{alg:fastExp}.
+Therefore, we utilize $FastExp$ (\cref{alg:fastExp}).
+However, since the projective Montgomery Group Law $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)}$ requires $44$ constraints, this is still not very efficient.
+A further improevement is possible with the Montgomery Ladder algorithm \cite{costello_montgomery_2018,montgomery_speeding_1987} which utilizes the Pseudooperations $xDbl$ and $xAdd$ with only $4$ and $6$ constraints each.
 This algorithm requires $\mathcal{O}(\log_2(k))$ many iterations to compute the coordinates $X_k$ and $Z_k$ of $P^k$ from the coordinates $X$ and $Z$ of $P$.
 Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_k$ from the last two iterations of the Montgomery Ladder.
 
@@ -736,7 +738,7 @@ Note that this is not the standard version of the Montgomery Ladder but slightly
 In the standard version of the Montgomery Ladder algorithm, we require the most significant bit of the exponent $k_{l-1}$ to be $1$. 
 However, this means that the length of the bitstring representing $k$ changes based on the exponent $k$.
 When we implement the Montgomery Ladder in a ciruit for our voting scheme this is problematic.
-Since the exponent is not known during the compilation time of the circuit, we need to work with exponents of a fixed length $l$ where the most significatn bit might be zero.
+Since the exponent is not known during the compilation time of the circuit, we need to work with exponents of a fixed length $l$ where the most significant bit might be zero.
 Therefore, this version of the Montgomery Ladder is better suited for our purposes.
 
 \subsubsection{$Y$-Recovery}
@@ -915,6 +917,9 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
 %     \label{fig:circuit:reverse}
 % \end{figure}
 
+With $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ fully defined, we can conclude that this approach needs significantly less constraints compared to the standard circuit for $FastExp$ that we presented in $\mathfrak{C}_{\mathbb{G}\_FExp}$ (\cref{fig:circuit:fexp}) instantiated with $\mathbb{G}:=M_{A,B}(\mathbb{F}P^2)$.
+A detailed comparison of constraint counts for exponentiation circuits is given in \cref{tab:expConstraintComp}.
+
 \section{Twisted Edwards Curves}
 \label{section:ellipticCurves:twistedEdwards}
 
@@ -923,7 +928,7 @@ An alternative representation of Montgomery curves are Twisted Edwards curves.
 As discussed in \cref{section:elGamalEncryption:precomputedPowers}, it can be benefitial to precompute powers of the public key elements $g$ and $h$ in \gls{eeg} if we want to encrypt many messages with the same public key.
 This leads to \gls{ppeeg} which was introduced in \cref{def:ppeeg}.
 If we use this approach, the montgomery ladder is no longer applicable.
-The group law of Twisted Edwards curves is more efficient that that of Montgomery Curves.
+However, the group law of Twisted Edwards curves is more efficient that that of Montgomery Curves.
 Therefore, we can use this to compute group exponentiations more efficiently than with Montgomery Curves.
 Then, \gls{ppeeg} based on Twisted Edwards curves is more efficient than \gls{eeg} based on Montgomery Curves.
 
@@ -957,7 +962,7 @@ As with Montgomery Curves, we introduce Twisted Edwards curves similarly to \cit
     \label{fig:circuit:teGroupLaw}
 \end{figure}
 
-In constrast to Montgomery Curves there is no distinguished point at infinity $\mathcal{O}$ as the neutral element since the point $(0,1)$ is the neutral element of every Twisted Edwards curve.
+In constrast to Montgomery Curves, there is no distinguished point at infinity $\mathcal{O}$ as the neutral element since the point $(0,1)$ is the neutral element of every Twisted Edwards curve.
 Therefore, there is also no need for a projective version of Twisted Edwards curves.
 
 \subsection{Group Exponentiation with Precomputed Powers}
@@ -1002,6 +1007,9 @@ $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ (\cref{fig:circuit:teIfEls
     \label{fig:circuit:teIfElse}
 \end{figure}
 
+With the group arithmetic for Twisted Edwards curves fully defined, we can conclude that $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ (\cref{fig:circuit:ppfexp}) needs significantly less constraints compared to the standard circuit for $FastExp$, $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_FExp}$ (\cref{fig:circuit:fexp}).
+A detailed comparison of constraint counts for exponentiation circuits is given in \cref{tab:expConstraintComp}.
+
 \subsection{Isomorphism with Montgomery Curves}
 For every Twisted Edwards curve, there is an isomorphic Montgomery curve and vice versa.
 Thus, we can transform between these two representations freely.
@@ -1031,3 +1039,31 @@ Additionally, it is straightforward to replace one representation with the other
         \end{cases}
     \end{align*}
 \end{theorem}
+
+\section{Comparison of Exponentiation Circuits}
+
+For \gls{eeg} encryption, the main contributing factor to the total constraint counts in the encryption circuit $\mathfrak{C}_{EEG(\mathbb{G}).Enc}$ or $\mathfrak{C}_{PPEEG(\mathbb{G}).Enc}$ are the exponentiation circuits.
+To demonstrate that \gls{ppeeg} encryption with Twisted Edwards curves is the most efficient choice, we compare the encryption circuits $\mathfrak{C}_{\mathbb{G}\_Exp}$, $\mathfrak{C}_{\mathbb{G}\_FExp}$ and $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ for the elliptic curves $M_{A,B}(\mathbb{F}P^2)$ and $TE_{a,d}(\mathbb{F})$ as shown in \cref{tab:expConstraintComp}.
+
+Here, we use the contraint counts for the individual circuits as presented in \cref{tab:completeCircuitList}.
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{l|l|l|l||l|l|}
+        \cline{2-6}
+                                      & \multicolumn{3}{c||}{Montgomery: $\mathbb{G}:=M_{A,B}(\mathbb{F}P^2)$}                                                              & \multicolumn{2}{c|}{Twisted Edwards: $\mathbb{G}:=TE_{a,d}(\mathbb{F})$}                    \\ \hline
+        \multicolumn{1}{|c|}{\# Bits} & $\mathfrak{C}_{\mathbb{G}\_FExp}$*& $\mathfrak{C}_{\mathbb{G}\_Exp}$             & $\mathfrak{C}_{\mathbb{G}\_PPFExp}$*             & $\mathfrak{C}_{\mathbb{G}\_FExp}$*           & $\mathfrak{C}_{\mathbb{G}\_PPFExp}$           \\ \hline\hline
+        \multicolumn{1}{|l|}{$l$    } & $92l$                             & $19l+68$                                             & $48l$                                              & $17l$                                     & \boldmath$10l-4$                                          \\ \hline
+        \multicolumn{1}{|l|}{$1$    } & $92$                              & $87$                                             & $48$                                                 & $17$                                            & \boldmath$6$                                              \\ \hline
+        \multicolumn{1}{|l|}{$32$   } & $2944$                                & $676$                                           & $1536$                                                 & $544$                                            & \boldmath$316$                                              \\ \hline
+        \multicolumn{1}{|l|}{$255$  } & $23460$                                & $4913$                                           & $12240$                                                 & $4335$                                            & \boldmath$2546$                                              \\ \hline
+    \end{tabular}
+    \renewcommand{\arraystretch}{1.0}
+    \caption{Constraint counts for the different exponentiation circuits using Montgomery curves and Twisted Edwards curves.
+    Here, we use the Montgomery Ladder in $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)}\_Exp$, as shown in \cref{fig:circuit:montgomeryExp}.
+    The circuits $\mathfrak{C}_{\mathbb{G}\_FExp}$ (\cref{fig:circuit:fexp}) and $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\cref{fig:circuit:ppfexp}) are instantiated with $\mathbb{G}:=M_{A,B}(\mathbb{F}P^2)$ and $\mathbb{G}:=TE_{a,d}(\mathbb{F})$ respectively using the corresponding curve specific subcircuits.\\
+    *The constraint counts for these circuits are calculated from the constraints for the subcircuits as we did not implement the complete exponentiation circuits in Circom in these cases.
+    }
+    \label{tab:expConstraintComp}
+\end{table}

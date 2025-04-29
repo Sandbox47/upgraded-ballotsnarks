@@ -16,7 +16,7 @@ For instance, providing $k$ in a representation to base $5$ could reduce the con
 Another way to reduce the constraint count of $\mathfrak{C}_C^{Enc}$ could be to employ a different type of elliptic curve.
 Note though, that directly exchanging the Twisted Edwards curve in $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ should not yield any reductions since the circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ implementing the Twisted Edwards group law uses only $7$ constraints.
 This is the least out of any of the commonly used ellitic curve types Short Weierstrass, Montgomery and Twisted Edwards.
-Nevertheless, one might be able to use pseudooperations only involving a part of the coordinates to reduce the constraints further similar to how those were employed for Montgomery curves in the Montgomery Ladder.
+Nevertheless, one might be able to use pseudooperations only involving a part of the coordinates to reduce the constraints further, similar to how those were employed for Montgomery curves in the Montgomery Ladder.
 % We explore this idea in more detail in \cref{todo}\todo{Make in appendix} and show why straightforward integrations of the pseudooperations are not possible or use too many constraints.
 
 Furthermore, the elliptic curve \verb|BN254| we used as the basis for the \gls{g16snark} could be exchanged for a different one.

@@ -31,3 +31,5 @@ template assertLineVoteVoting(bitsVotes, nVotes) {
 
     assertLine.in <== indicator[nVotes-1];
 }
+
+// component main = assertLineVoteVoting(1, 300);

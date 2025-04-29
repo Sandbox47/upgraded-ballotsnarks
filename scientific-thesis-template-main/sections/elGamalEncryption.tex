@@ -255,6 +255,35 @@ This is benefitial, since we can compute $g^{2^i}$ by iterated squaring of $g$.
 The algorithm $FastExp(g, k)$ to compute $g^k$ in $\mathbb{G}$ with the Square and Multiply approach is presented in \cref{alg:fastExp}.
 Here, we use the function $r_{Num2Bits(l)}(k)$ to compute the \gls{lsb} binary representation $(k_0,\dots,k_{l-1})$ of $k$, with $k=\sum\limits_{i=0}^{l-1}k_i2^i$.
 
+To represent $FastExp$ as a circuit, we need additional circuits $\mathfrak{C}_{Num2Bits(l)}$ (\cref{section:appendix:num2Bits}) to compute $r_{Num2Bits(l)}(k)$ and $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ to enable branching.
+%$Num2Bits$ is a standard template and preimplemented in the circuit language Circom we use here \cite{circomlib}.
+$\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ depends on the choice of $\mathbb{G}$.
+Therefore, we will use it as a black box circuit as shown in \cref{fig:circuit:groupIfElse} for now.
+Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cref{fig:circuit:groupLaw}, we can then implement $FastExp$ as the circuit $\mathfrak{C}_{\mathbb{G}\_FExp}$ presented in \cref{fig:circuit:fexp}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupIfElse.pdf}
+    \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ implementing branching for group elements. Computes $g_{res}$ from $g_{else}, g_{if}$ and $cond$:\\
+        $g_{res}:=\begin{cases}
+                g_{if}, &\quad\text{if } cond=1\\
+                g_{else}, &\quad\text{if } cond=0
+        \end{cases}$
+    }
+    \label{fig:circuit:groupIfElse}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/FExp.pdf}
+    \caption{Circuit $\mathfrak{C}_{\mathbb{G}\_FExp}$ for computing $g^k$ from inputs $g$ and $k$.
+    Here, $g\in\mathbb{G}$ and $k$ can be represented as bitstring of length $l$.
+    Moreover, we use $\mathfrak{C}_{Reverse(l)}$ (\cref{fig:circuit:reverse}) and $\mathfrak{C}_{Num2Bits(l)}$ (\cref{fig:circuit:num2Bits}) as building blocks.
+    $\mathfrak{C}_{Reverse(l)}$ just reverses the order of its inputs.
+    }
+    \label{fig:circuit:fexp}
+\end{figure}
+
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Algorithm $FastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
     Here, $k$ can be represented as bitstring of length $l$.}
@@ -278,6 +307,7 @@ This is the basis for the Montgomery Ladder Algorithm we use in \cref{section:el
 
 It is possible to optimize computing group exponentiation further if we provide $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ to the exponentiation algorithm.
 This approach, using precomputed powers of the element to compute $g^k$, is defined in \cref{alg:fastExpPrecomputedPowers}.
+The corresponding circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ is shown in \cref{fig:circuit:ppfexp}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Algorithm $PrecomputedPowersFastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
@@ -297,23 +327,11 @@ This approach, using precomputed powers of the element to compute $g^k$, is defi
     \end{algorithmic}
 \end{Algorithmus}
 
-To represent $PrecomputedPowersFastExp$ as a circuit, we need additional circuits $\mathfrak{C}_{Num2Bits(l)}$ (\cref{section:appendix:num2Bits}) to compute $r_{Num2Bits(l)}(k)$ and $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ to enable branching.
-%$Num2Bits$ is a standard template and preimplemented in the circuit language Circom we use here \cite{circomlib}.
-$\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ depends on the choice of $\mathbb{G}$.
-Therefore, we will use it as a black box circuit as shown in \cref{fig:circuit:groupIfElse} for now.
-Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cref{fig:circuit:groupLaw}, we can then implement $PrecomputedPowersFastExp$ as the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ presented in \cref{fig:circuit:ppfexp}.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupIfElse.pdf}
-    \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ implementing branching for group elements. Computes $g_{res}$ from $g_{else}, g_{if}$ and $cond$:\\
-        $g_{res}:=\begin{cases}
-                g_{if}, &\quad\text{if } cond=1\\
-                g_{else}, &\quad\text{if } cond=0
-        \end{cases}$
-    }
-    \label{fig:circuit:groupIfElse}
-\end{figure}
+% To represent $PrecomputedPowersFastExp$ as a circuit, we need additional circuits $\mathfrak{C}_{Num2Bits(l)}$ (\cref{section:appendix:num2Bits}) to compute $r_{Num2Bits(l)}(k)$ and $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ to enable branching.
+% %$Num2Bits$ is a standard template and preimplemented in the circuit language Circom we use here \cite{circomlib}.
+% $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ depends on the choice of $\mathbb{G}$.
+% Therefore, we will use it as a black box circuit as shown in \cref{fig:circuit:groupIfElse} for now.
+% Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cref{fig:circuit:groupLaw}, we can then implement $PrecomputedPowersFastExp$ as the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ presented in \cref{fig:circuit:ppfexp}.
 
 \begin{figure}[h]
     \centering
@@ -327,7 +345,10 @@ Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cre
 The algorithm $PrecomputedPowersFastExp$ is used in \cref{section:ellipticCurves:twistedEdwards} to compute group exponentiation for Twisted Edwards curves.
 Precomputing $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ can be adventageuos, when computing multiple group exponentiations with exponents that have at most $l$ bits.
 In this case, we only need to compute the powers of $g$ once and can reuse them for all exponentiations.
-One such use case is \gls{eeg} encryption.
+Additionally, by precomputing the powers and providing them as an input to the circuit, we avoid these computations insicde the circuit.
+This significantly reduces the computational effort for a \gls{zkp} of correct circuit execution.
+
+One such use case of $ProcomputedPowersFastExp$ is \gls{eeg} encryption.
 In our voting schemes, we want to encrypt ballots $b$ with entries $b_0,\dots, b_{m-1}$.
 With \gls{eeg} encryption, we reuse the same public key $pk=(\mathbb{G}, n, g, h)$ to compute all entries $b'_0,\dots,b'_{m-1}$ of the encrypted ballot $b'=\mathcal{S}.Enc(b, pk)$ belonging to ballot $b$:
 \begin{align*}
