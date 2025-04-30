@@ -24,3 +24,5 @@ template assertSingleVoteVoting(bitsVotes, nVotes) {
 
     assertSumBit.in <== sum;
 }
+
+// component main = assertSingleVoteVoting(32, 300);

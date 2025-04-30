@@ -26,3 +26,5 @@ template assertMultiVoteWithRulesVoting(bitsVotes, nVotes, maxVotesCand, maxChoi
 
     ballot[1] * ballot[2] === ballot[0];
 }
+
+// component main = assertMultiVoteWithRulesVoting(32, 300, 5, 600);

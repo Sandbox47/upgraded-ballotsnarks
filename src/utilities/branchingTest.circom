@@ -42,4 +42,4 @@ template mux(n) {
     out <== selectEnabled.out;
 }
 
-component main = mux(3);
+// component main = mux(3);

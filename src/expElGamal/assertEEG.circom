@@ -287,3 +287,4 @@ template assertEncMatrixTwistedEdwardsArbitraryBase(rows, columns, bitsPlain, bi
 // component main = assertEncVector(100, 32, 255, 126932, 1);
 // component main = assertEncTwistedEdwardsArbitraryBase(5, 14, 110, 126934, 126930);
 // component main = assertEncTwistedEdwards(32, 255, 126934, 126930);
+// component main = assertEncMontgomeryProjective(32, 255, 126932, 1);

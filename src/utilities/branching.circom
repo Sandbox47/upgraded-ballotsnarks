@@ -233,4 +233,4 @@ template test(n) {
 // component main = mux2();
 // component main = ifThenElseMulti(3);
 // component main = test(252);
-component main = IsEqual();
+// component main = IsEqual();

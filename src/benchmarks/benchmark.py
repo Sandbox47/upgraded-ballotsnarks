@@ -314,7 +314,7 @@ def main():
     t_prove = prove(snark, base_path, file_prefix)
     t_ver = verify_proof(snark, base_path, file_prefix)
     export_results(snark, elliptic_curve, mode, election_type, n_bits, named_params, non_linear_constraints, linear_constraints, crs_size, t_prep, t_prove, t_ver)
-    # cleanup(base_path)
+    cleanup(base_path)
 
 if __name__ == "__main__":
     main()

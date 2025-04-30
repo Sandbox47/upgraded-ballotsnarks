@@ -63,4 +63,4 @@ template isCurvePointProjective(A, B) {
     out <== isZero.out;
 }
 
-component main = isCurvePointAffine(126932, 1);
+// component main = isCurvePointAffine(126932, 1);

@@ -36,7 +36,7 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
     assertSumLtEq.test <== maxChoices;
 }
 
-//component main = assertMultiVoteVoting(32, );
+// component main = assertMultiVoteVoting(32, 200, 5, 400);
 // component main = assertLtEq(3);
 // component main = LessEqThan(3);
 // component main = Num2Bits(2);

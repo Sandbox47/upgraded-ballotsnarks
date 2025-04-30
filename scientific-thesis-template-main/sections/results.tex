@@ -5,15 +5,22 @@ In the following, we present benchmarks for the ballot validity proofs in our vo
 Additionally, we present separate benchmarks for proving choice space membership and proving correct encryption.
 Here, we use SageMath to generate the inputs for the ballot validity circuits, Circom to implement the circuits and snarkjs to conduct the actual proofs (\cref{chap:software}) in a Groth16 \gls{zps}.
 
-For every benchmarked circuit, we record the constraint count\footnote{
+\SaveVerb{o1}|--O1|
+\SaveVerb{o2}|--O2|
+For every benchmarked circuit, we record the constraint count
+\footnote{
     \label{footnote:onlyNonLinearConstraints}
-    Note that we only record the number of non-linear constraints for every circuit.
+    Note that Circom reports the number of linear and non-linear constraints that a circuit needs seperatly and we consider only the non-linear constraints for our benchmarks.
+    Here, the number of linear constraints is determined by the number of additions involving signals in the a circuit and the number of non-linear constraints is determined by the number of multiplications involving signals in the circuit.
     As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
-    These linear constraints are missing from the constraint counts we present in our benchmarks.
-    For $\mathfrak{C}_C^{Enc}$, there are no such constraints and our presented constraint count is accurate.
-    However, for $\mathfrak{C}_C^{Vot}$, there are at least some linear constraints for most of the election types.
-    More precisely, there are 
-} , $CRS$ size and $CRS$ generation time\footnote{
+    For our benchmarks, we compiled the circuits using the compilation option \UseVerb{o1} which means that every addition contributes an additional linear constraints.
+    This is benefitial in case we want to use a different \gls{zps} such a PLONK \cite{gabizon_plonk_2019}, where additions are not free.
+    However, for Groth16, the option \UseVerb{o2} is arguably the better choice as this simplifies constraint system, removing as many linear and non-linear constraints as possible.
+    If we choose this option, the total number of constraints reported by Circom is always lower than the number of non-linear constraints reported by Circom when using option \UseVerb{o1}.
+    Therefore, our results can be viewed as an upper bound for the performance of our implementation.
+    With better optimization, even better results are possible.
+} 
+, $CRS$ size and $CRS$ generation time\footnote{
     \label{footnote:crsBasedOnPtauFile}
     Here, we create $CRS$ based on the same pregenerated file \UseVerb{ptau} for every circuit (\cref{section:software:snarkjsSetup}).
 },

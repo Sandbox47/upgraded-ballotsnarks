@@ -1,9 +1,1199 @@
 [
     {
         "name": "singleVote",
-        "ellipticCurve": "montgomeryProjective",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 1,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 2,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 3,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 5,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 10,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 25,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 50,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 75,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 100,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 125,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 150,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 175,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 200,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 250,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 300,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=300"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 350,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=350"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 400,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=400"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 450,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=450"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 500,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=500"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 550,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=550"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 575,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=575"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 600,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 650,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 700,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 750,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 800,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 850,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 900,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 950,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 1,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 1 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 1,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 2,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 3,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 5,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 10,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 25,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 50,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 75,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 100,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 125,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 150,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 175,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 200,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 250,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 300,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=300"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 350,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=350"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 400,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=400"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 450,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=450"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 500,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=500"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 550,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=550"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 575,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=575"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 600,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 650,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 700,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 750,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 800,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 850,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 900,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 950,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 16,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 16 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 1,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 2,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 3,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 5,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 10,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 25,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 50,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 75,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 100,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 125,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 150,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 175,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 200,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 250,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 300,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=300"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 350,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=350"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 400,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=400"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 450,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=450"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 500,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=500"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 550,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=550"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 575,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=575"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 600,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 650,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 700,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 750,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 800,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 850,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 900,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 950,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 32,
+        "nVotes": 1000,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 32 nVotes=1000"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 1,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 2,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 3,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 5,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 10,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 25,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 50,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 75,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 100,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 125,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 150,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 175,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 200,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 250,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 300,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=300"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 350,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=350"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 400,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=400"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 450,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=450"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 500,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=500"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 550,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=550"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 575,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=575"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 600,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 650,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 700,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 750,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 800,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 850,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 900,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 64,
+        "nVotes": 950,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 64 nVotes=950"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 1,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 2,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 3,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 5,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 10,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 25,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 50,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 75,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 100,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 125,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 150,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 175,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 200,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 250,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 300,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=300"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 350,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=350"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 400,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=400"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 450,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=450"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 500,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=500"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 550,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=550"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 575,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=575"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 600,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 650,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 700,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=700"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 750,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=750"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 800,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=800"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 850,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=850"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 128,
+        "nVotes": 900,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 128 nVotes=900"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 1,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=1"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 2,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=2"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
         "bitsVotes": 250,
         "nVotes": 3,
-        "command": "python3 benchmark.py encryption montgomeryProjective singleVote 250 nVotes=3"
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=3"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 5,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=5"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 10,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=10"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 25,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=25"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 50,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=50"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 75,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=75"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 100,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=100"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 125,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=125"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 150,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=150"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 175,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=175"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 200,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=200"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 250,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=250"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 300,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=300"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 350,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=350"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 400,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=400"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 450,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=450"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 500,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=500"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 550,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=550"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 575,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=575"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 600,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=600"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 650,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=650"
+    },
+    {
+        "name": "singleVote",
+        "ellipticCurve": "twistedEdwards",
+        "bitsVotes": 250,
+        "nVotes": 700,
+        "command": "python3 benchmark.py groth16 encryption twistedEdwards singleVote 250 nVotes=700"
     }
 ]

@@ -45,7 +45,7 @@ fi
 
 # Run circom to generate r1cs, sym, and wasm files (or C++ if --c is used)
 if [ "$USE_CPP_WITNESS" = true ]; then
-  circom "$CIRCOM_FILE" --r1cs --sym --c
+  circom "$CIRCOM_FILE" --r1cs --sym --c --O2
 
   # Navigate to the generated folder
   cd "${BASE_NAME}_cpp" || { echo "Error: Could not change directory to ${BASE_NAME}_cpp"; exit 1; }
@@ -57,7 +57,7 @@ if [ "$USE_CPP_WITNESS" = true ]; then
   make
   ./$BASE_NAME input.json witness.wtns
 else
-  circom "$CIRCOM_FILE" --r1cs --sym --wasm
+  circom "$CIRCOM_FILE" --r1cs --sym --wasm --O2
   
   # Navigate to the generated folder
   cd "${BASE_NAME}_js" || { echo "Error: Could not change directory to ${BASE_NAME}_js"; exit 1; }
