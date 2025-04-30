@@ -49,7 +49,7 @@ Then rename this file to `powersOfTau_22.ptau` and move it to a new folder `src/
 (The file is not included in the repository as it is very large (4.5 GB!).)
 
 # SageMath
-Some Linux distributions have current versions of SageMath available (E.g., ArchLinux). I have found the option presented [here](https://sagemanifolds.obspm.fr/install_ubuntu.html) to be the most convenient:
+Some Linux distributions have current versions of SageMath available (E.g., ArchLinux). We have found the option presented [here](https://sagemanifolds.obspm.fr/install_ubuntu.html) to be the most convenient:
 1. Install SageMath Dependencies:
 ```bash
 sudo apt install automake bc binutils bzip2 ca-certificates cliquer cmake curl ecl eclib-tools fflas-ffpack flintqs g++ gengetopt gfan gfortran git glpk-utils gmp-ecm lcalc libatomic-ops-dev libboost-dev libbraiding-dev libbz2-dev libcdd-dev libcdd-tools libcliquer-dev libcurl4-openssl-dev libec-dev libecm-dev libffi-dev libflint-dev libfreetype-dev libgc-dev libgd-dev libgf2x-dev libgiac-dev libgivaro-dev libglpk-dev libgmp-dev libgsl-dev libhomfly-dev libiml-dev liblfunction-dev liblrcalc-dev liblzma-dev libm4rie-dev libmpc-dev libmpfi-dev libmpfr-dev libncurses-dev libntl-dev libopenblas-dev libpari-dev libpcre3-dev libplanarity-dev libppl-dev libprimesieve-dev libpython3-dev libqhull-dev libreadline-dev librw-dev libsingular4-dev libsqlite3-dev libssl-dev libsuitesparse-dev libsymmetrica2-dev zlib1g-dev libzmq3-dev libzn-poly-dev m4 make nauty openssl palp pari-doc pari-elldata pari-galdata pari-galpol pari-gp2c pari-seadata patch perl pkg-config planarity ppl-dev python3-setuptools python3-venv r-base-dev r-cran-lattice singular sqlite3 sympow tachyon tar tox xcas xz-utils 
@@ -69,7 +69,7 @@ make configure
 ./configure
 MAKE="make -j8" make
 ```
-The `8` in the last command means that the installation utilizes $8$ threads during the installation. You can change this to at most twice the number of cores your system has to accelerate installation. (Although I tried this with $32$ on my system with 16 cores and it crashed. When I tried it again with $16$ it worked fine. So I would be careful with this.)
+The `8` in the last command means that the installation utilizes $8$ threads during the installation. You can change this to at most twice the number of cores your system has to accelerate installation. (Although we tried this with $32$ on my system with 16 cores and it crashed. When we tried it again with $16$ it worked fine. So we would be careful with this.)
 
 4. To be able to use SageMath from the terminal anywhere on your system, add a symbolic link:
 ```bash
@@ -95,7 +95,7 @@ echo $PATH
 echo $PYTHONPATH
 ```
 
-Optionally, to keep your `PATH` and `PYTHONPATH` clean and free from duplicates I also recommend adding the following lines to your `~/.bashrc` file:
+Optionally, to keep your `PATH` and `PYTHONPATH` clean and free from duplicates We also recommend adding the following lines to your `~/.bashrc` file:
 ```bash
 # Remove duplicate entries from PATH
 clean_path() {

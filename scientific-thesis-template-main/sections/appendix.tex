@@ -110,14 +110,14 @@ Furthermore, the cost is influenced by the number of constraint needed for the g
 We deonte the constraint counts for the individual circuits by $constraints(\mathfrak{C}_\mathbb{G}\_\odot)$ and $constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)})$.
 Putting everything together, we get 
 \begin{align*}
-    cost\mathbb{G}(base) = \frac{constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}) + constraints(\mathfrak{C}_\mathbb{G}\_\odot)}{log_2(base)}\text{.}
+    cost_\mathbb{G}(base) = \frac{constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}) + constraints(\mathfrak{C}_\mathbb{G}\_\odot)}{log_2(base)}\text{.}
 \end{align*}
 
 As before, we use Twisted Edwards curves as the group $\mathbb{G}$ since the group law $\mathfrak{C}_\mathbb{G}\_\odot$ requires less constraints compared to the group law for Montgomery Curves.
 Additionally, Twisted Edwards curves have only two coordinates whereas Montgomery Curves have three coordinates, which means that $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ uses less constraints as well.
 Specifically, with $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(c)}$ as presented in \cref{fig:circuit:teSwitchCase}, we get $constraints(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(base)})=2\cdot(base-1)$ and $constraints(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot})=7$.
 Then, \begin{align*}
-    cost_\mathbb{TE_{a,d}(\mathbb{F})}= \frac{2\cdot(base-1) + 7}{\log_2(base)}
+    cost_{TE_{a,d}(\mathbb{F})}(base)= \frac{2\cdot(base-1) + 7}{\log_2(base)}
 \end{align*}
 
 \begin{figure}[h]
@@ -129,7 +129,7 @@ Then, \begin{align*}
     \label{fig:circuit:teSwitchCase}
 \end{figure}
 
-Some results for $cost_\mathbb{TE_{a,d}(\mathbb{F})}$ are presented in \cref{tab:teArbBase} along with constraint counts for $\mathfrak{C}_{TE_{a,d}\_PPFExp_{base}}$ when used to calculate $g^k$ with a $255$ bit exponent $k$.
+Some results for $cost_{TE_{a,d}(\mathbb{F})}(base)$ are presented in \cref{tab:teArbBase} along with constraint counts for $\mathfrak{C}_{TE_{a,d}\_PPFExp_{base}}$ when used to calculate $g^k$ with a $255$ bit exponent $k$.
 
 \begin{table}[h]
     \centering
@@ -144,6 +144,7 @@ Some results for $cost_\mathbb{TE_{a,d}(\mathbb{F})}$ are presented in \cref{tab
     \end{tabular}
     \renewcommand{\arraystretch}{1.0}
     \caption{Constraint analysis of $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$ for different choices of $base$.
+    Note that the constraint counts for $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$ and $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ were obtained from our Circom implementation but match the expected constraint count $255\cdot cost_{TE_{a,d}(\mathbb{F})}(base)$ very closely for all covered bases.
     }
     \label{tab:teArbBase}
 \end{table}
@@ -484,6 +485,7 @@ For instance, we omitted the verification times in all plots.
 For completeness, we present the full results we obtained here.
 
 \section{Asserting Correct Encryption with $\mathfrak{C}_C^{Enc}$}
+\label{section:appendix:encResults}
 In the results presented in \cref{section:results:assertEncryption}, we omitted the verification times and only showed the results for $1$, $16$ and $32$ bit ballot entries.
 Now we include the verification times and cover ballot entries up to $250$ bit as presented in \cref{fig:plots:Enc_complete}.\cref{footnote:bitLimitEnc}
 
@@ -496,6 +498,7 @@ Now we include the verification times and cover ballot entries up to $250$ bit a
 \end{figure}
 
 \section{Asserting Choice Space Membership with $\mathfrak{C}_C^{Vot}$}
+\label{section:appendix:votResults}
 In the results presented in \cref{section:results:assertEncryption}, we omitted the verification times.
 Now, we include the verification times.
 As before, we split the results into those where the constraint count grows linearly with the candidate count $cand$ and those where the constraint count grows faster than linearly with the candidate count $cand$.
@@ -518,6 +521,7 @@ The complete results are presented in \cref{fig:plots:Vot_Linear_Complete} and \
 \end{figure}
 
 \section{Asserting Ballot Validity with $\mathfrak{C}_C^{Ballot\text{-}Validity}$}
+\label{section:appendix:combinedResults}
 In the results presented in \cref{section:results:assertEncryption}, we only showed the constraint counts.
 Now, we also present the proving times, $CRS$ sizes, $CRS$ generation times and verification times.
 As before, we present our results seperately for every election type or family of election types to make the plots less cluttered.
@@ -565,4 +569,8 @@ The complete results are presented in \cref{fig:plots:Combined_Borda_Complete}, 
 
 \chapter{Reproducibility}
 
-\todo{}
+In the accompanying implementation, we include a quick start guide \verb|QuickStart.md|.
+Here, we provide instructions on how to install the required software Circom, snarkjs and SageMath.
+Additionally, we explain how to run individual benchmarks of our implementation and we show how to create and run suites with multiple benchmarks.
+
+As mentioned in \cref{chap:results}, all of our benchmarks were obtained on an ESPRIMO Q957 ($64$-bit, i5-7500T CPU @ 2.70GHz, $16$GB RAM).

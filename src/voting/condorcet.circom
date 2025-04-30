@@ -157,6 +157,6 @@ template assertCondorcetVoting(bitsVotes, n) {
 }
 
 // component main = assertCondorcetVotingWithoutRanking(5);
-// component main = assertCondorcetVoting(32, 20);
+// component main = assertCondorcetVoting(32, 3);
 // component main = IsEqual();
 // component main = GreaterThan(32);

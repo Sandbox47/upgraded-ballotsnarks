@@ -980,15 +980,15 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
 \end{definition}
 
 The zero-knowledge property of \glspl{zps} can be defined formally for \glspl{g16snark}.
-In their work, Groth \cite{groth_size_2016} introduced an additional algorithm $Sim(CRS, I, (\alpha,\beta,\gamma,\delta,\tau))$ which produces a forged proof $\pi'$ for $I$.
+In their work, Groth \cite{groth_size_2016} introduced an additional algorithm $Sim(I, (\alpha,\beta,\gamma,\delta,\tau))$ which produces a forged proof $\pi'$ for $I$.
 A detailed definition of $Sim$ is presented in \cite{groth_size_2016} and also in Appendix B of \cite{huber_zk-snarks_2025}.
-Here, $Sim$ uses the common reference string $CRS$ of the \gls{g16snark}, an instance $I$ and the simulation trapdoor $(\alpha, \beta, \delta, \gamma, \tau)$ but does not receive a witness $W$.
+Here, $Sim$ uses an instance $I$ and the simulation trapdoor $(\alpha, \beta, \delta, \gamma, \tau)$ but does not receive a witness $W$.
 Based on this algorithm, the zero-knowledge property of \glspl{g16snark} can be defined as follows \cite{groth_size_2016}:
 Let $CRS$ be a common reference string and let $I\in\mathcal{I}$ and $W\in\mathcal{W}$.% such that $I$ and $W$ are related, i.e. $DR(QAP(R1CS_r), d_p)=1$.
 Then, any adversary cannot distinguish the proofs $\pi:=Prove(CRS, I, W)$ and $\pi':=Sim(CRS, I, (\alpha, \beta, \gamma, \delta, \tau))$.
-In other words, the proofs $\pi$ and $\pi'$ do not reveal anything about the witness $W$.
+In other words, the proof $\pi$ does not reveal anything about the witness $W$ since $W$ was not involved in the creation of $\pi'$.
 
-Proofs of Soundness, Completeness, Succinctness and the Argument and Zero-Knowledge properties of \glspl{g16snark} are presented in \cite{groth_size_2016}.
+Proofs of Knowledge Soundness, Completeness and Succinctness as well as proofs of the Argument property and Zero-Knowledge property of \glspl{g16snark} are presented in \cite{groth_size_2016}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Procedure to setup the \gls{zps} $GSNARK(DR(QAP(R1CS_r), d_p))$ based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.

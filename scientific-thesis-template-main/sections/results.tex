@@ -5,7 +5,15 @@ In the following, we present benchmarks for the ballot validity proofs in our vo
 Additionally, we present separate benchmarks for proving choice space membership and proving correct encryption.
 Here, we use SageMath to generate the inputs for the ballot validity circuits, Circom to implement the circuits and snarkjs to conduct the actual proofs (\cref{chap:software}) in a Groth16 \gls{zps}.
 
-For every benchmarked circuit, we record the constraint count , $CRS$ size and $CRS$ generation time\footnote{
+For every benchmarked circuit, we record the constraint count\footnote{
+    \label{footnote:onlyNonLinearConstraints}
+    Note that we only record the number of non-linear constraints for every circuit.
+    As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
+    These linear constraints are missing from the constraint counts we present in our benchmarks.
+    For $\mathfrak{C}_C^{Enc}$, there are no such constraints and our presented constraint count is accurate.
+    However, for $\mathfrak{C}_C^{Vot}$, there are at least some linear constraints for most of the election types.
+    More precisely, there are 
+} , $CRS$ size and $CRS$ generation time\footnote{
     \label{footnote:crsBasedOnPtauFile}
     Here, we create $CRS$ based on the same pregenerated file \UseVerb{ptau} for every circuit (\cref{section:software:snarkjsSetup}).
 },
@@ -21,7 +29,19 @@ proving time and verification time\footnote{
     Therefore, we do not compare the verification times in more detail.
 }.
 
-Note that the proof sizes obtained with our implementation are constant, since we use \glspl{g16snark}.
+% Note, that we only record the number of non-linear constraints for every circuit.
+% As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
+% These linear constraints are missing from the constraint counts we present in our benchmarks.\footnote{
+%     \label{footnote:onlyNonLinearConstraints}
+%     In Circom, we can record the non-linear and linear constraints seperately. 
+%     However, the linear constraints refer to every addition involving a signal, not just to those that are directly part of the output.
+%     Since we did not find a way to record just these linear constraints, we choose to ignore them for our benchmarks.
+% }
+% For $\mathfrak{C}_C^{Enc}$, there are no such constraints and our presented constraint count is accurate.
+% However, for $\mathfrak{C}_C^{Vot}$, there are at least some linear constraints for most of the election types.
+% More precisely, the constraints missing from our implementation are 
+
+Note, that the proof sizes obtained with our implementation are constant, since we use \glspl{g16snark}.
 As introduced in \cref{alg:proveG16}, Groth16 proofs always consist of three elements $(g_1^A,g_1^C,g_2^B)$.
 These are stored in a \verb|proof.json| file by snarkjs as presented in \cref{section:software:snarkjs} which takes up $806$ bytes.
 Therefore, we will not consider proof sizes further in our results.
@@ -68,7 +88,7 @@ Note that we compare results for encrypting ballot entries represented with $1$,
     Using more than $32$ Bits to represent a ballot entry $v$ is infeasible in practice as decryption requires finding $v$ based on $g^v$.
     This is hard according to the Discrete Logarithm problem if $v$ can assume a lot of different values.
 }
-However, we also tested our implementation with up to $250$ bits per ballot entry as shown in \cref{todo}.\footnote{
+However, we also tested our implementation with up to $250$ bits per ballot entry as shown in \cref{section:appendix:encResults}.\footnote{
     \label{footnote:bitLimitEnc}
     Note that using more than $250$ bits to represent ballots is not possible in our voting schemes.
     We use group with order 
@@ -81,7 +101,7 @@ However, we also tested our implementation with up to $250$ bits per ballot entr
     %
     %However, even using more than $32$ Bits to represent a ballot entry $v$ is infeasible in practice as decryption requires finding $v$ based on $g^v$.
     %This is hard according to the Discrete Logarithm problem if $v$ can assume a lot of different values.
-}\todo{Make in Appendix}
+}
 
 
 % In addition to that, we compare our results to those obtained by Huber et. al. as shown in \cref{fig:plots:Circom_libsnark_Enc}.\footnote{
@@ -454,8 +474,8 @@ As in \cref{section:results:assertEncryption}, we use either a Montgomery Curve 
 The results of our benchmarks and the comparison with the results obtained by Huber et. al. are shown in Figures \ref{fig:plots:Combined}.
 Here, we show our results seperately for every election type or family of election types to limit the amount of data presented in each plot.
 Additionally, we only show the candidate count here and omit the results for proving times, $CRS$ sizes and $CRS$ generation times.
-As mentioned previously, these metrics depend directly on the candidate count and the connection beteeen them has been explored in \cref{section:results:assertEncryption} and in detail.
-However, the remaining results are also presented in \cref{todo}. \todo{Make in Appendix}
+As mentioned previously, these metrics depend directly on the candidate count and the connection between them has been explored in \cref{section:results:assertEncryption} and in detail.
+However, the remaining results are also presented in \cref{section:appendix:combinedResults}.
 
 \begin{figure}[h]
     \centering
@@ -522,7 +542,7 @@ The results of this are shown in \cref{tab:combinedResults}.
                                                                                                                                                       &                                            & $1.000$              & \multicolumn{1}{c|}{$0.000$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{Multi(cand, 2cand, 5)}$}                                                                                                  &                                            & \multicolumn{2}{c|}{$12249$}                                     & \multicolumn{2}{c|}{$10588$}           & \multicolumn{2}{c|}{$5448$}      \\
                                                                                                                                                       &                                            & $0.997$              & \multicolumn{1}{c|}{$0.003$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $0.994$         & $0.006$        \\ \cline{1-1} \cline{3-8} 
-        \multirow{2}{*}{$C_{MWR(cand, 2cand, 5)}$}                                                                                                    &                                            & \multicolumn{2}{c|}{$12249$*}                                    & \multicolumn{2}{c|}{$10588$}           & \multicolumn{2}{c|}{$5448$}      \\
+        \multirow{2}{*}{$C_{MWR(cand, 2cand, 5)}$}                                                                                                    &                                            & \multicolumn{2}{c|}{$12249$}                                     & \multicolumn{2}{c|}{$10588$}           & \multicolumn{2}{c|}{$5448$}      \\
                                                                                                                                                       &                                            & $0.997$              & \multicolumn{1}{c|}{$0.003$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $0.994$         & $0.006$        \\ \cline{1-1} \cline{3-8} 
         \multirow{2}{*}{$C_{Line(cand)}$}                                                                                                             &                                            & \multicolumn{2}{c|}{$11505$}                                     & \multicolumn{2}{c|}{$10557$}           & \multicolumn{2}{c|}{$5417$}      \\
                                                                                                                                                       &                                            & $1.000$              & \multicolumn{1}{c|}{$0.000$}              & $1.000$ & \multicolumn{1}{c|}{$0.000$} & $1.000$         & $0.000$        \\ \cline{1-1} \cline{3-8} 
@@ -545,8 +565,8 @@ The results of this are shown in \cref{tab:combinedResults}.
     \caption{Constraints needed by $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ per ballot entry.
     For every entry in the \glqq Constraints per Ballot Entry \grqq\ column, we also show which portion of those constraints is needed for $\mathfrak{C}_C^{Enc}$ on the left and which portion is needed for $\mathfrak{C}_C^{Vot}$ on the right.
     Note that we use $C_{PB}$ to denote $C_{Pointlist\text{-}Borda}$ and $C_{Cond.}$ to denote $C_{Condorcet}$.\\
-    *For \gls{mwr}, the constraint count per ballot entry is theoretical since the result obtained by Huber et. al. was $11865$ (calculated from the result for $300$ candidates).
-    This does not fit together with the $12216$ constraints we need to purely encrypt a ballot entry.
+    % *For \gls{mwr}, the constraint count per ballot entry is theoretical since the result obtained by Huber et. al. was $11865$ (calculated from the result for $300$ candidates).
+    % This does not fit together with the $12216$ constraints we need to purely encrypt a ballot entry.
     }
     \label{tab:combinedResults}
 \end{table}

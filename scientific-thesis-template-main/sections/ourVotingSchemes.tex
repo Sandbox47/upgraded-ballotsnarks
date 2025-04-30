@@ -241,7 +241,7 @@ In contrast to Single-Vote, each voter can allocate up to a maximum of $max$ vot
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/multiVoteVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Multi}(cand, max, t)}$.
     Here, we use $\mathfrak{C}_{Assert\text{-}Leq}$ (\cref{fig:circuit:assertLeq}) as a building block.
-    $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}^{Vot}}$ needs $(l+1)\cdot cand + \lceil\log_2(cand)\rceil + l + 1$ constraints if the ballot entries are represented with $l$ bits.
+    $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}^{Vot}}$ needs $(l+2)\cdot cand + \lceil\log_2(cand)\rceil + l + 2$ constraints if the ballot entries are represented with $l$ bits.
     }
     \label{fig:circuit:multiVoteVoting}
 \end{figure}
@@ -343,7 +343,7 @@ This illustrates nicely that we can extend the existing Multi-Vote system easily
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/mwrVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{MWR}(cand, max, t)}$.
     Here, we use $\mathfrak{C}_{C_{\text{Multi}}(cand, max, t)}$ (\cref{fig:circuit:multiVoteVoting}) as a building block.
-    $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}^{Vot}}$ needs $(l+1)\cdot cand + \lceil\log_2(cand)\rceil + l + 2$ constraints if the ballot entries are represented with $l$ bits.
+    $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}^{Vot}}$ needs $(l+2)\cdot cand + \lceil\log_2(cand)\rceil + l + 3$ constraints if the ballot entries are represented with $l$ bits.
     }
     \label{fig:circuit:mwrVoting}
 \end{figure}
@@ -400,15 +400,15 @@ Since we allow that there are more candidates than points in the pointlist, ther
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Function $r_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$ used to assert that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$.
-    Here, we use $r_{Count\text{-}Equal(l)}(b, v)$ (\cref{section:appendix:counting}) to count how often the value $v$ appears in $b=(b_0,\dots, b_{cand-1})$.
+    Here, we use $r_{Count\text{-}Equal(cand)}(b, v)$ (\cref{section:appendix:counting}) to count how often the value $v$ appears in $b=(b_0,\dots, b_{cand-1})$.
     }
     \label{alg:pointlistBordaVoting}
     \begin{algorithmic}
     \Procedure{$r_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$}{$b, r$}
         \State $(p_0,\dots, p_{l-1}):=\mathcal{L}$
-        \State $cand-l \mbeq r_{Count\text{-}Equal(l)}(b, 0)$
+        \State $cand-l \mbeq r_{Count\text{-}Equal(cand)}(b, 0)$
         \For{$i\in\{0,\dots, l-1\}$}
-            \State $1\mbeq r_{Count\text{-}Equal(l)}(b, p_i)$
+            \State $1\mbeq r_{Count\text{-}Equal(cand)}(b, p_i)$
         \EndFor
     \EndProcedure
     \end{algorithmic}
@@ -418,8 +418,8 @@ Since we allow that there are more candidates than points in the pointlist, ther
     \centering
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/pointlistBordaVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{l}$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$.
-    Here, we use $\mathfrak{C}_{Count\text{-}Equal(l)}$ (\cref{fig:circuit:countEqual}) with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
-    $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}^{Vot}}$ needs $2\cdot cand\cdot(l+1)$ constraints.
+    Here, we use $\mathfrak{C}_{Count\text{-}Equal(cand)}$ (\cref{fig:circuit:countEqual}) with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
+    $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}^{Vot}}$ needs $(2\cdot cand + 1)\cdot(l+1)$ constraints.
     }
     \label{fig:circuit:pointlistBordaVoting}
 \end{figure}
@@ -464,7 +464,7 @@ Using this ranking, the candidates are then assigned a fixed number of points fo
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/btsVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand}$ computed from a ranking $r\in\mathbb{F}_q^{cand}$ is part of the choice space $C_{\text{BTS}(cand, ap, bp)}$.
     Here, we use $\mathfrak{C}_{Compute\text{-BTS}(cand, ap, bp)}$ (\cref{fig:circuit:btsComputeBallot}) to compute the ballot $b'$ corresponding to $r$.
-    $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}^{Vot}}$ needs $cand\cdot (2\cdot cand + cand\cdot (\lceil\log_2(cand)\rceil + 1))$ constraints if we limit the ranking values to the range $\{0,\dots, cand\}$.
+    $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}^{Vot}}$ needs $cand\cdot (2\cdot cand + cand\cdot (\lceil\log_2(cand)\rceil + 1)+1)$ constraints if we limit the ranking values to the range $\{0,\dots, cand\}$.
     This is still sufficient to express arbitrary rankings of $cand$ many candidates.
     }
     \label{fig:circuit:btsVoting}
@@ -472,15 +472,15 @@ Using this ranking, the candidates are then assigned a fixed number of points fo
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Function $r_{Compute\text{-BTS}(cand, ap, bp)}$ used to compute the ballot $b'$ belonging to ranking $r$ in a \gls{bts} voting system with choice space $C_{\text{BTS}(cand, ap, bp)}$.
-    Here, we use $r_{count\text{-}greater}(r, r_i)$ (\cref{section:appendix:counting}) and $r_{count\text{-}equal}(r, r_i)$ (\cref{section:appendix:counting}) as auxiliary functions.
+    Here, we use $r_{Count\text{-}Greater(cand)}(r, r_i)$ (\cref{section:appendix:counting}) and $r_{Count\text{-}Equal(cand)}(r, r_i)$ (\cref{section:appendix:counting}) as auxiliary functions.
     }
     \label{alg:btsComputeBallot}
     \begin{algorithmic}
     \Procedure{$r_{Compute\text{-BTS}(cand, ap, bp)}$}{$r$}
         \State $(r_0,\dots, r_{cand-1}):=r$
         \For{$i\in\{0,\dots, cand-1\}$}
-            \State $n_{rw}\gets r_{count\text{-}greater}(r, r_i)$ \Comment Number of candidates ranked worse than candidate $i$
-            \State $n_{rs}\gets r_{count\text{-}equal}(r, r_i)$ \Comment Number of candidates ranked the same as candidate $i$
+            \State $n_{rw}\gets r_{Count\text{-}Greater(cand)}(r, r_i)$ \Comment Number of candidates ranked worse than candidate $i$
+            \State $n_{rs}\gets r_{Count\text{-}Equal(cand)}(r, r_i)$ \Comment Number of candidates ranked the same as candidate $i$
             \State $b'_i\gets ap\cdot n_{rw} + bp\cdot (n_{rs} - 1)$ \Comment Subtract $bp$ points for candidate themself
         \EndFor
         \State $b'\gets (b'_0,\dots, b'_{cand-1})$
@@ -493,7 +493,7 @@ Using this ranking, the candidates are then assigned a fixed number of points fo
     \centering
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/btsComputeBallot.pdf}
     \caption{Circuit $\mathfrak{C}_{Compute\text{-BTS}(cand, ap, bp)}$, computing the ballot $b'$ belonging to ranking $r$ in a \gls{bts} voting system with choice space $C_{\text{BTS}(cand, ap, bp)}$.
-    Here, we use $\mathfrak{C}_{count\text{-}greater}$ (\cref{fig:circuit:countGreater}) and $\mathfrak{C}_{count\text{-}equal}$ (\cref{fig:circuit:countEqual}) as building blocks.
+    Here, we use $\mathfrak{C}_{Count\text{-}Greater(cand)}$ (\cref{fig:circuit:countGreater}) and $\mathfrak{C}_{Count\text{-}Equal(cand)}$ (\cref{fig:circuit:countEqual}) as building blocks.
     }
     \label{fig:circuit:btsComputeBallot}
 \end{figure}
@@ -684,8 +684,7 @@ All other entries are $0$.
     \centering
     \includegraphics[scale=.7]{graphics/ourVotingSchemes/majorityJudgmentVoting.pdf}
     \caption{Circuit $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$, asserting that a ballot $b\in\mathbb{F}_q^{cand\times grades}$ is part of the choice space $C_{\text{Majority-Judgment}(cand, grades)}$.
-    %Here, we use $\mathfrak{C}_{occurences(l)}$ \cref{fig:circuit:occurences} with inputs $b$ and $v$ as a building block to count how often the value $v$ appears in $b$.
-    $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}^{Vot}}$ needs $cand\cdot grades$ constraints.
+    $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}^{Vot}}$ needs $cand\cdot (grades+1)$ constraints.
     }
     \label{fig:circuit:majorityJudgmentVoting}
 \end{figure}

@@ -37,4 +37,6 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
 }
 
 //component main = assertMultiVoteVoting(32, );
-//component main = assertLtEq(3);
+// component main = assertLtEq(3);
+// component main = LessEqThan(3);
+// component main = Num2Bits(2);
