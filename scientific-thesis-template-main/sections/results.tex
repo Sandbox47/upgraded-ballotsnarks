@@ -8,18 +8,18 @@ Here, we use SageMath to generate the inputs for the ballot validity circuits, C
 \SaveVerb{o1}|--O1|
 \SaveVerb{o2}|--O2|
 For every benchmarked circuit, we record the constraint count
-\footnote{
-    \label{footnote:onlyNonLinearConstraints}
-    Note that Circom reports the number of linear and non-linear constraints that a circuit needs seperatly and we consider only the non-linear constraints for our benchmarks.
-    Here, the number of linear constraints is determined by the number of additions involving signals in the a circuit and the number of non-linear constraints is determined by the number of multiplications involving signals in the circuit.
-    As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
-    For our benchmarks, we compiled the circuits using the compilation option \UseVerb{o1} which means that every addition contributes an additional linear constraints.
-    This is benefitial in case we want to use a different \gls{zps} such a PLONK \cite{gabizon_plonk_2019}, where additions are not free.
-    However, for Groth16, the option \UseVerb{o2} is arguably the better choice as this simplifies constraint system, removing as many linear and non-linear constraints as possible.
-    If we choose this option, the total number of constraints reported by Circom is always lower than the number of non-linear constraints reported by Circom when using option \UseVerb{o1}.
-    Therefore, our results can be viewed as an upper bound for the performance of our implementation.
-    With better optimization, even better results are possible.
-} 
+% \footnote{
+%     \label{footnote:onlyNonLinearConstraints}
+%     Note that Circom reports the number of linear and non-linear constraints that a circuit needs seperatly and we consider only the non-linear constraints for our benchmarks.
+%     Here, the number of linear constraints is determined by the number of additions involving signals in a circuit and the number of non-linear constraints is determined by the number of multiplications involving signals in the circuit.
+%     As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
+%     For our benchmarks, we compiled the circuits using the default compilation option \UseVerb{o1} which means that every addition of signals contributes an additional linear constraints.
+%     This is required in case we want to use a different \gls{zps} such a PLONK \cite{gabizon_plonk_2019}, where additions are not free.
+%     However, for Groth16, the comilation option \UseVerb{o2} is arguably the better choice as this simplifies constraint system, removing as many linear and non-linear constraints as possible.
+%     If we choose this option, the total number of constraints reported by Circom is always lower than the number of non-linear constraints reported by Circom when using option \UseVerb{o1}.
+%     Therefore, our results can be viewed as an upper bound for the performance of our implementation.
+%     With more advanced optimization, slightly better results are possible.
+% } 
 , $CRS$ size and $CRS$ generation time\footnote{
     \label{footnote:crsBasedOnPtauFile}
     Here, we create $CRS$ based on the same pregenerated file \UseVerb{ptau} for every circuit (\cref{section:software:snarkjsSetup}).
@@ -36,6 +36,16 @@ proving time and verification time\footnote{
     Therefore, we do not compare the verification times in more detail.
 }.
 
+Note that Circom reports the number of linear and non-linear constraints that a circuit needs seperatly and we consider only the non-linear constraints for our benchmarks.
+Here, the number of linear constraints is determined by the number of additions involving signals in a circuit and the number of non-linear constraints is determined by the number of multiplications involving signals in the circuit.
+As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
+For our benchmarks, we compiled the circuits using the default compilation option \UseVerb{o1} which means that every addition of signals contributes an additional linear constraints.
+This is required in case we want to use a different \gls{zps} such a PLONK \cite{gabizon_plonk_2019}, where additions are not free.
+However, for Groth16, the comilation option \UseVerb{o2} is arguably the better choice as this simplifies the constraint system, removing as many linear and non-linear constraints as possible while maintaining semantic equivalency.
+If we choose this option, the total number of constraints reported by Circom is always lower than the number of non-linear constraints reported by Circom when using option \UseVerb{o1}.
+Therefore, our results can be viewed as an upper bound for the performance of our implementation.
+With more advanced optimization, better results are possible.
+
 % Note, that we only record the number of non-linear constraints for every circuit.
 % As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
 % These linear constraints are missing from the constraint counts we present in our benchmarks.\footnote{
@@ -48,7 +58,7 @@ proving time and verification time\footnote{
 % However, for $\mathfrak{C}_C^{Vot}$, there are at least some linear constraints for most of the election types.
 % More precisely, the constraints missing from our implementation are 
 
-Note, that the proof sizes obtained with our implementation are constant, since we use \glspl{g16snark}.
+The proof sizes obtained with our implementation are constant, since we use \glspl{g16snark}.
 As introduced in \cref{alg:proveG16}, Groth16 proofs always consist of three elements $(g_1^A,g_1^C,g_2^B)$.
 These are stored in a \verb|proof.json| file by snarkjs as presented in \cref{section:software:snarkjs} which takes up $806$ bytes.
 Therefore, we will not consider proof sizes further in our results.

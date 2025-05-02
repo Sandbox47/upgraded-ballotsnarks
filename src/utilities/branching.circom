@@ -216,21 +216,24 @@ template mux(n) {
     out <== selectEnabled.out;
 }
 
-template test(n) {
-    input signal in;
+template test() {
+    input signal in1;
+    input signal in2;
     output signal out;
 
-    component comp = IsEqual();
-    comp.in[0] <== in;
-    comp.in[1] <== in;
-
-    out <== comp.out * comp.out;
+    out <== in1 + in2;
 }
 
 // component main = selectEnabled(3);
 // component main = switchCaseMulti(3, 5);
+// component main = switchCase(3);
 // component main = mux(3);
 // component main = mux2();
 // component main = ifThenElseMulti(3);
-// component main = test(252);
+// component main = test();
 // component main = IsEqual();
+// component main = Num2Bits(250);
+
+// component main = LessEqThan(250);
+
+// component main = Bits2Num(8);

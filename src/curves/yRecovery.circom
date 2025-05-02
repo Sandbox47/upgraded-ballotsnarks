@@ -172,3 +172,4 @@ template yRecoveryProjective(A, B) {
 }
 
 // component main = okeyaSakuraiYRecoveryProjective(126932, 1);
+// component main = yRecoveryProjective(126932, 1);

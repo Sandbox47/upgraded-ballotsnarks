@@ -53,3 +53,5 @@ template projectiveToAffine() {
     // input AffinePoint() test;
     // test === out;
 }
+
+// component main = projectiveToAffine();

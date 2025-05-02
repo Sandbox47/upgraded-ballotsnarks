@@ -119,7 +119,7 @@ Elliptic curves such as the Montgomery curve are defined as groups over $\mathbb
     \centering
     \includegraphics[scale=.7]{graphics/ellipticCurves/TangentRule.pdf}
     \caption{Circuit $\mathfrak{C}_{Tangent\text{-}Rule}$ for computing $Tangent\text{-}Rule(P)$ with $P=(x,y)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $y\neq 0$.
-    Here, we use $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as a building block.
+    Here, we use $\mathfrak{C}_{Safe\text{-}Division}$ (\cref{fig:circuit:safeDivision}) as a building block.
     Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
     }
     \label{fig:circuit:tangentRuleAffineMontgomery}
@@ -129,7 +129,7 @@ Elliptic curves such as the Montgomery curve are defined as groups over $\mathbb
     \centering
     \includegraphics[scale=.7]{graphics/ellipticCurves/ChordRule.pdf}
     \caption{Circuit $\mathfrak{C}_{Chord\text{-}Rule}$ for computing $Chord\text{-}Rule(P_1, P_2)$ where $P_1=(x_1,y_1), P_2=(x_2, y_2)\in M_{A,B}(\mathbb{F})\setminus\{\mathcal{O}\}$ and $x_1\neq x_2$.
-    Here, we use $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) as a building block.
+    Here, we use $\mathfrak{C}_{Safe\text{-}Division}$ (\cref{fig:circuit:safeDivision}) as a building block.
     Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
     }
     \label{fig:circuit:chordRuleAffineMontgomery}
@@ -1045,7 +1045,7 @@ Additionally, it is straightforward to replace one representation with the other
 For \gls{eeg} encryption, the main contributing factor to the total constraint counts in the encryption circuit $\mathfrak{C}_{EEG(\mathbb{G}).Enc}$ or $\mathfrak{C}_{PPEEG(\mathbb{G}).Enc}$ are the exponentiation circuits.
 To demonstrate that \gls{ppeeg} encryption with Twisted Edwards curves is the most efficient choice, we compare the encryption circuits $\mathfrak{C}_{\mathbb{G}\_Exp}$, $\mathfrak{C}_{\mathbb{G}\_FExp}$ and $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ for the elliptic curves $M_{A,B}(\mathbb{F}P^2)$ and $TE_{a,d}(\mathbb{F})$ as shown in \cref{tab:expConstraintComp}.
 
-Here, we use the contraint counts for the individual circuits as presented in \cref{tab:completeCircuitList}.
+% Here, we use the contraint counts for the individual circuits as presented in \cref{tab:completeCircuitList}.
 
 \begin{table}[h]
     \centering

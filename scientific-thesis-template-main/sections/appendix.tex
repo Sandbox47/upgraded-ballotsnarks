@@ -1,7 +1,6 @@
-\chapter{Used Symbols}
-
-\todo{Make usage of variables, etc. consistent throughout the thesis and explain every symbol here shortly.}
-
+% \chapter{Used Symbols}
+% 
+% \todo{Make usage of variables, etc. consistent throughout the thesis and explain every symbol here shortly.}
 \chapter{Preliminaries}
 
 %\section{Algebra}
@@ -107,15 +106,15 @@ For this purpose, we introduce a cost function $cost_\mathbb{G}(base)$ which cal
 We employ this normalization since a a number that can be represented with $255$ bits can also be represented with $\Big\lceil \frac{255}{\log_2(base)}\Big\rceil$ digits in base $base$.
 For instance, we need $\Big\lceil \frac{255}{\log_2(5)}\Big\rceil=110$ digits to represent a $255$ bit number in base $5$.
 Furthermore, the cost is influenced by the number of constraint needed for the group law $\mathfrak{C}_\mathbb{G}\_\odot$ and the group switch case $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$.
-We deonte the constraint counts for the individual circuits by $constraints(\mathfrak{C}_\mathbb{G}\_\odot)$ and $constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)})$.
+We denote the constraint counts for the individual circuits by $\mathcal{N}(\mathfrak{C}_\mathbb{G}\_\odot)$ and $\mathcal{N}(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)})$.
 Putting everything together, we get 
 \begin{align*}
-    cost_\mathbb{G}(base) = \frac{constraints(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}) + constraints(\mathfrak{C}_\mathbb{G}\_\odot)}{log_2(base)}\text{.}
+    cost_\mathbb{G}(base) = \frac{\mathcal{N}(\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}) + \mathcal{N}(\mathfrak{C}_\mathbb{G}\_\odot)}{log_2(base)}\text{.}
 \end{align*}
 
 As before, we use Twisted Edwards curves as the group $\mathbb{G}$ since the group law $\mathfrak{C}_\mathbb{G}\_\odot$ requires less constraints compared to the group law for Montgomery Curves.
 Additionally, Twisted Edwards curves have only two coordinates whereas Montgomery Curves have three coordinates, which means that $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ uses less constraints as well.
-Specifically, with $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(c)}$ as presented in \cref{fig:circuit:teSwitchCase}, we get $constraints(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(base)})=2\cdot(base-1)$ and $constraints(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot})=7$.
+Specifically, with $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(c)}$ as presented in \cref{fig:circuit:teSwitchCase}, we get $\mathcal{N}(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(base)})=2\cdot(base-1)$ and $\mathcal{N}(\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot})=7$.
 Then, \begin{align*}
     cost_{TE_{a,d}(\mathbb{F})}(base)= \frac{2\cdot(base-1) + 7}{\log_2(base)}
 \end{align*}
@@ -236,10 +235,10 @@ For this purpse, we use, \begin{align*}
         v_{def},\quad\text{if } \forall i\in\{0,\dots, c-2\}:cond_i=0\\
         undefined,\quad\text{otherwise}
     \end{cases} \\
-    &\quad\quad\text{with }\quad\begin{matrix}
+    &\quad\quad\text{with }\quad\begin{matrix*}[l]
         v &= (v_0, \dots, v_{c-2}, v_{def})\\
-        cond & = (cond_0, \dots, cond_{c-2})
-    \end{matrix}
+        cond &= (cond_0, \dots, cond_{c-2})
+    \end{matrix*}
 \end{align*}
 and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c)}$ \cref{fig:circuit:switchCase}.
 
@@ -247,7 +246,7 @@ and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c)}$ \cref{fig:c
     \centering
     \includegraphics[scale=0.7]{graphics/appendix/switchCase.pdf}
     \caption{Circuit $\mathfrak{C}_{Switch\text{-}Case(c)}$ which outputs the selected value from $v$ depending on $cond$.
-    Note that the circuit can produce arbitrary outputs if \\$cond\notin\left\{(cond_0,\dots, cond_{c-2})\in\{0,1\}^{c-1}\Bigg|\sum_{i=0}^{c-2}cond_i\in\{0,1\}\right\}$.}
+    Note that the circuit can produce arbitrary outputs if \\$cond\notin\left\{(cond_0,\dots, cond_{c-2})\in\{0,1\}^{c-1}\Bigg|\sum\limits_{i=0}^{c-2}cond_i\in\{0,1\}\right\}$.}
     \label{fig:circuit:switchCase}
 \end{figure}
 
@@ -259,10 +258,10 @@ For this purpose, we use \begin{align*}
         (v_{def,0}, \dots, v_{def,l-1}),\quad\text{if } \forall i\in\{0,\dots, c-2\}:cond_i=0\\
         undefined,\quad\text{otherwise}
     \end{cases} \\
-    &\quad\quad\text{with }\quad\begin{matrix}
+    &\quad\quad\text{with }\quad\begin{matrix*}[l]
         v &= ((v_{0,0}, \dots, v_{0,l-1}), \dots, (v_{c-2, 0}, \dots, v_{c-2,l-1}), (v_{def,0},\dots, v_{def, l-1}))\\
-        cond & = (cond_0, \dots, cond_{c-2})
-    \end{matrix}
+        cond &= (cond_0, \dots, cond_{c-2})
+    \end{matrix*}
 \end{align*}
 and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ \cref{fig:circuit:switchCaseGen}.
 
@@ -271,7 +270,7 @@ and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ \cref{fig
     \includegraphics[scale=0.7]{graphics/appendix/switchCaseGen.pdf}
     \caption{Circuit $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ which outputs the selected value from $v$ depending on $cond$.
     Here, we use $\mathfrak{C}_{Switch\text{-}Case(c)}$ (\cref{fig:circuit:switchCase}) as a building block.
-    Note that the circuit can produce arbitrary outputs if \\$cond\notin\left\{(cond_0,\dots, cond_{c-2})\in\{0,1\}^{c-1}\Bigg|\sum_{i=0}^{c-2}cond_i\in\{0,1\}\right\}$.}
+    Note that the circuit can produce arbitrary outputs if \\$cond\notin\left\{(cond_0,\dots, cond_{c-2})\in\{0,1\}^{c-1}\Bigg|\sum\limits_{i=0}^{c-2}cond_i\in\{0,1\}\right\}$.}
     \label{fig:circuit:switchCaseGen}
 \end{figure}
 
@@ -321,19 +320,19 @@ In our implementation, we mainly use this in the circuit $\mathfrak{C}_C^{Vot}$ 
 
 For this purpose, we use \begin{align*}
     & r_{Is\text{-}Less}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
-        1,\quad\text{if } x < test
+        1,\quad\text{if } x < test\\
         0,\quad\text{otherwise}
     \end{cases}\\
     & r_{Is\text{-}Leq}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
-        1,\quad\text{if } x \leq test
+        1,\quad\text{if } x \leq test\\
         0,\quad\text{otherwise}
     \end{cases}\\
     & r_{Is\text{-}Greater}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
-        1,\quad\text{if } x > test
+        1,\quad\text{if } x > test\\
         0,\quad\text{otherwise}
     \end{cases}\\
     & r_{Is\text{-}Geq}:\mathbb{F}^2\to\mathbb{F}, (x,test)\mapsto\begin{cases}
-        1,\quad\text{if } x \geq test
+        1,\quad\text{if } x \geq test\\
         0,\quad\text{otherwise}
     \end{cases}\\
 \end{align*}
@@ -474,7 +473,106 @@ Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text
 \end{figure}
 
 \section{Complete Circuit List}
-\todo{Each circuit with short description, reference to where it is defined (in the thesis, appendix or in circomlib), constraint count and corresponding name in circom implementation.}
+In this work, we combine many circuits to create $\mathfrak{C}_C^{Ballot\text{-}Validity}$ which is the basis for all ballot validity proofs.
+Here, we provide a list of all circuits we used with a brief description, a reference to where it is defined and constraint count.
+
+\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{|L{4cm}|L{5cm}|L{2cm}|L{3cm}|}
+    \hline
+    Circuit $\mathfrak{C}$ & Description & Definition in & Constraints $\mathcal{N}(\mathfrak{C})$\\
+    \hline
+    \hline
+    $+$ & Gate to compute $x+y$. & \cref{fig:circuit:addMul} & $0$\\
+    $\cdot$ & Gate to compute $x\cdot y$. & \cref{fig:circuit:addMul} & $1$\\
+    \hline
+    \hline
+    $\mathfrak{C}_{Reverse}$ & Reverses the order of inputs. & \cref{fig:circuit:reverse} & $0$\\
+    $\mathfrak{C}_{Is\text{-}Bit}$ & Computes whether a signal is a bit. & \cref{fig:circuit:bitModularity} & $1$*\\
+    $\mathfrak{C}_{Assert\text{-}Bit}$ & Asserts that a signal is a bit. & \cref{fig:circuit:bitModularity} & $1$\\
+    $\mathfrak{C}_{Division}$ & Computes $\frac{x}{y}$ & \cref{fig:circuit:division} & $1$\\
+    $\mathfrak{C}_{Safe\text{-}Division}$ & Division variant that does not produce an error if the denominator is $0$.& \cref{fig:circuit:safeDivision} & $4$\\
+    $\mathfrak{C}_{Num2Bits(l)}$ & Converts a number to binary representation with at most $l$ bits. & \cref{fig:circuit:num2Bits} & $l$\\
+    $\mathfrak{C}_{Count\text{-}Equal(l)}$ & Counts the number of values in a list with $l$ entries that are equal to a test value $test$. & \cref{fig:circuit:countEqual} & $2\cdot l$\\
+    $\mathfrak{C}_{Count\text{-}Less(l)}$ & Counts the number of values in a list with $l$ entries that are less than a test value $test$, where all entries in the list and $test$ are in $\{0,\dots, l\}$. & \cref{fig:circuit:countLess} & $(\lceil \log_2(l)\rceil + 1)\cdot l$\\
+    $\mathfrak{C}_{Count\text{-}Greater(l)}$ & Counts the number of values in a list with $l$ entries that are greater than a test value $test$, where all entries in the list and $test$ are in $\{0,\dots, l\}$. & \cref{fig:circuit:countGreater} & $(\lceil \log_2(l)\rceil + 1)\cdot l$\\
+    \hline
+    \hline
+    $\mathfrak{C}_{Is\text{-}Equal}$ & Computes whether two signals are equal. & \cref{fig:circuit:isEqual} & $2$\\
+    $\mathfrak{C}_{If\text{-}Else(l)}$ & Result is either $v_{if}$ or $v_{else}$ depending on condition $cond$, where $v_{if}$ and $v_{else}$ have $l$ coordniates each. & \cref{fig:circuit:ifElse} & $l$\\
+    $\mathfrak{C}_{Switch\text{-}Case(c)}$ & Result is either one of $c-1$ values or a default value depending on condition $cond$.& \cref{fig:circuit:switchCase} & $c-1$\\
+    $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ & Switch-Case for values with $l$ coordinates. & \cref{fig:circuit:switchCaseGen} & $l\cdot(c-1)$\\
+    $\mathfrak{C}_{Is\text{-}Less}$ & Computes $x<test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:isLess} & $l+1$\\
+    $\mathfrak{C}_{Is\text{-}Leq}$ & Computes $x\leq test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:isLeq} & $l+1$\\
+    $\mathfrak{C}_{Is\text{-}Greater}$ & Computes $x>test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:isGreater} & $l+1$\\
+    $\mathfrak{C}_{Is\text{-}Geq}$ & Computes $x\geq test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:isGeq} & $l+1$\\
+    $\mathfrak{C}_{Assert\text{-}Less}$ & Asserts that $x<test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:assertLess} & $l+1$\\
+    $\mathfrak{C}_{Assert\text{-}Leq}$ & Asserts that $x\leq test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:assertLeq} & $l+1$\\
+    $\mathfrak{C}_{Assert\text{-}Greater}$ & Asserts that $x>test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:assertGreater} & $l+1$\\
+    $\mathfrak{C}_{Assert\text{-}Geq}$ & Asserts that $x\geq test$ where $x$ and $test$ have at most $l$ bits each. & \cref{fig:circuit:assertGeq} & $l+1$\\
+    \hline
+    \hline
+    $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ & If-Else for group elements. & \cref{fig:circuit:groupIfElse} & Depends on $\mathbb{G}$.\\
+    $\mathfrak{C}_{\mathbb{G}\_\odot}$ & Group law $g_1 \odot_{\mathbb{G}} g_2$ in group $\mathbb{G}$. & \cref{fig:circuit:groupLaw} & Depends on $\mathbb{G}$.\\
+    $\mathfrak{C}_{\mathbb{G}\_Exp}$ & Group exponentiation $g^k$ in group $\mathbb{G}$. & \cref{fig:circuit:groupExp} & Depends on $\mathbb{G}$.\\
+    $\mathfrak{C}_{\mathbb{G}_{EEG(\mathbb{G}).Enc}}$ & Computes an \gls{eeg} ciphertext $(g^y, h^y\odot_{\mathbb{G}}g^m)$ & \cref{fig:circuit:eegEnc} & $3\cdot \mathcal{N}(\mathfrak{C}_{\mathbb{G}\_Exp}) + \mathcal{N}(\mathfrak{C}_{\mathbb{G}\_\odot})$\\
+    $\mathfrak{C}_{\mathbb{G}\_FExp}$ & Fast Exponentiation $g^k$ where $k$ has at most $l$ bits. & \cref{fig:circuit:fexp} & $l\cdot (2\cdot \mathcal{N}(\mathfrak{C}_{\mathbb{G}\_\odot}) + \mathcal{N}(\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}) + 1)$ (see \cref{tab:expConstraintComp})\\
+    $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ & Fast Exponentiation $g^k$ where $k$ has at most $l$ bits utilizing precomputed powers $\left(g^{2^i}\right)_{i=0}^{l-1}$. & \cref{fig:circuit:ppfexp} & $l\cdot (\mathcal{N}(\mathfrak{C}_{\mathbb{G}\_\odot}) + \mathcal{N}(\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}) + 1)$ (see \cref{tab:expConstraintComp})\\
+    $\mathfrak{C}_{{PPEEG(\mathbb{G}).Enc}}$ & Computes an \gls{eeg} ciphertext $(g^y, h^y\odot_{\mathbb{G}}g^m)$ where $y$ has at most $r$ bits and $m$ has at most $l$ bits, utilizing precomputed powers $\left(g^{2^i}\right)_{i=0}^{l-1}$ and $\left(h^{2^i}\right)_{i=0}^{l-1}$ & \cref{fig:circuit:eegEnc} & Depends on $\mathbb{G}$, $l$ and $r$.\\
+    $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ & Fast Exponentiation $g^k$ where $k$ is represented with at most $l$ digits in base $base$ utilizing precomputed powers $\left(g^{j\cdot base^i}\right)_{i\in\{0,\dots, l-1\},j\in\{0,\dots, base-1\}}$. & \cref{fig:circuit:ppfexpArbBase} & Depends on $\mathbb{G}$, $base$ and $l$ (see \cref{tab:teArbBase}).\\
+    \hline
+    \hline
+    $\mathfrak{C}_{Tangent\text{-}Rule}$ & Tangent Rule case $P\odot_M^{Aff} P$ in the affine Montgomery group law. & \cref{fig:circuit:tangentRuleAffineMontgomery} & $7$\\
+    $\mathfrak{C}_{Chord\text{-}Rule}$ & Chord Rule case $P_1\odot_M^{Aff} P_2$ in the affine Montgomery group law. & \cref{fig:circuit:chordRuleAffineMontgomery} & $6$\\
+    $\mathfrak{C}_{M_{A,B}(\mathbb{F})\_\odot}$ & Affine Montgomery group law $P_1\odot_M^{Aff} P_2$. & \cref{fig:circuit:groupLawAffineMontgomery} & $34$ \\
+    $\mathfrak{C}_{I}$ & Mapping from affine to projective coordinates. & \cref{fig:circuit:affToProj} & $2$\\
+    $\mathfrak{C}_{{I^{-1}}}$ & Mapping from projective to affine coordinates. & \cref{fig:circuit:projToAff} & $4$\\
+    $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_\odot}$ & Projective Montgomery group law $P_1\odot_M^{Pro} P_2$. & \cref{fig:circuit:groupLawProjectiveMontgomery} & $44$ \\
+    $\mathfrak{C}_{x}$ & Mapping projective points to pseudopoints. & \cref{fig:circuit:quotientMap} & $4$*\\
+    $\mathfrak{C}_{{xIf\text{-}Else}}$ & If-Else for pseudopoints. & \cref{fig:circuit:xIfElse} & $2$\\
+    $\mathfrak{C}_{xAdd}$ & Addition of pseudopoints $x(Q)$ and $x(P)$. & \cref{fig:circuit:xAdd} & $6$\\
+    $\mathfrak{C}_{xDbl}$ & Doubling of pseudopoint $x(P)$. & \cref{fig:circuit:xDbl} & $6$\\
+    $\mathfrak{C}_{Montgomery\text{-}Ladder}$ & Montgomery Ladder computing $x(P^k)$ and $x(P^{k+1})$ where $k$ has at most $l$ bits. & \cref{fig:circuit:montgomeryLadder} & $18l-4$\\
+    $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$ & Recovers the $Y$ coordinate of $Q$ from $P, x(Q)$ and $x(P\odot_M^{Pro}Q)$. & \cref{fig:circuit:okSakYRecovery} & $11$\\
+    $\mathfrak{C}_{Norm\text{-}Projective}$ & Norms a projective point so that the $Z$ coordinate is $1$. & \cref{fig:circuit:normProjective} & $12$* \\
+    $\mathfrak{C}_{Pro\_If\text{-}Else}$ & If-Else for projective points. & \cref{fig:circuit:proIfElse} & $3$\\
+    $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ & Recovery the $Y$ coordinate of $P^k$ from $P, x(P^k)$ and $x(P^{k+1})$. & \cref{fig:circuit:ladderYRecovery} & $55$\\
+    $\mathfrak{C}_{M_{A, B}}(\mathbb{F}P^2)\_Exp$ & Exponentiation $P^k$ for Montgomery curves where $k$ has at most $l$ bits. & \cref{fig:circuit:montgomeryExp} & $x$\\
+    \hline
+    \hline
+    $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ & Twisted Edwards group law $P_1\odot_{TE_{a,d}(\mathbb{F})}P_2$. & \cref{fig:circuit:teGroupLaw} & $7$\\
+    $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_If\text{-}Else}$ & If-Else for Twisted Edwards points. & \cref{fig:circuit:teIfElse} & $2$\\
+    $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(c)}$ & If-Else for Twisted Edwards points. & \cref{fig:circuit:teSwitchCase} & $2\cdot (c-1)$.\\
+    \hline
+    \hline
+    $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ & Asserts ballot validity. & \cref{fig:circuit:ballotValidity} & $\mathcal{N}(\mathfrak{C}_C^{Vot}) + \mathcal{N}(\mathfrak{C}_C^{Enc})$ (see \cref{section:results:assertCombined})\\
+    $\mathfrak{C}_{C}^{Enc}$ & Asserts correct encryption of a ballot $b$. & \cref{fig:circuit:encMEEG,fig:circuit:encTEPPEEG} & Depends on the encryption scheme (see \cref{section:results:assertEncryption}). \\
+    $\mathfrak{C}_{C_{\text{Single}(cand)}}^{Vot}$ & Asserts that a ballot $b$ is part of the choice space $C_{\text{Single}(cand)}$. & \cref{fig:circuit:singleVoteVoting} & $cand + 1$\\
+    $\mathfrak{C}_{C_{\text{Multi}(cand, max, t)}}^{Vot}$ & Asserts that a ballot $b$ with $l$ bit entries is part of the choice space $C_{\text{Multi}(cand, max, t)}$. & \cref{fig:circuit:multiVoteVoting} & $(l+1)\cdot cand + \lceil\log_2(cand)\rceil + l + 1$\\
+    $\mathfrak{C}_{C_{\text{Line}(cand)}}^{Vot}$ & Asserts that a ballot $b$ is part of the choice space $C_{\text{Line}(cand)}$. & \cref{fig:circuit:lineVoteVoting} & $2\cdot cand$\\
+    $\mathfrak{C}_{C_{\text{MWR}(cand, max, t)}}^{Vot}$ & Asserts that a ballot $b$ with $l$ bit entries is part of the choice space $C_{\text{MWR}(cand, max, t)}$. & \cref{fig:circuit:mwrVoting} & $(l+1)\cdot cand + \lceil\log_2(cand)\rceil + l + 2$\\
+    $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$ & Asserts that a ballot $b$ compputed from a ranking $r$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$. & \cref{fig:circuit:pointlistBordaVoting} & $2\cdot cand\cdot (l+1)$\\
+    $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$ & Asserts that a ballot $b$ computed from a ranking $r\in\{0,\dots, cand\}^{cand}$ is part of the choice space $C_{\text{BTS}(cand, ap, bp)}$. & \cref{fig:circuit:btsVoting} & $cand\cdot(2\cdot cand + cand\cdot (\lceil\log_2(cand) + 1\rceil + 1))$\\
+    $\mathfrak{C}_{Compute\text{-BTS}(cand, ap, bp)}$ & Computes the ballot $b$ corresponding to a ranking $r\in\{0,\dots, cand\}^{cand}$ in \gls{bts} elections. & \cref{fig:circuit:btsComputeBallot} & $cand\cdot(2\cdot cand + cand\cdot (\lceil\log_2(cand) + 1\rceil + 1))$\\
+    \multirow{2}{4em}{$\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$} & \multirow{2}{*}{\parbox{5cm}{Asserts that a ballot $b$ is part of the choice space $C_{\text{Condorcet}(cand)}$ without utilizing the ranking or with the ranking $r\in\{0,\dots, 2^{l}-1\}^{cand}$.}} & \cref{fig:circuit:condorcetVotingNoRanking} & $cand^2 + \frac{cand\cdot(cand-1)}{2} + 2\cdot cand\cdot(cand-1)\cdot (cand-2)$\\
+    & & \cref{fig:circuit:condorcetVotingWithRanking} & $\frac{cand\cdot (cand-1)}{2}\cdot (l+3)$\\
+    $\mathfrak{C}_{Compute\text{-Condorcet}(cand)}$ & Computes the ballot $b$ corresponding to a ranking $r\in\{0,\dots, 2^l-1\}^{cand}$ in Condorcet elections. & \cref{fig:circuit:condorcetComputeBallot} & $\frac{cand\cdot (cand-1)}{2}\cdot (l+3)$\\
+    $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$ & Asserts that a ballot $b$ is part of the choice space $C_{\text{Majority-Judgment}(cand, grades)}$. & \cref{fig:circuit:majorityJudgmentVoting} & $cand\cdot grades$\\
+    \hline
+    \hline
+    $\mathfrak{C}_{3\text{-}vot}$ & Example circuit computing whether a ballot with $3$ entries conforms to Single-Vote format. & \cref{fig:circuit:exampleVotingDef,fig:circuit:threeVotModularity} & $4$\\
+    $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ & Example circuit asserting that a ballot with $3$ entries conforms to Single-Vote format. & \cref{fig:circuit:exampleAssertThreeVot,fig:circuit:threeVotModularity} & $4$\\
+    \hline
+    %$\mathfrak{C}_{}$ && \cref{fig:circuit:} & $x$\\
+    \caption{List of every circuit with description, definition reference, Circom template name and constraint count.
+    The constraint counts marked with * were calculated rather than generated from our implementation. 
+    In these cases, we did not implement the corresponding circuit seperately but only as part of other circuits.
+    %We are using $\mathcal{N}(\mathfrak{C})$ to deonte the number of constraints of a circuit $\mathfrak{C}$.
+    }
+    \label{fig:circuit:completeCircuitList}
+
+\end{longtable}
+\renewcommand{\arraystretch}{1.0}
+
 
 
 \chapter{Additional benchmarks}

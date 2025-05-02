@@ -254,8 +254,18 @@ In the example \verb|component main = vot(3)|, the signals that still need to be
 Here, the Circom \glqq Witness\grqq\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all contraints.\cref{footnote:fieldNegativeNumbers}
 Since the sum of all votes is $1+1=2$, $S_{out}^4=-2\neq 0$ and therefore, the ballot $(1,0,1)$ is not part of the choice space in our example voting scheme from \cref{chap:votingschemes}.
 
+\SaveVerb{circomCopmO1}|circom vot.circom --r1cs --wasm|
+\SaveVerb{circomCompO2}|circom vot.circom --r1cs --wasm --O2|
+\SaveVerb{compO1}|--O1|
+\SaveVerb{compO2}|--O2|
 Assume, we have a \verb|vot.circom| file with \verb|component main = vot(3)|.
-Then, we can generate the corresponding \gls{r1cs} and create the full assignment described previously as in \cref{fig:shell:circomExample}.
+Then, we can generate the corresponding \gls{r1cs} and create the full assignment described previously as in \cref{fig:shell:circomExample}.\footnote{
+    \label{footnote:optimizationOption}
+    With the command \Verb|circom vot.circom --r1cs --wasm|, we compile our circuits with the default optimization option \Verb|--O1|.
+    For the zk-\gls{snark} of our choice, Groth16, the optimization option \Verb|--O2| can be used safely and is arguably the better choice as it simplifies constraints as much possible.
+    In that case, the compilation command would be \Verb|circom vot.circom --r1cs --wasm --O2|.
+    However, we used the default optimization \Verb|--O1| for our benchmarks.
+}
 After this, the instantiated \gls{r1cs} is saved in the \verb|witness.wtns| file.
 
 \begin{figure}[h]

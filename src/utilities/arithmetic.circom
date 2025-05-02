@@ -83,4 +83,16 @@ template divisionSafe() {
     out <== res;
 }
 
+template test() {
+    signal input x;
+    signal input y;
+
+    signal output out;
+
+    out <== x + y;
+}
+
 // component main = divisionSafe();
+// component main = IsEqual();
+
+// component main = test();
