@@ -2281,7 +2281,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="IedHLG4BD3tUk57V33tE" name="Utilities">
-    <mxGraphModel dx="4196" dy="1955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
+    <mxGraphModel dx="2450" dy="992" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -5103,7 +5103,7 @@
         <mxCell id="YEVgz8CUogRT3Dwyzi0R-117" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="1010" y="1560" width="220" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="YEVgz8CUogRT3Dwyzi0R-118" value="$$\mathfrak{C}_{Count-Equal}$$" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="YEVgz8CUogRT3Dwyzi0R-117" vertex="1">
+        <mxCell id="YEVgz8CUogRT3Dwyzi0R-118" value="$$\mathfrak{C}_{Count-Equal(l)}$$" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="YEVgz8CUogRT3Dwyzi0R-117" vertex="1">
           <mxGeometry width="220.00000000000003" height="30" as="geometry" />
         </mxCell>
         <mxCell id="YEVgz8CUogRT3Dwyzi0R-119" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" parent="YEVgz8CUogRT3Dwyzi0R-117" source="YEVgz8CUogRT3Dwyzi0R-118" target="YEVgz8CUogRT3Dwyzi0R-118" edge="1">
@@ -5316,7 +5316,7 @@
         <mxCell id="YEVgz8CUogRT3Dwyzi0R-158" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="1010" y="1950" width="220" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="YEVgz8CUogRT3Dwyzi0R-159" value="$$\mathfrak{C}_{Count-Less}$$" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="YEVgz8CUogRT3Dwyzi0R-158" vertex="1">
+        <mxCell id="YEVgz8CUogRT3Dwyzi0R-159" value="$$\mathfrak{C}_{Count-Less(l)}$$" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="YEVgz8CUogRT3Dwyzi0R-158" vertex="1">
           <mxGeometry width="220.00000000000003" height="30" as="geometry" />
         </mxCell>
         <mxCell id="YEVgz8CUogRT3Dwyzi0R-160" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" parent="YEVgz8CUogRT3Dwyzi0R-158" source="YEVgz8CUogRT3Dwyzi0R-159" target="YEVgz8CUogRT3Dwyzi0R-159" edge="1">
@@ -5532,7 +5532,7 @@
         <mxCell id="YEVgz8CUogRT3Dwyzi0R-200" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="1390" y="1950" width="220" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="YEVgz8CUogRT3Dwyzi0R-201" value="$$\mathfrak{C}_{Count-Greater}$$" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="YEVgz8CUogRT3Dwyzi0R-200" vertex="1">
+        <mxCell id="YEVgz8CUogRT3Dwyzi0R-201" value="$$\mathfrak{C}_{Count-Greater(l)}$$" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="YEVgz8CUogRT3Dwyzi0R-200" vertex="1">
           <mxGeometry width="220.00000000000003" height="30" as="geometry" />
         </mxCell>
         <mxCell id="YEVgz8CUogRT3Dwyzi0R-202" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" parent="YEVgz8CUogRT3Dwyzi0R-200" source="YEVgz8CUogRT3Dwyzi0R-201" target="YEVgz8CUogRT3Dwyzi0R-201" edge="1">

@@ -2,12 +2,9 @@
 \label{chap:results}
 
 In the following, we present benchmarks for the ballot validity proofs in our voting schemes.
-Additionally, we present separate benchmarks for proving choice space membership and proving correct encryption.
+Additionally, we present separate benchmarks for proving choice space membership and correct encryption.
 Here, we use SageMath to generate the inputs for the ballot validity circuits, Circom to implement the circuits and snarkjs to conduct the actual proofs (\cref{chap:software}) in a Groth16 \gls{zps}.
 
-\SaveVerb{o1}|--O1|
-\SaveVerb{o2}|--O2|
-For every benchmarked circuit, we record the constraint count
 % \footnote{
 %     \label{footnote:onlyNonLinearConstraints}
 %     Note that Circom reports the number of linear and non-linear constraints that a circuit needs seperatly and we consider only the non-linear constraints for our benchmarks.
@@ -20,7 +17,10 @@ For every benchmarked circuit, we record the constraint count
 %     Therefore, our results can be viewed as an upper bound for the performance of our implementation.
 %     With more advanced optimization, slightly better results are possible.
 % } 
-, $CRS$ size and $CRS$ generation time\footnote{
+
+\SaveVerb{o1}|--O1|
+\SaveVerb{o2}|--O2|
+For every benchmarked circuit, we record the constraint count, $CRS$ size and $CRS$ generation time\footnote{
     \label{footnote:crsBasedOnPtauFile}
     Here, we create $CRS$ based on the same pregenerated file \UseVerb{ptau} for every circuit (\cref{section:software:snarkjsSetup}).
 },
@@ -36,12 +36,12 @@ proving time and verification time\footnote{
     Therefore, we do not compare the verification times in more detail.
 }.
 
-Note that Circom reports the number of linear and non-linear constraints that a circuit needs seperatly and we consider only the non-linear constraints for our benchmarks.
+Note that Circom reports the number of linear and non-linear constraints a circuit needs separately, and that we consider only the non-linear constraints for our benchmarks.
 Here, the number of linear constraints is determined by the number of additions involving signals in a circuit and the number of non-linear constraints is determined by the number of multiplications involving signals in the circuit.
 As introduced in \cref{chap:gpzkp}, addition in a circuit does not add any new constraints to the corresponding \gls{r1cs} unless the result of this addition is directly part of the output of the circuit.
-For our benchmarks, we compiled the circuits using the default compilation option \UseVerb{o1} which means that every addition of signals contributes an additional linear constraints.
+For our benchmarks, we compiled the circuits using the default compilation option \UseVerb{o1} which means that every addition of signals contributes an additional linear constraint.
 This is required in case we want to use a different \gls{zps} such a PLONK \cite{gabizon_plonk_2019}, where additions are not free.
-However, for Groth16, the comilation option \UseVerb{o2} is arguably the better choice as this simplifies the constraint system, removing as many linear and non-linear constraints as possible while maintaining semantic equivalency.
+However, for Groth16, the compilation option \UseVerb{o2} is arguably the better choice as this simplifies the constraint system, removing as many linear and non-linear constraints as possible while maintaining semantic equivalency.
 If we choose this option, the total number of constraints reported by Circom is always lower than the number of non-linear constraints reported by Circom when using option \UseVerb{o1}.
 Therefore, our results can be viewed as an upper bound for the performance of our implementation.
 With more advanced optimization, better results are possible.
@@ -60,28 +60,28 @@ With more advanced optimization, better results are possible.
 
 The proof sizes obtained with our implementation are constant, since we use \glspl{g16snark}.
 As introduced in \cref{alg:proveG16}, Groth16 proofs always consist of three elements $(g_1^A,g_1^C,g_2^B)$.
-These are stored in a \verb|proof.json| file by snarkjs as presented in \cref{section:software:snarkjs} which takes up $806$ bytes.
+These are stored in a \verb|proof.json| file by snarkjs, as presented in \cref{section:software:snarkjs}, which takes up $806$ bytes.
 Therefore, we will not consider proof sizes further in our results.
 
-We compare our findings to the results obtained by Huber et. al. using libsnark \cite{huber_zk-snarks_2025}.\footnote{
+We compare our findings to the results obtained by Huber et al. using libsnark \cite{huber_zk-snarks_2025}.\footnote{
     \label{footnote:noCompForCRSGenerationTimes}
-    Note that Huber et. al. did not record $CRS$ generation times.
+    Note that Huber et al. did not record $CRS$ generation times.
     Therefore, we cannot compare this metric.
     However, in practical applications of voting schemes, the $CRS$ for $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ would likely be included in the voting software or be publicly accessible.
     Specifically, such a software would either include multiple $CRS$ for some selected election types with specified parameters or publish this information to their \gls{pbb}.
     Then, the $CRS$ generation times are irrelevant.
 }\footnote{
     \label{footnote:plottingMethod}
-    We plot our results and the result by Huber et. al. as the individual data points recorded.
+    We plot our results and the result by Huber et al. as the individual data points recorded.
     Additionally, we use regression polynomials of suitable degrees to show overall trends.
 }\footnote{
     \label{footnote:resultsFromImplementation}
-    Note that the constraint counts we present for the implementation by Huber et. al. were obtained from their implementation.
+    Note that the constraint counts we present for the implementation by Huber et al. were obtained from their implementation.
     While this matches the constraints they reported in their work for the most part, some constraint counts are slightly different.
     Most notably, the constraint count for $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ with a $255$ bit exponent is given as $5084$ in their paper whereas we obtained $5593$ constraints using their implementation.
 }
 
-As in the work of Huber et. al., all our benchmarks were conducted on an ESPRIMO Q957 ($64$-bit, i5-7500T CPU @ 2.70GHz, $16$GB RAM).
+As in the work of Huber et al., all our benchmarks were conducted on an ESPRIMO Q957 ($64$-bit, i5-7500T CPU @ 2.70GHz, $16$GB RAM).
 
 We observed that the $CRS$ generation phase and the $16$GB of RAM are the main limiting factor.
 This allows us to compute \glspl{g16snark} over circuits with roughly $6$ million times at most.
@@ -90,19 +90,19 @@ However, even with a $6$ million constraint limit, proving times reach $400$s an
 
 \section{Asserting Correct Encryption with $\mathfrak{C}_C^{Enc}$}
 \label{section:results:assertEncryption}
-The circuit $\mathfrak{C}_C^{Enc}$ is used to assert the a ballot $b$ corresponds to an encrypted ballot $b'$ where both $b$ and $b'$ are provided as inputs to the circuit (\cref{section:ourVotingSchemes:ballotValidity}).
+The circuit $\mathfrak{C}_C^{Enc}$ is used to assert that a ballot $b$ corresponds to an encrypted ballot $b'$ where both $b$ and $b'$ are provided as inputs to the circuit (\cref{section:ourVotingSchemes:ballotValidity}).
 
-In their approach, Huber et. al. use an \gls{eeg} encryption scheme based on the Montgomery curve $M_{126932, 1}(\mathbb{F}_qP^2)$ to implement $\mathfrak{C}_{C}^{Enc}$ in libsnark \cite{huber_zk-snarks_2025}.
+In their approach, Huber et al. use an \gls{eeg} encryption scheme based on the Montgomery curve $M_{126932, 1}(\mathbb{F}_qP^2)$ to implement $\mathfrak{C}_{C}^{Enc}$ in libsnark \cite{huber_zk-snarks_2025}.
 We implement the same option in Circom (\cref{fig:circuit:encMEEG}).
 Additionally, we implement $\mathfrak{C}_{C}^{Enc}$ using a \gls{ppeeg} encryption scheme based on the Twisted Edwards curve $TE_{126934, 126930}(\mathbb{F}_q)$ isomorphic to $M_{126932, 1}(\mathbb{F}_qP^2)$ (\cref{fig:circuit:encTEPPEEG}).
 
-Since ballots are encrypted componentwise, we benchmark the circuit $\mathfrak{C}_C^{Enc}$ for ballots with different numbers of entries.
+Since ballots are encrypted component-wise, we benchmark the circuit $\mathfrak{C}_C^{Enc}$ for ballots with different numbers of entries.
 Moreover, the size of the circuit $\mathfrak{C}_C^{Enc}$ depends on the number of bits which we use to represent individual ballot entries.
 
-The results of our benchmarks and the comparison with the results obtained by Huber et. al. are shown in \cref{fig:plots:Circom_libsnark_Enc}.
-Note that we compare results for encrypting ballot entries represented with $1$, $16$ and $32$ bits since those are the cases also covered by Huber et. al. \cite{huber_zk-snarks_2025}.\footnote{
+The results of our benchmarks and the comparison with the results obtained by Huber et al. are shown in \cref{fig:plots:Circom_libsnark_Enc}.
+Note that we compare results for encrypting ballot entries represented with $1$, $16$ and $32$ bits since those are the cases also covered by Huber et al. \cite{huber_zk-snarks_2025}.\footnote{
     \label{footnote:bitPracticalityEnc}
-    Using more than $32$ Bits to represent a ballot entry $v$ is infeasible in practice as decryption requires finding $v$ based on $g^v$.
+    Using a lot more than $32$ Bits to represent a ballot entry $v$ is infeasible in practice as decryption requires finding $v$ based on $g^v$.
     This is hard according to the Discrete Logarithm problem if $v$ can assume a lot of different values.
 }
 However, we also tested our implementation with up to $250$ bits per ballot entry as shown in \cref{section:appendix:encResults}.\footnote{
@@ -112,18 +112,18 @@ However, we also tested our implementation with up to $250$ bits per ballot entr
     \begin{align*}
         p=2736030358979909402780800718157159386074658810754251464600343418943805806723
     \end{align*}
-    as the basis for our \gls{eeg} or \gls{ppeeg} encrpytion scheme.
+    as the basis for our \gls{eeg} or \gls{ppeeg} encryption scheme.
     Here, $p$ is a $251$-Bit number. 
-    Since we use $g^{v}$ for a generator $g$ to represent a ballot entry $v$ in those encryption schemes, we can use at most $250$ Bits to represent $v$ unambiguosly.
+    Since we use $g^{v}$ for a generator $g$ to represent a ballot entry $v$ in those encryption schemes, we can use at most $250$ Bits to represent $v$ unambiguously.
     %
     %However, even using more than $32$ Bits to represent a ballot entry $v$ is infeasible in practice as decryption requires finding $v$ based on $g^v$.
     %This is hard according to the Discrete Logarithm problem if $v$ can assume a lot of different values.
 }
 
 
-% In addition to that, we compare our results to those obtained by Huber et. al. as shown in \cref{fig:plots:Circom_libsnark_Enc}.\footnote{
+% In addition to that, we compare our results to those obtained by Huber et al. as shown in \cref{fig:plots:Circom_libsnark_Enc}.\footnote{
 %     \label{footnote:encBitLimitationLibsnark}
-%     Note that we only compare results for encrypting ballot entries represented with $1$, $16$ and $32$ bits since those are the cases also covered by Huber et. al. \cite{huber_zk-snarks_2025}.
+%     Note that we only compare results for encrypting ballot entries represented with $1$, $16$ and $32$ bits since those are the cases also covered by Huber et al. \cite{huber_zk-snarks_2025}.
 % }
 
 % \begin{figure}[h]
@@ -198,14 +198,14 @@ However, we also tested our implementation with up to $250$ bits per ballot entr
     \label{fig:plots:Circom_libsnark_Enc}
 \end{figure}
 
-Due to the componentwise encryption of ballots, the constraint count scales perfectly linear with the number of entries $m$ in a ballot.
+Due to the component-wise encryption of ballots, the constraint count scales perfectly linear with the number of entries $m$ in a ballot.
 Note that the encryption of an individual ballot entry $v$ using \gls{eeg} or \gls{ppeeg} encryption is dominated by the three group exponentiations $g^r$, $g^v$ and $pk^r$, where $r\probgets \{0,\dots, q\}$.
 In particular, we report constraint counts for the circuits $\mathfrak{C}_{\mathbb{G}\_Exp}$ and $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ respectively as shown in \cref{tab:theoreticalConstraintCounts}.\footnote{
     \label{footnote:libsnarkMontgomeryLadderWrong}
-    Note that the implementation of $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ we presented earlier (\cref{fig:circuit:montgomeryExp}) is quite different from the implementation by Huber et. al.
-    Huber et. al. assumed that the leading bit of the exponent is always $1$ which is not the case.
-    Furthermore, Huber et. al. provided the exponent in binary representation whereas we compute this representation in the circuit.
-    Additionally, the 
+    Note that the implementation of $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ we presented earlier (\cref{fig:circuit:montgomeryExp}) is quite different from the implementation by Huber et al.
+    Huber et al. assumed that the leading bit of the exponent is always $1$ which is not the case.
+    Furthermore, Huber et al. provided the exponent in binary representation whereas we compute this representation in the circuit.
+    Additionally, subcircuits used in both implementation, such as $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$, are different in both implementations as well.
 }
 
 \begin{table}[h]
@@ -236,13 +236,13 @@ In particular, we report constraint counts for the circuits $\mathfrak{C}_{\math
     \label{tab:theoreticalConstraintCounts}
 \end{table}
 
-From \cref{tab:theoreticalConstraintCounts}, we can conclude that in the encryption of an individual ballot entry $v$, the exponentiations $g^r$ and $pk^r$ with a $255$ bit value $r$ contribute significantly more constraints than the exponentiation $g^v$ for any realistic number of bots to represent $v$.
+From \cref{tab:theoreticalConstraintCounts}, we can conclude that in the encryption of an individual ballot entry $v$, the exponentiations $g^r$ and $pk^r$ with a $255$ bit value $r$ contribute significantly more constraints than the exponentiation $g^v$ for any realistic number of bits to represent $v$.
 We can observe this in \cref{fig:plots:Circom_libsnark_Enc} since the difference in constraints, proving times, $CRS$ sizes and $CRS$ generation times between the $1$, $16$ and $32$ bits is rather small when compared to the total constraints, proving times, $CRS$ sizes and $CRS$ generation times.
 
 The findings shown in \cref{fig:plots:Circom_libsnark_Enc} can also be summarized as in \cref{tab:encryptionResults}.\footnote{
     \label{footnote:compareFunctions}
     We compute the performance of a polynomial $f(x)=\sum\limits_{i=0}^{n} f_ix^{i}$ of degree $n$ relative to another polynomial $g(x)=\sum\limits_{i=0}^{n}g_ix^{i}$ as $\frac{f_n}{g_n}$.
-    This is a suitable approximation, since all our functions intersect the origin or have a very small y-axis intercept and we are interested in the performance for large $x$.
+    This is a suitable approximation, since all our functions intersect the origin or have a very small y-axis intercept, and we are interested in the performance for large $x$.
 }
 
 \begin{table}[h]
@@ -257,33 +257,35 @@ The findings shown in \cref{fig:plots:Circom_libsnark_Enc} can also be summarize
         Constraints & $1$ & $0.869$ & $0.444$\\
         Proving time & $1$ & $\approx1.299$ & $\approx0.639$ \\
         $CRS$ size & $1$ & $\approx0.318$ & $\approx0.174$ \\
-        $CRS$ gen. times & NaN & $1$ & $\approx0.300$ \\
+        $CRS$ gen. time & NaN & $1$ & $\approx0.300$ \\
         \hline
     \end{tabular}
-    \caption{Relative performance of our implementation of $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves compared to the implementation using Montgomery curves by Huber et. al.}
+    \caption{Relative performance of our implementation of $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves compared to the implementation using Montgomery curves by Huber et al.}
     \label{tab:encryptionResults}
 \end{table}
 
-Our implementation with Montgomery curves uses roughly $13.1\%$ less constraints than the implementation of Huber et. al. as shown in \cref{tab:encryptionResults}.
-Additionally, we report more constraints for $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ with small bit sizes for the exponent but roughly $12.2\%$ less constraints with large bit sizes for the exponent (\cref{tab:theoreticalConstraintCounts}).
+Our implementation with Montgomery curves uses roughly $13.1\%$ fewer constraints than the implementation of Huber et al. as shown in \cref{tab:encryptionResults}.
+Additionally, we report more constraints for $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ with small bit sizes for the exponent but roughly $12.2\%$ fewer constraints with large bit sizes for the exponent (\cref{tab:theoreticalConstraintCounts}).
 This can be attributed partly to different implementations of the exponentiation circuit $\mathfrak{C}_{\mathbb{G}\_Exp}$ for Montgomery curves in Circom and in libsnark.
-While Huber et. al. use the projective and affine representation of Montgomery points in their implementation, we use only the projective representation.
+While Huber et al. use the projective and affine representation of Montgomery points in their implementation, we use only the projective representation.
 This affects some of the subcircuits in $\mathfrak{C}_{M_{126932, 1}(\mathbb{F}_qP^2)\_Exp}$ such as the Okeya-Sakurai Y-Recovery circuit $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$.
-Here, we report $11$ constraints whereas Huber et. al. report $39$ constraints.
-Additionally, the circuit $\mathfrak{C}_{M_{126932, 1}(\mathbb{F}_qP^2)\_\odot}$ we use to compute the group law for the Montgomery curve needs $44$ constraints in our implmentation whereas Huber et. al. reported $86$ constraints.
-Furthermore, Huber et. al. assumed that the leading bit of the exponent is always $1$ which is not the case.
-Finally, Huber et. al. provided the exponent in binary representation whereas we compute this representation in the circuit.
+Here, we report $11$ constraints whereas Huber et al. report $39$ constraints.
+Additionally, the circuit $\mathfrak{C}_{M_{126932, 1}(\mathbb{F}_qP^2)\_\odot}$ we use to compute the group law for the Montgomery curve needs $44$ constraints in our implementation whereas Huber et al. reported $86$ constraints.
+Furthermore, Huber et al. assumed that the leading bit of the exponent is always $1$ which is not the case.
+Finally, Huber et al. provided the exponent in binary representation whereas we compute this representation in the circuit.
 In addition to the exponentiations $g^r, g^v$ and $pk^r$, the difference in constraint counts also influences the computation of the second entry in the ciphertext $Enc(v, pk)=(g^r, g^v \odot_M^{Pro} pk^r)$.
-The $6$ million constraint limit of our test machine is reached for for about $600$ ballot entries.
-Our implementation with Twisted Edwards curves needs roughly $55.6\%$ less constraints than the implementation with Montgomery curves by Huber et. al. as shown in \cref{tab:encryptionResults}.
+The $6$ million constraint limit of our test machine is reached for about $600$ ballot entries.
+Our implementation with Twisted Edwards curves needs roughly $55.6\%$ fewer constraints than the implementation with Montgomery curves by Huber et al. as shown in \cref{tab:encryptionResults}.
 This can be attributed to the fundamental difference between the \gls{eeg} and \gls{ppeeg} encryption scheme (\cref{chap:elGamalEncryption}).
 The reduction in constraints compared to the implementation with Montgomery curves allows us to extend the benchmarks up to $1000$ ballot entries before hitting the $6$ million constraint limit of our test machine.
 
-We report roughly $29.9\%$ larger proving times in our implementation with Montgomery curves compared to that of Huber et. al. (\cref{tab:encryptionResults}).
-This increase in proving times despite a reduction in constraints can be attributed to the different backend provers used to construct the \glspl{g16snark}.
-Consequently, our implementation with Twisted Edwards curves only improves on the proving times reported by Huber et. al. by about $36.1\%$ despite having a $55.6\%$ lower constraint count.
+We report roughly $29.9\%$ larger proving times in our implementation with Montgomery curves compared to that of Huber et al. (\cref{tab:encryptionResults}).
+This increase in proving times despite a reduction in constraints can be attributed partly to the different backend provers used to construct the \glspl{g16snark}.
+Additionally, due to using the compile option \verb|--O1| for our Circuits, the created \glspl{r1cs} include some additional linear constraints that do not contribute to the constraint counts we reported but still increase proving times.
+Using compile option \verb|--O2|, one should be able to improve upon our proving times.
+Consequently, our implementation with Twisted Edwards curves only improves on the proving times reported by Huber et al. by about $36.1\%$ despite having a $55.6\%$ lower constraint count.
 % However, in our implemenations, the Twisted Edwards variant improves on the Montgomery variant by roughly $45.6\%$ which aligns with the constraint reduction of $48.7\%$.
-In constrast to the constraint counts, the proving times are subject to fluctuations caused by running the proving algorithm on the test machine.
+In contrast to the constraint counts, the proving times are subject to fluctuations caused by running the proving algorithm on the test machine.
 However, beyond the noise we can isolate a pattern of jumps in the proving times in our implementations.
 In the case of Twisted Edwards curves, there are jumps at roughly $150$, $300$ and $600$ ballot entries.
 Similarly, for Montgomery curves, there are jumps at roughly $100$, $175$ and $350$ ballot entries. 
@@ -291,11 +293,11 @@ Note that in both cases, this equates to jumps at roughly $0.75$, $1.5$ and $3$ 
 Therefore, there seems to be a jump at roughly every doubling of the ballot entries and consequently also at every doubling of the constraints.
 We attribute this to the snarkjs implementation of the Groth16 proving algorithm \cite{jordi_baylina_iden3snarkjs_2025}.
 
-The $CRS$ in our implementation with Montgomery curves are about $68.2\%$ smaller than the $CRS$ in the implementation by Huber et. al.
+The $CRS$ in our implementation with Montgomery curves are about $68.2\%$ smaller than the $CRS$ in the implementation by Huber et al.
 We attribute this partly to the lower constraint count of our implementation.
 Additionally, the format of the $CRS$ is different in libsnark and in snarkjs \cite{huber_zk-snarks_2025,jordi_baylina_iden3snarkjs_2025}.
 Similarly to the proving times there is a jump in $CRS$ sizes at $150$, $300$ and $600$ ballot entries for the implementation with Twisted Edwards curves and at $100$, $175$ and $350$ ballot entries for the implementation with Montgomery curves.
-However, this is less pronounced than for the proving times and we contribute it to the snarkjs implementation of the Groth16 setup algorithm \cite{jordi_baylina_iden3snarkjs_2025}.
+However, this is less pronounced than for the proving times, and we attribute it to the snarkjs implementation of the Groth16 setup algorithm \cite{jordi_baylina_iden3snarkjs_2025}.
 
 Lastly, the $CRS$ generation times are about $70\%$ lower in our implementation using Twisted Edwards curves compared to using Montgomery curves.
 Most of this improvement can be attributed to the lower constraint count of the Twisted Edwards implementation. %\todo{This still leaves $20\%$ unaccounted for. What is the reason for this?}
@@ -326,8 +328,8 @@ This is sufficient for all election types covered here.\footnote{
     (We use as little additional bits as possible according to the election type parameters.)
 }
 
-The results of our benchmarks and the comparison with the results obtained by Huber et. al. are shown in Figures \ref{fig:plots:Circom_libsnark_Vot_Linear} and \ref{fig:plots:Circom_libsnark_Vot_Quadratic}.
-Here, we split our findings into the results for voting schemes where the contraint count needed to prove ballot validity scales linearly with the candidate count and the voting schemes where this characteristic scales quadratically or cubically with the candidate count.
+The results of our benchmarks and the comparison with the results obtained by Huber et al. are shown in Figures \ref{fig:plots:Circom_libsnark_Vot_Linear} and \ref{fig:plots:Circom_libsnark_Vot_Quadratic}.
+Here, we split our findings into the results for voting schemes where the constraint count needed to prove ballot validity scales linearly with the candidate count and the voting schemes where this characteristic scales quadratically or cubically with the candidate count.
 
 Regarding the constraint count, we can also express the results from \cref{fig:plots:Circom_libsnark_Vot_Linear} and \cref{fig:plots:Circom_libsnark_Vot_Quadratic} as shown in \cref{tab:votingResults}.\cref{footnote:compareFunctions}
 Note that we will not compare the Proving times, $CRS$ size and $CRS$ generation times in detail since these depend linearly on the constraint count.
@@ -337,7 +339,7 @@ The connection of the different metrics to the constraint count was discussed in
     \centering
     %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/linear/VotingComparisonLinear_allMetrics.pdf}
     \includegraphics[scale=.5]{graphics/results/VotingComparisonLinear_allMetrics.pdf}
-    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
+    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
     \label{fig:plots:Circom_libsnark_Vot_Linear}
 \end{figure}
 
@@ -363,7 +365,7 @@ The connection of the different metrics to the constraint count was discussed in
         $C_{Majority\text{-}Judgment(cand, cand)}$ & $1$ & $1$\\
         \hline
     \end{tabular}
-    \caption{Relative number of constraints needed by our implementation of $\mathfrak{C}_{C}^{Vot}$ compared to the implementation by Huber et. al.}
+    \caption{Relative number of constraints needed by our implementation of $\mathfrak{C}_{C}^{Vot}$ compared to the implementation by Huber et al.}
     \label{tab:votingResults}
 \end{table}
 
@@ -408,7 +410,7 @@ The connection of the different metrics to the constraint count was discussed in
     \centering
     %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
     \includegraphics[scale=.5]{graphics/results/VotingComparisonQuadratic_allMetrics.pdf}
-    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales quadratically with the candidate count.}
+    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales quadratically with the candidate count.}
     \label{fig:plots:Circom_libsnark_Vot_Quadratic}
 \end{figure}
 
@@ -449,37 +451,37 @@ The connection of the different metrics to the constraint count was discussed in
 %     \label{fig:plots:Circom_libsnark_Vot_Quadratic}
 % \end{figure}
 
-Our implementation produces exactly the same amount of constraints as the implementation by Huber et. al. for Single-Vote as well as Multi-Vote and its variants \gls{mwr} and Line-Vote.
-This is caused by the implementations being exectly the same as well.
+Our implementation produces exactly the same amount of constraints as the implementation by Huber et al. for Single-Vote as well as Multi-Vote and its variants \gls{mwr} and Line-Vote.
+This is caused by the implementations being exactly the same as well.
 
-For Pointlist-Borda elections, our implementation uses roughly half the number of constraints compared to the implementation by Huber et. al.
-Since our implementation is very similar to that of Huber et. al., we attribute this difference in constraints to the differences between Circom and libsnark.
-When computing the \gls{r1cs} for a circuit, these ciruit languages \glqq flatten\grqq the circuit.
-In this process, a circuit can be chagned to reduce the number of constraints in the \gls{r1cs} without affecting the semantic of the ciruit.
+For Pointlist-Borda elections, our implementation uses roughly half the number of constraints compared to the implementation by Huber et al.
+Since our implementation is very similar to that of Huber et al., we attribute this difference in constraints to the differences between Circom and libsnark.
+When computing the \gls{r1cs} for a circuit, these circuit languages \glqq flatten\grqq\ the circuit.
+In this process, a circuit can be changed to reduce the number of constraints in the \gls{r1cs} without affecting the semantic of the circuit.
 Therefore, one circuit may produce different constraint counts in Circom and in libsnark.
 
-In the other Borda variant, \gls{bts}, our implementation reduces the constraints by about $\%25.9$ when compared to the implementation of Huber et. al.
+In the other Borda variant, \gls{bts}, our implementation reduces the constraints by about $25.9\%$ when compared to the implementation of Huber et al.
 Both implementations are very similar and use helper circuits $\mathfrak{C}_{count\text{-}greater}$ to count how many entries in the ranking are greater than the current one (\cref{fig:circuit:btsComputeBallot}).
 In these circuits, we need to compute whether one value $r_i$ in the ranking is greater than another value $r_j$ in the ranking.
-Our implementation uses the template circuit $\mathfrak{C}_{Is\text{-}Greater}$ from circomlib \cite{jordy_baylina_iden3circomlib_2025} (\cref{fig:circuit:isGreater}) which is built mostly on arithmetic computations to the compare numbers.
-Huber et. al. use an implementation that requires us to compute the binary representation of a temporary signal in the circuit \cite{huber_hicolasnuberballotsnarks_2024}.
+Our implementation uses the template circuit $\mathfrak{C}_{Is\text{-}Greater}$ from circomlib \cite{jordy_baylina_iden3circomlib_2025} (\cref{fig:circuit:isGreater}) which is built mostly on arithmetic computations to compare the numbers.
+Huber et al. use an implementation that requires computing the binary representation of a temporary signal in the circuit \cite{huber_hicolasnuberballotsnarks_2024}.
 We attribute the reduction of constraints mostly to this difference in implementation.
 
 For the election type Majority-Judgment, we report a reduction of constraints by about $14.3\%$ if we use a constant number of grades and therefore produce a linear amount of constraints.
-However, this improvement becomes negligible when using as many grades as there are candidate and therefore quadratically many constraints.
-Our implementation of $\mathfrak{C}_{C_{Majority\text{-}Judgment}(cand, grades)}$ is equivalent to that of Huber et. al. in libsnark.
-Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq procedures of Circom and libsnark, the same as for Pointlist-Borda elections.
+However, this improvement becomes negligible when using as many grades as there are candidates and therefore quadratically many constraints.
+Our implementation of $\mathfrak{C}_{C_{Majority\text{-}Judgment}(cand, grades)}$ is equivalent to that of Huber et al. in libsnark.
+Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq\ procedures of Circom and libsnark, the same as for Pointlist-Borda elections.
 
 Finally, for Condorcet elections, we report a reduction of constraints of about half when not using the ranking.
-Our implementation of $\mathfrak{C}_{C_{Condorcet(cand)}}^{Vot}$ is equivalent to that of Huber et. al. in libsnark from a constraint perspective.
-Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq procedures of Circom and libsnark, the same as for Pointlist-Borda elections and Majority-Judgment.
+Our implementation of $\mathfrak{C}_{C_{Condorcet(cand)}}^{Vot}$ is equivalent to that of Huber et al. in libsnark from a constraint perspective.
+Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq\ procedures of Circom and libsnark, the same as for Pointlist-Borda elections and Majority-Judgment.
 However, in both cases the constraint count is cubic in the number of candidates.
-To improve on this, we introduced a version of condorcet that uses the voting (\cref{subsection:ourVotingSchemes:condorcet}).
+To improve on this, we introduced a version of Condorcet that uses the voting (\cref{subsection:ourVotingSchemes:condorcet}).
 Here, we only need quadratically many constraints.
-This improvement is also visible in \cref{fig:plots:Circom_libsnark_Vot_Quadratic}, where constraints for this specific implementation of condorcet are close to those needed for \gls{bts} elections.
+This improvement is also visible in \cref{fig:plots:Circom_libsnark_Vot_Quadratic}, where constraints for this specific implementation of Condorcet are close to those needed for \gls{bts} elections.
 
 Note that in our implementation with snarkjs as the backend prover, proving times seem to be at least about $0.75$s even for a proof with $0$ constraints.
-This offset is not present in the implementation by Huber et. al. in libsnark.
+This offset is not present in the implementation by Huber et al. in libsnark.
 Similarly, there is also an offset in the $CRS$ generation times of about $0.75$s in our implementation.
 We attribute this to differences between the implementation of the setup and proving algorithm in snarkjs and in libsnark.
 
@@ -488,8 +490,8 @@ We attribute this to differences between the implementation of the setup and pro
 The circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ combines $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$ for complete proofs of ballot validity \cref{section:ourVotingSchemes:ballotValidity}.
 As in \cref{section:results:assertEncryption}, we use either a Montgomery Curve or the isomorphic Twisted Edwards curve for the encryption part.
 
-The results of our benchmarks and the comparison with the results obtained by Huber et. al. are shown in Figures \ref{fig:plots:Combined}.
-Here, we show our results seperately for every election type or family of election types to limit the amount of data presented in each plot.
+The results of our benchmarks and the comparison with the results obtained by Huber et al. are shown in Figures \ref{fig:plots:Combined}.
+Here, we show our results separately for every election type or family of election types to limit the amount of data presented in each plot.
 Additionally, we only show the candidate count here and omit the results for proving times, $CRS$ sizes and $CRS$ generation times.
 As mentioned previously, these metrics depend directly on the candidate count and the connection between them has been explored in \cref{section:results:assertEncryption} and in detail.
 However, the remaining results are also presented in \cref{section:appendix:combinedResults}.
@@ -525,22 +527,22 @@ However, the remaining results are also presented in \cref{section:appendix:comb
 \end{figure}
 
 As presented previously, the circuit $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ is a combination of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
-Therefore, the constaint count of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is always the sum of the constraint counts of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
+Therefore, the constraint count of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is always the sum of the constraint counts of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
 From the results presented in \cref{section:results:assertEncryption} and \cref{section:results:assertVoting} we can conclude that the constraints contributed by $\mathfrak{C}_C^{Vot}$ are negligible compared to the constraints generated by $\mathfrak{C}_C^{Enc}$.
-However, to evaluate in detail what portions of the total constraint count are contributeded by which circuit, we compute how many constraints are needed in the different elections per ballot entry.
-Then, we compare this to how many constraint are needed for the pure encryption of a $1$ bit or $32$ bit ballot entry since we use $1$ or $32$ bits to represent the individual ballot entries in all elections.
+However, to evaluate in detail what portions of the total constraint count are contributed by which circuit, we compute how many constraints are needed in the different elections per ballot entry.
+Then, we compare this to how many constraints are needed for the pure encryption of a $1$ bit or $32$ bit ballot entry since we use $1$ or $32$ bits to represent the individual ballot entries in all elections.
 We use the constraint count for the largest candidate count available to compute the constraints needed per ballot entry in an election.\footnote{
     \label{footnote:votEncLinearInBallotEntries}
     Note that the constraints needed for $\mathfrak{C}_C^{Enc}$ are linear in the number of ballot entries as presented in \cref{section:results:assertEncryption}.
     Additionally, the constraints needed for $\mathfrak{C}_C^{Vot}$ are also linear in the number of ballot entries for all covered elections with two exceptions.
-    For $C_{Pointlist\text{-}Borda(cand, cand, [cand, cand-1, \dots, 1])}$ and $C_{BTS(cand, 2, 1)}$ the number of constraints needed for $\mathfrak{C}_C^{Vot}$ is quadratic in the number of ballot entries.
+    For $C_{Pointlist\text{-}Borda(cand, cand, [cand, cand-1, \dots, 1])}$ and $C_{BTS(cand, 2, 1)}$, the number of constraints needed for $\mathfrak{C}_C^{Vot}$ is quadratic in the number of ballot entries.
     Condorcet elections present a special case since the implementation that does not utilize the ranking generates $\mathcal{O}(entries^{\frac{3}{2}})$ constraints for $entries$ many ballot entries.
     However, in the results, this is only relevant for the libsnark implementation.
     In our implementation, we use the more efficient variant that utilizes the ranking and has a constraint count linear in the number of ballot entries.
 
     Therefore, decomposing the constraints per ballot entry into parts that can be attributed to $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$ is sufficient to evaluate all election types except the previously discussed cases.
     For $C_{Pointlist\text{-}Borda}(cand, cand, [cand, cand-1, \dots, 1])$, $C_{BTS(cand, 2, 1)}$ and Condorcet elections in libsnark, this decomposition does not hold for arbitrary numbers of candidates $cand$ but rather merely for the highest candidate count tested.
-    Note that, since the constraints needed for $\mathfrak{C}_C^{Vot}$ grow superlinearly in the number of ballot entires in all three cases, the portion of constraints that can be attributed to $\mathfrak{C}_C^{Vot}$ grows with the number of candidates in those election types.
+    Note that, since the constraints needed for $\mathfrak{C}_C^{Vot}$ grow superlinearly in the number of ballot entries in all three cases, the portion of constraints that can be attributed to $\mathfrak{C}_C^{Vot}$ grows with the number of candidates in those election types.
 }
 The results of this are shown in \cref{tab:combinedResults}.
 
@@ -582,37 +584,37 @@ The results of this are shown in \cref{tab:combinedResults}.
     \caption{Constraints needed by $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ per ballot entry.
     For every entry in the \glqq Constraints per Ballot Entry \grqq\ column, we also show which portion of those constraints is needed for $\mathfrak{C}_C^{Enc}$ on the left and which portion is needed for $\mathfrak{C}_C^{Vot}$ on the right.
     Note that we use $C_{PB}$ to denote $C_{Pointlist\text{-}Borda}$ and $C_{Cond.}$ to denote $C_{Condorcet}$.\\
-    % *For \gls{mwr}, the constraint count per ballot entry is theoretical since the result obtained by Huber et. al. was $11865$ (calculated from the result for $300$ candidates).
+    % *For \gls{mwr}, the constraint count per ballot entry is theoretical since the result obtained by Huber et al. was $11865$ (calculated from the result for $300$ candidates).
     % This does not fit together with the $12216$ constraints we need to purely encrypt a ballot entry.
     }
     \label{tab:combinedResults}
 \end{table}
 
-From \cref{fig:plots:Combined}, we can conclude that our implementation using Montgomery curves of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ uses slightly less constraints than the implementation of Huber et. al.
-Moreover, our implementation using Twisted Edwards curves uses significantly less constraints than the implementation by Huber et. al.
+From \cref{fig:plots:Combined}, we can conclude that our implementation using Montgomery curves of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ uses slightly fewer constraints than the implementation of Huber et al.
+Moreover, our implementation using Twisted Edwards curves uses significantly fewer constraints than the implementation by Huber et al.
 
-As observed previously, our implementation of $\mathfrak{C}_C^{Vot}$ for Single-Vote, Multi-Vote and its variants \gls{mwr} and Line-Vot, and Majority-Judgment use the same amount of constraints as in the implementation by Huber et. al. (\cref{tab:votingResults}).
+As observed previously, our implementation of $\mathfrak{C}_C^{Vot}$ for Single-Vote, Multi-Vote and its variants \gls{mwr} and Line-Vote, and Majority-Judgment use the same amount of constraints as in the implementation by Huber et al. (\cref{tab:votingResults}).
 In these cases, the reduction in constraints of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ can be attributed entirely to the reduction in constraints of $\mathfrak{C}_C^{Enc}$.
 
 However, even in the voting schemes with choice space $C_{Pointlist\text{-}Borda}(cand, 10, [10, 9, \dots, 1])$ we can attribute the reduction in constraints of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ almost entirely to the reduction in constraints of $\mathfrak{C}_C^{Enc}$ since the constraints of $\mathfrak{C}_C^{Vot}$ are negligible in comparison (\cref{tab:combinedResults}).
 
 For \gls{bts} elections and the voting scheme with choice space $C_{Pointlist\text{-}Borda}(cand, cand, [cand, cand-1, \dots, 1])$ this is different.
 Here, the number of constraints needed for $\mathfrak{C}_C^{Vot}$ scales quadratically with $cand$, whereas the number of constraints needed for $\mathfrak{C}_C^{Enc}$ scales linearly.
-Asymptotically, the constraints needed for $\mathfrak{C}_C^{Enc}$ are therefore be negligible compared to those needed for $\mathfrak{C}_C{Vot}$.
-Despite this, we observe that $\mathfrak{C}_C^{Vot}$ needs at most equally many constraints as $\mathfrak{C}_C{Enc}$ as shown in \cref{tab:combinedResults} for the highest number of candidates $cand$ we tested.
+Asymptotically, the constraints needed for $\mathfrak{C}_C^{Enc}$ are therefore negligible compared to those needed for $\mathfrak{C}_C^{Vot}$.
+Despite this, we observe that $\mathfrak{C}_C^{Vot}$ needs at most equally many constraints as $\mathfrak{C}_C^{Enc}$ as shown in \cref{tab:combinedResults} for the highest number of candidates $cand$ we tested.
 The reason for this is that asserting encryption is very costly and requires many constraints.
-Therefore, for any realistic number of candidates $cand$, the theoretical asymptotic behaviour does not take effect.
+Therefore, for any realistic number of candidates $cand$, the theoretical asymptotic behavior does not take effect.
 
-Once again, Condorcet elections arre a special case.
-Note that in the implementation of Huber et. al. we use cubically many constraints in the number of candidates $cand$ for $\mathfrak{C}_C^{Vot}$ whereas, we use quadratically many constraints for $\mathfrak{C}_C^{Enc}$.
+Once again, Condorcet elections are a special case.
+Note that in the implementation of Huber et al. we use cubically many constraints in the number of candidates $cand$ for $\mathfrak{C}_C^{Vot}$ whereas we use quadratically many constraints for $\mathfrak{C}_C^{Enc}$.
 Asymptotically, the constraints for $\mathfrak{C}_C^{Enc}$ are negligible compared to the constraints for $\mathfrak{C}_C^{Vot}$ in this case.
 However, as shown in \cref{tab:combinedResults}, this is not observable for any realistic number of candidates $cand$.
-In our implementation of $\mathfrak{C}_C^{Vot}$ for condorcet elections, we use quadratically many constraints.
+In our implementation of $\mathfrak{C}_C^{Vot}$ for Condorcet elections, we use quadratically many constraints.
 Therefore, neither of the constraint counts for the two circuits is dominant.
-This effect can be observed in \cref{tab:combinedResults} since the relative number of constraints needed for $\mathfrak{C}_C^{Vot}$ compared to those needed for $\mathfrak{C}_C^{Enc}$ is singnificantly lower than in the implementation by Huber et. al.
+This effect can be observed in \cref{tab:combinedResults} since the relative number of constraints needed for $\mathfrak{C}_C^{Vot}$ compared to those needed for $\mathfrak{C}_C^{Enc}$ is significantly lower than in the implementation by Huber et al.
 
 From \cref{tab:combinedResults} we can conclude that the number of constraints for $\mathfrak{C}_C^{Vot}$ is negligible compared to $\mathfrak{C}_C^{Enc}$ for most election types.
-For the election types, where this is not the case, $\mathfrak{C}_C^{Vot}$ needs asymptotically more constraints than $\mathfrak{C}_C^{Enc}$ but this is not the case for any realistic number of candidates $cand$.
+For the election types where this is not the case, $\mathfrak{C}_C^{Vot}$ needs asymptotically more constraints than $\mathfrak{C}_C^{Enc}$, but this is not the case for any realistic number of candidates $cand$.
 Additionally, the dominance in constraint count of $\mathfrak{C}_C^{Enc}$ compared to $\mathfrak{C}_C^{Vot}$ is less pronounced for the implementation with Twisted Edwards curves.
 The reason for this is the lower constraint count for $\mathfrak{C}_C^{Enc}$ when using Twisted Edwards curves compared to using Montgomery curves.
 
@@ -649,4 +651,4 @@ The reason for this is the lower constraint count for $\mathfrak{C}_C^{Enc}$ whe
 
 % into the results for voting schemes where the number of entries in a ballot scales linearly with the candidate count and the results for voting schemes where the number of entries in a ballot scales quadratically with the candidate count.
 
-% Additionally, we compare our results to those obtained by Huber et. al. as shown in \cref{fig:benchmarks:combinedComp}.
+% Additionally, we compare our results to those obtained by Huber et al. as shown in \cref{fig:benchmarks:combinedComp}.

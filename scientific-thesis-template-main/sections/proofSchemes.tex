@@ -11,7 +11,7 @@ This allows us to use \glspl{gpzkp} over correct circuit execution to provide th
 %In this sense, depending on which values are public and which are private, 
 We introduce \glspl{gpzkp} is a similar fashion to \cite{least_authority_moonmath_2024}.
 
-\section{Algebraic Functions and Algebraic Circuts}
+\section{Algebraic Functions and Algebraic Circuits}
 An algebraic circuit models an algebraic function $r$ that maps from a set of inputs to a set of outputs.
 %An algebraic circuit represents a relation between a set of input signals and a set of output signals from a fixed field.
 \begin{definition}[Algebraic Function]
@@ -84,12 +84,12 @@ The basic operations $+$ and $\cdot$ are represented by the addition and multipl
 %     \label{fig:circuit:threeFac}
 % \end{figure}
 
-To see how algebraic functions can be used to indicate ballot validity, we consider our example from \cref{chap:votingschemes}.
+In order to see how algebraic functions can be used to indicate ballot validity, we consider our example from \cref{chap:votingschemes}.
 Here, among other things, a voter needs to show that the ballot $b=(b_0,b_1,b_2)$ they chose is part of the choice space $C=\{(0,0,0),(1,0,0), (0,1,0), (0,0,1)\}$.
 We can express this membership of the choice space by the function $r_{3\text{-}vot}$ defined in \cref{example:threeVot}.
 \begin{example}[Choice space membership for $3\text{-}vot$]
     \label{example:threeVot}
-    Let $(\mathbb{F},+,\cdot)$ be a finite field of sufficiently large chracteristic \cref{footnote:choiceSpaceSize} with $0,1\in\mathbb{F}$.
+    Let $(\mathbb{F},+,\cdot)$ be a finite field of sufficiently large characteristic \cref{footnote:choiceSpaceSize} with $0,1\in\mathbb{F}$.
     Then, $r_{3\text{-}vot}$ is defined as:
     \begin{align*}
         r_{3\text{-}vot}:\mathbb{F}^3\to\mathbb{F}^4;\quad(S_1^{in},S_2^{in}, S_3^{in})\mapsto (S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})
@@ -141,7 +141,7 @@ We can express this membership of the choice space by the function $r_{3\text{-}
 \subsection{Satisfiability}
 
 Now, we can assign arbitrary input and output values to the circuit $\mathfrak{C}$ for the function $r$.
-If we then compute the algebraic function $r$ on the input values, this either yields the chosen output values or it yields something else.
+If we then compute the algebraic function $r$ on the input values, this either yields the chosen output values or something else.
 If the computation results in the same output values as the ones chosen before, we say that $\mathfrak{C}$ is satisfied.
 % Furthermore, we can fix some of the input and output values of the circuit.
 % Then it is either possible to assign values to the rest of the signals such that the circuit for $r$ holds or it is not possible to do so.
@@ -180,10 +180,10 @@ We can formalize these ideas with the concept circuit satisfiability.
 % % Similarily, $r_{3\text{-}fac}$ is satisfiable under the partial assignment $(\bot, 2, 4, \bot)$ but not under the partial assignment $(0,\bot, \bot, 1)$.
 % 
 For instance, the assignment $(0,0,1,0,0,0,0)$ satisfies the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$ since $(0,0,1)\in C$.
-Therfore, the $\mathfrak{C}_{3\text{-}vot}$ is satisfiable.
+Therefore, the $\mathfrak{C}_{3\text{-}vot}$ is satisfiable.
 However, the assignment $(1,1,0,0,0,0,0)$ does not satisfy $\mathfrak{C}_{3\text{-}vot}$ since $tmp=1+1=2$, $(1-2)\cdot 2=-2$ and therefore, $r_{3\text{-}vot}(1,1,0)=(0,0,0,-2)\neq(0,0,0,0)$.\footnote{
     \label{footnote:fieldNegativeNumbers}
-    Here, $-2$ depends on the chracteristic of the field $\mathbb{F}$.
+    Here, $-2$ depends on the characteristic of the field $\mathbb{F}$.
     For a field $\mathbb{F}_q$ of prime order $q$, we have $-2=q-2$.
 }
 % Similarily, the circuit for $r_{3\text{-}vot}$ is satisfiable under the partial assignment $(\bot, \bot, 1, 0,0,0,0)$ but not under the partial assignment $(2,\bot, \bot, 0,0,0,0)$.
@@ -309,7 +309,7 @@ The corresponding circuits $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{Asse
 These circuits are exactly the same as the ones defined in \cref{fig:circuit:exampleVotingDef} and \cref{fig:circuit:exampleAssertThreeVot}, we have just grouped some of the internal structure as new circuits $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{Assert\text{-}Bit}$ respectively.
 
 Note that we cannot reuse the same circuit $\mathfrak{C}_{module}$ multiple times inside another circuit $\mathfrak{C}$.
-Therefore, we use multiple sepearate instantiations of $\mathfrak{C}_{module}$ inside $\mathfrak{C}$.
+Therefore, we use multiple separate instantiations of $\mathfrak{C}_{module}$ inside $\mathfrak{C}$.
 In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{Assert\text{-}Bit}$ in the definition of $\mathfrak{C}_{3\text{-}vot}$ and $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ respectively.
 
 \begin{center}
@@ -333,7 +333,7 @@ In our example, we use multiple instantiations of $\mathfrak{C}_{is\text{-}Bit}$
     \end{figure}
 \end{center}
 
-The modularity of circuits allows us to define more complicated circuits based on simpler ones and will be used througout the thesis.
+The modularity of circuits allows us to define more complicated circuits based on simpler ones and will be used throughout the thesis.
 For the rest of this chapter however, we need to know the exact specification of a circuit down to the circuits for the basic field operations $+$ and $\cdot$ of $\mathbb{F}$.
 Therefore, we will use the definition of $r_{3\text{-}vot}$ from \cref{example:threeVot} and the corresponding circuit $\mathfrak{C}_{3\text{-}vot}$ from \cref{fig:circuit:exampleVotingDef}.
 
@@ -361,11 +361,11 @@ Therefore, under the definition that all constants, all inputs and all intermedi
 \begin{itemize}
     \item Any computation $x\cdot y$, where $x$ and $y$ are sums of constant multiples of primitives is expressed as an additional constraint $tmp=x\cdot y$ where $tmp$ is an intermediate signal.\footnote{
         \label{footnote:intermediateSignalsInCircuit}
-        Note that it is possible too include intermediate signals in the circuit definition directly.
+        Note that it is possible to include intermediate signals in the circuit definition directly.
         However, to simplify and to match our definition of algebraic functions, we abstract away from the details here and do not include them in the assignments for circuits.
     }
     \item Any computation $x+y$, where the result is directly used as an output $S_{i}^{out}$ of $\mathfrak{C}$ is expressed as an additional constraint $S_{i}^{out}=x + y$.
-    \item Every other computation $x+y$ and $x\cdot y$ does not contribute additinal constraints.
+    \item Every other computation $x+y$ and $x\cdot y$ does not contribute additional constraints.
 \end{itemize}
 % The process of converting $\mathfrak{C}$ into the corresponding \gls{r1cs} has 
 
@@ -414,7 +414,7 @@ Therefore, under the definition that all constants, all inputs and all intermedi
 
 % As we can see, this \gls{r1cs} does represent $f_{3\text{-}fac}$.
 
-For instance, we can represent $r_{3\text{-}vot}$ and $\mathfrak{C}_{3\text{-}vot}$ as an \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ as follows:\\
+For instance, we can represent $r_{3\text{-}vot}$ and $\mathfrak{C}_{3\text{-}vot}$ as a \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ as follows:\\
 %First, we rewrite the definition of $r_{3\text{-}vot}$ since each constraint of a \gls{r1cs} can have at most one multiplication $\cdot$.
 %This process is also called flattening \cite{least_authority_moonmath_2024}. 
 %We get:
@@ -471,7 +471,7 @@ Now, we can construct the equation system:
 }
 
 As we can see, this \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ does represent $r_{3\text{-}vot}$.
-We can now define \gls{r1cs} Satisfiability in a similar fashion to Circuit Satisfiability.
+We can now define \gls{r1cs} Satisfiability similarly to Circuit Satisfiability.
 
 \begin{definition}[\gls{r1cs} Satisfiability]
     \label{def:r1csSat}
@@ -505,7 +505,7 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
 \end{itemize}
 
 In general, a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ if and only if $(b_0,b_1,b_2,0,0,0,0)$ satisfies $R1CS_{r_{3\text{-}vot}}$.
-Therefore, we can use $R1CS_{r_{3\text{-}vot}}$ to show membership of the choice space in a similar fashion to how we used $\mathfrak{C}_{3\text{-}vot}$.
+Therefore, we can use $R1CS_{r_{3\text{-}vot}}$ to show membership of the choice space similarly to how we used $\mathfrak{C}_{3\text{-}vot}$.
 
 \section{Quadratic Arithmetic Programs}
 To use \glspl{r1cs} in \glspl{gpzkp}, we need to transform them into another different representation, namely \glspl{qap}.
@@ -731,7 +731,7 @@ Putting everything together, we get $QAP(R1CS_{r_{3\text{-}vot}})$ as follows (w
     &\phantom{=bl} (0,&& 0,&& 10x^3 + 7x^2 + 3x + 3)&&\Bigr\}\\
 \end{align*}
 
-We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satisfiability.
+We can now define \gls{qap} Satisfiability similarly to Circuit Satisfiability.
 
 \begin{definition}[\gls{qap} Satisfiability]
     \label{def:qapSat}
@@ -754,7 +754,7 @@ We can now define \gls{qap} Satisfiability in a similar fashion to Circuit Satis
 
 As we have shown before, the \gls{r1cs} $R1CS_{r_{3\text{-}vot}}$ is satisfied by the assignment $S=(0,0,1,0,0,0,0)$ but not by the assignment $S'=(1,1,0,0,0,0,0)$.
 Therefore, the \gls{qap} $QAP(R1CS_{r_{3\text{-}vot}})$ should also be satisfied by $S$ but not by $S'$.
-We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the definition of $P_S$ as in \cref{def:qapSat} and checking wheter this polynomial is divisible by $T$:
+We can check this by inserting the values for the variables $S_1,\dots, S_7$ into the definition of $P_S$ as in \cref{def:qapSat} and checking whether this polynomial is divisible by $T$:
 \begin{itemize}
     \item Assignment $S=(0,0,1,0,0,0,0)$:
     {\setlength{\mathindent}{0pt}
@@ -785,7 +785,7 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
 \end{itemize}
 
 As for $R1CS_{r_{3\text{-}vot}}$, a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ if and only if $(b_0,b_1,b_2,0,0,0,0)$ satisfies $QAP(R1CS_{r_{3\text{-}vot}})$.
-Therefore, we can use $QAP(R1CS_{r_{3\text{-}vot}})$ to show membership of the choice space in a similar fashion to how we used $\mathfrak{C}_{3\text{-}vot}$.
+Therefore, we can use $QAP(R1CS_{r_{3\text{-}vot}})$ to show membership of the choice space similarly to how we used $\mathfrak{C}_{3\text{-}vot}$.
 
 In general, the satisfiability definitions of circuits implies the satisfiability definition of \glspl{r1cs} and \glspl{qap} in the sense that for every assignment that satisfies the circuit, there is an extended assignment, where values are assigned to the intermediate signals as well, that satisfies the \gls{r1cs} and the \gls{qap} as presented in \cref{theorem:satisfiabilityEquality}.
 \begin{theorem}[Satisfiability Definitions Relation]
@@ -793,7 +793,7 @@ In general, the satisfiability definitions of circuits implies the satisfiabilit
     Let $(\mathbb{F}, +, \cdot )$ be a finite field.
     Let $r:\mathbb{F}^m\to \mathbb{F}^n$ be an algebraic function and $\mathfrak{C}$ be the corresponding algebraic circuit.
     Let $R1CS_r$ be the corresponding \gls{r1cs} and let $QAP(R1CS_r)$ be the corresponding \gls{qap} with $s$ additional intermediate signals.
-    Without loss of generality, assume that the order of assignments to $\mathfrak{C}$ is preserved by $R1CS_r$ and $QAP(R1CS_r)$ and the additinal intermediate signals are added as a suffix.\footnote{
+    Without loss of generality, assume that the order of assignments to $\mathfrak{C}$ is preserved by $R1CS_r$ and $QAP(R1CS_r)$ and the additional intermediate signals are added as a suffix.\footnote{
         \label{footnote:assignmentOrderDoesNotMatter}
         Intuitively, the order of the assignments to a \gls{r1cs} and corresponding \gls{qap} does not matter since we can just swap where the different signals from an assignment are being used in the two representations.
     }
@@ -812,7 +812,7 @@ This is captured by the zero knowledge characteristic of ballot validity proofs 
 More generally, we need to be able to hide a part of the assignment to a circuit $\mathfrak{C}$ for a relation $r$ and still be able to provide the proof of correct circuit execution.
 
 For this purpose, we split an assignment to the circuit for $r$ into an instance and a witness part. 
-As outlined in \cref{chap:votingschemes}, the instance is public and the witness is private and proving the relation between them is the goal of the \gls{zps} (\cref{def:zpsForR}) in our voting schemes.
+As outlined in \cref{chap:votingschemes}, the instance is public, and the witness is private and proving the relation between them is the goal of the \gls{zps} (\cref{def:zpsForR}) in our voting schemes.
 
 We can formalize this concept as a Decomposition Relation.
 
@@ -823,16 +823,16 @@ We can formalize this concept as a Decomposition Relation.
 
     Assignments to $r$ have $m+n$ entries, to account for the input and output signals.
     For $R1CS_r$ and $QAP(R1CS_r)$, assignments have more entries if intermediate signals are required to conform to the \gls{r1cs} and \gls{qap} format.
-    The set of all assignments to any of the representations $r$, $R1CS_r$ and $QAP(R1CS_r)$ is therefore $\mathcal{A}=\mathbb{F}^{m+n+s}$,where $s\in\mathbb{N}$ is the number of intermediate signals required.
+    The set of all assignments to any of the representations $r$, $R1CS_r$ and $QAP(R1CS_r)$ is therefore $\mathcal{A}=\mathbb{F}^{m+n+s}$, where $s\in\mathbb{N}$ is the number of intermediate signals required.
     
     To decompose an assignment $S\in\mathcal{A}$ into an assignment $(I,W)\in\mathcal{I}\times\mathcal{W}$, we employ a bijective function $d_p$ based on a permutation $p:\{0,\dots, m+n+s\}\to\{0,\dots, n_I + n_W\}$ ($m+n+s=n_I+n_W$) with $p(0):=0$. \footnote{\label{footnote:decompRelationPermutation}
         To understand how $p$ helps to map between instance-witness decomposition and normal assignments, consider the following:
         Let $S=(S_1,\dots, S_{m+n+s})$ be an assignment, and let $(I,W)=((I_1,\dots, I_u), (W_1,\dots, W_v))$ be the corresponding decomposed assignment, where the signals $S$ have each been assigned to instance $I$ or witness $W$.
-        If $I_j$ corresponds to $S_i$ , then $p(i):=j$ and consequently $p^{-1}(j)=i$.
+        If $I_j$ corresponds to $S_i$, then $p(i):=j$ and consequently $p^{-1}(j)=i$.
         Similarly, if $W_j$ corresponds to $S_i$, then $p(i)=u+j$ and consequently $p^{-1}(u+j)=i$.
         (We need to add $u$ to the index of the witness signal to account for all $u$ instance signals before the witness signals.)
 
-        The definition $p(0):=0$ is purely to simplify notation in Groth16 SNARKs later on. 
+        The definition $p(0):=0$ is purely to simplify notation in \glspl{g16snark} later on. 
         For this section, defining $p:\{1,\dots, m+n+s\}\to\{1,\dots, n_I + n_W\}$ would be sufficient as well.
     }
     \begin{align*}
@@ -914,7 +914,7 @@ Visually, we can represent this as shown in \cref{fig:circuit:instanceWitnessRel
 \end{figure}
 
 Let $DR(QAP(R1CS_{r_{3\text{-}vot}}), d_p)$ be defined analogously to $DR(r_{3\text{-}vot}, d_p)$. \footnote{\label{footnote:instanceWitnessIntermediateSignals}
-    Note, that in our case there are no intermediate signals that need to be assigned to instance or witness. 
+    Note, that in our case, there are no intermediate signals that need to be assigned to instance or witness. 
     However, in many circuits there are such signals. 
     In that case, we typically determine whether an intermediate signal is instance or witness depending on the instance and witness properties of the rest of the signals.
     If an intermediate signal is only dependent on instance signals, then it is typically also part of the instance.
@@ -925,7 +925,7 @@ To prove that a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ without reve
 If $P_S$ is divisible by the target polynomial $T$ of $QAP(R1CS_{r_{3\text{-}vot}})$, we know that the assignment $S$ satisfies $QAP(R1CS_{r_{3\text{-}vot}})$.
 Therefore, $DR(QAP(R1CS_{r_{3\text{-}vot}}), d_p)(I,W)=1$ and the ballot $b$ is valid.
 However, we do not learn what the ballot $b$ is which is what the zero-knowledge property of our voting scheme definition states.
-Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
+Such constructive proofs of circuit execution are the basis for \glspl{g16snark}.
 
 %However, it is currently not possible to show that the polynomial $P_S$ provided by a voter actually belongs to the assignment $S$.
 
@@ -934,7 +934,7 @@ Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
 \glspl{snark} are a special form of the \glspl{zkp} we introduced in \cref{chap:votingschemes}.
 
 \begin{definition}[Succinct Non-Interactive Argument of Knowledge for Relation $R$]
-    Let $R$ be a binary polynomial time decideable relation relating instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$.
+    Let $R$ be a binary polynomial time decidable relation relating instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$.
     Let $ZPS(R)=(Setup, Prove, Verify)$ be a \gls{zps} for $R$.
     $ZPS(R)$ is a \gls{snark}, if it fulfills the following properties:\footnote{\label{footnote:NonInteractiveness}
         Note that our definition of \glspl{zkp} is already non-interactive, meaning that a prover sends only the proof $\pi$ to the verifier.
@@ -952,7 +952,7 @@ Such constructive proofs of circuit execution are the basis for Groth16 SNARKs.
 \end{definition}
 
 One widely used \gls{snark} is the Groth16 SNARK. 
-Our definition, largely parallels that in section 8.2 of \cite{least_authority_moonmath_2024} and appendix B in \cite{huber_zk-snarks_2025}.
+Our definition largely parallels that in section 8.2 of \cite{least_authority_moonmath_2024} and appendix B in \cite{huber_zk-snarks_2025}.
 
 %\newpage
 \begin{definition}[Groth16 SNARK]
@@ -968,7 +968,7 @@ Our definition, largely parallels that in section 8.2 of \cite{least_authority_m
     Let $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$ be a corresponding decomposition relation where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
 
     Let $(\mathbb{G}_1, \odot_{\mathbb{G}_1}), (\mathbb{G}_2, \odot_{\mathbb{G}_2})$ and $(\mathbb{G}_T, \odot_{\mathbb{G}_T})$ be groups of prime order $q$.
-    Let $e:\mathbb{G}_1\times\mathbb{G}_2\to\mathbb{G}_T$ be an efficiently computable, non-degenrate, bilinear pairing as defined in \cref{def:bilinearPairing}.
+    Let $e:\mathbb{G}_1\times\mathbb{G}_2\to\mathbb{G}_T$ be an efficiently computable, non-degenerate, bilinear pairing as defined in \cref{def:bilinearPairing}.
     Let $g_1\in\mathbb{G}_1, g_2\in\mathbb{G}_2$ be generators of the respective groups and $e(g_1, g_2)$ be a generator of $\mathbb{G}_T$.
 
     Then, the \gls{g16snark} for the relation $DR(QAP(R1CS_r), d_p)$ based on the parameters $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$ is the \gls{snark}
@@ -984,14 +984,14 @@ In their work, Groth \cite{groth_size_2016} introduced an additional algorithm $
 A detailed definition of $Sim$ is presented in \cite{groth_size_2016} and also in Appendix B of \cite{huber_zk-snarks_2025}.
 Here, $Sim$ uses an instance $I$ and the simulation trapdoor $(\alpha, \beta, \delta, \gamma, \tau)$ but does not receive a witness $W$.
 Based on this algorithm, the zero-knowledge property of \glspl{g16snark} can be defined as follows \cite{groth_size_2016}:
-Let $CRS$ be a common reference string and let $I\in\mathcal{I}$ and $W\in\mathcal{W}$.% such that $I$ and $W$ are related, i.e. $DR(QAP(R1CS_r), d_p)=1$.
+Let $CRS$ be a common reference string and let $I\in\mathcal{I}$ and $W\in\mathcal{W}$. % such that $I$ and $W$ are related, i.e. $DR(QAP(R1CS_r), d_p)=1$.
 Then, any adversary cannot distinguish the proofs $\pi:=Prove(CRS, I, W)$ and $\pi':=Sim(CRS, I, (\alpha, \beta, \gamma, \delta, \tau))$.
 In other words, the proof $\pi$ does not reveal anything about the witness $W$ since $W$ was not involved in the creation of $\pi'$.
 
 Proofs of Knowledge Soundness, Completeness and Succinctness as well as a proof of the Zero-Knowledge property of \glspl{g16snark} are presented in \cite{groth_size_2016}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
-    \caption{Procedure to setup the \gls{zps} $GSNARK(DR(QAP(R1CS_r), d_p))$ based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
+    \caption{Procedure to set up the \gls{zps} $GSNARK(DR(QAP(R1CS_r), d_p))$ based on $params:=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot,\cdot),g_1,g_2,\mathbb{F}_q)$.
     Here, $r:\mathbb{F}_q^m\to\mathbb{F}_q^n$ and $DR(QAP(R1CS_r), d_p):\mathcal{I}\times\mathcal{W}\to\{0,1\}$, where $d_p:\mathcal{A}\to\mathcal{I}\times\mathcal{W}$, $\mathcal{I}=\mathbb{F}_q^{n_I}, \mathcal{W}=\mathbb{F}_q^{n_W}$ where $n_I + n_W=m+n+s$ and $\mathcal{A}=\mathbb{F}_q^{m+n+s}$.
     Additionally, $QAP(R1CS)=\left\{T\right\}\cup \bigcup_{j=0}^{n}\left\{\left(A_j, B_j, C_j\right)\right\}$ and $k:=deg(T)$ is the number of constraints in the \gls{qap}.
     }

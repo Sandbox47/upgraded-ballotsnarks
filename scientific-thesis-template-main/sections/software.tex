@@ -2,7 +2,7 @@
 \label{chap:software}
 
 We use software to implement circuits, create proofs of correct circuit execution and to provide the correct inputs to the ballot validity assertion circuits.
-The accompanying implementation contains all sourcecode we wrote for this work.
+The accompanying implementation contains all source code we wrote for this work.
 
 \section{Circom}
 
@@ -12,18 +12,18 @@ These proofs constitute a form of \gls{gpzkp} since we can derive a \gls{zkp} fo
 Previously, we defined circuits to assert ballot validity in our voting schemes (\cref{chap:ourVotingSchemes}).
 So far, we represented these circuits visually.
 However, to implement circuits and automatically derive a proof of correct circuit execution, we need to express them in a Circuit Language.
-In contrast to Huber et. al. \cite{huber_zk-snarks_2025}, who used libsnark \cite{madars_virza_scipr-lablibsnark_2025}, we choose Circom \cite{rodriguez_circom_2025} as the Circuit Language.
-Circom is adventageuos when compared to libsnark for multiple reasons:
+In contrast to Huber et al. \cite{huber_zk-snarks_2025}, who used libsnark \cite{madars_virza_scipr-lablibsnark_2025}, we choose Circom \cite{rodriguez_circom_2025} as the Circuit Language.
+Circom is advantageous when compared to libsnark for multiple reasons:
 
 The main benefit is, that Circom is used purely to define circuits and to convert them to the corresponding \gls{r1cs} representation. 
 Therefore, we can choose any \gls{zps} that uses \glspl{r1cs} for the proofs of correct circuit execution.
 As we did in this thesis, Circom is most commonly used with the backend library snarkjs \cite{jordi_baylina_iden3snarkjs_2025} and the \gls{zps} \gls{g16snark} \cite{groth_size_2016}.
 However, snarkjs also supports the \glspl{zps} PLONK \cite{gabizon_plonk_2019} and FFLONK \cite{gabizon_fflonk_2021}.
-Moreover, using other backends such as arkworks \cite{yuncong_hu_arkworks_2025} with other \gls{zps} such as marlin \cite{chiesa_marlin_2019,pratyush_mishra_arkworks-rsmarlin_2025} and gemini \cite{bootle_gemini_2022} is also possible.
-libsnark on the other hand is an End-to-End \gls{zkp} system which implements \glspl{g16snark} and \glspl{snark} based on the approach by Ben-Sasson et. al. \cite{ben-sasson_succinct_2013}.
+Moreover, using other backends such as arkworks \cite{yuncong_hu_arkworks_2025} with other \gls{zps} such as marlin \cite{chiesa_marlin_2019,pratyush_mishra_arkworks-rsmarlin_2025} and Gemini \cite{bootle_gemini_2022} is also possible.
+libsnark on the other hand is an End-to-End \gls{zkp} system which implements \glspl{g16snark} and \glspl{snark} based on the approach by Ben-Sasson et al. \cite{ben-sasson_succinct_2013}.
 
 Additionally, Circom provides higher-level primitives and easier syntax for defining circuits, leading to implementations that are easier to create, use and maintain than in libsnark.
-Moreover, Circom is still being maintaines whereas libsnark does not support recent recent proof systems and there are no new features being added to it.
+Moreover, Circom is still being maintained whereas libsnark does not support recent proof systems and there are no new features being added to it.
 
 \subsection{Syntax}
 The syntax of Circom is similar to that of JavaScript.
@@ -33,7 +33,7 @@ We define a circuit with the keyword \verb|template| and use a notation similar 
 Variables that participate in constraints are denoted with \verb|signal|.\footnote{
     \label{footnote:circomSignalElimination}
     When computing the \gls{r1cs} corresponding to a circuit, Circom tries to minimize the number of equations (i.e., constraints).
-    In this process some intermediate signals might get eliminated and are therefore not part of the \gls{r1cs}.
+    In this process, some intermediate signals might get eliminated and are therefore not part of the \gls{r1cs}.
 }
 Additionally, inputs and outputs are denoted with \verb|input| and \verb|output| respectively.
 In order to assign a value or variable \verb|v| to a variable \verb|variable|, we write \verb|variable <-- v|.
@@ -75,7 +75,7 @@ template threeVot() {
 As introduced earlier (\cref{chap:gpzkp}), $\mathfrak{C}_{3\text{-}vot}$ is used to indicate whether a ballot $b=(S_1^{in}, S_2^{in}, S_3^{in})$ is in the choice space $C=\{(0,0,0), (0,0,1), (0,1,0), (1,0,0)\}$.
 If this is the case, the circuit will produce the outputs $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})=(0,0,0,0)$.
 To use the circuit to assert that a ballot is in $C$, we need to enforce $(S_1^{out}, S_2^{out}, S_3^{out}, S_4^{out})\mbeq(0,0,0,0)$.
-We call this modified circuit $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ (\cref{chap:gpzkp}) and can define this in Circom as \verb|assertThreeVot| (\cref{fig:circom:assertThreeVot}).
+We call this modified circuit $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ (\cref{fig:circuit:exampleAssertThreeVot}) and can define this in Circom as \verb|assertThreeVot| (\cref{fig:circom:assertThreeVot}).
 However, to explain the core concepts of Circom, we continue with $\mathfrak{C}_{3\text{-}vot}$ for the rest of this section.
 
 \begin{figure}[h]
@@ -212,7 +212,7 @@ template vot(n) {
 \subsection{Instance and Witness}
 Strictly speaking, the templates \verb|threeVot| and \verb|vot| are not circuits yet but rather \glqq templates\grqq\ of circuits that need to be instantiated to create circuits.
 In Circom, we can do that by specifying the \verb|main| component.
-For parameterized circuits such as \verb|vot|, we also need to assign values to all parameters since the circuit typically has a different size or layout depending on them.
+For parametrized circuits such as \verb|vot|, we also need to assign values to all parameters since the circuit typically has a different size or layout depending on them.
 By assigning $3$ to \verb|n|, we can create an instantiation of \verb|vot| that is equivalent to \verb|threeVot|:
 
 \begin{lstlisting}[language=Circom]
@@ -220,9 +220,9 @@ By assigning $3$ to \verb|n|, we can create an instantiation of \verb|vot| that 
 \end{lstlisting}
 
 In \cref{section:proofSchemes:instanceAndWitness}, we discussed how we can decompose an assignment to a circuit into a private witness and a public instance.
-In Circom, all inputs to a circuit are part of the witness by default but can be specified to be part of the instance by including them in a \verb|public| list when instantiating the circuit.
+In Circom, all inputs to a circuit are part of the witness by default, but can be specified to be part of the instance by including them in a \verb|public| list when instantiating the circuit.
 All outputs of a circuit in Circom are part of the instance and cannot be made part of the witness.
-Therefore, the decomposition into instance and witness of $\mathfrak{C}_{3\text{-}vot}$ (\cref{fig:circuit:instanceWitnessRelationThreeVot}), where all inputs are part of the witness is the default in Circom.
+Therefore, the decomposition into instance and witness of $\mathfrak{C}_{3\text{-}vot}$ (\cref{fig:circuit:instanceWitnessRelationThreeVot}) where all inputs are part of the witness is the default in Circom.
 
 Assume, we wanted to implement a different decomposition, where the first of the submitted votes is also revealed and part of the instance.
 Then, we can implement this in Circom as follows:
@@ -251,8 +251,8 @@ For this purpose, Circom provides a so-called \glqq Witness\grqq\ Generation pro
     Note that the term \glqq Witness\grqq\ in the context of Circom \glqq Witness\grqq\ Generation has a very different meaning compared to the term witness describing the private parts of an assignment to a circuit.
 }
 In the example \verb|component main = vot(3)|, the signals that still need to be assigned are the outputs \verb|S_out|.
-Here, the Circom \glqq Witness\grqq\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all contraints.\cref{footnote:fieldNegativeNumbers}
-Since the sum of all votes is $1+1=2$, $S_{out}^4=-2\neq 0$ and therefore, the ballot $(1,0,1)$ is not part of the choice space in our example voting scheme from \cref{chap:votingschemes}.
+Here, the Circom \glqq Witness\grqq\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all constraints.\cref{footnote:fieldNegativeNumbers}
+Since the sum of all votes is $1+1=2$, $S_{out}^4=-2\neq 0$, the ballot $(1,0,1)$ is not part of the choice space in our example voting scheme from \cref{chap:votingschemes}.
 
 \SaveVerb{circomCopmO1}|circom vot.circom --r1cs --wasm|
 \SaveVerb{circomCompO2}|circom vot.circom --r1cs --wasm --O2|
@@ -284,7 +284,7 @@ node generate_witness.js vot.wasm input.json witness.wtns   # Create instantiati
 In the previous example, Circom \glqq Witness\grqq\ generation is equivalent to circuit execution.
 However, in general, Circom \glqq Witness\grqq generation is more powerful since it is used to \textit{find} values such that the constraints are satisfied.
 We can make use of this for the utility circuit $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) which computes $\frac{x}{y}$ for inputs $x$ and $y$.
-The corresponding circom implementation is shown in \cref{fig:circom:division}.
+The corresponding Circom implementation is shown in \cref{fig:circom:division}.
 Here, Circom \glqq Witness\grqq\ generation is employed to find a value $out$ such that the $out\cdot y=x$ which is equivalent to $out=\frac{x}{y}$.
 Achieving the same result with pure circuit execution would be more complicated.
 
@@ -329,7 +329,7 @@ This makes it a versatile choice for many different use cases.
 
 In our implementation, we used the \gls{zps} Groth16 operating over the elliptic curve \verb|BN254|.
 
-The three different algorithms $Setup$, $Prove$ and $Verify$ of \glspl{g16snark} (\cref{section:proofSchemes:groth16}) are implemented seperately in snarkjs.
+The three different algorithms $Setup$, $Prove$ and $Verify$ of \glspl{g16snark} (\cref{section:proofSchemes:groth16}) are implemented separately in snarkjs.
 
 \subsubsection{Setup}
 \label{section:software:snarkjsSetup}
@@ -346,8 +346,8 @@ Similarly, in $CRS_{\mathbb{G}_1}$ the parameters
 do not depend on $R1CS$ or only depend on the number of constraints $k$.
 
 Therefore, we can split up the generation of $CRS$ into a part $CRS\text{-}Universal$ and a part $CRS\text{-}R1CS_r$ that can be combined to the full $CRS$.
-Here, $CRS\text{-}Universal$ is independent from the circuit and can be used for any circuits up to some fixed maximum amount of constraints $k_{max}$.
-$CRS\text{-}R1CS_r$ on the other hand is specific to the circuit.
+Here, $CRS\text{-}Universal$ is independent of the circuit and can be used for any circuits up to some fixed maximum amount of constraints $k_{max}$.
+$CRS\text{-}R1CS_r$ on the other hand, is specific to the circuit.
 
 In our voting schemes, we want to create \glspl{zkp} for many different election types and different candidate counts.
 Therefore, we can generate $CRS\text{-}Universal$ once for a number of constraints $k_{max}$ sufficient for all scenarios.
@@ -358,9 +358,9 @@ This can be very efficient compared to generating the full $CRS$ from scratch ev
 In snarkjs, $CRS\text{-}Universal$ is represented by a \verb|powersoftau.ptau| file, which is typically generated using a \gls{mpc} protocol with several contributions from different sources such as random beacons \cite{nicolas_gailly_league_2025,popper_powers--tau_2024,bowe_scalable_2017}.\footnote{
     For our benchmarks, we used the pregenerated \protect\UseVerb{ptau} files from \cite{jordi_baylina_iden3snarkjs_2025} which have been generated with many contributions from different sources.
 }
-To create $CRS\text{-}R1CS_r$, snarkjs uses \verb|powersoftau.ptau| and the $R1CS$ of a circuit in the form of an \verb|circuit.r1cs| file.
+To create $CRS\text{-}R1CS_r$, snarkjs uses \verb|powersoftau.ptau| and the $R1CS$ of a circuit in the form of a \verb|circuit.r1cs| file.
 Here, we typically perform another \gls{mpc} to contribute randomness from different sources to the $CRS\text{-}R1CS_r$.\footnote{
-    For our benchmarks, we created the full $CRS$ directyl from $CRS\text{-}Universal$ without using any additional contributions.
+    For our benchmarks, we created the full $CRS$ directly from $CRS\text{-}Universal$ without using any additional contributions.
     Note that this approach is insecure and should not be used in practice.
     Therefore, we also implement the option to contribute randomness from the NIST 2.0 random beacon \cite{computer_security_division_nist_2019}.
     However, this is disabled at the moment.
@@ -380,13 +380,13 @@ Then, we can create the proof as in the $Prove$ algorithm (\cref{alg:proveG16}) 
 This creates two files \verb|proof.json| and \verb|public.json| containing the proof itself and the instance, i.e., an assignment to all public signals of the circuit.
 
 \subsubsection{Verify}
-To verify a a Groth16 proof for a circuit, we require a specific subset of the $CRS$ as \verb|verification_key.json|, the proof \verb|proof.json| as generated by $Prove$ \cref{alg:proveG16} and an instance as \verb|public.json|.
+To verify a Groth16 proof for a circuit, we require a specific subset of the $CRS$ as \verb|verification_key.json|, the proof \verb|proof.json| as generated by $Prove$ \cref{alg:proveG16} and an instance as \verb|public.json|.
 Then, we can verify the proof as in the $Verify$ algorithm (\cref{alg:verifyG16}) using the \verb|groth16 verify| command.
 
 \subsubsection{Full example}
 Assume, we have a sufficiently large \verb|powersoftau.ptau| file for the circuit $\mathfrak{C}_{3\text{-}vot}$ which is saved in the same directory as \verb|vot.circom|.
 Furthermore, assume we have generated the corresponding \gls{r1cs} as described in \cref{fig:shell:circomExample} and are still in the folder \verb|vot_js|.
-Then, we can setup, create and verify a Groth16 proof using snarkjs as in \cref{fig:shell:snarkjsExample}.
+Then, we can set up, create and verify a Groth16 proof using snarkjs as in \cref{fig:shell:snarkjsExample}.
 
 \SaveVerb{votr1cs}|vot.r1cs|
 \SaveVerb{wtns}|witness.wtns|
@@ -411,35 +411,35 @@ snarkjs groth16 verify verification_key.json public.json proof.json
 
 \section{SageMath}
 When proving ballot validity, a voter needs to submit the ballot $b$ they chose to a \gls{zps}.
-However, to construct the proof, we also require the corresponding encrpyted ballot $b'$ as well as the public key $pk$ and the randomness $aux^{Enc}$ that was used in the computation of $b$.
+However, to construct the proof, we also require the corresponding encrypted ballot $b'$ as well as the public key $pk$ and the randomness $aux^{Enc}$ that was used in the computation of $b$.
 In case of ranking based voting methods, we also need the private ranking $aux^{Vot}=r$ chosen by the voter to construct the ballot.
 
 In a real world voting system, a voter should only have to choose the ballot $b$ or, in case of ranking based voting schemes, the ranking $r$.
 The rest of the inputs required for the \gls{zkp} of ballot validity should be generated automatically.
 In our implementation, we employ SageMath \cite{matthias_koppe_sagemath_2025} for this purpose.
-SageMath is good choice since the encryption of ballots is defined utilizing finite fields and elliptic curves which are already implemented efficiently in SageMath.
+SageMath is a good choice since the encryption of ballots is defined utilizing finite fields and elliptic curves which are already implemented efficiently in SageMath.
 However, SageMath is not designed for cryptographic purposes and might be susceptible to generic attack strategies such as Side-Channel attacks.
 Therefore, our implementations in SageMath should not be used in practice without thorough security analysis beforehand.
 %Additionally, SageMath is based on Python which makes it easy to integrate into 
 
 In most election types, the voters directly choose their ballots as part of the voting procedure.
 However, in ranking based election types, the voters merely choose a ranking $aux^{Vot}=r$ from which the ballot $b$ is computed.
-Therefore, we provide this functionality of computing a ballot from a ranking for the election types Pointlist-Borda, \gls{bts} and Corndorcet in SageMath.
+Therefore, we provide this functionality of computing a ballot from a ranking for the election types Pointlist-Borda, \gls{bts} and Condorcet in SageMath.
 
 To compute the encryption of a singular ballot entry $b_i$ in the encryption scheme $EEG(\mathbb{G})$ or $PPEEG(\mathbb{G})$, we need a randomness $aux^{Enc}_i$ in the range $0,\dots, |\mathbb{G}|-1$.
 For this purpose, we provide a SageMath implementation as well.
 
-Using the ballot $b$ and the randomness $aux^{Enc}$, we employ \gls{eeg} or \gls{ppeeg} to to check the correctness of encryption based on circuits as shown in \cref{chap:elGamalEncryption}.
+Using the ballot $b$ and the randomness $aux^{Enc}$, we employ \gls{eeg} or \gls{ppeeg} to check the correctness of encryption based on circuits, as shown in \cref{chap:elGamalEncryption}.
 As discussed previously, we either use $EEG(M_{A,B}(\mathbb{F}P^2))$ or $PPEEG(TE_{a,d}(\mathbb{F}))$.
 To enable encryption of $b$, we now need to generate a public key $pk=(M_{A,B}(\mathbb{F}P^2), |M_{A,B}(\mathbb{F}P^2)|, g, h)$ or $pk=\left(TE_{a,d}(\mathbb{F}), n, \left(g^{2^i}\right)_{i=0}^{\lfloor \log_2(n)\rfloor}, \left(h^{2^i}\right)_{i=0}^{\lfloor \log_2(n)\rfloor}\right)$ with $n:=|TE_{a,d}(\mathbb{F})|$ respectively.
 Finally, we need to compute the encrypted ballot $b'$ as either $EEG(M_{A,B}(\mathbb{F}P^2)).Enc^{aux^{Enc}}(b, pk)$ or $PPEEG(TE_{a,d}(\mathbb{F})).Enc^{aux^{Enc}}(b, pk)$.
-SageMath has built-in support of elliptic curve arithmetic but only for Short Weierstrass curves.
+SageMath has built-in support of elliptic curve arithmetic, but only for Short Weierstrass curves.
 Recall that for every Montgomery curve there is an isomorphic Twisted Edwards curve and vice versa and that for every Montgomery curve there is an isomorphic Short Weierstrass curve.
 Therefore, we can make use of the built-in Short Weierstrass curves of SageMath by converting elliptic curve points to and from this representation.
 
 More formally, let $(TE_{a,d}(\mathbb{F}), \odot_{TE})$ be a Twisted Edwards curve, let $(M_{A,B}(\mathbb{F}P^2), \odot_M)$ be the isomorphic Montgomery curve (\cref{theorem:TEMIsomorphism}) and let $(\mathbb{S}, \odot_\mathbb{S})$ be the isomorphic Short Weierstrass curve.
 Then, we can compute $g_{M,1}\odot_{M} g_{M, 2}$ with $g_{M,1}, g_{M, 2}\in M_{A,B}(\mathbb{F}P^2)$ using the conversions: 
-Firs, we convert $g_{M, 1}$ and $g_{M, 2}$ to the corresponding Short Weierstrass points $g_{\mathbb{S}, 1}, g_{\mathbb{S}, 2}\in\mathbb{S}$.
+First, we convert $g_{M, 1}$ and $g_{M, 2}$ to the corresponding Short Weierstrass points $g_{\mathbb{S}, 1}, g_{\mathbb{S}, 2}\in\mathbb{S}$.
 Finally, we compute $g_{\mathbb{S}, res}:=g_{\mathbb{S}, 1}\odot_\mathbb{S} g_{\mathbb{S}, 2}$ using the built-in implementation from SageMath and convert $g_{\mathbb{S}, res}$ back to the corresponding Montgomery point $g_{M, res}$.
 
 Similarly, we compute $g_{TE,1}\odot_{TE} g_{TE, 2}$ with $g_{TE,1}, g_{TE, 2}\in TE_{a,d}(\mathbb{F})$:
@@ -450,11 +450,11 @@ We can also visualize this procedure as illustrated in \cref{fig:sage:groupLaw}.
 \begin{figure}[h]
     \centering
     \includegraphics[scale=1]{graphics/software/sageGroupLaw.pdf}
-    \caption{Computing $g_{TE, res} := g_{TE, 1}\odot_{TE} g_{TE, 2}$ by using SageMaths built-in support for Short Weierstrass (SW) curves.}
+    \caption{Computing $g_{TE, res} := g_{TE, 1}\odot_{TE} g_{TE, 2}$ by using SageMaths' built-in support for Short Weierstrass (SW) curves.}
     \label{fig:sage:groupLaw}
 \end{figure}
 
-With SageMath, we can then compute both $pk$ and $b'$ utilizing the conversion mechanism and the built-in Short Weeierstrass arithmetic.
+With SageMath, we can then compute both $pk$ and $b'$ utilizing the conversion mechanism and the built-in Short Weierstrass arithmetic.
 
 Furthermore, a large part of our benchmarking scripts are written in SageMath.
 In addition to the use cases above, we employ SageMath here to generate random ballots in the different election types we consider.

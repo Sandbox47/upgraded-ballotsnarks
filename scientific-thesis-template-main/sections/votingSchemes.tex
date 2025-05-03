@@ -9,13 +9,13 @@ We will now formalize this approach and iteratively extend it to fulfill several
 To motivate the different steps, we introduce a simple example: Electing a new president of the Computer Science Club at a university.
 The club has the five members Alice (A), Bob (B), Charlie (C), Derpy (D) and Eve (E). 
 Three of these members are running for the position, namely Alice, Bob and Eve.
-In the election, each of the five clubs' members can vote for one candidate. 
+In the election, each of the five club members can vote for one candidate. 
 It is possible to abstain from the vote.
 % The votes will be counted by the voting authority ($VA$) Fred (F) who does not participate in the election.
 In the end, the candidate receiving the most votes overall wins the election and becomes the next president.
 
 In a first attempt at implementing this election, each of the members writes their chosen candidate on a piece of paper. 
-The ballots are then collected by Fred who counts how often each candidate was choosen and posts the result to a public bulletin board ($PBB$).
+The ballots are then collected by Fred who counts how often each candidate was chosen and posts the result to a \gls{pbb}.
 Fred does not participate in the election.
 
 This first version of the voting scheme is illustrated in \cref{fig:ExVS1}.
@@ -23,7 +23,7 @@ This first version of the voting scheme is illustrated in \cref{fig:ExVS1}.
 \begin{figure}[h]
   \centering
   \includegraphics[width=.5\textwidth]{graphics/votingSchemes/EXVotingScheme_1.pdf}
-  \caption{First naive implementation of the example voting scheme}
+  \caption{First naive implementation of the example voting scheme.}
   \label{fig:ExVS1}
 \end{figure}
 
@@ -32,12 +32,12 @@ For example, it is not clear what to do if a voter misspells the name of a candi
 We can combat this problem by standardizing the ballot format.
 
 \section{Ballot Format}
-In every voting scheme, the ballots submitted by the voters need to be chosen from specific choice space $C$. 
+In every voting scheme, the ballots submitted by the voters need to be chosen from a specific choice space $C$. 
 In our example, every voter now has to submit a ballot from $C:=\{(1,0,0), (0,1,0), (0,0,1), (0,0,0)\}$. 
-Here a ballot $(a, b, e)$ signifies that the member gave $a$ votes to Alice, $b$ votes to Bob and $e$ Votes to Eve.
+Here, a ballot $(a, b, e)$ signifies that the member gave $a$ votes to Alice, $b$ votes to Bob and $e$ Votes to Eve.
 
 Another benefit of standardized ballots is that the votes can now be counted automatically.
-The new voting authority $VA$ can aggregate the ballots by adding them component-wise via a function $tally$.
+The new \gls{va} can aggregate the ballots by adding them component-wise via a function $tally$.
 Then, they can publish the result of this computation.
 The winner of the election can be determined by anyone based on this aggregated ballot.
 The new version of our example voting scheme is illustrated in \cref{fig:ExVS2}.
@@ -53,21 +53,21 @@ With this new voting system, abstention by not casting a ballot is no longer pos
 Instead, no preference for any candidate is represented by casting a ballot $(0, 0, 0)$.
 We chose to model abstention explicitly since this has security benefits compared to silent abstention where voters don't cast a ballot at all.
 For instance, it is more difficult for misbehaving parties to insert ballots into an election if every voter already cast a ballot.
-In such a case $VA$ can detect that that the election was influenced even if they might not know which ballots are fraudulent.
-However, the downside of explicit abstantion is aloss of convenience for the user as they always have to cast a ballot now.
+In such a case the \gls{va} can detect that the election was influenced even if they might not know which ballots are fraudulent.
+However, the downside of explicit abstention is a loss of convenience for the user as they always have to cast a ballot now.
 
 In the current version of the voting scheme, votes are transmitted to the voting authority in plain.
-This means that any party eavedropping this connection can see who the individual members voted for.
+This means that any party eavesdropping this connection can see who the individual members voted for.
 To prevent this, we need to add encryption.
 
 \section{Confidentiality of Ballots}
-To ensure that ballots are secret and nobody but the voters themself know what they voted for, ballots are encrypted component-wise by an encryption function $Enc$ before being submitted.
-We use an asymmetric encryption scheme for the encryption and decryption process as this allows users to encrypt ballots using a public key $pk$ and without having to exchange a private key $sk$ beforehand.
+To ensure that ballots are secret and nobody but the voters themselves know what they voted for, ballots are encrypted component-wise by an encryption function $Enc$ before being submitted.
+We use an asymmetric encryption scheme for the encryption and decryption process as this allows voters to encrypt ballots using a public key $pk$ and does not require exchanging a private key $sk$ with the voting authority beforehand.
 Moreover, it is important to choose an additively homomorphic encryption scheme. 
 With additive homomorphism, the voting authority can still aggregate the individual entries at corresponding positions of ballots by performing some computation $agg$ on the components of the encrypted ballots.
-The result of the election can then be obtained by decrypting the comonents of the output of $agg$ using the corresponding decryption function $Dec$ of the encryption scheme.
+The result of the election can then be obtained by decrypting the components of the output of $agg$ using the corresponding decryption function $Dec$ of the encryption scheme.
 Since the encrypted ballots don't reveal any information about the plain ballots, it doesn't matter who obtains them. 
-Therefore, the voters can submit their ballots to the public bulletin board and the voting authority can take them from there.
+Therefore, the voters can submit their ballots to the \gls{pbb} and the voting authority can take them from there.
 This version of the example voting scheme is illustrated in \cref{fig:ExVS3}.
 
 \begin{figure}[h]
@@ -77,15 +77,15 @@ This version of the example voting scheme is illustrated in \cref{fig:ExVS3}.
   \label{fig:ExVS3}
 \end{figure}
 
-A popular choice for an additively homomorphic encrytion scheme is Exponential ElGamal encryption. 
+A popular choice for an additively homomorphic encryption scheme is Exponential ElGamal encryption. 
 This will be covered in detail later on.
 
 %If the voting authority is honest, confidentiality of the individual ballots is ensured in this new scheme.
 
 Unfortunately, confidentiality is still not ensured in this new scheme.
-The voting authority needs to have access to the private key of the used encrytion scheme to be able to decrypt the final tally of the election.
+The voting authority needs to have access to the private key of the used encryption scheme to be able to decrypt the final tally of the election.
 However, this means that a misbehaving voting authority can also decrypt individual votes. 
-One approach to combat this problem is Threshhold encryption as presented by Bernhard and Warinschi in section 4.1 of \cite{aldini_cryptographic_2014}.
+One approach to combat this problem is Threshold encryption as presented by Bernhard and Warinschi in section 4.1 of \cite{aldini_cryptographic_2014}.
 % Here, the public and private key of the encryption scheme are split into $n$ shares and distributed accross multiple authorities. 
 % In our example, the members of the club could also be the authorities.
 % Users can obtain the public key needed for encryption by combining the publicly available shares of this key using a combination function. %$comb$.
@@ -93,10 +93,10 @@ One approach to combat this problem is Threshhold encryption as presented by Ber
 % Additionally, confidentiality of individual ballots is only broken if at least $t$ authorities behave malicously and work together.
 
 Exponential ElGamal is an encryption scheme that allows Threshold encryption.
-Therefore it is still a good choice in this new setting.
+Therefore, it is still a good choice in this new setting.
 % We will show how this is possible when introducing Exponential ElGamal.
 
-Since the voting authority is not the focus of this thesis, we will asumme that it is honest. 
+Since the voting authority is not the focus of this thesis, we will assume that it is honest. 
 In that case there is no need for threshold encryption.
 Note that an honest voting authority also eliminates the need for ensuring correct decryption of the tally.
 If the voting authority was dishonest, they might just publish an invented tally that is favorable to them.
@@ -118,24 +118,24 @@ We can combat this problem using \glspl{zkp} as presented by Bernhard and Warins
 % $\pi$ proves that the party who executed $P$ knows a corresponding witness $W$ for the instance $I$, even if only the instance is published.
 % Anyone can verify the proof $\pi$ by running the verifying algorithm $V$ on $\pi$ and the instance $I$.
 
-Although we consider an honest voting authority, a malicous voter Eve can still break the voting scheme:
+Although we consider an honest voting authority, a malicious voter Eve can still break the voting scheme:
 \begin{enumerate}
-  \item Eve can impersonate other voters such as $A$ and submit ballots preferrable to her (e.g., $(0,0,1)$) to $PBB$ on their behalf.
-  \item Eve can impersonate the $VA$ and submit a desireable election result (e.g., $(0,0,100)$) to $PBB$.
+  \item Eve can impersonate other voters such as $A$ and submit ballots preferable to her (e.g., $(0,0,1)$) to $PBB$ on their behalf.
+  \item Eve can impersonate the $VA$ and submit a desirable election result (e.g., $(0,0,100)$) to $PBB$.
 \end{enumerate}
-These problems are also illustraded in \cref{fig:ExVS3Prob1}.
+These problems are also illustrated in \cref{fig:ExVS3Prob1}.
 
 \begin{figure}[h]
   \hfill
   \begin{subfigure}{.48\textwidth}
     \includegraphics[width=\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem1_a.pdf}
-    \caption{A malicous $E$ can impersonate other voters and submit votes that are favourable to her on their behalf.}
+    \caption{A malicious $E$ can impersonate other voters and submit votes that are favorable to her on their behalf.}
     \label{fig:ExVS3Prob1a}
   \end{subfigure}
   \hfill
   \begin{subfigure}{.48\textwidth}
     \includegraphics[width=\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem1_b.pdf}
-    \caption{A malicous $E$ can impersonate $VA$ and publish an election result favourable to her.}
+    \caption{A malicious $E$ can impersonate $VA$ and publish an election result favorable to her.}
     \label{fig:ExVS3Prob1b}
   \end{subfigure}
   \hfill
@@ -144,19 +144,19 @@ These problems are also illustraded in \cref{fig:ExVS3Prob1}.
 \end{figure}
 
 \section{Integrity of Ballots and Election Result}
-To ensure that no malicous voter can submit ballots on behalf of other voters and that only $VA$ can publish the final election result, we employ digital signatures.
+To ensure that no malicious voter can submit ballots on behalf of other voters and that only $VA$ can publish the final election result, we employ digital signatures.
 Here, every voter $V$ and $VA$ have a public-private key pair $(pk_V, sk_V)$ and $(pk_{VA}, sk_{VA})$ that is different from the key pair used for encryption.
-We asssume that it is public knowledge which public key belongs to which voter and which public key belongs to $VA$.
-This knowledgge can be obtained using a \gls{pki} based on a hierarchy of certificate authorities mapping public keys to entities as presented in section 13.6 of \cite{katz_introduction_2021}.
+We assume that it is public knowledge which public key belongs to which voter and which public key belongs to $VA$.
+This knowledge can be obtained using a \gls{pki} based on a hierarchy of certificate authorities mapping public keys to entities as presented in section 13.6 of \cite{katz_introduction_2021}.
 % $s_V=Sig(b'_V, sk_v)$
 % $Ver(b'_V, s_V, pk_V)$ returns $valid$
 
-Then, every time a party $P$ publishes a message $m$ to $PBB$, they also submit a signature $s=Sign(m, sk)$ on $m$ signed with their private key $sk$.
-Since the public keys are public information, everybody can verify the signature $s$ on $m$ to check that it was actually $P$ who submitted the message by running the verification algorithm $Vrfy(m, s, pk)$.
+Then, every time a party $P$ publishes a message $m$ to the \gls{pbb}, they also submit a signature $s=Sign(m, sk_P)$ on $m$ signed with their private key $sk$.
+Since the public keys are public information, everybody can verify the signature $s$ on $m$ to check that it was actually $P$ who submitted the message by running the verification algorithm $Vrfy(m, s, pk_P)$.
 
 For instance, each voter submits a signature on their encrypted ballot $b'$ alongside the ballot itself and the voting authority additionally submits a signature on the final tally of the election $b_{total}$.
 Using the verification algorithm, the voting authority can check the signature on an encrypted ballot $b'$.
-Only if the verification is successful will the voting authority consider $b'$ in the aggregation.
+The voting authority will consider $b'$ in the aggregation, only if the verification is successful.
 Similarly, any voter can check the final result of the election by verifying the signature of the voting authority on $b_{total}$.
 
 % $s_{VA}=Sig(b_{total}, sk_{VA})$
@@ -166,16 +166,19 @@ Similarly, any voter can check the final result of the election by verifying the
 % The modified version of our election scheme is illustrated in \cref{fig:ExVS4}.
 
 Since integrity checks are not the focus of this thesis, we abstract away from the details and do not formalize the use of digital signatures in our voting schemes.
-However, for the rest of the thesis, keep in mind that any message published to $PBB$ needs to be signed by the party publishing it and that any information retrieved from $PBB$ comes with a signature that needs to be checked before the information is used.
+However, for the rest of the thesis, keep in mind that any message published to the \gls{pbb} needs to be signed by the party publishing it and that any information retrieved from the \gls{pbb} comes with a signature that needs to be checked before the information is used.
 
 Even after ensuring the integrity of submitted ballots and ensuring that only $VA$ can publish the final election result, two problems that are directly connected remain.
 In the current version of the voting scheme, voters can submit ballots that are not in the choice space to gain an unfair advantage. 
-In our example Eve could submit a vote $(0,0,100)$ to win the election as shown in \cref{fig:ExVS3Prob2}.
+In our example, Eve could submit a vote $(0,0,100)$ to win the election as shown in \cref{fig:ExVS3Prob2}.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem2.pdf}
-  \caption{The example voting scheme as in \cref{fig:ExVS3}. Eve malicously sends a ballot that does not come from the choice space $C$ and contains $100$ votes for Eve. The faulty ballot can not be detected by this voting scheme.}
+  \caption{The example voting scheme as in \cref{fig:ExVS3}. 
+  Eve maliciously sends a ballot that does not come from the choice space $C$ and contains $100$ votes for Eve. 
+  The faulty ballot cannot be detected by this voting scheme.
+  }
   \label{fig:ExVS3Prob2}
 \end{figure}
 
@@ -191,48 +194,47 @@ To make sure that voters can only choose ballots from the choice space and then 
 The goal of \glspl{zkp} is to convince some party of the truth of a statement without revealing any confidential information to them.
 In our example, this would mean convincing the general public that the ballot a voter chose is part of the choice space and belongs to the encrypted ballot they submitted.
  
-For now we will look at \glspl{zkp} as Black-Box-Protocols $ZKP=(Setup, Prove, Verify)$. 
+For now, we will look at \glspl{zkp} as Black-Box-Protocols $ZKP=(Setup, Prove, Verify)$. 
 Here, the proving algorithm $Prove$ takes some public inputs $I$ (also called instance) and some private inputs $W$ (also called witness) and produces a \gls{zkp} $\pi$.
 $\pi$ proves that the party who executed $Prove$ knows a corresponding witness $W$ for the instance $I$, even though only the instance is published.
 Anyone can verify the proof $\pi$ by running the verifying algorithm $Verify$ on $\pi$ and the instance $I$.
 
 In a voting scheme we use the \gls{zkp} $(Setup_C, Prove_C, Verify_C)$, where each voter $V$ runs the proving algorithm $Prove_C$ to obtain a \gls{zkp} $\pi_V$.
-Here, the witness is the plain ballot $b_V$ they chose and the instance is the corresponding encrypted ballot $b'_V$.\footnote{
+Here, the witness is the plain ballot $b_V$ they chose, and the instance is the corresponding encrypted ballot $b'_V$.\footnote{
   \label{footnote:encryptedBallotInCircuit}
   Note that it is also possible to compute the encrypted ballot $b'_V$ as part of the \gls{zkp} rather than providing it as an input for it.
   However, both \gls{zkp} variants are equally efficient.
   Since we can compute the encryption of a ballot efficiently before providing it as an input to the \gls{zkp} using SageMath \cite{matthias_koppe_sagemath_2025}, we choose this variant for ease of explanation.
 }
 $\pi$ then proves that $b_V\in C$ and $Enc(b_V)=b'_V$.
-Finally, the member publishes the encrypted ballot $b'_V$ along with the \gls{zkp} $\pi_V$ to the PBB.
+Finally, the voter publishes the encrypted ballot $b'_V$ along with the \gls{zkp} $\pi_V$ to the \gls{pbb}.
 
 Before aggregating the ballots, the voting authority runs $Verify_C$ for each $(\pi_V, (b'_V, C))$. 
 The voting authority only accepts ballots with a valid \gls{zkp} $\pi_V$. 
-This prevents a malicous voter like $E$ from submitting ballots that are not part of the choice space $C$.
+This prevents a malicious voter like $E$ from submitting ballots that are not part of the choice space $C$.
 This version of our example voting scheme is illustrated in \cref{fig:ExVS4}.
 
 \begin{figure}[!h]
   \centering
   \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_4.pdf}
-  \caption{The example voting scheme as in \cref{fig:ExVS3}. Additionally voters use \glspl{zkp} to show that the ballots they chose are in the choice space $C$ and belong to the submitted encrypted ballots.}
+  \caption{The example voting scheme as in \cref{fig:ExVS3}. Additionally, voters use \glspl{zkp} to show that the ballots they chose are in the choice space $C$ and belong to the submitted encrypted ballots.}
   \label{fig:ExVS4}
 \end{figure}
 
 With this, we have reached the voting scheme we will use throughout the rest of this thesis.
 
-% \todo{What is stopping voters from submitting multiple ballots to the public bulletin board?}
+% \todo{What is stopping voters from submitting multiple ballots to the \gls{pbb}?}
 
 \section{Defining Voting Schemes}
 
 We can now define what a voting scheme is formally. 
 Here, we use asymmetric encryption schemes as presented in \cite{katz_introduction_2021}.
 The voting scheme is based on the approach presented in \cite{cortier_fifty_2020}.
-However, to simplify things a little, we assume that the voting authority and the public bulletin board are both honest and that the public bulletin board is available.
-\footnote{\label{footnote:honestAvailablePBB}
-  An \glqq honest\grqq\ $PBB$ does not discard any information published and answers queries truthfully.
+However, to simplify things a little, we assume that the voting authority and the \gls{pbb} are both honest and that the \gls{pbb} is available.\footnote{\label{footnote:honestAvailablePBB}
+  An \glqq honest\grqq\ \gls{pbb} $PBB$ does not discard any information published and answers queries truthfully.
   It is possible to model voting systems with misbehaving bulletin boards. 
   One such approach is described in \cite{cortier_fifty_2020}.
-  To simplify the construction we will only consider an honest public bulletin board.
+  To simplify the construction we will only consider an honest \gls{pbb}.
   \glqq Available\grqq\ means that all voters and the voting authority can publish entries to $PBB$ and query $PBB$ at any point. 
   Neither information to publish nor answers from $PBB$ can be blocked.
 }
@@ -242,7 +244,7 @@ However, to simplify things a little, we assume that the voting authority and th
     A choice space $C$ is a set of allowed ballots. 
     Ballots are always either vectors or matrices of field elements.
 
-    Formally, Let $(\mathbb{F}, +, \cdot)$ be a sufficiently large finite field.\footnote{\label{footnote:choiceSpaceSize}
+    Formally, let $(\mathbb{F}, +, \cdot)$ be a sufficiently large finite field.\footnote{\label{footnote:choiceSpaceSize}
       Intuitively, \glqq Sufficiently large\grqq\ means that the aggregated tally of plain ballots does not exceed the characteristic $char_\mathbb{F}$ of the field $\mathbb{F}$.
       More formally: 
       Consider an election with $n$ voters and a choice space $C$ over $\mathbb{F}$.
@@ -262,10 +264,10 @@ However, to simplify things a little, we assume that the voting authority and th
 
 \begin{definition}[Public Bulletin Board]
   \label{def:pbb}
-  A public bulletin board $PBB$ is a dictionary of public information.
+  A \gls{pbb} $PBB$ is a dictionary of public information.
   Anyone with access to this board can publish new information or obtain existing information.
   Formally, $PBB=(publish, obtain)$. 
-  Here, $publish(id, x)$ stores a the information $x$ under the identifier $id$. 
+  Here, $publish(id, x)$ stores the information $x$ under the identifier $id$. 
   $obtain(id)$ will return $x$ if $publish(id, x)$ was executed by any party sometime before and $\bot$ otherwise.
 \end{definition}
 
@@ -286,7 +288,7 @@ However, to simplify things a little, we assume that the voting authority and th
   Let $R$ be a binary polynomial time decidable relation \cite{least_authority_moonmath_2024} relating instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$.
   A zero knowledge proof system $ZPS(R)$ for the relation $R$ consists of three algorithms: 
   \begin{itemize}
-    \item $Setup()$: This algorithm generates some auxiliary public information $CRS$ ("common reference string") that is needed to coduct and verify proofs for the relation $R$.
+    \item $Setup()$: This algorithm generates some auxiliary public information $CRS$ ("common reference string") that is needed to conduct and verify proofs for the relation $R$.
     \item $Prove(CRS, I, W)$: This algorithm uses the $CRS$ to generate a proof $\pi$, stating that the public instance $I\in\mathcal{I}$ and the private witness $W\in\mathcal{W}$ are related, i.e., $R(I, W)=1$.
     Here, $\pi$ proves that the party executing $Prove(CRS, I, W)$ knows the private witness $W$ without revealing any information about $W$.
     The party executing $Prove$ is also called \glqq Prover\grqq.
@@ -329,7 +331,7 @@ However, to simplify things a little, we assume that the voting authority and th
     \item $C$ is a choice space.
     \item $\mathcal{S}=(Gen, Enc, Dec)$ is a homomorphic encryption scheme as presented by Katz and Lindell in definitions 12.1 and 15.14 of \cite{katz_introduction_2021}.
     We use $Enc^{aux}(x, pk)$\footnote{\label{footnote:compwiseEncDec}
-      To simplify notation, we also denote the componentwise encryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$ and the componentwise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
+      To simplify notation, we also denote the component-wise encryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$ and the component-wise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
       For instance, for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux=(aux_0,\dots, aux_{l-1})$ by $Enc^{aux}(b):=(Enc^{aux_0}(b_0),\dots, Enc^{aux_{l-1}}(b_{l-1}))$.
     } to denote the encryption of a plaintext $x$ under auxiliary information $aux$ with public key $pk$. 
     Since $Enc$ needs to be probabilistic to achieve security, $aux$ models the randomness used for the encryption of $x$.
@@ -344,14 +346,13 @@ However, to simplify things a little, we assume that the voting authority and th
     To do so, $R_C$ relates public instances $(pk, b')$ and private witnesses $(aux, b)$.
     Here, $R_C((pk, b'), (aux, b))=1$ iff $b\in C$, $pk$ is a public key of $\mathcal{S}$, and $\mathcal{S}.Enc^{aux}(b, pk)=b'$. 
     Otherwise, $R_C$ maps to $0$.
-    \item $ZPS(R_C)$ is a zero-knowledge proof system used to prove ballot validity. 
-    \glqq Ballot validity\grqq\ as defined by the relation $R_C$ above.
+    \item $ZPS(R_C)$ is a zero-knowledge proof system used to prove ballot validity as defined by the relation $R_C$ above.
     %Here, $Prove(CRS, (pk, b'), (aux, b))$ uses a plain ballot $b$ and the auxiliary information from the encryption of $b$ as the private witness as well as a public key $pk$ and the encrypted ballot $b'$ as an instance.
     %The proof $\pi$ created by $Prove(CRS, (pk, b'), (aux, b))$ then shows that the ballot $b$ a voter chose is in $C$ and that $Enc^{aux}(b, pk)=b'$.
     \footnote{\label{footnote:zkpKnowVsExists}
       It is important to show that a voter \textit{knows} the ballot $b\in C$. 
-      Showing that such a ballot exists is not enough, since then, replay attacks based on copying the votes and corresponding \glspl{zkp} of other voters would be very problematic \cite{mestel_how_2022}. 
-      It is possible to combat replay attacks by rejecting duplicated ballots \cite{mestel_how_2022} however, this is beyond the scope of our work.
+      Showing that such a ballot exists is not enough, since then, Replay Attacks based on copying the votes and corresponding \glspl{zkp} of other voters would be very problematic \cite{mestel_how_2022}. 
+      It is possible to combat replay attacks by rejecting duplicated ballots \cite{mestel_how_2022}. However, this is beyond the scope of our work.
       %\todo{Is Malleability of Groth16 a problem if all instances are involved in the constraints?}
       %Note that even when direct replay attacks are not possible, the \gls{zps} we use (Groth16) itself is malleable. 
       %This means that, without modification, it is sometimes possible to change part of the instance and still obtain a valid proof even if we don't know the corresponding witness. \cite{novakovic_groth16_2022, baghery_another_2020}
@@ -362,15 +363,15 @@ However, to simplify things a little, we assume that the voting authority and th
       %\todo{How do our ZKPs ensure this? In our version, can malicous voters not just copy the encrypted vote and zkp of other another voter? Do we need to include the ids of the voters in the instance of the ZKP?}
     }
     %Consequently, $Verify(CRS, (C, pk, b'), \pi)$ uses the public key and the encrypted ballot to verify the proof $\pi$.
-    \item $PBB$ is an honest and available public bulletin board.\cref{footnote:honestAvailablePBB}
-    \item $Setup$ is used at the start of the election to setup $ZPS$, the voters and the voting authority and publish all information to $PBB$.
+    \item $PBB$ is an honest and available \gls{pbb}.\cref{footnote:honestAvailablePBB}
+    \item $Setup$ is used at the start of the election to set up $ZPS$, the voters and the voting authority and to publish all information to $PBB$.
     Here, the $Setup$ procedure is defined by \cref{alg:setupVotingScheme}.
     \item $V_0,\dots, V_{n-1}$ are voters. 
     Each Voter $V$ is a three-tuple of the form $V=(PBB, Vote, id_V)$. $Vote$ is defined by \cref{alg:vote}.
     \item $VA$ is the voting authority tallying the valid votes submitted to the $PBB$.
     Here, $VA$ is a five-tuple of the form $VA=(PBB, sk, SetupEnc, agg, Tally)$. 
     $SetupEnc$ is called by the $Setup$ procedure of the voting system with the encryption scheme $\mathcal{S}$ and used to generate the public private key pair.
-    Here, the $SetupEnc(\mathcal{S})$ proedure is defined in \cref{alg:setupEncryption}. 
+    Here, the $SetupEnc(\mathcal{S})$ procedure is defined in \cref{alg:setupEncryption}. 
     $agg((b'_0, \dots, b'_{n-1}))$ is the function performed on the encrypted ballots to aggregate them. 
     This function is used during tallying which is defined in \cref{alg:tally}.\footnote{\label{footnote:vaRegisterVoters} 
       $VA$ needs to know which voters $V$ are part of the election in order to retrieve their ballots from $PBB$ via $id_V$.

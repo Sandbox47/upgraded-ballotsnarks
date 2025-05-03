@@ -244,10 +244,10 @@ zk-SNARKs are a good choice for our use case since voters are usually resource c
 
 A typical form of encrypting ballots in e-voting schemes is Exponential ElGamal (EEG) encryption.
 The feasability of GPZKPs for showing validity of ballots that are component-wise encrypted using EEG ciphertexts in voting systems with arbitrary election types and ballot formats using Groth16-SNARKs \cite{groth_size_2016} has been shown by Huber et al. \cite{huber_zk-snarks_2025}.
-To demonstrate the versatility of GPZKPs, the authors implemented ballot validity relations for the different election types Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, the ranked election types Pointlist-Borda and Borda Tournament Style, and Condorcet methods in libsnark and benchmarked their performance.
+To demonstrate the versatility of GPZKPs, the authors implemented ballot validity relations for the different election types Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, the ranked election types Pointlist-Borda and Borda Tournament Style, Condorcet methods and Majority Judgment in libsnark and benchmarked their performance.
 
 We extend on this research by implementing ballot validity relations for the same election types in Circom and generating the ZKPs using snarkjs.
-First, we follow the same approach as Huber et. al. for our implementation, using EEG encryption instantiated with elliptic curves in Montgomery form for the encryption of individual ballot entries.
+First, we follow the same approach as Huber et al. for our implementation, using EEG encryption instantiated with elliptic curves in Montgomery form for the encryption of individual ballot entries.
 
 Then, as our main contribution, we introduce a novel variant of computing EEG ciphertexts: Precomputed Powers EEG (PPEEG). 
 By providing some precomputed powers of group elements to the encryption, we reduce the computations needed for ZKPs of ballot validity.
@@ -270,13 +270,14 @@ Eine Klasse von ZKPs, die zum Beweis von (fast) beliebigen gültigen Aussagen ve
 zk-SNARKs sind eine gute Option im E-Voting Kontext, da Wähler in der Regel nur über begrenzte Ressourcen verfügen und zk-SNARKs kleine Beweise und in der Regel effiziente Beweiser haben.
 
 Eine typische Form der Verschlüsselung von Stimmzetteln in E-Voting-Systemen ist Exponential ElGamal (EEG) Verschlüsselung.
-Huber et. al. \cite{huber_zk-snarks_2025} haben mittels des Groth16-SNARKs \cite{groth_size_2016} gezeigt, dass GPZKPs eine valide Option für den Nachweis der Gültigkeit von Stimmzetteln sind, die komponentenweise mit EEG-Chiffretexten verschlüsselt sind.
-Diese Beweise haben die Autoren für Wahlsysteme mit beliebigen Wahltypen und Stimmzettelformaten in der Praxis durchgeführt.
-Um die Vielseitigkeit von GPZKPs zu demonstrieren, implementierten die Autoren Relationen in libsnark, um die Gültigkeit von Stimmzetteln für die verschiedenen Wahltypen zu zeigen: Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, die Ranglisten-Wahltypen Pointlist-Borda und Borda Tournament Style sowie Condorcet-Methoden.
+Huber et al. \cite{huber_zk-snarks_2025} haben mittels des Groth16-SNARKs \cite{groth_size_2016} gezeigt, dass GPZKPs eine valide Option für den Nachweis der Gültigkeit von Stimmzetteln sind, die komponentenweise als EEG-Chiffretexte verschlüsselt sind.
+Hierbei haben die Autoren in der Praxis nachgewiesen, dass sich die Beweise der Stimmzettelgültigkeit leicht für viele Wahltypen und Stimmzettelformate implementieren lassen.
+% Diese Beweise haben die Autoren für Wahlsysteme mit  Wahltypen und Stimmzettelformaten in der Praxis durchgeführt.
+Um die Vielseitigkeit von GPZKPs zu demonstrieren, implementierten die Autoren Relationen in libsnark, um die Gültigkeit von Stimmzetteln für die verschiedenen Wahltypen zu zeigen: Single-Vote, Multi-Vote, Line-Vote, Multi-Vote with Rules, die Ranglisten-Wahltypen Pointlist-Borda und Borda Tournament Style, Condorcet-Methoden und Majority Judgment.
 Anschließend, vergleichen sie die Performance der ZKP-Berechnung zwischen den verschiedenen Wahltypen.
 
 Wir bauen auf dieser Forschung auf, indem wir die Relationen für Stimmzettelgültigkeit für dieselben Wahltypen in Circom implementieren und ZKPs mit snarkjs erzeugen.
-Zunächst folgen wir hier demselben Ansatz wie Huber et. al. und verwenden Elliptische Kurven in Montgomery Form für die EEG-Verschlüsselung der einzelnen Stimmzettel.
+Zunächst folgen wir hier demselben Ansatz wie Huber et al. und verwenden Elliptische Kurven in Montgomery Form für die EEG-Verschlüsselung der einzelnen Stimmzettel.
 
 Als Hauptbeitrag unserer Arbeit führen wir eine neue Variante zur Berechnung von EEG-Chiffretexten ein: Precomputed Powers EEG (PPEEG). 
 Hierbei verringern wir die Berechnungen, die für ZKPs der Stimmzettelgültigkeit erforderlich sind, indem wir der Verschlüsselung einige vorberechnete Potenzen von Gruppenelementen zur Verfügung stellen.
@@ -285,7 +286,7 @@ Außerdem verwenden wir bei der PPEEG-Verschlüsselung Elliptische Kurven in Twi
 Darüber hinaus reduzieren wir die wahltypspezifischen Berechnungen in den Beweisen der Stimmzettelgültigkeit für mehrere Wahltypen, insbesondere für Condorcet-Verfahren.
 Diese Verbesserungen sind jedoch in den meisten Fällen vernachlässigbar im Vergleich zu der Verringerung des Rechenaufwands im Verschlüsselungsteil.
 
-Im Vergleich zu den Ergebnissen von Huber et. al. reduzieren wir den Rechenaufwand für den Beweis der Stimmzettelgültigkeit, abhängig von der Metrik, über alle Wahltypen hinweg um $35\%$ bis $82\%$.
+Im Vergleich zu den Ergebnissen von Huber et al. reduzieren wir den Rechenaufwand für den Beweis der Stimmzettelgültigkeit, abhängig von der Metrik, über alle Wahltypen hinweg um $35\%$ bis $82\%$.
 Darüber hinaus können wir Beweise für Stimmzettelgültigkeit mit bis zu $1000$ Stimmen auf einem Standard-PC berechnen, was für fast alle realen Anwendungen der behandelten Wahltypen ausreichend ist.
 
 \cleardoublepage

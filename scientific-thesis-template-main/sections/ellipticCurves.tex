@@ -5,17 +5,17 @@ In our voting scheme, we use \gls{eeg} encryption for the ballots.
 All operations in the encryption of a value in \gls{eeg} are performed in a finite cyclic group $\mathbb{G}$.
 For a secure encryption, the \gls{ddh} assumption needs to hold on $\mathbb{G}$.
 The elliptic curves we consider for our voting schemes are finite groups on which the \gls{ddh} assumption is believed to hold.
-Moreover, Elliptic curves are benefitial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{national_security_agency_case_2009}.
+Moreover, Elliptic curves are beneficial compared to other cyclic groups because they need a smaller order to produce similar levels of security \cite{national_security_agency_case_2009}.
 
 Fundamentally, Elliptic curves are sets of points that satisfy certain equations \cite{least_authority_moonmath_2024}. 
 Here, a curve point consists of multiple elements from a so-called base field $\mathbb{F}_p$ of order $p$.
-For better distinction, we call the field $\mathbb{F}_q$ with elliptic curve order $q$ the scalar field of the elliptic curve.
+For better distinction, we call the field $\mathbb{F}_q$ with elliptic curve order $q$, the scalar field of the elliptic curve.
 
 \SaveVerb{BN254}|BN254|
 Our introduction of elliptic curves largely parallels the one given in chapter 5 of \cite{least_authority_moonmath_2024}.
-However, as we exclusively use Montgomery curves and Twisted Edwards curves in the definitions of our ballot validity circuits, we introduce them directly and do not introduce Short Weierstrass Curves seperately.\footnote{
+However, as we exclusively use Montgomery curves and Twisted Edwards curves in the definitions of our ballot validity circuits, we introduce them directly and do not introduce Short Weierstrass Curves separately.\footnote{
     \label{footnote:shortWeierstrassForGroth16}
-    Note that we employ the curve \UseVerb{BN254} as a basis for the \gls{zps} Groth16 which is used to costruct the ballot validity proofs.
+    Note that we employ the curve \UseVerb{BN254} as a basis for the \gls{zps} Groth16 which is used to construct the ballot validity proofs.
     This curve is a Short Weierstrass curve without an isomorphic Montgomery Curve equivalent.
     However, we do not implement any curve arithmetic of \UseVerb{BN254} inside circuits.
 }
@@ -25,22 +25,22 @@ However, as we exclusively use Montgomery curves and Twisted Edwards curves in t
 
 The most general form of Elliptic curves are so-called Short Weierstrass curves \cite{least_authority_moonmath_2024}.
 Montgomery Curves are a subclass of Short Weierstrass curves \cite{montgomery_speeding_1987}.
-We can transform any Montgomery curve into an isomorphic Short Weierstrass curve but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
+We can transform any Montgomery curve into an isomorphic Short Weierstrass curve, but not every Short Weierstrass curves has an isomorphic Montgomery counterpart.
 Overall, Montgomery curves are more limited than Short Weierstrass curves \cite{least_authority_moonmath_2024}.
 
 However, as established previously, we will later use an Elliptic curve as the group $(\mathbb{G}, \odot_{\mathbb{G}})$ for \gls{eeg} encryption.
-In \gls{eeg} we need to compute exponentiations of group elements, i.e., $g^m:=\underbrace{g\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}g}_{m \text{ times}}$ very often.
+In \gls{eeg}, we need to compute exponentiations of group elements, i.e., $g^m:=\underbrace{g\odot_{\mathbb{G}}\dots\odot_{\mathbb{G}}g}_{m \text{ times}}$ very often.
 Even if we do not provide precomputed powers of $g$, Montgomery curves still allow us to compute $g^m$ efficiently using the Montgomery Ladder algorithm.
 
 \subsection{Affine Montgomery Form}
-As in \cite{least_authority_moonmath_2024} we introduce elliptic curves first in their affine representation and then in their projective representation.
+As in \cite{least_authority_moonmath_2024}, we introduce elliptic curves first in their affine representation and then in their projective representation.
 Later on, we use both representations in the voting schemes.
 
 For a given prime field $(\mathbb{F}, +, \cdot)$, affine coordinates are elements from the set $\mathbb{F}^2\cup\{\mathcal{O}\}$.
 Here, $\mathcal{O}$ is the so-called \glqq point at infinity\grqq.
 To translate this definition of affine coordinates to algebraic circuits, we need to be able to distinguish the point at infinity from elements of $\mathbb{F}^2$ and need to represent every element with the same number of signals.
 Therefore, in algebraic circuits, we add a third field $i$ to every affine point which indicates whether the point is $\mathcal{O}$.
-More formally, we map a point $P\in \mathbb{F}^2\cup\{\mathcal{O}\}$ to its algebraic circuit eqivalent as follows:
+More formally, we map a point $P\in \mathbb{F}^2\cup\{\mathcal{O}\}$ to its algebraic circuit equivalent as follows:
 \begin{align*}
     P\mapsto\begin{cases}
         (x, y, 1)&\quad\text{if } P=(x,y)\in\mathbb{F}^2\\
@@ -83,8 +83,8 @@ Elliptic curves such as the Montgomery curve are defined as groups over $\mathbb
     The neutral element of $M_{A,B}(\mathbb{F})$ is $\mathcal{O}$.
     For $P\in M_{A,B}(\mathbb{F})$, the inverse element $P^{-1}$ is defined as $P^{-1}:=\begin{cases}
         \mathcal{O}, &\quad\text{if } P=\mathcal{O}\\
-        (x, -y), &\quad\text{otherwise, with } P=(x,y)
-    \end{cases}$.
+        (x, -y), &\quad\text{otherwise, with } P=(x,y)\text{.}
+    \end{cases}$
 \end{definition}
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
@@ -140,7 +140,7 @@ Elliptic curves such as the Montgomery curve are defined as groups over $\mathbb
     \includegraphics[scale=.7]{graphics/ellipticCurves/GroupLawAffineMontgomery.pdf}
     \caption{Circuit $\mathfrak{C}_{M_{A,B}(\mathbb{F})\_\odot}$ for computing $P_1\odot_M^{Aff}P_2$ with $P_1, P_2\in M_{A,B}(\mathbb{F})$.
     Here, we use $\mathfrak{C}_{Is\text{-}Equal}$ (\cref{fig:circuit:isEqual}), $\mathfrak{C}_{If\text{-}Else}$ (\cref{fig:circuit:isEqual}), $\mathfrak{C}_{Switch\text{-}Case(4, 3)}$ (\cref{fig:circuit:switchCaseGen}), $\mathfrak{C}_{Tangent\text{-}Rule}$ (\cref{fig:circuit:tangentRuleAffineMontgomery}) and $\mathfrak{C}_{Chord\text{-}Rule}$ (\cref{fig:circuit:chordRuleAffineMontgomery}) as building blocks.
-    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    Note that we are using the circuit specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
     We combine the first two cases from \cref{def:affineMontgomeryCurve} as the output of $\mathfrak{C}_{If\text{-}Else}$, which outputs $P_1$ if $P_2=\mathcal{O}$ and $P_2$ if $P_1=\mathcal{O}$.
     }
     \label{fig:circuit:groupLawAffineMontgomery}
@@ -149,7 +149,7 @@ Elliptic curves such as the Montgomery curve are defined as groups over $\mathbb
 \subsection{Affine and Projective Coordinates}
 \label{sec:coordinateTranformation}
 
-To avoid the special point at infinity $\mathcal{O}$ there exists the projective representation of elliptic curves based on projective planes.
+To avoid the special point at infinity $\mathcal{O}$, there exists the projective representation of elliptic curves based on projective planes.
 
 \begin{definition}[Projective Point and Projective Plane]
     Let $(\mathbb{F}, +, \cdot)$ be a field. 
@@ -190,14 +190,14 @@ Therefore, we need to be able to convert from affine coordinates to correspondin
 \end{definition}
 
 Note that this conversion is independent of the elliptic curve type.
-For instance, it works the same for Montgomery curves and for Short Weierstrass curves.
+For instance, it works in the same way for Montgomery curves and for Short Weierstrass curves.
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=.7]{graphics/ellipticCurves/AffToProj.pdf}
     \caption{Circuit $\mathfrak{C}_{I}$ for computing $P_{Pro}:=I(P_{Aff})$ with $P_{Aff}\in M_{A,B}(\mathbb{F})$.
     Here, we use $\mathfrak{C}_{If\text{-}Else(3)}$ (\cref{fig:circuit:ifElse}) as a building block.
-    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    Note that we are using the circuit specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
     }
     \label{fig:circuit:affToProj}
 \end{figure}
@@ -207,7 +207,7 @@ For instance, it works the same for Montgomery curves and for Short Weierstrass 
     \includegraphics[scale=.7]{graphics/ellipticCurves/ProjToAff.pdf}
     \caption{Circuit $\mathfrak{C}_{I^{-1}}$ for computing $P_{Aff}:=I^{-1}(P_{Pro})$ with $P_{Pro}=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
     Here, we use $\mathfrak{C}_{Safe\text{-}Division}$ (\cref{fig:circuit:safeDivision}) and $\mathfrak{C}_{If\text{-}Else(3)}$ (\cref{fig:circuit:ifElse}) as building blocks.
-    Note that we are using the circuits specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
+    Note that we are using the circuit specific notation $P=(x,y,i)$ for affine points $P\in M_{A,B}(\mathbb{F})$ where $i=0$ if $P=\mathcal{O}$ and $i=1$ otherwise.
     Also note, that we cannot use $\mathfrak{C}_{Division}$ here, since $\frac{X}{Z}$ and $\frac{Y}{Z}$ are not computable if $Z=0$.
     }
     \label{fig:circuit:projToAff}
@@ -245,7 +245,7 @@ Using projective planes, we can define Montgomery Curves in their projective rep
         Here, $[0:1:0]$ corresponds to the point at infinity $\mathcal{O}$ of the affine form.
         \item The group law $\odot_M^{Pro}$:\\
         Let $P_1=[X_1:Y_1:Z_1], P_2=[X_2:Y_2:Z_2]\in M_{A,B}(\mathbb{F}P^2)$. 
-        To compute $P_1\odot_M^{Pro} P_2$ we transform $P_1, P_2$ to corresponding points on the corresponding affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
+        To compute $P_1\odot_M^{Pro} P_2$, we transform $P_1, P_2$ to corresponding points on the corresponding affine Montgomery Curve $M_{A,B}(\mathbb{F})$, use the affine group law $\odot_{M}^{Aff}$ and transform the result back to $M_{A,B}(\mathbb{F}P^2)$.
         Formally:
         {\setlength{\mathindent}{0pt}
         \begin{align*}
@@ -545,13 +545,13 @@ Group exponentiation is defined as follows:
 \end{align*}
 However, computing $P^k=[X_k:Y_k:Z_k]$ by iteratively using the group law $\odot_{M}^{Pro}$ $k-1$ times is computationally expensive as discussed in \cref{section:elGamalEncryption:precomputedPowers}.
 Therefore, we utilize $FastExp$ (\cref{alg:fastExp}).
-However, since the projective Montgomery Group Law $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)}$ requires $44$ constraints, this is still not very efficient.
-A further improevement is possible with the Montgomery Ladder algorithm \cite{costello_montgomery_2018,montgomery_speeding_1987} which utilizes the Pseudooperations $xDbl$ and $xAdd$ with only $4$ and $6$ constraints each.
-This algorithm requires $\mathcal{O}(\log_2(k))$ many iterations to compute the coordinates $X_k$ and $Z_k$ of $P^k$ from the coordinates $X$ and $Z$ of $P$.
-Afterwards, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_k$ from the last two iterations of the Montgomery Ladder.
+Even so, since the projective Montgomery Group Law $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)}$ requires $44$ constraints, this is still not very efficient.
+A further improvement is possible with the Montgomery Ladder algorithm \cite{montgomery_speeding_1987,costello_montgomery_2018} which utilizes the Pseudooperations $xDbl$ and $xAdd$ with only $4$ and $6$ constraints each.
+This algorithm requires $\mathcal{O}(\log_2(k))$ iterations to compute the coordinates $X_k$ and $Z_k$ of $P^k$ from the coordinates $X$ and $Z$ of $P$.
+Afterward, we use the Okeya-Sakurai $Y$-Recovery algorithm \cite{goos_efficient_2001} to reconstruct $Y_k$ from the last two iterations of the Montgomery Ladder.
 
 \subsubsection{Pseudooperations}
-For the Montgomery Ladder algorithm we work only with the $X$ and $Z$ coordinates of points $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
+For the Montgomery Ladder algorithm, we work only with the $X$ and $Z$ coordinates of points $P=[X:Y:Z]\in M_{A,B}(\mathbb{F}P^2)$.
 For this purpose, we define a quotient map $x$ to map projective points to pairs of their $X$ and $Z$ coordinates.
 Specially treated is the point at infinity $[0:1:0]$.
 \begin{definition}[Quotient Map of Montgomery Curves]
@@ -564,7 +564,7 @@ Specially treated is the point at infinity $[0:1:0]$.
             [1:0], \quad\text{otherwise ($\rightsquigarrow [X:Y:Z]=[0:1:0]$)}
         \end{cases}
     \end{align*}
-    We call $x(P)$ the Pseudopoint of $P\in M_{A,B}(\mathbb{F}P^2)$.
+    We call $x(P)$ the pseudopoint of $P\in M_{A,B}(\mathbb{F}P^2)$.
 \end{definition}
 
 The quotient map can be implemented inside a circuit $\mathfrak{C}_x$ as shown in \cref{fig:circuit:quotientMap}.
@@ -602,9 +602,9 @@ The quotient map can be implemented inside a circuit $\mathfrak{C}_x$ as shown i
     %\end{minipage}    
 \end{figure}
 
-Using this map, we want to be able to apply the group law to Pseudopoints. 
+Using this map, we want to be able to apply the group law to pseudopoints. 
 In other words, we want to compute $x(P\odot_M^{Pro}Q)$ from $x(P)$ and $x(Q)$.
-Unfortunately, as mentioned in chapter 3.1 of \cite{costello_montgomery_2018} this is not possible, since $x(P)$ and $x(Q)$ do not uniquely determine $x(P\odot_M^{Pro} Q)$.
+Unfortunately, as mentioned in chapter 3.1 of \cite{costello_montgomery_2018}, this is not possible, since $x(P)$ and $x(Q)$ do not uniquely determine $x(P\odot_M^{Pro} Q)$.
 However, it is possible to determine $x(P\odot_M^{Pro} Q)$ based on $x(P), x(Q)$ and $x(P\odot_M^{Pro}Q^{-1})$.
 This is useful for the Montgomery Ladder later on, since $P\odot_M^{Pro}Q$ will be a fixed, known point.
 
@@ -619,7 +619,7 @@ We define these operations analog to the approach presented in chapter 3 of \cit
         xAdd(x(Q), x(P), x(P\odot_M^{Pro}Q^{-1})) := x(P\odot_M^{Pro} Q)
     \end{align*}
     We can compute $xAdd$ as presented in \cref{alg:xAdd}.
-    A proof of correctness of $xAdd$ is presented in in section 4.5 of \cite{bernstein_montgomery_2017}.
+    A proof of correctness of $xAdd$ is presented in section 4.5 of \cite{bernstein_montgomery_2017}.
     The corresponding circuit $\mathfrak{C}_{xAdd}$ is illustrated in \cref{fig:circuit:xAdd}.
 \end{definition}
 
@@ -679,9 +679,8 @@ We define these operations analog to the approach presented in chapter 3 of \cit
 
 \subsubsection{The Montgomery Ladder}
 \label{section:ellipticCurves:montgomeryLadder}
-The Montgomery Ladder is based on the Square and Multiply approach presented earlier in \cref{alg:fastExp} and was presented first by Montgomery \cite{montgomery_speeding_1987}.
-Analogously to Square and Multiply, we can compute exponentiations $P^k$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$.
-However, we can also employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^k)$ based on $x(P)$. 
+The Montgomery Ladder was presented first by Montgomery \cite{montgomery_speeding_1987}.
+Instead of using $FastExp$ (\cref{alg:fastExp}) to compute exponentiations $P^k$ for some $P\in M_{A,B}(\mathbb{F}P^2)$ and $k\in\mathbb{N}$ directly, we employ $xAdd$ and $xDbl$ to more efficiently determine $x(P^k)$ based on $x(P)$. 
 The Montgomery Ladder Algorithm computes $x(P^k)$ along with $x(P^{k+1})$ which we need later on to recover the $Y$ coordinate of $P^k$.
 
 \begin{theorem}[Montgomery Ladder]
@@ -734,10 +733,10 @@ A proof of correctness of the $Montgomery\text{-}Ladder$ is given in section 4.1
 
 \newpage
 
-Note that this is not the standard version of the Montgomery Ladder but slightly changed and originally intendended for constant-time execution \cite{costello_montgomery_2018,montgomery_speeding_1987}.
+Note that this is not the standard version of the Montgomery Ladder, but slightly changed and originally intended for constant-time execution \cite{costello_montgomery_2018,montgomery_speeding_1987}.
 In the standard version of the Montgomery Ladder algorithm, we require the most significant bit of the exponent $k_{l-1}$ to be $1$. 
 However, this means that the length of the bitstring representing $k$ changes based on the exponent $k$.
-When we implement the Montgomery Ladder in a ciruit for our voting scheme this is problematic.
+When we implement the Montgomery Ladder in a circuit for our voting scheme this is problematic.
 Since the exponent is not known during the compilation time of the circuit, we need to work with exponents of a fixed length $l$ where the most significant bit might be zero.
 Therefore, this version of the Montgomery Ladder is better suited for our purposes.
 
@@ -748,7 +747,7 @@ To reconstruct the $Y$ coordinate $Y_k$ of $P^{k}=[X_k:Y_k:Z_k]$, we use a recov
 \begin{theorem}[Okeya-Sakurai $Y$-Recovery]
     Let $M_{A,B}(\mathbb{F}P^2)$ be a Montgomery curve.
     Let $P=[X_P:Y_P:Z_P], Q, P\odot_{M}^{Pro}Q\in M_{A,B}(\mathbb{F}P^2)\setminus\{[0:1:0]\}$ with $Y_P\neq 0$.
-    Then, we can reconstruct the complete $Q=Q_{rec}$, including the $Y$ coordinate from $(x_P, y_P):=I^{-1}(P)=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$, $x(Q)=[X_Q:Z_Q]$ and $x(P\odot_M^{Pro} Q)=[X_\odot:Z_\odot]$ using \cref{alg:okSakYRecovery}.
+    Then, we can reconstruct the complete $Q=Q_{rec}$ including the $Y$ coordinate from $(x_P, y_P):=I^{-1}(P)=\left(\frac{X_P}{Z_P}, \frac{Y_P}{Z_P}\right)$, $x(Q)=[X_Q:Z_Q]$ and $x(P\odot_M^{Pro} Q)=[X_\odot:Z_\odot]$ using \cref{alg:okSakYRecovery}.
     The corresponding circuit $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$ is illustrated in \cref{fig:circuit:okSakYRecovery}.
 \end{theorem}
 
@@ -782,11 +781,11 @@ A proof of this theorem can be found in section B in the Appendix of \cite{goos_
     \label{fig:circuit:okSakYRecovery}
 \end{figure}
 
-Now we can recover the $Y$ coordinate of a point $Q$ from its pseudopoint $x(Q)$, $P$ and $x(P\odot_M^{Pro} Q)$ if the preconditions for Okeya-Sakurai $Y$-Recovery are fulfilled.
+Now, we can recover the $Y$ coordinate of a point $Q$ from its pseudopoint $x(Q)$, $P$ and $x(P\odot_M^{Pro} Q)$ if the preconditions for Okeya-Sakurai $Y$-Recovery are fulfilled.
 However, we only want to employ the Okeya-Sakurai $Y$-Recovery for group exponentiations.
 Here, we want to compute $P^k$ for some $P\in M_{A,B}^{Pro}$ and $k\in \mathbb{N}$.
 The Montgomery Ladder produces the pseudopoints $x(P^k)$ and $x(P^{k+1})$.
-In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sakurai $Y$-Recovery with $P:=P$, $Q:=P^k$ and $P\odot_M^{Pro} Q:=P^{k+1}$ but need to treat some edge cases seperately:
+In order to recover the correct $Y$-Coordinate of $P^k$, we can use the Okeya-Sakurai $Y$-Recovery with $P:=P$, $Q:=P^k$ and $P\odot_M^{Pro} Q:=P^{k+1}$, but need to treat some edge cases separately:
 \begin{itemize}
     \item First, we consider the case that $P=[0:1:0]$. 
     Here, we can conclude $P^{k+1}=P^k=[0:1:0]$.
@@ -917,7 +916,7 @@ Now, we can combine the Montgomery Ladder with the $Y$-Recovery to compute full 
 %     \label{fig:circuit:reverse}
 % \end{figure}
 
-With $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ fully defined, we can conclude that this approach needs significantly less constraints compared to the standard circuit for $FastExp$ that we presented in $\mathfrak{C}_{\mathbb{G}\_FExp}$ (\cref{fig:circuit:fexp}) instantiated with $\mathbb{G}:=M_{A,B}(\mathbb{F}P^2)$.
+With $\mathfrak{C}_{M_{A,B}(\mathbb{F}P^2)\_Exp}$ fully defined, we can conclude that this approach needs significantly fewer constraints compared to the standard circuit for $FastExp$ that we presented in $\mathfrak{C}_{\mathbb{G}\_FExp}$ (\cref{fig:circuit:fexp}) instantiated with $\mathbb{G}:=M_{A,B}(\mathbb{F}P^2)$.
 A detailed comparison of constraint counts for exponentiation circuits is given in \cref{tab:expConstraintComp}.
 
 \section{Twisted Edwards Curves}
@@ -925,10 +924,10 @@ A detailed comparison of constraint counts for exponentiation circuits is given 
 
 An alternative representation of Montgomery curves are Twisted Edwards curves.
 
-As discussed in \cref{section:elGamalEncryption:precomputedPowers}, it can be benefitial to precompute powers of the public key elements $g$ and $h$ in \gls{eeg} if we want to encrypt many messages with the same public key.
+As discussed in \cref{section:elGamalEncryption:precomputedPowers}, it can be beneficial to precompute powers of the public key elements $g$ and $h$ in \gls{eeg} if we want to encrypt many messages with the same public key.
 This leads to \gls{ppeeg} which was introduced in \cref{def:ppeeg}.
-If we use this approach, the montgomery ladder is no longer applicable.
-However, the group law of Twisted Edwards curves is more efficient that that of Montgomery Curves.
+If we use this approach, the Montgomery ladder is no longer applicable.
+However, the group law of Twisted Edwards curves is more efficient than that of Montgomery Curves.
 Therefore, we can use this to compute group exponentiations more efficiently than with Montgomery Curves.
 Then, \gls{ppeeg} based on Twisted Edwards curves is more efficient than \gls{eeg} based on Montgomery Curves.
 
@@ -936,7 +935,7 @@ Then, \gls{ppeeg} based on Twisted Edwards curves is more efficient than \gls{ee
 As with Montgomery Curves, we introduce Twisted Edwards curves similarly to \cite{least_authority_moonmath_2024}.
 
 \begin{definition}[Twisted Edwards Curve]
-    Let $(\mathbb{F},+,\cdot)$ be a finite field of chracteristic $p>3$. Let $a, d\in\mathbb{F}\setminus\{0\}$ with $a\neq d$.
+    Let $(\mathbb{F},+,\cdot)$ be a finite field of characteristic $p>3$. Let $a, d\in\mathbb{F}\setminus\{0\}$ with $a\neq d$.
     Then, the corresponding Twisted Edwards curve is the group $(TE_{a,d}(\mathbb{F}, \odot_{TE}))$, with:
     \begin{itemize}
         \item The set of points $TE_{a,d}(\mathbb{F})$:
@@ -962,7 +961,7 @@ As with Montgomery Curves, we introduce Twisted Edwards curves similarly to \cit
     \label{fig:circuit:teGroupLaw}
 \end{figure}
 
-In constrast to Montgomery Curves, there is no distinguished point at infinity $\mathcal{O}$ as the neutral element since the point $(0,1)$ is the neutral element of every Twisted Edwards curve.
+In contrast to Montgomery Curves, there is no distinguished point at infinity $\mathcal{O}$ as the neutral element since the point $(0,1)$ is the neutral element of every Twisted Edwards curve.
 Therefore, there is also no need for a projective version of Twisted Edwards curves.
 
 \subsection{Group Exponentiation with Precomputed Powers}
@@ -1007,7 +1006,7 @@ $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\-If\text{-}Else}$ (\cref{fig:circuit:teIfEls
     \label{fig:circuit:teIfElse}
 \end{figure}
 
-With the group arithmetic for Twisted Edwards curves fully defined, we can conclude that $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ (\cref{fig:circuit:ppfexp}) needs significantly less constraints compared to the standard circuit for $FastExp$, $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_FExp}$ (\cref{fig:circuit:fexp}).
+With the group arithmetic for Twisted Edwards curves fully defined, we can conclude that $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp}$ (\cref{fig:circuit:ppfexp}) needs significantly fewer constraints compared to the standard circuit for $FastExp$, $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_FExp}$ (\cref{fig:circuit:fexp}).
 A detailed comparison of constraint counts for exponentiation circuits is given in \cref{tab:expConstraintComp}.
 
 \subsection{Isomorphism with Montgomery Curves}
@@ -1030,7 +1029,7 @@ Additionally, it is straightforward to replace one representation with the other
 
     Let $M_{A',B'}(\mathbb{F})$ be a Montgomery curve.
     Then, for $a':=\frac{A'+2}{B'}$ and $d':=\frac{A'-2}{B'}$ \cite{least_authority_moonmath_2024}, the Twisted Edwards curve $TE_{a',d'}(\mathbb{F})$ is isomorphic to $M_{A',B'}(\mathbb{F})$.
-    We can transform from the Montgomers to the Twisted Edwards curve with the function $M\_to\_TE:M_{A',B'}(\mathbb{F})\to TE_{a',d'}(\mathbb{F})$. 
+    We can transform from the Montgomery to the Twisted Edwards curve with the function $M\_to\_TE:M_{A',B'}(\mathbb{F})\to TE_{a',d'}(\mathbb{F})$. 
     Let $P'\in M_{A',B'}(\mathbb{F})$. Then \cite{costello_montgomery_2018}:
     \begin{align*}
         M\_to\_TE(P)=\begin{cases}

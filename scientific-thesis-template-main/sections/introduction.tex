@@ -1,22 +1,25 @@
 \chapter{Introduction}
 
-Secure electronic voting (e-voting) schemes often employ homomorphic aggregation.
+Secure electronic voting (e-voting) schemes often employ homomorphic aggregation of ciphertexts.
 In these schemes, a ballot submitted by a voter is typically represented as a vector or a matrix.
-Here, each entry represents a choice made by the voter, for instance whether a specific candidate receives a vote or not.
+Here, each entry represents a choice made by the voter, for instance, whether a specific candidate receives a vote or not.
 Then, every entry is encrypted individually using an additively homomorphic encryption scheme like \gls{eeg}, resulting in a vector or matrix of ciphertexts. 
 The encrypted ballots of all voters are then aggregated by a voting authority and decrypted to obtain the final tally.
 
 To ensure the integrity of the tally, it is important that each encrypted ballot encodes a valid vote. 
-Otherwise, a malicious voter could manipulate the tally by submitting malicously chosen votes. 
+Otherwise, a malicious voter could manipulate the tally by submitting maliciously chosen votes. 
 To prevent this, voters provide a \gls{zkp} of ballot validity.
-This proof shows that the vote they encrypted lies within the set of allowed choices and corresponds to the encrypted vote they submmited without revealing the actual vote.
+This proof shows that the vote they encrypted lies within the set of allowed choices and corresponds to the encrypted vote they submitted without revealing the actual vote.
 
 \section*{Related Work}
+Our work is mainly based on \cite{huber_zk-snarks_2025}, where the authors showed that Groth16 based \glspl{zkp} are a valid option for showing ballot validity in election schemes in that use \gls{eeg} to encrypt ballot entries.
+Therefore, our work has a very similar background to \cite{huber_zk-snarks_2025}.
+
 Traditionally, \glspl{zkp} for ballot validity are crafted specifically for certain election types, ballot formats, and encryption schemes. 
 For example, Helios 2.0 \cite{adida_electing_2009} and Belenios \cite{cortier_belenios_2019,gaudry_zk_2017} support basic Single-Vote elections using component-wise \gls{eeg} encryption.
 Here, a valid ballot contains as many votes as there are candidates to choose from. 
 Each of the individual votes has to be $0$ or $1$ and voters can select at most one candidate in total meaning that the sum of all individual votes is also required to be $0$ or $1$.
-Helios 2.0 and Belenios implement ballot validity \gls{zkp} based on disjunctive Chaum-Pedersen proofs \cite{chaum_wallet_1993,desmedt_proofs_1994}, which show that each encrypted ballot corresponds to a valid plain ballot. 
+Helios 2.0 and Belenios implement ballot validity \glspl{zkp} based on disjunctive Chaum-Pedersen proofs \cite{chaum_wallet_1993,desmedt_proofs_1994} which show that each encrypted ballot corresponds to a valid plain ballot. 
 These proofs are composed of individual proofs for each encrypted vote verifying that the corresponding plain vote is a bit and an additional proof verifying that the sum of all plain votes in a ballot is a bit.
 
 It is possible to extend this approach to Multi-Vote, where each voter can distribute multiple votes among the candidates with each candidate receiving up to some maximum of votes \cite{adida_electing_2009,cortier_belenios_2019,gaudry_zk_2017}.
@@ -29,39 +32,39 @@ Overall, while efficient specialized \glspl{zkp} exist for many election types, 
 Designing efficient \glspl{zkp} for new or complex election types remains a difficult process with many opportunities for mistakes.
 
 An alternative to specialized \glspl{zkp} are \glspl{gpzkp} with \glspl{zksnark} being one form of these.
-\glspl{gpzkp} can be employed to prove arbitrary statements as long as they can be expressed as the correct execution of an arithmetic circuit. 
+The specification of \glspl{gpzkp} used in our work can be employed to prove arbitrary statements as long as they can be expressed as the correct execution of an arithmetic circuit. 
 Therefore, we can construct proofs of ballot validity by implementing appropriate arithmetic circuits.
 This approach is more flexible than specialized \glspl{zkp} and allows us to construct new voting schemes for novel ballot formats easily.
 
-In the Kryvos system \cite{huber_kryvos_2022}, Huber et. al. employed the \gls{g16snark} \cite{groth_size_2016} to show ballot validity in voting schemes where the ballots are encrypted using \glspl{pvc}.
-Here, the authors demonstrated that their apporach is feasible for several different election types including Borda elections and Condorcet methods even for large numbers of candidates.
+In the Kryvos system \cite{huber_kryvos_2022}, Huber et al. employed the \gls{g16snark} \cite{groth_size_2016} to show ballot validity in voting schemes where the ballots are encrypted using \glspl{pvc}.
+Here, the authors demonstrated that their approach is feasible for several different election types including Borda elections and Condorcet methods even for large numbers of candidates.
 However, \glspl{pvc} are not used commonly in practice, whereas \gls{eeg} encryption is \cite{adida_electing_2009,cortier_belenios_2019}.
 
-The practicality of \gls{gpzkp} for ballots encrypted with \gls{eeg} has been explored by Huber et. al. \cite{huber_zk-snarks_2025}.
-In their work Huber et. al. implemented circuits showing ballot validity for the different election types Single-Vote, Multi-Vote and the variations Line-Vote and \gls{mwr}, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment in libsnark.
-The benchmark results obtained by Huber et. al. demonstrate that \glspl{g16snark} showing ballot validity are significantly less efficient when using \gls{eeg} encryption compared to the same proofs when using \glspl{pvc}.
+The practicality of \gls{gpzkp} for ballots encrypted with \gls{eeg} has been explored by Huber et al. \cite{huber_zk-snarks_2025}.
+In their work, Huber et al. implemented circuits showing ballot validity for the different election types Single-Vote, Multi-Vote and the variations Line-Vote and \gls{mwr}, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment in libsnark.
+The benchmark results obtained by Huber et al. demonstrate that \glspl{g16snark} showing ballot validity are significantly less efficient when using \gls{eeg} encryption compared to the same proofs when using \glspl{pvc}.
 Nevertheless, the proofs of ballot validity remain practical even for complex choice spaces such as \gls{bts} or Condorcet methods.
 
 \section*{Contributions}
-In this work, we implement the same approach as Huber et. al. in Circom and use snarkjs to generate the \glspl{zkp}.
-Additionally, we reduce the computational effort needed for the ballot validity proofs by redevolping parts of the corresponding circuits.
+In this work, we implement the same approach as Huber et al. in Circom and use snarkjs to generate the \glspl{zkp}.
+Additionally, we reduce the computational effort needed for the ballot validity proofs by redeveloping parts of the corresponding circuits.
 Asserting ballot validity can be split into asserting that the encrypted ballot submitted by a voter belongs to the plain ballot they chose and asserting that the chosen plain ballot is within the set of allowed choices.
 
 % For the majority of covered election types, the computational effort needed to assert that the encrypted ballot submitted by a voter belongs to the plain ballot they chose far exceeds the effort needed to assert that the chosen plain ballot is within the set of allowed choices.
 To improve on the computational effort needed to assert correct encryption, we introduce \gls{ppeeg} encryption, a novel variant of computing \gls{eeg} ciphertexts.
-Since encrypting a ballot in \gls{eeg} comes down almost exclusively to exponentiating group elements, we aim to reduce the computational effort needed for the corresponding circuit by precomputing some powers of the group element to exponentiate.
+Since encrypting a ballot in \gls{eeg} comes down almost exclusively to exponentiations of group elements, we aim to reduce the computational effort needed for the corresponding circuit by precomputing some powers of the group element to exponentiate.
 These precomputed powers are then combined within the new exponentiation circuit depending on the concrete choice of exponent.
 Moreover, we explore the use of Twisted Edwards curves as the basis group for \gls{ppeeg}.
-This choice is adventageuos compared to Montgomery curves used previously by Huber et. al. as the basis for \gls{eeg} encryption since the group law requires significantly less computations for Twisted Edwards curves compared to Montgomery curves.
-Note that changing from a Montgomery Curve to a Twisted Edwards curve and vice versa does not influence the security of encryption since both curves can be instantiated to representat the same algebraic group.
+This choice is advantageous compared to Montgomery curves used previously by Huber et al. as the basis for \gls{eeg} encryption since the group law requires significantly fewer computations for Twisted Edwards curves compared to Montgomery curves.
+Note that changing from a Montgomery Curve to a Twisted Edwards curve and vice versa does not influence the security of encryption since both curves can be instantiated to represent the same algebraic group.
 
-Furthermore, we try to reduce the computational effort for asserting that a chosen ballot is within the allowed set of choices.
-However, since the computational effort needed to assert correct encryption far exceeds the effort needed to assert membership of the set of allowed choices in most cases, we reuse the implementations from Huber et. al. for most election types here.
+Furthermore, we reduce the computational effort for asserting that a chosen ballot is within the allowed set of choices.
+However, since the computational effort needed to assert correct encryption far exceeds the effort needed to assert membership of the set of allowed choices in most cases, we reuse the implementations from Huber et al. for most election types here.
 
-Finally, we benchmark our implementations of ballot validity circuits and compare the results to those obtained by Huber et. al.
+Finally, we benchmark our implementations of ballot validity circuits and compare the results to those obtained by Huber et al.
 With the improvements to \gls{eeg}, we manage to reduce the constraint count, an important and system independent metric for measuring computational effort, by more than $50\%$ for the circuit asserting correct encryption.
 Furthermore, we manage to reduce the constraint count for asserting membership of the set of allowed choices by up to $50\%$ for some of the considered election types.
-These efficience gains also allow us to extend the benchmarks from at most $300$ ballot entries in the implementation by Huber et. al. \cite{huber_zk-snarks_2025} to up to $1000$ ballot entries in our implemenation.
+These efficiency gains also allow us to extend the benchmarks from at most $300$ ballot entries in the implementation by Huber et al. \cite{huber_zk-snarks_2025} to up to $1000$ ballot entries in our implementation.
 
 \section*{Overview}
 
@@ -73,18 +76,18 @@ This work can be divided into six parts:
     \item In chapter 3, we present the algebraic constructions used to create \glspl{gpzkp}. 
     Here, we introduce algebraic functions and algebraic circuits.
     Then, we show how algebraic circuits can be represented by \glspl{r1cs} and how we can transform those to \glspl{qap}.
-    Additionally, we show how a \glspl{g16snark} use \glspl{qap} as a basis to create \glspl{gpzkp}.
+    Additionally, we show how \glspl{g16snark} use \glspl{qap} as a basis to create \glspl{gpzkp}.
     \item In chapters 4 and 5, we cover the circuits used to show correct encryption of ballots.
     Here, we explain \gls{eeg} encryption and introduce \gls{ppeeg} encryption as a slight modification of this.
     Then, we present Montgomery curves and Twisted Edwards curves as the basis groups for \gls{eeg} and \gls{ppeeg}.
     \item In chapter 6, we show how the voting schemes introduced previously can be instantiated to cover the different election types.
-    Here, we use \gls{g16snark} instantiated with the \verb|BN254| curve as the \gls{zps} operating over the \gls{eeg} or \gls{ppeeg} based circuits to assert correct encryption of ballots.
+    Here, we use a \gls{g16snark} instantiated with the \verb|BN254| curve as the \gls{zps} operating over the \gls{eeg} or \gls{ppeeg} based circuits to assert correct encryption of ballots.
     Additionally, we instantiate \gls{eeg} and \gls{ppeeg} with a subgroup of a Curve25519 instantiation as the Montgomery or Twisted Edwards curve.
     Furthermore, to assert that a submitted ballot was chosen from the allowed set of choices, we introduce different circuits for the different election types.
     We cover the election types Single-Vote, Multi-Vote and the variations Line-Vote and \gls{mwr}, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment.
     \item In chapter 7, we briefly cover the Software we used for our implementations.
-    Here, we used Circom to create the circuits, snarkj to compute the \glspl{zkp} and SageMath for utilities, benchmarking setup and testing.
-    \item In chpaters 8, 9 and 10, we present our results, discuss them and draw a conclusion.
+    Here, we used Circom to create the circuits, snarkjs to compute the \glspl{zkp} and SageMath for utilities, benchmarking setup and testing.
+    \item In chapters 8, 9 and 10, we present our results, discuss them and draw a conclusion.
     Furthermore, we give a brief outlook on possible further work.
 \end{enumerate}
 
