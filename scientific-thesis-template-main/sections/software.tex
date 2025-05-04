@@ -132,9 +132,9 @@ template threeVot() {
 \end{figure}
 
 To make the design of complicated circuits possible, we need a way of using circuits inside other circuits.
-In the example of $\mathfrak{C}_{3\text{-}vot}$, we used a circuit $\mathfrak{C}_{is\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) to check whether all individual votes and the sum of all votes are bits.
+In the example of $\mathfrak{C}_{3\text{-}vot}$, we used a circuit $\mathfrak{C}_{Is\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) to check whether all individual votes and the sum of all votes are bits.
 Circom supports this concept of circuit modularity with the keyword \verb|component| which is used to denote the instantiation of a template inside another one.
-Using this mechanism, we can extract the circuit $\mathfrak{C}_{is\text{-}Bit}$ into a separate template \verb|isBit| (\cref{fig:circom:threeVotIsBit}).
+Using this mechanism, we can extract the circuit $\mathfrak{C}_{Is\text{-}Bit}$ into a separate template \verb|isBit| (\cref{fig:circom:threeVotIsBit}).
 Then, \verb|threeVot| can be implemented as shown in \cref{fig:circom:threeVotIsBit}.
 
 \begin{figure}[h]
@@ -170,7 +170,7 @@ template threeVot() {
     isBit[3].in <== sum;
     S_out[3] <== isBit[3].out;
 }\end{lstlisting}
-    \caption{Implementation of $\mathfrak{C}_{is\text{-}Bit}$ and $\mathfrak{C}_{3\text{-}vot}$ utilizing the $\mathfrak{C}_{is\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) template in Circom.}
+    \caption{Implementation of $\mathfrak{C}_{Is\text{-}Bit}$ and $\mathfrak{C}_{3\text{-}vot}$ utilizing the $\mathfrak{C}_{Is\text{-}Bit}$ (\cref{fig:circuit:bitModularity}) template in Circom.}
     \label{fig:circom:threeVotIsBit}
 \end{figure}
 
@@ -285,7 +285,7 @@ In the previous example, Circom \glqq Witness\grqq\ generation is equivalent to 
 However, in general, Circom \glqq Witness\grqq generation is more powerful since it is used to \textit{find} values such that the constraints are satisfied.
 We can make use of this for the utility circuit $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) which computes $\frac{x}{y}$ for inputs $x$ and $y$.
 The corresponding Circom implementation is shown in \cref{fig:circom:division}.
-Here, Circom \glqq Witness\grqq\ generation is employed to find a value $out$ such that the $out\cdot y=x$ which is equivalent to $out=\frac{x}{y}$.
+Here, Circom \glqq Witness\grqq\ generation is employed to find a value $out$ such that $out\cdot y=x$ which is equivalent to $out=\frac{x}{y}$.
 Achieving the same result with pure circuit execution would be more complicated.
 
 \begin{figure}[h]
@@ -351,7 +351,7 @@ $CRS\text{-}R1CS_r$ on the other hand, is specific to the circuit.
 
 In our voting schemes, we want to create \glspl{zkp} for many different election types and different candidate counts.
 Therefore, we can generate $CRS\text{-}Universal$ once for a number of constraints $k_{max}$ sufficient for all scenarios.
-For every circuit, we then only need to generate $CRS\text{-}R1CS_r$ and combine this with $CRS\text{-}Universal$ to obtain the full $CRS$ for this circuit.
+Then, for every circuit, we only need to generate $CRS\text{-}R1CS_r$ and combine this with $CRS\text{-}Universal$ to obtain the full $CRS$ for this circuit.
 This can be very efficient compared to generating the full $CRS$ from scratch every time.
 
 \SaveVerb{ptau}|powersoftau.ptau|
@@ -411,8 +411,8 @@ snarkjs groth16 verify verification_key.json public.json proof.json
 
 \section{SageMath}
 When proving ballot validity, a voter needs to submit the ballot $b$ they chose to a \gls{zps}.
-However, to construct the proof, we also require the corresponding encrypted ballot $b'$ as well as the public key $pk$ and the randomness $aux^{Enc}$ that was used in the computation of $b$.
-In case of ranking based voting methods, we also need the private ranking $aux^{Vot}=r$ chosen by the voter to construct the ballot.
+However, to construct the proof, we also require the corresponding encrypted ballot $b'$ as well as the public key $pk$ and the randomness $aux^{Enc}$ that was used in the computation of $b'$.
+In case of ranking based voting methods, we sometimes also need the private ranking $aux^{Vot}=r$ chosen by the voter to construct the ballot.
 
 In a real world voting system, a voter should only have to choose the ballot $b$ or, in case of ranking based voting schemes, the ranking $r$.
 The rest of the inputs required for the \gls{zkp} of ballot validity should be generated automatically.
@@ -438,9 +438,9 @@ Recall that for every Montgomery curve there is an isomorphic Twisted Edwards cu
 Therefore, we can make use of the built-in Short Weierstrass curves of SageMath by converting elliptic curve points to and from this representation.
 
 More formally, let $(TE_{a,d}(\mathbb{F}), \odot_{TE})$ be a Twisted Edwards curve, let $(M_{A,B}(\mathbb{F}P^2), \odot_M)$ be the isomorphic Montgomery curve (\cref{theorem:TEMIsomorphism}) and let $(\mathbb{S}, \odot_\mathbb{S})$ be the isomorphic Short Weierstrass curve.
-Then, we can compute $g_{M,1}\odot_{M} g_{M, 2}$ with $g_{M,1}, g_{M, 2}\in M_{A,B}(\mathbb{F}P^2)$ using the conversions: 
+Then, we can compute $g_{M,1}\odot_{M} g_{M, 2}$ with $g_{M,1}, g_{M, 2}\in M_{A,B}(\mathbb{F}P^2)$ using the following procedure: 
 First, we convert $g_{M, 1}$ and $g_{M, 2}$ to the corresponding Short Weierstrass points $g_{\mathbb{S}, 1}, g_{\mathbb{S}, 2}\in\mathbb{S}$.
-Finally, we compute $g_{\mathbb{S}, res}:=g_{\mathbb{S}, 1}\odot_\mathbb{S} g_{\mathbb{S}, 2}$ using the built-in implementation from SageMath and convert $g_{\mathbb{S}, res}$ back to the corresponding Montgomery point $g_{M, res}$.
+Then, we compute $g_{\mathbb{S}, res}:=g_{\mathbb{S}, 1}\odot_\mathbb{S} g_{\mathbb{S}, 2}$ using the built-in implementation from SageMath and convert $g_{\mathbb{S}, res}$ back to the corresponding Montgomery point $g_{M, res}$.
 
 Similarly, we compute $g_{TE,1}\odot_{TE} g_{TE, 2}$ with $g_{TE,1}, g_{TE, 2}\in TE_{a,d}(\mathbb{F})$:
 First, we convert the points to the corresponding Montgomery points $g_{M, 1}, g_{M, 2}$ and from there to the corresponding Short Weierstrass points $g_{\mathbb{S}, 1}, g_{\mathbb{S}, 2}\in\mathbb{S}$.

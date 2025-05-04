@@ -55,7 +55,7 @@ Note that computational hardness of the \gls{ddh} problem implies computational 
 
 \section{Homomorphic Encryption Schemes}
 Homomorphic encryption schemes allow us to obtain the encrypted result of some computation on the plaintexts by some (other) computation on the ciphertext.
-For instance, a homomorphic encryption scheme could allow aggregation of ballots by some computation on the corresponding encrypted ballots. 
+For instance, a homomorphic encryption scheme could allow aggregation of plain ballots by some computation on the corresponding encrypted ballots. 
 This is exactly what we require in voting schemes.
 
 We define homomorphic encryption schemes as presented in definition 15.14 of \cite{katz_introduction_2021} and just change the notation slightly to match our encryption scheme notation.
@@ -110,7 +110,7 @@ Then, we get:
 
 Despite the homomorphic property, standard ElGamal is not useful when it comes to aggregating ballots.
 To aggregate two ballots $b_1, b_2$ from a choice space $C$, we need to add them by performing the standard (component-wise) addition $b_1+b_2$.
-However, ElGamal encryption would only allow us to compute the (component-wise) operation $b_1\odot_{\mathbb{G}} b_2$ of two ballots $b_1$ and $b_2$ by performing the operation $\mathcal{C}$ on the corresponding ciphertexts.
+However, ElGamal encryption would only allow us to compute the (component-wise) operation $b_1\odot_{\mathbb{G}} b_2$ on two ballots $b_1$ and $b_2$ by performing the operation $\odot_\mathcal{C}$ on the corresponding ciphertexts.
 The operation $\odot_{\mathbb{G}}$ depends on the generated group $\mathbb{G}$ and in most cases is closer to the standard multiplication \glqq$\cdot$\grqq\ than the addition \glqq$+$\grqq.
 To allow for (component-wise) addition of ballots, we need a slight variation of ElGamal, namely Exponential ElGamal.
 
@@ -245,7 +245,7 @@ Then, the naive way of computing $g^k$ as $g^k=\underbrace{g\odot_{\mathbb{G}}\c
 In our use case, $\mathbb{G}$ has an order that can be expressed as a $251$-bit number (\cref{chap:ourVotingSchemes}).
 Therefore, $k$ can also be a number with up to $l=251$ bits.
 Then, computing $g^k$ naively is completely infeasible.
-A more efficient approach is the Square and Multiply method as introduced in chapter 9 of \cite{cohen_handbook_2005} which needs $\mathcal{O}(\log(k))$ applications of the group law.
+A more efficient approach is the Square and Multiply method as introduced in Chapter 9 of \cite{cohen_handbook_2005} which needs $\mathcal{O}(\log(k))$ applications of the group law.
 Here, we use the binary representation $(k_0,\dots, k_{l-1})$ of $k=\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}$ to compute $g^k$:
 \begin{align*}
     g^k&=g^{\left(\sum\limits_{i=0}^{l-1}k_i\cdot 2^{i}\right)} = \prod_{i=0}^{l-1} g^{k_i\cdot 2^{i}} = \prod_{i=0}^{l-1} \left(g^{2^{i}}\right)^{k_i}
@@ -291,7 +291,7 @@ Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cre
     \begin{algorithmic}
     \Procedure{$FastExp$}{$g, k$}
         \State $y\gets e_\mathbb{G}$ \Comment $e_\mathbb{G}$ is the neutral element of $\mathbb{G}$
-        \State $(k_0, \dots, k_{l-1})\gets r_{Num2Bits(l)}(k)$
+        \State $(k_0, \dots, k_{l-1})\gets r_{Num2Bits(l)}(k)$ \Comment \gls{lsb} binary representation of $k$
         \For{$i=l-1$ \textbf{ down to } $0$}
             \State $y\gets y^2=y\odot_\mathbb{G} y$
             \If{$k_i=1$}
@@ -306,7 +306,7 @@ Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cre
 This is the basis for the Montgomery Ladder Algorithm we use in \cref{section:ellipticCurves:montgomery} to compute group exponentiations for Montgomery curves.
 
 It is possible to optimize computing group exponentiation further if we provide $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ to the exponentiation algorithm.
-This approach, using precomputed powers of the element to compute $g^k$, is defined in \cref{alg:fastExpPrecomputedPowers}.
+This approach, using precomputed powers of the element $g$ to compute $g^k$, is defined in \cref{alg:fastExpPrecomputedPowers}.
 The corresponding circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ is shown in \cref{fig:circuit:ppfexp}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
@@ -337,7 +337,7 @@ The corresponding circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ is shown in \cref{
     \centering
     \includegraphics[scale=.7]{graphics/elGamalEncryption/PPFExp.pdf}
     \caption{Circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ for computing $g^k$ from $\left(g^{2^i}\right)_{i=0}^{l-1}$ and $k$.
-    Here, $g\in\mathbb{G}$ and $k$ can be represented as bitstring of length $l$.
+    Here, $g\in\mathbb{G}$ and $k$ can be represented as a bitstring of length $l$.
     }
     \label{fig:circuit:ppfexp}
 \end{figure}
@@ -348,7 +348,7 @@ In this case, we only need to compute the powers of $g$ once and can reuse them 
 Additionally, by precomputing the powers and providing them as an input to the circuit, we avoid these computations inside the circuit.
 This significantly reduces the computational effort for a \gls{zkp} of correct circuit execution.
 
-One such use case of $ProcomputedPowersFastExp$ is \gls{eeg} encryption.
+One use case of $ProcomputedPowersFastExp$ is \gls{eeg} encryption.
 In our voting schemes, we want to encrypt ballots $b$ with entries $b_0,\dots, b_{m-1}$.
 With \gls{eeg} encryption, we reuse the same public key $pk=(\mathbb{G}, n, g, h)$ to compute all entries $b'_0,\dots,b'_{m-1}$ of the encrypted ballot $b'=\mathcal{S}.Enc(b, pk)$ belonging to ballot $b$:
 \begin{align*}
@@ -388,7 +388,7 @@ If an adversary $A'$ can break security in $\mathcal{S}'$, then we can construct
 Then, $A$ will break security of $\mathcal{S}$.
 
 Just as with \gls{eeg}, we can also compute encryption in a \gls{ppeeg} encryption scheme inside a circuit.
-By providing the randomness $y$ used by $Enc$ as an additional input, we can implement $PPEEG(\mathbb{G}.Enc)$ as $\mathfrak{C}_{PPEEG(\mathbb{G}.Enc)}$ (\cref{fig:circuit:ppeegEnc}).
+By providing the randomness $y$ used by $Enc$ as an additional input, we can implement $PPEEG(\mathbb{G}).Enc)$ as $\mathfrak{C}_{PPEEG(\mathbb{G}).Enc}$ (\cref{fig:circuit:ppeegEnc}).
 
 \begin{figure}[h]
     \centering

@@ -70,24 +70,24 @@ These efficiency gains also allow us to extend the benchmarks from at most $300$
 
 This work can be divided into six parts:
 \begin{enumerate}
-    \item In chapter 2, we give an introduction to voting schemes and discuss several security aspects of them.
+    \item In Chapter 2, we give an introduction to voting schemes and discuss several security aspects of them.
     Most importantly, we introduce the concept of ballot validity in detail and propose \glspl{gpzkp} as one method of asserting this.
     Additionally, we show how ballot validity can be placed in the context of voting schemes.
-    \item In chapter 3, we present the algebraic constructions used to create \glspl{gpzkp}. 
+    \item In Chapter 3, we present the algebraic constructions used to create \glspl{gpzkp}. 
     Here, we introduce algebraic functions and algebraic circuits.
     Then, we show how algebraic circuits can be represented by \glspl{r1cs} and how we can transform those to \glspl{qap}.
     Additionally, we show how \glspl{g16snark} use \glspl{qap} as a basis to create \glspl{gpzkp}.
-    \item In chapters 4 and 5, we cover the circuits used to show correct encryption of ballots.
+    \item In Chapters 4 and 5, we cover the circuits used to show correct encryption of ballots.
     Here, we explain \gls{eeg} encryption and introduce \gls{ppeeg} encryption as a slight modification of this.
     Then, we present Montgomery curves and Twisted Edwards curves as the basis groups for \gls{eeg} and \gls{ppeeg}.
-    \item In chapter 6, we show how the voting schemes introduced previously can be instantiated to cover the different election types.
+    \item In Chapter 6, we show how the voting schemes introduced previously can be instantiated to cover the different election types.
     Here, we use a \gls{g16snark} instantiated with the \verb|BN254| curve as the \gls{zps} operating over the \gls{eeg} or \gls{ppeeg} based circuits to assert correct encryption of ballots.
     Additionally, we instantiate \gls{eeg} and \gls{ppeeg} with a subgroup of a Curve25519 instantiation as the Montgomery or Twisted Edwards curve.
     Furthermore, to assert that a submitted ballot was chosen from the allowed set of choices, we introduce different circuits for the different election types.
     We cover the election types Single-Vote, Multi-Vote and the variations Line-Vote and \gls{mwr}, the Borda election types Pointlist-Borda and \gls{bts}, Condorcet methods and Majority-Judgment.
-    \item In chapter 7, we briefly cover the Software we used for our implementations.
+    \item In Chapter 7, we briefly cover the Software we used for our implementations.
     Here, we used Circom to create the circuits, snarkjs to compute the \glspl{zkp} and SageMath for utilities, benchmarking setup and testing.
-    \item In chapters 8, 9 and 10, we present our results, discuss them and draw a conclusion.
+    \item In Chapters 8, 9 and 10, we present our results, discuss them and draw a conclusion.
     Furthermore, we give a brief outlook on possible further work.
 \end{enumerate}
 

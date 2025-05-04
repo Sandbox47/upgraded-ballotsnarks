@@ -46,11 +46,11 @@ In \gls{ppeeg}, we reduce the effort to compute exponentiations $g^k$ with $k=\s
 
 Here, we utilized the binary representation $(k_0,\dots, k_{l-1})$ of the exponent $k$. 
 We can generalize this concept to arbitrary bases for the representation of the exponent.
-Assume, we have a base $base$ representation $k=\sum_{i=0}^{l'-1}k_i\cdot b^i$ (with $l'=\lceil\log_{base}(2)\cdot l\rceil$) of $k$ and want to compute $g^k$.
+Assume, we have a base $base$ representation $k=\sum_{i=0}^{l'-1}k_i\cdot base^i$ (with $l'=\lceil\log_{base}(2)\cdot l\rceil$) of $k$ and want to compute $g^k$.
 Additionally, we represent each digit $k_i$ of the base $base$ representation of $k$ as an array of binary indicators $(k_{i,0},\dots, k_{i,base-1})\in\{0,1\}^{base}$.
 Here, we have $\forall j\in\{0,\dots, base-1\}: k_{i,j}=1\Leftrightarrow k_i=j$.
 In other words, if $k_i=j$, then the entry at position $j$ in the indicator array is $1$ and all other entries are $0$.
-For example, for $k=8=3\cdot 5^0+1\cdot 5^1=(3,1)=(k_0, k_1)$ we would get $(0,0,0,1,0)$ for $k_0$ and $(0,1,0,0,0)$ for $k_1$.
+For example, for $k=8=3\cdot 5^0+1\cdot 5^1=(3,1)=(k_0, k_1)$ we would get $(0,0,0,1,0)$ for $k_0$ and $(0,1,0,0,0)$ for $k_1$ in a representation to base $5$.
 
 Based on this, we can employ a similar equivalence as before:
 \begin{align*}
@@ -98,11 +98,11 @@ Using this, we can extend $PrecomputedPowersFastExp$ (\cref{alg:fastExpPrecomput
 By providing $k$ in the representation to base $base$ where the individual digits are stored as indicator arrays, we reduce the number of constraint required in the circuit.
 Otherwise, we would have to compute this representation in the circuit itself or use more complicated logic, both of which would require more constraints.
 
-For base $2$, $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ works very similarly to $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\cref{alg:fastExpPrecomputedPowers}).
+For base $2$, $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ works very similar to $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ (\cref{alg:fastExpPrecomputedPowers}).
 The only differences are that we provide $k$ as a list of indicator arrays for $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ whereas we provide it as a number to $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ and that we switch the order of the group law application and the selection of the result in each iteration.
 
 Next, we want to determine the optimal base $base$ that yields the smallest constraint count for $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$.
-For this purpose, we introduce a cost function $cost_\mathbb{G}(base)$ which calculates the number of constraints per "Bit-Equivalent" $\log_{base}(2)$.
+For this purpose, we introduce a cost function $cost_\mathbb{G}(base)$ which calculates the number of constraints per "Bit-Equivalent"\ $\log_{base}(2)$.
 We employ this normalization, since a number that can be represented with $255$ bits can also be represented with $\Big\lceil \frac{255}{\log_2(base)}\Big\rceil$ digits in base $base$.
 For instance, we need $\Big\lceil \frac{255}{\log_2(5)}\Big\rceil=110$ digits to represent a $255$ bit number in base $5$.
 Furthermore, the cost is influenced by the number of constraint needed for the group law $\mathfrak{C}_\mathbb{G}\_\odot$ and the group switch case $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$.
@@ -123,7 +123,7 @@ Then, \begin{align*}
     \centering
     \includegraphics[scale=0.7]{graphics/appendix/TESwitchCase.pdf}
     \caption{Circuit $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_Switch\text{-}Case(c)}$ implementing $Switch\text{-}Case$ between $c$ elements $P_0^v,\dots, P_{c-1}^v\in TE_{a,d}(\mathbb{F})$.
-    Here, we use $\mathfrak{C}_{Switch\text{-}Case(base, 2)}$ (\cref{fig:circuit:switchCaseGen}) as a building block.
+    Here, we use $\mathfrak{C}_{Switch\text{-}Case(c, 2)}$ (\cref{fig:circuit:switchCaseGen}) as a building block.
     }
     \label{fig:circuit:teSwitchCase}
 \end{figure}
@@ -149,9 +149,9 @@ Some results for $cost_{TE_{a,d}(\mathbb{F})}(base)$ are presented in \cref{tab:
 \end{table}
 
 We can conclude that $base=5$ is optimal for $\mathbb{G}=TE_{a,d}(\mathbb{F})$.
-Note that choosing base $base$ requires us to precompute $\frac{base-1}{\log_2(base)}$ times as many powers of $g$ as in the circuit $\mathfrak{C}_{\mathbb{G}\_}$.
+Note that choosing base $base$ requires us to precompute $\frac{base-1}{\log_2(base)}$ times as many powers of $g$ as in the circuit $\mathfrak{C}_{\mathbb{G}\_PPFExp}$.
 For our choice $base=5$ this means that we need to precompute $\frac{4}{\log_2(5)}=1.72$ times as many powers of $g$ as before.
-However, this is a sensible tradeoff since these computations are typically not executed by the voter but rather the election organizers.
+However, this is a sensible tradeoff since these computations are typically not executed by the voter but rather the election organizers and are not part of the ballot validity proofs.
 Furthermore, as before, we can share the precomputed powers of $g$ among all instantiations of $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ in a ballot validity circuit.
 
 While we did implement $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_PPFExp_{base}}$ in Circom, it would be interesting to build a new version of \gls{ppeeg} using this.
@@ -184,7 +184,7 @@ Note that $\mathfrak{C}_{Reverse(l)}$ does not need any constraints and we use i
 \label{section:appendix:isEqual}
 In many cases, we need to compute whether two signals $x$ and $y$ are equal.
 Therefore, we use \begin{align*}
-    r_{If\text{-}Equal}:\mathbb{F}^2\to\mathbb{F}, (x,y)\mapsto \begin{cases}
+    r_{Is\text{-}Equal}:\mathbb{F}^2\to\mathbb{F}, (x,y)\mapsto \begin{cases}
         1,\quad \text{if } x=y\\
         0,\quad\text{otherwise}
     \end{cases}
@@ -230,7 +230,7 @@ Branching is very important for most use cases.
 Often, the result of a computation depends on a condition that can take several different values with a default value if none of the allowed values are chosen.
 For this purpose, we use \begin{align*}
     &r_{Switch\text{-}Case(c)}:\mathbb{F}^c\times \mathbb{F}^{c-1}, \\
-    &\quad(v, cond)\mapsto v_res:=\begin{cases}
+    &\quad(v, cond)\mapsto v_{res}:=\begin{cases}
         v_{i},\quad \text{if } cond_i=1 \land \forall j\in\{0,\dots,c-2\}\setminus\{i\}: cond_j=0\\
         v_{def},\quad\text{if } \forall i\in\{0,\dots, c-2\}:cond_i=0\\
         undefined,\quad\text{otherwise}
@@ -433,11 +433,11 @@ In our implementation, we make use of this in the circuit $\mathfrak{C}_C^{Vot}$
 
 For this purpose, we use \begin{align*}
     & r_{Count\text{-}Equal(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i=test\}|\\
-    & r_{Count\text{-}Less(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i=test\}|\\
-    & r_{Count\text{-}Greater(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i=test\}|\\
+    & r_{Count\text{-}Less(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i<test\}|\\
+    & r_{Count\text{-}Greater(l)}:\mathbb{F}^l\times\mathbb{F}\to\mathbb{F}, ((v_0,\dots, v_{l-1}), test)\mapsto count:=|\{i|v_i>test\}|\\
 \end{align*}
 and the corresponding circuits $\mathfrak{C}_{Count\text{-}Equal}$, $\mathfrak{C}_{Count\text{-}Less}$ and $\mathfrak{C}_{Count\text{-}Greater}$ (\cref{fig:circuit:counting}).
-Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text{-}Greater(l)}$ count how many values in a list of length $l$ are equal to a test value $test$.
+Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text{-}Greater(l)}$ count how many values in a list of length $l$ have the desired relation with a test value $test$.
 
 \begin{figure}[h]
     \centering
@@ -526,16 +526,16 @@ Here, we provide a list of all circuits we used with brief descriptions, referen
     $\mathfrak{C}_{x}$ & Mapping projective points to pseudopoints. & \cref{fig:circuit:quotientMap} & $4$*\\
     $\mathfrak{C}_{{xIf\text{-}Else}}$ & If-Else for pseudopoints. & \cref{fig:circuit:xIfElse} & $2$\\
     $\mathfrak{C}_{xAdd}$ & Addition of pseudopoints $x(Q)$ and $x(P)$. & \cref{fig:circuit:xAdd} & $6$\\
-    $\mathfrak{C}_{xDbl}$ & Doubling of pseudopoint $x(P)$. & \cref{fig:circuit:xDbl} & $6$\\
+    $\mathfrak{C}_{xDbl}$ & Doubling of pseudopoint $x(P)$. & \cref{fig:circuit:xDbl} & $4$\\
     $\mathfrak{C}_{Montgomery\text{-}Ladder}$ & Montgomery Ladder computing $x(P^k)$ and $x(P^{k+1})$ where $k$ has at most $l$ bits. & \cref{fig:circuit:montgomeryLadder} & $18l-4$\\
     $\mathfrak{C}_{OkSak\text{-}Y\text{-}Recovery}$ & Recovers the $Y$ coordinate of $Q$ from $P, x(Q)$ and $x(P\odot_M^{Pro}Q)$. & \cref{fig:circuit:okSakYRecovery} & $11$\\
     $\mathfrak{C}_{Norm\text{-}Projective}$ & Norms a projective point so that the $Z$ coordinate is $1$. & \cref{fig:circuit:normProjective} & $12$* \\
     $\mathfrak{C}_{Pro\_If\text{-}Else}$ & If-Else for projective points. & \cref{fig:circuit:proIfElse} & $3$\\
-    $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ & Recovery the $Y$ coordinate of $P^k$ from $P, x(P^k)$ and $x(P^{k+1})$. & \cref{fig:circuit:ladderYRecovery} & $55$\\
-    $\mathfrak{C}_{M_{A, B}}(\mathbb{F}P^2)\_Exp$ & Exponentiation $P^k$ for Montgomery curves where $k$ has at most $l$ bits. & \cref{fig:circuit:montgomeryExp} & $x$\\
+    $\mathfrak{C}_{Ladder\text{-}Y\text{-}Recovery}$ & Recovers the $Y$ coordinate of $P^k$ from $P, x(P^k)$ and $x(P^{k+1})$. & \cref{fig:circuit:ladderYRecovery} & $55$\\
+    $\mathfrak{C}_{M_{A, B}}(\mathbb{F}P^2)\_Exp$ & Exponentiation $P^k$ for Montgomery curves where $k$ has at most $l$ bits. & \cref{fig:circuit:montgomeryExp} & $19l+68$\\
     \hline
     $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_\odot}$ & Twisted Edwards group law $P_1\odot_{TE_{a,d}(\mathbb{F})}P_2$. & \cref{fig:circuit:teGroupLaw} & $7$\\
-    $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_If\text{-}Else}$ & If-Else for Twisted Edwards points. & \cref{fig:circuit:teIfElse} & $2$\\
+    $\mathfrak{C}_{TE_{a,d}(\mathbb{F})\_If\text{-}Else}$ & Switch-Case for Twisted Edwards points. & \cref{fig:circuit:teIfElse} & $2$\\
     $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(c)}$ & If-Else for Twisted Edwards points. & \cref{fig:circuit:teSwitchCase} & $2\cdot (c-1)$.\\
     \hline
     $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ & Asserts ballot validity. & \cref{fig:circuit:ballotValidity} & $\mathcal{N}(\mathfrak{C}_C^{Vot}) + \mathcal{N}(\mathfrak{C}_C^{Enc})$ (see \cref{section:results:assertCombined})\\
@@ -547,7 +547,7 @@ Here, we provide a list of all circuits we used with brief descriptions, referen
     $\mathfrak{C}_{C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}}^{Vot}$ & Asserts that a ballot $b$ computed from a ranking $r$ is part of the choice space $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$. & \cref{fig:circuit:pointlistBordaVoting} & $2\cdot cand\cdot (l+1)$\\
     $\mathfrak{C}_{C_{\text{BTS}(cand, ap, bp)}}^{Vot}$ & Asserts that a ballot $b$ computed from a ranking $r\in\{0,\dots, cand\}^{cand}$ is part of the choice space $C_{\text{BTS}(cand, ap, bp)}$. & \cref{fig:circuit:btsVoting} & $cand\cdot(2\cdot cand + cand\cdot (\lceil\log_2(cand) + 1\rceil + 1))$\\
     $\mathfrak{C}_{Compute\text{-BTS}(cand, ap, bp)}$ & Computes the ballot $b$ corresponding to a ranking $r\in\{0,\dots, cand\}^{cand}$ in \gls{bts} elections. & \cref{fig:circuit:btsComputeBallot} & $cand\cdot(2\cdot cand + cand\cdot (\lceil\log_2(cand) + 1\rceil + 1))$\\
-    \multirow{2}{4em}{$\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$} & \multirow{2}{*}{\parbox{5cm}{Asserts that a ballot $b$ is part of the choice space $C_{\text{Condorcet}(cand)}$ without utilizing the ranking or with the ranking $r\in\{0,\dots, 2^{l}-1\}^{cand}$.}} & \cref{fig:circuit:condorcetVotingNoRanking} & $cand^2 + \frac{cand\cdot(cand-1)}{2} + 2\cdot cand\cdot(cand-1)\cdot (cand-2)$\\
+    \multirow{2}{4em}{$\mathfrak{C}_{C_{\text{Condorcet}(cand)}}^{Vot}$} & \multirow{2}{*}{\parbox{5cm}{Asserts that a ballot $b$ is part of the choice space $C_{\text{Condorcet}(cand)}$ without utilizing the ranking and with the ranking $r\in\{0,\dots, 2^{l}-1\}^{cand}$ respectively.}} & \cref{fig:circuit:condorcetVotingNoRanking} & $cand^2 + \frac{cand\cdot(cand-1)}{2} + 2\cdot cand\cdot(cand-1)\cdot (cand-2)$\\
     & & \cref{fig:circuit:condorcetVotingWithRanking} & $\frac{cand\cdot (cand-1)}{2}\cdot (l+3)$\\
     $\mathfrak{C}_{Compute\text{-Condorcet}(cand)}$ & Computes the ballot $b$ corresponding to a ranking $r\in\{0,\dots, 2^l-1\}^{cand}$ in Condorcet elections. & \cref{fig:circuit:condorcetComputeBallot} & $\frac{cand\cdot (cand-1)}{2}\cdot (l+3)$\\
     $\mathfrak{C}_{C_{\text{Majority-Judgment}(cand, grades)}}^{Vot}$ & Asserts that a ballot $b$ is part of the choice space $C_{\text{Majority-Judgment}(cand, grades)}$. & \cref{fig:circuit:majorityJudgmentVoting} & $cand\cdot grades$\\
@@ -556,7 +556,7 @@ Here, we provide a list of all circuits we used with brief descriptions, referen
     $\mathfrak{C}_{Assert\text{-}3\text{-}vot}$ & Example circuit asserting that a ballot with $3$ entries conforms to Single-Vote format. & \cref{fig:circuit:exampleAssertThreeVot,fig:circuit:threeVotModularity} & $4$\\
     \hline
     %$\mathfrak{C}_{}$ && \cref{fig:circuit:} & $x$\\
-    \caption{List of every circuit with description, definition reference, Circom template name and constraint count.
+    \caption{List of every circuit with description, definition reference and constraint count.
     The constraint counts marked with * were calculated rather than generated from our implementation. 
     In these cases, we did not implement the corresponding circuit separately but only as part of other circuits.
     %We are using $\mathcal{N}(\mathfrak{C})$ to deonte the number of constraints of a circuit $\mathfrak{C}$.
@@ -607,7 +607,7 @@ The complete results are presented in \cref{fig:plots:Vot_Linear_Complete} and \
     \centering
     %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
     \includegraphics[scale=.5]{graphics/appendix/VotingComparisonQuadratic_allMetrics.pdf}
-    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales more than linearly with the candidate count.}
+    \caption{Number of constraints, proving times, $CRS$ sizes, $CRS$ generation times and verification times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales faster than linearly with the candidate count.}
     \label{fig:plots:Vot_Quadratic_Complete}
 \end{figure}
 

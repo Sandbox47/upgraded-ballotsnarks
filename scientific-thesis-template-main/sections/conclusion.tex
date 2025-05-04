@@ -1,9 +1,9 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
 
-In this work, we used the \gls{g16snark} based on the \verb|BN-254| curve to show ballot validity in different election types.
+In this work, we used the \gls{g16snark} based on the \verb|BN254| curve to show ballot validity in different election types.
 For this purpose, we implemented circuits $\mathfrak{C}_C^{Ballot\text{-}Validity}$ in Circom and conducted the proofs of ballot validity using snarkjs.
-Compared to the implementation of the same circuits by Huber et al. in libsnark, our implementation performs better in most of the election types for most of the considered metrics.
+Compared to the implementation of the same circuits by Huber et al. in libsnark, our implementation performs better in most of the election types for all of the considered metrics.
 
 The circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is composed of two circuits $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
 The former of these subcircuits asserts that a ballot in an election was encrypted correctly, and the latter asserts that the ballot is in the choice space $C$ of the election.
@@ -41,15 +41,15 @@ Furthermore, we recorded the $CRS$ generation times and the verification times o
 All of these metrics are linearly dependent on the constraint count with the verification times being almost constant as expected for \glspl{g16snark}.
 For equal numbers of constraints, our implementation needs slightly more proving time than the implementation by Huber et al.
 This means that the proving times can reach close to $7$ minutes for the maximum of $6$ million constraints possible on our test system, but remains much lower in most election types for any realistic number of candidates.
-For example, in a Single-Vote election with $25$ candidates, the proving time is roughly $21.7$ seconds in our Montgomery based implementation and roughly $10.2$ seconds in our Twisted Edwards based implementation compared to roughly $12.8$ seconds in the implementation by Huber et al. \footnote{
+For example, in a Single-Vote election with $25$ candidates, the proving time is roughly $21.7$ seconds in our Montgomery based implementation and roughly $10.2$ seconds in our Twisted Edwards based implementation compared to roughly $12.8$ seconds in the implementation by Huber et al.\footnote{
     \label{footnote:singleVoteRealisticExampleProvingTimes}
     The reduction in proving times from the Twisted Edwards implementation compared to the implementation by Huber et al. is comparatively small due to the $0.75$s of base proving time in our implementation that is not present in the implementation by Huber et al.
     Additionally, as mentioned before, our results could likely be improved by compiling the circuits with the option \UseVerb{o2}.
 }
 On the other hand, the $CRS$ sizes in our implementation are significantly less than those recorded by Huber et al.
 Note that $CRS$ generation times can reach well over an hour for the circuits with up to $6$ million constraints that we tested.
-However, this should not be a problem in practice since $CRS$ will most likely be pregenerated and downloaded with the voting software in real-world applications.
+However, this should not be a problem in practice since the $CRS$ will most likely be pregenerated and downloaded with the voting software in real-world applications.
 
 Overall, for the majority of supported election types, our Circom-based implementation allows Groth16 ballot validity proofs to be computed in a reasonable amount of time on standard PCs, even when handling many candidates.
-Our implementation based on Twisted Edwards curves uses at least $55\%$ fewer constraints, produces at least $82\%$ smaller $CRS$ and needs at least $35\%$ less proving time across all election types when compared to the implementation by Huber et al. 
+Our implementation based on Twisted Edwards curves uses at least $55\%$ fewer constraints, produces at least $82\%$ smaller $CRS$ and needs at least $35\%$ less proving time for large candidate counts across all election types when compared to the implementation by Huber et al. 
 This reduction is caused almost exclusively by our implementation of $\mathfrak{C}_C^{Enc}$ with improvements to $\mathfrak{C}_C^{Vot}$ being negligible in most cases.

@@ -28,7 +28,7 @@ This first version of the voting scheme is illustrated in \cref{fig:ExVS1}.
 \end{figure}
 
 One obvious problem with this approach is the lack of consistency of the ballots submitted by the members.
-For example, it is not clear what to do if a voter misspells the name of a candidate on their ballot. 
+For example, it is not clear what to do if a voter misspells the name of a candidate on their ballot as Derpy did in \cref{fig:ExVS1}.
 We can combat this problem by standardizing the ballot format.
 
 \section{Ballot Format}
@@ -85,7 +85,7 @@ This will be covered in detail later on.
 Unfortunately, confidentiality is still not ensured in this new scheme.
 The voting authority needs to have access to the private key of the used encryption scheme to be able to decrypt the final tally of the election.
 However, this means that a misbehaving voting authority can also decrypt individual votes. 
-One approach to combat this problem is Threshold encryption as presented by Bernhard and Warinschi in section 4.1 of \cite{aldini_cryptographic_2014}.
+One approach to combat this problem is Threshold encryption as presented by Bernhard and Warinschi in Section 4.1 of \cite{aldini_cryptographic_2014}.
 % Here, the public and private key of the encryption scheme are split into $n$ shares and distributed accross multiple authorities. 
 % In our example, the members of the club could also be the authorities.
 % Users can obtain the public key needed for encryption by combining the publicly available shares of this key using a combination function. %$comb$.
@@ -100,7 +100,7 @@ Since the voting authority is not the focus of this thesis, we will assume that 
 In that case there is no need for threshold encryption.
 Note that an honest voting authority also eliminates the need for ensuring correct decryption of the tally.
 If the voting authority was dishonest, they might just publish an invented tally that is favorable to them.
-We can combat this problem using \glspl{zkp} as presented by Bernhard and Warinschi in section 4.3 of \cite{aldini_cryptographic_2014}.
+We can combat this problem using \glspl{zkp} as presented by Bernhard and Warinschi in Section 4.3 of \cite{aldini_cryptographic_2014}.
 
 % Despite confidentiality of the ballots being ensured there remains another problem. 
 % Currently, there is no guarantee of the integrity of the computed tally.
@@ -147,7 +147,7 @@ These problems are also illustrated in \cref{fig:ExVS3Prob1}.
 To ensure that no malicious voter can submit ballots on behalf of other voters and that only $VA$ can publish the final election result, we employ digital signatures.
 Here, every voter $V$ and $VA$ have a public-private key pair $(pk_V, sk_V)$ and $(pk_{VA}, sk_{VA})$ that is different from the key pair used for encryption.
 We assume that it is public knowledge which public key belongs to which voter and which public key belongs to $VA$.
-This knowledge can be obtained using a \gls{pki} based on a hierarchy of certificate authorities mapping public keys to entities as presented in section 13.6 of \cite{katz_introduction_2021}.
+This knowledge can be obtained using a \gls{pki} based on a hierarchy of certificate authorities mapping public keys to entities as presented in Section 13.6 of \cite{katz_introduction_2021}.
 % $s_V=Sig(b'_V, sk_v)$
 % $Ver(b'_V, s_V, pk_V)$ returns $valid$
 
@@ -330,23 +330,24 @@ However, to simplify things a little, we assume that the voting authority and th
   \begin{itemize}
     \item $C$ is a choice space.
     \item $\mathcal{S}=(Gen, Enc, Dec)$ is a homomorphic encryption scheme as presented by Katz and Lindell in definitions 12.1 and 15.14 of \cite{katz_introduction_2021}.
-    We use $Enc^{aux}(x, pk)$\footnote{\label{footnote:compwiseEncDec}
-      To simplify notation, we also denote the component-wise encryption of a ballot $b\in C$ under auxiliary information $aux$ by $Enc^{aux}(b)$ and the component-wise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
-      For instance, for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux=(aux_0,\dots, aux_{l-1})$ by $Enc^{aux}(b):=(Enc^{aux_0}(b_0),\dots, Enc^{aux_{l-1}}(b_{l-1}))$.
-    } to denote the encryption of a plaintext $x$ under auxiliary information $aux$ with public key $pk$. 
-    Since $Enc$ needs to be probabilistic to achieve security, $aux$ models the randomness used for the encryption of $x$.
+    We use $Enc^{aux^{Enc}}(x, pk)$\footnote{\label{footnote:compwiseEncDec}
+      To simplify notation, we also denote the component-wise encryption of a ballot $b\in C$ under auxiliary information $aux^{Enc}$ by $Enc^{aux^{Enc}}(b)$ and the component-wise decryption of an encrypted tally $b'_{total}$ by $Dec(b'_{total}, sk)$.
+      For instance, for $C=\{0,\dots, m-1\}^l$, we encrypt a ballot $b=(b_0,\dots, b_{l-1})$ under $aux^{Enc}=(aux^{Enc}_0,\dots, aux^{Enc}_{l-1})$ by $Enc^{aux^{Enc}}(b):=(Enc^{aux^{Enc}_0}(b_0),\dots, Enc^{aux^{Enc}_{l-1}}(b_{l-1}))$.
+    } to denote the encryption of a plaintext $x$ under auxiliary information $aux^{Enc}$ with public key $pk$. 
+    Since $Enc$ needs to be probabilistic to achieve security, $aux^{Enc}$ models the randomness used for the encryption of $x$.
     Similarly, we use $Dec(y, sk)$\cref{footnote:compwiseEncDec} to denote the deterministic decryption of a ciphertext $y$ with the secret key $sk$.
     % For instance, $aux$ can include the randomness used in the non-deterministic encryption.
     % Here, $C$ must be a subset of the message space $\mathcal{M}_{pk}$ for any public key $pk$ generated by $Gen$.
     
-    % \item $\mathcal{M}=(Gen, Sign, Vrfy)$ is a digital signature scheme as defined by Katz and Lindell in section 13 of \cite{katz_introduction_2021}.
+    % \item $\mathcal{M}=(Gen, Sign, Vrfy)$ is a digital signature scheme as defined by Katz and Lindell in Section 13 of \cite{katz_introduction_2021}.
     % We use $Sign(m, sk)$ to denote the signature of a message $m$ under the secret key $sk$.
     % Similarly, we denote the verification of the signature $s$ for the message $m$ with the public key $pk$ by $Vrfy(m, s, pk)$.
     \item $R_C$ is a relation indicating ballot validity.
-    To do so, $R_C$ relates public instances $(pk, b')$ and private witnesses $(aux, b)$.
-    Here, $R_C((pk, b'), (aux, b))=1$ iff $b\in C$, $pk$ is a public key of $\mathcal{S}$, and $\mathcal{S}.Enc^{aux}(b, pk)=b'$. 
+    To do so, $R_C$ relates public instances $(pk, b')$ and private witnesses $(aux, b)$ with $aux=(aux^{Vot}, aux^{Enc})$.
+    Here, $R_C((pk, b'), (aux, b))=1$ iff $b\in C$, $pk$ is a public key of $\mathcal{S}$, and $\mathcal{S}.Enc^{aux^{Enc}}(b, pk)=b'$.
+    For some election types, $aux^{Vot}$ is used by the voter to compute $b$, and we can use $aux^{Vot}$ to check $b\in C$ more easily.
     Otherwise, $R_C$ maps to $0$.
-    \item $ZPS(R_C)$ is a zero-knowledge proof system used to prove ballot validity as defined by the relation $R_C$ above.
+    \item $ZPS(R_C)$ is a zero-knowledge proof system used to prove ballot validity as defined by the relation $R_C$ above.%
     %Here, $Prove(CRS, (pk, b'), (aux, b))$ uses a plain ballot $b$ and the auxiliary information from the encryption of $b$ as the private witness as well as a public key $pk$ and the encrypted ballot $b'$ as an instance.
     %The proof $\pi$ created by $Prove(CRS, (pk, b'), (aux, b))$ then shows that the ballot $b$ a voter chose is in $C$ and that $Enc^{aux}(b, pk)=b'$.
     \footnote{\label{footnote:zkpKnowVsExists}
@@ -410,9 +411,11 @@ However, to simplify things a little, we assume that the voting authority and th
   \begin{algorithmic}
   \Procedure{$Vote$}{}
     \State $(C, ZPS, CRS, \mathcal{S}, pk, n)\gets PBB.obtain(setup)$
+    \State Choose auxiliary information $aux^{Vot}$ needed for computing the ballot.
     \State Choose ballot $b\in C$.
-    \State Choose auxiliary information $aux$ needed for encryption.
-    \State $b'\probgets \mathcal{S}.Enc^{aux}(b, pk)$
+    \State Choose auxiliary information $aux^{Enc}$ needed for encryption.
+    \State $b'\probgets \mathcal{S}.Enc^{aux^{Enc}}(b, pk)$
+    \State $aux\gets(aux^{Vot}, aux^{Enc})$
     \State $\pi\gets ZPS.Prove(CRS, (pk, b'), (aux, b))$
     \State $PBB.publish(id_V, (b', \pi))$
   \EndProcedure

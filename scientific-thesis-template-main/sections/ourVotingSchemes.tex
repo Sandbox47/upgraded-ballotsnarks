@@ -4,7 +4,7 @@
 The voting schemes we use, are built from the concepts introduced in the Chapters \ref{chap:gpzkp}, \ref{chap:elGamalEncryption} and \ref{chap:ellipticCurves}.
 Recall, that we introduced a voting scheme as the following seven-tuple in \cref{chap:votingschemes}:
 \begin{align*}
-    VS=(C, \mathcal{S}, ZPS(R_C), Setup, \{V_0, \dots, V_{n-1}, VA\})
+    VS=(C, \mathcal{S}, ZPS(R_C), PBB, Setup, \{V_0, \dots, V_{n-1}\}, VA)
 \end{align*}
 We employ \gls{eeg} based on either a Montgomery Curve or its Twisted Edwards equivalent as the encryption scheme $\mathcal{S}$.
 Furthermore, we use a \gls{g16snark} as the \gls{zps} to ensure ballot validity.
@@ -39,7 +39,7 @@ We can combine $r_C^{Vot}$ and $r_C^{Enc}$ into the function $r_C^{Ballot\text{-
     \begin{algorithmic}
     \Procedure{$r_C^{Ballot\text{-}Validity}$}{$pk, b, aux, b'$}
         \State $(aux^{Vot}, aux^{Enc})\gets aux$
-        \State $r_C^{Vot}(b)$ \Comment Assert $b\in C$.
+        \State $r_C^{Vot}(b, aux^{Vot})$ \Comment Assert $b\in C$.
         \State $r_C^{Enc}(pk, b, aux^{Enc}, b')$ \Comment Assert $\mathcal{S}.Enc^{aux^{Enc}}(b)=b'$.
     \EndProcedure
     \end{algorithmic}
@@ -71,8 +71,7 @@ Then, $R_C=DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$.
 Assume, we have a ballot validity relation $R_C$ as introduced in \cref{chap:votingschemes}.
 Moreover, assume that $R_C$ is a decomposition relation $DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$ for the algebraic relation $r_C^{Ballot\text{-}Validity}$ as previously (\cref{section:ourVotingSchemes:ballotValidity}).
 Then, we use the \gls{g16snark} $GSNARK(R_C)=(Setup, Prove, Verify)$ based on parameters $param=(\mathbb{G}_1, \mathbb{G}_2, e(\cdot, \cdot), g_1, g_2, \mathbb{F}_q)$ as $ZPS(R_C)$.
-We use the Barreto-Naehrig curve \verb|BN254| \cite{jonathan_wang_bn254_2024} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.
-\footnote{
+We use the Barreto-Naehrig curve \verb|BN254| \cite{jonathan_wang_bn254_2024} to instantiate $\mathbb{G}_1$ and $\mathbb{G}_2$.\footnote{
     \label{footnote:bn254IsSW}
     Note that \UseVerb{BN254} is a Short Weierstrass curve and therefore of a curve type that was not introduced in \cref{chap:ellipticCurves}.
 }
@@ -92,6 +91,7 @@ Furthermore, we choose an elliptic curve as the group $\mathbb{G}$ the encryptio
 As established in \cref{section:ourVotingSchemes:zps}, our $GSNARK(R_C)$ requires that $R_C$ operates over $\mathbb{F}_q$ with 
 \begin{align*}
     \scriptstyle q = 21888242871839275222246405745257275088548364400416034343698204186575808495617\text{.}
+    %                21888242871839275222246405745257275088696311157297823662689037894645226208583
 \end{align*}
 Therefore, as the elliptic curve $\mathbb{G}$ used in $\mathcal{S}$, we need to choose one that operates over elements of $\mathbb{F}_q$.
 Here, we implement two options: 
@@ -120,7 +120,7 @@ The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illus
     %The definition of $\mathfrak{C}_C^{Enc}$ given here is for vector choice spaces ($\exists i: C\subseteq \mathbb{F}^i$).
     The definition of $\mathfrak{C}_C^{Enc}$ given here is for a choice space $C\subseteq \mathbb{F}$.
     For vector choice spaces ($\exists i: C\subseteq \mathbb{F}^i$), we have $i$ entries in $b$ and $aux^{Enc}$, and $i$ tuples in $b'$.
-    Then, $\mathfrak{C}_C^{Enc}$ needs $i$ instantiations of $\mathcal{S}:=EEG(M_{126932,1}(\mathbb{F}_qP^2))$ or $\mathcal{S}:=PPEEG(TE_{126934, 126930}(\mathbb{F}_qP^2))$ respectively to assert correct encryption of all entries.
+    Then, $\mathfrak{C}_C^{Enc}$ needs $i$ instantiations of $\mathfrak{C}_{EEG(M_{126932,1}(\mathbb{F}_qP^2)).Enc}$ or $\mathfrak{C}_{PPEEG(TE_{126934, 126930}(\mathbb{F}_qP^2)).Enc}$ respectively to assert correct encryption of all entries.
     The definition for matrix choice spaces ($\exists i, j\in\mathbb{N}: C\subseteq \mathbb{F}^{i\times j}$) is analog.
 }
 
@@ -147,10 +147,10 @@ The corresponding instantiations of the circuit $\mathfrak{C}_C^{Enc}$ are illus
 
 \section{Choice Spaces $C$}
 \label{section:ourVotingSchemes:choiceSpaces}
-The choice space $C$ in a voting system $VS(C)$ only influences the relation $R_C$ and by extension the \gls{zps} instantiation, but not any other part of the voting scheme.
+The choice space $C$ in a voting system $VS(C)=(C, \mathcal{S}, ZPS(R_C), PBB, Setup, \{V_0, \dots, V_{n-1}\}, VA)$ only influences the relation $R_C$ and by extension the \gls{zps} instantiation, but not any other part of the voting scheme.
 As described in \cref{section:ourVotingSchemes:ballotValidity}, there is an algebraic function $r_C$ and a function $d_p$ for which $R_C=DR(QAP(R1CS(r_C^{Ballot\text{-}Validity})), d_p)$.
 Here, $r_C^{Ballot\text{-}Validity}$ can be split into a part $r_C^{Enc}$ for ensuring correct encryption and a part $r_C^{Vot}$ for ensuring that a ballot $b$ is part of $C$ (\cref{section:ourVotingSchemes:encryption}).
-Since encryption is done component-wise, $r_C^{Enc}$ is only influenced by the dimensions of $C$ \cref{footnote:encryptionComponentwiseCircuit}.
+Since encryption is done component-wise, $r_C^{Enc}$ is only influenced by the dimensions of $C$.\cref{footnote:encryptionComponentwiseCircuit}
 Therefore, to instantiate our voting system $VS(C)$ for a new election type, we only need to define the choice space $C$ and the corresponding algebraic function $r_C^{Vot}$ for this election type.
 
 As in \cite{huber_zk-snarks_2025}, we cover a variety of election types ranging from simple Single-Vote to more complicated ranking-based types like Condorcet.
@@ -248,7 +248,7 @@ In contrast to Single-Vote, each voter can allocate up to a maximum of $max$ vot
 
 We present two modifications of Multi-Vote that introduce novel choice spaces: Line-Vote and \gls{mwr}.
 Both of these were introduced by Huber et al. \cite{huber_zk-snarks_2025}.
-Therefore, there are no specialized \gls{zkp} for these election types yet and developing them would be relatively complicated.
+Therefore, there are no specialized \glspl{zkp} for these election types yet and developing them would be relatively complicated.
 On the other hand, our voting system can be easily adapted to Line-Vote and \gls{mwr}.
 
 \subsubsection{Line-Vote}
@@ -258,11 +258,11 @@ As in Multi-Vote with $t=1$, each voter can give at most one vote to each of the
 The total amount of votes submitted by a voter is only limited by the number of options.
 However, as an additional restriction in Line-Vote, we require that all $1$-votes form a continuous line.
 
-Therefore, we can also interpret a Line-Vote system $VS_{C_{Line(cand)}}$ as the Multi-Vote system $VS_{C_{Multi(cand, cand, 1)}}$ with additionally enforcing that all $1$-votes form a continuous line.
+Therefore, we can also interpret a Line-Vote system $VS(C_{Line(cand)})$ as the Multi-Vote system $VS(C_{Multi(cand, cand, 1)})$ with additionally enforcing that all $1$-votes form a continuous line.
 \footnote{
     \label{footnote:lineVoteAsMultiVoteInefficient}
-    Note, that using $\mathfrak{C}_{C_{Multi(cand, cand, 1)}}^{Vot}$ in the definition of $\mathfrak{C}_{C_{Line(cand)}}$ would be inefficient.
-    The assertions that the individual votes are $\leq 1$ can be replaced with bit assertions as we did in our implementation of $\mathfrak{C}_{C_{Line(cand)}}$.
+    Note, that using $\mathfrak{C}_{C_{Multi(cand, cand, 1)}}^{Vot}$ in the definition of $\mathfrak{C}_{C_{Line(cand)}}^{Vot}$ would be inefficient.
+    The assertions that the individual votes are $\leq 1$ can be replaced with bit assertions as we did in our implementation of $\mathfrak{C}_{C_{Line(cand)}}^{Vot}$.
 }
 
 \begin{definition}[Line-Vote System]
@@ -357,11 +357,11 @@ This concept is defined formally in \cref{def:ranking}.
 
 Note that the secret ranking is not part of the ballot, but only the corresponding points.
 However, the ranking can sometimes greatly accelerate the choice space membership assertion.
-Therefore, it is provided to the circuit $\mathfrak{C}_C^{Vot}$ as the auxiliary voting information $aux_{Vot}$.
+Therefore, it is provided to the circuit $\mathfrak{C}_C^{Vot}$ as the auxiliary voting information $aux^{Vot}$.
 
 \begin{definition}[Ranking]
     \label{def:ranking}
-    Let $cand$ be the number of candidates in a voting system operating on the field $\mathbb{F}$
+    Let $cand$ be the number of candidates in a voting system operating on the field $\mathbb{F}$.
     Then, a ranking in the same voting system is a list $r=(r_0,\dots, r_{cand-1})\in\mathbb{F}^{cand}$ with the following meaning:\\
     $\forall i, j\in\{0,\dots cand-1\}$:
     \begin{itemize}
@@ -479,8 +479,8 @@ Using this ranking, the candidates are then assigned a fixed number of points fo
     \Procedure{$r_{Compute\text{-BTS}(cand, ap, bp)}$}{$r$}
         \State $(r_0,\dots, r_{cand-1}):=r$
         \For{$i\in\{0,\dots, cand-1\}$}
-            \State $n_{rw}\gets r_{Count\text{-}Greater(cand)}(r, r_i)$ \Comment Number of candidates ranked worse than candidate $i$
-            \State $n_{rs}\gets r_{Count\text{-}Equal(cand)}(r, r_i)$ \Comment Number of candidates ranked the same as candidate $i$
+            \State $n_{rw}\gets r_{Count\text{-}Greater(cand)}(r, r_i)$ \Comment \# candidates ranked worse than candidate $i$
+            \State $n_{rs}\gets r_{Count\text{-}Equal(cand)}(r, r_i)$ \Comment \# candidates ranked the same as candidate $i$
             \State $b'_i\gets ap\cdot n_{rw} + bp\cdot (n_{rs} - 1)$ \Comment Subtract $bp$ points for candidate $i$ themself
         \EndFor
         \State $b'\gets (b'_0,\dots, b'_{cand-1})$
@@ -511,7 +511,7 @@ Therefore, we implement this variant as well.
 
 \begin{definition}[Condorcet System]
     Let $cand\in\mathbb{N}$ be the number of candidates, let $\mathbb{F}_q$ be a field.
-    Then, the corresponding \gls{bts} choice space is defined as follows:
+    Then, the corresponding Condorcet choice space is defined as follows:
     {\setlength{\mathindent}{2pt}
     \begin{align*}
         C_{\text{Condorcet}(cand)}=& \left\{b=(b_{i,j})_{i,j\in\{0,\dots, cand-1\}}\in \{0,1\}^{cand\times cand}\Bigg| \right.\\
@@ -527,7 +527,7 @@ Therefore, we implement this variant as well.
         We assert that all entries of the submitted ballot $b$ are bits and that for $i\neq j$ also $b_{i,j}+b_{j,i}$ is a bit.
         This covers the cases \glqq$r_i>r_j$\grqq\ and \glqq$r_j=r_i$\grqq\ from the choice space definition. 
         Additionally, we need to show that $b$ belongs to a ranking $r$ in which transitivity holds.
-        We can achieve this by computing a check matrix $a=(a_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=(1-b_{i,j})_{i,j\in\{0,\dots cand-1\}}$ and asserting that $a_{i,j}\cdot a_{j,k}\cdot (1-b_{i,k})=0$ for all triples of distinct values $(i,j,k)\in\{0,\dots, cand-1\}^3$ \cite{huber_zk-snarks_2025}.
+        We can achieve this by computing a check matrix $a=(a_{i,j})_{i,j\in\{0,\dots, cand-1\}}:=(1-b_{i,j})_{i,j\in\{0,\dots cand-1\}}$ and asserting that $a_{i,j}\cdot a_{j,k}\cdot (1-a_{i,k})=0$ for all triples of distinct values $(i,j,k)\in\{0,\dots, cand-1\}^3$ \cite{huber_zk-snarks_2025}.
         \item Utilizing the ranking (\cref{alg:condorcetVotingWithRanking}, \cref{fig:circuit:condorcetVotingWithRanking}): 
         We compute a ballot $b'$ from the ranking $r$ using the function $r_{Compute\text{-Condorcet}(cand)}:\mathbb{F}_q^{cand}\to\mathbb{F}_q^{cand\times cand}, r\mapsto b'$ (\cref{alg:condorcetComputeBallot}) and corresponding circuit $\mathfrak{C}_{Compute\text{-Condorcet}(cand)}$ (\cref{fig:circuit:condorcetComputeBallot}).
         Then, we assert that the computed ballot $b'$ equals the submitted ballot $b$.
