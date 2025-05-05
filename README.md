@@ -11,4 +11,6 @@ We support the following election types:
 - Condorcet
 - Majority Judgment
 
-This repository is the accompanying implementation to the bachelor thesis "Comparative Analysis of zk-SNARK Instantiations for Ensuring Ballot Validity" by Felix Röhr. This work is also included in this repository as `Thesis_Roehr.pdf`.
+This repository is the accompanying implementation to the bachelor thesis "Comparative Analysis of zk-SNARK Instantiations for Ensuring Ballot Validity" by Felix Röhr. This work is also included here as `Thesis_Roehr.pdf`.
+
+To install the required dependencies and benchmark our implementation, please follow the instructions in `QuickStart.md`.
