@@ -11,8 +11,25 @@ import re
 os.environ["NODE_OPTIONS"] = "--max-old-space-size=16384"
 
 # Ptau file
-PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
+def get_largest_ptau_file(folder_path):
+    pattern = re.compile(r"^powersOfTau28_hez_final_(\d+)\.ptau$")
+    max_n = -1
+    max_file = None
+
+    for file_name in os.listdir(folder_path):
+        match = pattern.match(file_name)
+        if match:
+            n = int(match.group(1))
+            if n > max_n:
+                max_n = n
+                max_file = file_name
+
+    return max_file
+
+# PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
 # PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
+PTAU_FILE = get_largest_ptau_file("../scripts/ptau/")
+print(f"Using ptau file: {PTAU_FILE}")
 
 BITS_RAND=255
 
@@ -104,7 +121,7 @@ def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n
 
     file_header = f"""
 pragma circom 2.2.1;
-include \"../../../../../voting/{election_type}.circom\";
+include \"../../../../../circom/voting/{election_type}.circom\";
     """
 
     template_method_signature = f"""
