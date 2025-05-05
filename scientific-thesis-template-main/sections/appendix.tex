@@ -90,7 +90,7 @@ Using this, we can extend $PrecomputedPowersFastExp$ (\cref{alg:fastExpPrecomput
     Here, $k$ is provided as a representation to base $base$ of length $l$: $\left(k_{i,j}\right)_{i\in\{0,\dots, l-1\},j\in\{0,\dots, base-1\}}\in\{0,1\}^{l\times base}$ with $k=\sum_{i=0}^{l-1}\sum_{j=0}^{base-1} k_{i,j}\cdot j\cdot base^{i}$ and $\forall i\in\{0,\dots, l-1\}\exists! j:k_{i,j}=1$.
     Furthermore, $\left(g^{j\cdot base^i}\right)_{i\in\{0,\dots, l-1\}, j\in\{0,\dots, base-1\}}$ are precomputed powers of $g$.
     Moreover, we use $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ as a building block to select which power of $g$ to multiply with the current intermediate result.
-    $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ depends on the choice of $\mathbb{G}$ and is defined for Twisted Edwards curves later on.
+    $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$ depends on the choice of $\mathbb{G}$ and is defined for Twisted Edwards curves later on (\cref{fig:circuit:teSwitchCase}).
     }
     \label{fig:circuit:ppfexpArbBase}
 \end{figure}
@@ -102,7 +102,7 @@ For base $2$, $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ works very similar to $
 The only differences are that we provide $k$ as a list of indicator arrays for $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$ whereas we provide it as a number to $\mathfrak{C}_{\mathbb{G}\_PPFExp}$ and that we switch the order of the group law application and the selection of the result in each iteration.
 
 Next, we want to determine the optimal base $base$ that yields the smallest constraint count for $\mathfrak{C}_{\mathbb{G}\_PPFExp_{base}}$.
-For this purpose, we introduce a cost function $cost_\mathbb{G}(base)$ which calculates the number of constraints per "Bit-Equivalent"\ $\log_{base}(2)$.
+For this purpose, we introduce a cost function $cost_\mathbb{G}(base)$ which calculates the number of constraints per ``Bit-Equivalent''\ $\log_{base}(2)$.
 We employ this normalization, since a number that can be represented with $255$ bits can also be represented with $\Big\lceil \frac{255}{\log_2(base)}\Big\rceil$ digits in base $base$.
 For instance, we need $\Big\lceil \frac{255}{\log_2(5)}\Big\rceil=110$ digits to represent a $255$ bit number in base $5$.
 Furthermore, the cost is influenced by the number of constraint needed for the group law $\mathfrak{C}_\mathbb{G}\_\odot$ and the group switch case $\mathfrak{C}_{\mathbb{G}\_Switch\text{-}Case(base)}$.
@@ -274,6 +274,7 @@ and the corresponding circuit $\mathfrak{C}_{Switch\text{-}Case(c,l)}$ \cref{fig
     \label{fig:circuit:switchCaseGen}
 \end{figure}
 
+\newpage
 \subsection{$Safe\text{-}Division$}
 \label{section:appendix:safeDivision}
 We introduced the circuit $\mathfrak{C}_{Division}$ to compute $\frac{x}{y}$ for two inputs $x$ and $y$ earlier (\cref{fig:circuit:division}).
@@ -438,6 +439,7 @@ For this purpose, we use \begin{align*}
 \end{align*}
 and the corresponding circuits $\mathfrak{C}_{Count\text{-}Equal}$, $\mathfrak{C}_{Count\text{-}Less}$ and $\mathfrak{C}_{Count\text{-}Greater}$ (\cref{fig:circuit:counting}).
 Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text{-}Greater(l)}$ count how many values in a list of length $l$ have the desired relation with a test value $test$.
+\newpage
 
 \begin{figure}[h]
     \centering
@@ -472,6 +474,7 @@ Here, $r_{Count\text{-}Equal(l)}$, $r_{Count\text{-}Less(l)}$ and $r_{Count\text
     \label{fig:circuit:counting}
 \end{figure}
 
+\newpage
 \section{Complete Circuit List}
 In this work, we combine many circuits to create $\mathfrak{C}_C^{Ballot\text{-}Validity}$ which is the basis for all ballot validity proofs.
 Here, we provide a list of all circuits we used with brief descriptions, references to where they are defined and constraint counts.

@@ -70,11 +70,11 @@ We compare our findings to the results obtained by Huber et al. using libsnark \
     However, in practical applications of voting schemes, the $CRS$ for $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ would likely be included in the voting software or be publicly accessible.
     Specifically, such a software would either include multiple $CRS$ for some selected election types with specified parameters or publish this information to their \gls{pbb}.
     Then, the $CRS$ generation times are irrelevant.
-} \footnote{
+}\footnote{
     \label{footnote:plottingMethod}
     We plot our results and the result by Huber et al. as the individual data points recorded.
     Additionally, we use regression polynomials of suitable degrees to show overall trends.
-} \footnote{
+}\footnote{
     \label{footnote:resultsFromImplementation}
     Note that the constraint counts we present for the implementation by Huber et al. were obtained from their implementation.
     While this matches the constraints they reported in their work for the most part, some constraint counts are slightly different.
@@ -90,7 +90,7 @@ However, even with a $6$ million constraint limit, proving times reach $400$s an
 
 \section{Asserting Correct Encryption with $\mathfrak{C}_C^{Enc}$}
 \label{section:results:assertEncryption}
-The circuit $\mathfrak{C}_C^{Enc}$ is used to assert that a ballot $b$ corresponds to an encrypted ballot $b'$ where both $b$ and $b'$ are provided as inputs to the circuit (\cref{section:ourVotingSchemes:ballotValidity}).
+The circuit $\mathfrak{C}_C^{Enc}$ is used to assert that a ballot $b$ corresponds to an encrypted ballot $b'$ where both $b$ and $b'$ are provided as inputs to the circuit along with the randomness $aux^{Enc}$ and the public key $pk$ used in the encryption of $b$ (\cref{section:ourVotingSchemes:ballotValidity}).
 
 In their approach, Huber et al. use an \gls{eeg} encryption scheme based on the Montgomery curve $M_{126932, 1}(\mathbb{F}_qP^2)$ to implement $\mathfrak{C}_{C}^{Enc}$ in libsnark \cite{huber_zk-snarks_2025}.
 We implement the same option in Circom (\cref{fig:circuit:encMEEG}).
@@ -189,14 +189,6 @@ However, we also tested our implementation with up to $250$ bits per ballot entr
 %     \caption{Number of constraints, proving times and $CRS$ sizes needed for the \gls{g16snark} over for $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves in Circom and using Montgomery curves in libsnark.\cref{footnote:noCompForCRSGenerationTimes}}
 %     \label{fig:plots:Circom_libsnark_Enc}
 % \end{figure}
-
-\begin{figure}[h]
-    \centering
-    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/encryption/Comparison/EncryptionComparison_allMetrics.pdf}
-    \includegraphics[scale=.5]{graphics/results/EncryptionComparison_allMetrics.pdf}
-    \caption{Number of constraints, proving times and $CRS$ sizes needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves in Circom and using Montgomery curves in libsnark.\cref{footnote:noCompForCRSGenerationTimes}}
-    \label{fig:plots:Circom_libsnark_Enc}
-\end{figure}
 
 Due to the component-wise encryption of ballots, the constraint count scales perfectly linear with the number of entries $m$ in a ballot.
 Note that the encryption of an individual ballot entry $v$ using \gls{eeg} or \gls{ppeeg} encryption is dominated by the three group exponentiations $g^r$, $g^v$ and $pk^r$, where $r\probgets \{0,\dots, q\}$.
@@ -310,6 +302,15 @@ Instead, one option is that the election organizers generate the $CRS$ before th
 % This which is infeasible to compute for an individual voter. 
 In this case, high $CRS$ generation times are not a problem.\cref{footnote:noCompForCRSGenerationTimes}
 
+\begin{figure}[!h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/encryption/Comparison/EncryptionComparison_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/results/EncryptionComparison_allMetrics.pdf}
+    \caption{Number of constraints, proving times and $CRS$ sizes needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Enc}$ using Montgomery and Twisted Edwards curves in Circom and using Montgomery curves in libsnark.\cref{footnote:noCompForCRSGenerationTimes}}
+    \label{fig:plots:Circom_libsnark_Enc}
+\end{figure}
+
+\newpage
 \section{Asserting Choice Space Membership with $\mathfrak{C}_C^{Vot}$}
 \label{section:results:assertVoting}
 The circuit $\mathbb{C}_C^{Vot}$ is used to assert that a ballot $b$ is part of the choice space $C$ (\cref{section:ourVotingSchemes:ballotValidity}).
@@ -339,15 +340,6 @@ Note that we will not compare the Proving times, $CRS$ size and $CRS$ generation
 The connection of the different metrics to the constraint count was discussed in detail in \cref{section:results:assertEncryption}.
 However, the remaining results are also presented in \cref{section:appendix:votResults}.
 
-
-\begin{figure}[h]
-    \centering
-    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/linear/VotingComparisonLinear_allMetrics.pdf}
-    \includegraphics[scale=.5]{graphics/results/VotingComparisonLinear_allMetrics.pdf}
-    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
-    \label{fig:plots:Circom_libsnark_Vot_Linear}
-\end{figure}
-
 \begin{table}[h]
     \centering
     \begin{tabular}{|l|c|c|}
@@ -373,7 +365,6 @@ However, the remaining results are also presented in \cref{section:appendix:votR
     \caption{Relative number of constraints needed by our implementation of $\mathfrak{C}_{C}^{Vot}$ compared to the implementation by Huber et al.}
     \label{tab:votingResults}
 \end{table}
-
 
 % \begin{figure}[h]
 %     \centering
@@ -410,16 +401,6 @@ However, the remaining results are also presented in \cref{section:appendix:votR
 %     \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over for $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark, where $C$ is a choice space for which the contraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
 %     \label{fig:plots:Circom_libsnark_Vot_Linear}
 % \end{figure}
-
-\begin{figure}[h]
-    \centering
-    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
-    \includegraphics[scale=.5]{graphics/results/VotingComparisonQuadratic_allMetrics.pdf}
-    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales quadratically with the candidate count.}
-    \label{fig:plots:Circom_libsnark_Vot_Quadratic}
-\end{figure}
-
-
 % \begin{figure}[h]
 %     \centering
 %     \begin{subfigure}{\textwidth}
@@ -461,7 +442,7 @@ This is caused by the implementations being exactly the same as well.
 
 For Pointlist-Borda elections, our implementation uses roughly half the number of constraints compared to the implementation by Huber et al.
 Since our implementation is very similar to that of Huber et al., we attribute this difference in constraints to the differences between Circom and libsnark.
-When computing the \gls{r1cs} for a circuit, these circuit languages \glqq flatten\grqq\ the circuit.
+When computing the \gls{r1cs} for a circuit, these circuit languages ``flatten''\ the circuit.
 In this process, a circuit can be changed to reduce the number of constraints in the \gls{r1cs} without affecting the semantics of the circuit.
 Therefore, one circuit may produce different constraint counts in Circom and in libsnark.
 
@@ -475,11 +456,11 @@ We attribute the reduction of constraints mostly to this difference in implement
 For the election type Majority-Judgment, we report a reduction of constraints by about $14.3\%$ if we use a constant number of grades and therefore produce a linear amount of constraints.
 However, this improvement becomes negligible when using as many grades as there are candidates and therefore quadratically many constraints.
 Our implementation of $\mathfrak{C}_{C_{Majority\text{-}Judgment}(cand, grades)}$ is equivalent to that of Huber et al. in libsnark.
-Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq\ procedures of Circom and libsnark, the same as for Pointlist-Borda elections.
+Therefore, we attribute the difference in constraints to the differences in the ``flattening''\ procedures of Circom and libsnark, the same as for Pointlist-Borda elections.
 
 Finally, for Condorcet elections, we report a reduction of constraints of about half when not using the ranking.
 Our implementation of $\mathfrak{C}_{C_{Condorcet(cand)}}^{Vot}$ is equivalent to that of Huber et al. in libsnark from a constraint perspective.
-Therefore, we attribute the difference in constraints to the differences in the \glqq flattening\grqq\ procedures of Circom and libsnark, the same as for Pointlist-Borda elections and Majority-Judgment.
+Therefore, we attribute the difference in constraints to the differences in the ``flattening''\ procedures of Circom and libsnark, the same as for Pointlist-Borda elections and Majority-Judgment.
 However, in both cases the constraint count is cubic in the number of candidates.
 To improve on this, we introduced a version of Condorcet that uses the voting (\cref{subsection:ourVotingSchemes:condorcet}).
 Here, we only need quadratically many constraints.
@@ -490,6 +471,22 @@ This offset is not present in the implementation by Huber et al. in libsnark.
 Similarly, there is also an offset in the $CRS$ generation times of about $0.75$s in our implementation.
 We attribute this to differences between the implementation of the setup and proving algorithm in snarkjs and in libsnark.
 
+\begin{figure}[!h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/linear/VotingComparisonLinear_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/results/VotingComparisonLinear_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales linearly with the candidate count.}
+    \label{fig:plots:Circom_libsnark_Vot_Linear}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/voting/Comparison/quadratic/VotingComparisonQuadratic_allMetrics.pdf}
+    \includegraphics[scale=.5]{graphics/results/VotingComparisonQuadratic_allMetrics.pdf}
+    \caption{Number of constraints, proving times, $CRS$ sizes and $CRS$ generation times needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Vot}$ in Circom and in libsnark where $C$ is a choice space for which the constraint count of $\mathfrak{C}_C^{Vot}$ scales quadratically with the candidate count.}
+    \label{fig:plots:Circom_libsnark_Vot_Quadratic}
+\end{figure}
+
+\cleardoublepage
 \section{Asserting Ballot Validity with $\mathfrak{C}_C^{Ballot\text{-}Validity}$}
 \label{section:results:assertCombined}
 The circuit $\mathfrak{C}_C^{Ballot\text{-}Validity}$ combines $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$ for complete proofs of ballot validity (\cref{section:ourVotingSchemes:ballotValidity}).
@@ -500,36 +497,6 @@ Here, we show our results separately for every election type or family of electi
 Additionally, we only show the candidate count here and omit the results for proving times, $CRS$ sizes and $CRS$ generation times.
 As mentioned previously, these metrics depend directly on the candidate count and the connection between them has been explored in \cref{section:results:assertEncryption} in detail.
 However, the remaining results are also presented in \cref{section:appendix:combinedResults}.
-
-\begin{figure}[h]
-    \centering
-    \begin{minipage}{.48\textwidth}
-        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
-        \includegraphics[scale=.5]{graphics/results/CombinedComparisonBorda_allMetrics.pdf}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{.48\textwidth}
-        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Multi/CombinedComparisonMulti_allMetrics.pdf}
-        \includegraphics[scale=.5]{graphics/results/CombinedComparisonMulti_allMetrics.pdf}
-    \end{minipage}
-    \\
-    \begin{minipage}{.48\textwidth}
-        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Single/CombinedComparisonSingle_allMetrics.pdf}
-        \includegraphics[scale=.5]{graphics/results/CombinedComparisonSingle_allMetrics.pdf}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{.48\textwidth}
-        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Condorcet/CombinedComparisonCondorcet_allMetrics.pdf}
-        \includegraphics[scale=.5]{graphics/results/CombinedComparisonCondorcet_allMetrics.pdf}
-    \end{minipage}
-    \\
-    \begin{minipage}{.48\textwidth}
-        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/MajorityJudgment/CombinedComparisonMajorityJudgment_allMetrics.pdf}
-        \includegraphics[scale=.5]{graphics/results/CombinedComparisonMajorityJudgment_allMetrics.pdf}
-    \end{minipage}
-    \caption{Number of constraints needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark.}
-    \label{fig:plots:Combined}
-\end{figure}
 
 As presented previously, the circuit $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ is a combination of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
 Therefore, the constraint count of $\mathfrak{C}_C^{Ballot\text{-}Validity}$ is always the sum of the constraint counts of $\mathfrak{C}_C^{Enc}$ and $\mathfrak{C}_C^{Vot}$.
@@ -587,7 +554,7 @@ The results of this are shown in \cref{tab:combinedResults}.
     \end{tabular}
     \renewcommand{\arraystretch}{1.0}
     \caption{Constraints needed by $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ per ballot entry.
-    For every entry in the \glqq Constraints per Ballot Entry\grqq\ column, we also show which portion of those constraints is needed for $\mathfrak{C}_C^{Enc}$ on the left and which portion is needed for $\mathfrak{C}_C^{Vot}$ on the right.
+    For every entry in the ``Constraints per Ballot Entry''\ column, we also show which portion of those constraints is needed for $\mathfrak{C}_C^{Enc}$ on the left and which portion is needed for $\mathfrak{C}_C^{Vot}$ on the right.
     Note that we use $C_{PB}$ to denote $C_{Pointlist\text{-}Borda}$ and $C_{Cond.}$ to denote $C_{Condorcet}$.\\
     % *For \gls{mwr}, the constraint count per ballot entry is theoretical since the result obtained by Huber et al. was $11865$ (calculated from the result for $300$ candidates).
     % This does not fit together with the $12216$ constraints we need to purely encrypt a ballot entry.
@@ -622,6 +589,36 @@ From \cref{tab:combinedResults} we can conclude that the number of constraints f
 For the election types where this is not the case, $\mathfrak{C}_C^{Vot}$ needs asymptotically more constraints than $\mathfrak{C}_C^{Enc}$, but this behavior does not take effect for any realistic number of candidates $cand$.
 Additionally, the dominance in constraint count of $\mathfrak{C}_C^{Enc}$ compared to $\mathfrak{C}_C^{Vot}$ is less pronounced for the implementation with Twisted Edwards curves.
 The reason for this is the lower constraint count for $\mathfrak{C}_C^{Enc}$ when using Twisted Edwards curves compared to using Montgomery curves.
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{.48\textwidth}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Borda/CombinedComparisonBorda_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/CombinedComparisonBorda_allMetrics.pdf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Multi/CombinedComparisonMulti_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/CombinedComparisonMulti_allMetrics.pdf}
+    \end{minipage}
+    \\
+    \begin{minipage}{.48\textwidth}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Single/CombinedComparisonSingle_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/CombinedComparisonSingle_allMetrics.pdf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{.48\textwidth}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/Condorcet/CombinedComparisonCondorcet_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/CombinedComparisonCondorcet_allMetrics.pdf}
+    \end{minipage}
+    \\
+    \begin{minipage}{.48\textwidth}
+        %\includegraphics[scale=.5]{../src/benchmarks/plotting/plots/combined/Comparison/MajorityJudgment/CombinedComparisonMajorityJudgment_allMetrics.pdf}
+        \includegraphics[scale=.5]{graphics/results/CombinedComparisonMajorityJudgment_allMetrics.pdf}
+    \end{minipage}
+    \caption{Number of constraints needed for the \gls{g16snark} over $\mathfrak{C}_{C}^{Ballot\text{-}Validity}$ in Circom and in libsnark.}
+    \label{fig:plots:Combined}
+\end{figure}
 
 % \begin{figure}[h]
 %     \centering

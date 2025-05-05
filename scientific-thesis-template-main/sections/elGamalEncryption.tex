@@ -32,6 +32,7 @@ Its security is based on the \gls{ddh} problem which is related to the Discrete 
 Formally, the ElGamal Encryption scheme is defined as follows.
 We mostly follow the definition in construction 12.16 of \cite{katz_introduction_2021}.
 
+\newpage
 \begin{definition}[ElGamal Encryption Scheme]
     \label{def:elGamalEncryption}
     The ElGamal asymmetric encryption scheme is $\mathcal{S}=(Gen(1^\eta), Enc, Dec)$. Here:
@@ -111,7 +112,7 @@ Then, we get:
 Despite the homomorphic property, standard ElGamal is not useful when it comes to aggregating ballots.
 To aggregate two ballots $b_1, b_2$ from a choice space $C$, we need to add them by performing the standard (component-wise) addition $b_1+b_2$.
 However, ElGamal encryption would only allow us to compute the (component-wise) operation $b_1\odot_{\mathbb{G}} b_2$ on two ballots $b_1$ and $b_2$ by performing the operation $\odot_\mathcal{C}$ on the corresponding ciphertexts.
-The operation $\odot_{\mathbb{G}}$ depends on the generated group $\mathbb{G}$ and in most cases is closer to the standard multiplication \glqq$\cdot$\grqq\ than the addition \glqq$+$\grqq.
+The operation $\odot_{\mathbb{G}}$ depends on the generated group $\mathbb{G}$ and in most cases is closer to the standard multiplication ``$\cdot$''\ than the addition ``$+$''.
 To allow for (component-wise) addition of ballots, we need a slight variation of ElGamal, namely Exponential ElGamal.
 
 \section{Exponential ElGamal Encryption Scheme}
@@ -166,7 +167,7 @@ We define:
     \begin{align*}
         m_1\odot_{\mathcal{M}}m_2 := m_1 + m_2
     \end{align*}
-    Here, \glqq$+$\grqq\ denotes the addition in $\mathbb{Z}_n$, i.e., $m_1+m_2:=m_1+m_2\mod n$.
+    Here, ``$+$''\ denotes the addition in $\mathbb{Z}_n$, i.e., $m_1+m_2:=m_1+m_2\mod n$.
     \item For $\mathcal{C}$:
     \begin{align*}
         c_1\odot_{\mathcal{C}}c_2 &= (c_{1,0}, c_{1,1})\odot_\mathcal{C} (c_{2,0}, c_{2,1})\\
@@ -261,30 +262,7 @@ $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ depends on the choice of $\mathbb{G}
 Therefore, we will use it as a black box circuit as shown in \cref{fig:circuit:groupIfElse} for now.
 Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cref{fig:circuit:groupLaw}, we can then implement $FastExp$ as the circuit $\mathfrak{C}_{\mathbb{G}\_FExp}$ presented in \cref{fig:circuit:fexp}.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupIfElse.pdf}
-    \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ implementing branching for group elements. Computes $g_{res}$ from $g_{else}, g_{if}$ and $cond$:\\
-        $g_{res}:=\begin{cases}
-                g_{if}, &\quad\text{if } cond=1\\
-                g_{else}, &\quad\text{if } cond=0
-        \end{cases}$
-    }
-    \label{fig:circuit:groupIfElse}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=.7]{graphics/elGamalEncryption/FExp.pdf}
-    \caption{Circuit $\mathfrak{C}_{\mathbb{G}\_FExp}$ for computing $g^k$ from inputs $g$ and $k$.
-    Here, $g\in\mathbb{G}$ and $k$ can be represented as bitstring of length $l$.
-    Moreover, we use $\mathfrak{C}_{Reverse(l)}$ (\cref{fig:circuit:reverse}) and $\mathfrak{C}_{Num2Bits(l)}$ (\cref{fig:circuit:num2Bits}) as building blocks.
-    $\mathfrak{C}_{Reverse(l)}$ just reverses the order of its inputs.
-    }
-    \label{fig:circuit:fexp}
-\end{figure}
-
-\begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
+\begin{Algorithmus}[!h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
     \caption{Algorithm $FastExp$ used to compute $g^k$ for $g\in\mathbb{G}$ and $k\in\{0,\dots, |\mathbb{G}|-1\}$.
     Here, $k$ can be represented as bitstring of length $l$.}
     \label{alg:fastExp}
@@ -303,6 +281,32 @@ Together with the black box circuit $\mathfrak{C}_{\mathbb{G}\_\odot}$ from \cre
     \end{algorithmic}
 \end{Algorithmus}
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/FExp.pdf}
+    \caption{Circuit $\mathfrak{C}_{\mathbb{G}\_FExp}$ for computing $g^k$ from inputs $g$ and $k$.
+    Here, $g\in\mathbb{G}$ and $k$ can be represented as bitstring of length $l$.
+    Moreover, we use $\mathfrak{C}_{Reverse(l)}$ (\cref{fig:circuit:reverse}) and $\mathfrak{C}_{Num2Bits(l)}$ (\cref{fig:circuit:num2Bits}) as building blocks.
+    $\mathfrak{C}_{Reverse(l)}$ just reverses the order of its inputs.
+    }
+    \label{fig:circuit:fexp}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=.7]{graphics/elGamalEncryption/GroupIfElse.pdf}
+    \caption{Black box circuit $\mathfrak{C}_{\mathbb{G}\_If\text{-}Else}$ implementing branching for group elements. Computes $g_{res}$ from $g_{else}, g_{if}$ and $cond$:\\
+        $g_{res}:=\begin{cases}
+                g_{if}, &\quad\text{if } cond=1\\
+                g_{else}, &\quad\text{if } cond=0
+        \end{cases}$
+    }
+    \label{fig:circuit:groupIfElse}
+\end{figure}
+
+\newpage
+\phantom{bla}
+\newpage
 This is the basis for the Montgomery Ladder Algorithm we use in \cref{section:ellipticCurves:montgomery} to compute group exponentiations for Montgomery curves.
 
 It is possible to optimize computing group exponentiation further if we provide $g^{2^i}\:\forall i\in\{0,\dots, l-1\}$ to the exponentiation algorithm.
@@ -348,7 +352,8 @@ In this case, we only need to compute the powers of $g$ once and can reuse them 
 Additionally, by precomputing the powers and providing them as an input to the circuit, we avoid these computations inside the circuit.
 This significantly reduces the computational effort for a \gls{zkp} of correct circuit execution.
 
-One use case of $ProcomputedPowersFastExp$ is \gls{eeg} encryption.
+\newpage
+One use case of $PrecomputedPowersFastExp$ is \gls{eeg} encryption.
 In our voting schemes, we want to encrypt ballots $b$ with entries $b_0,\dots, b_{m-1}$.
 With \gls{eeg} encryption, we reuse the same public key $pk=(\mathbb{G}, n, g, h)$ to compute all entries $b'_0,\dots,b'_{m-1}$ of the encrypted ballot $b'=\mathcal{S}.Enc(b, pk)$ belonging to ballot $b$:
 \begin{align*}
@@ -361,6 +366,7 @@ This requires the same computational effort as $FastExp$.
 
 Therefore, we propose a slightly modified version of \gls{eeg} which includes the precomputed powers of $g$ and $h$ in the public key $pk$: \gls{ppeeg}.
 
+\newpage
 \begin{definition}[Precomputed Powers Exponential ElGamal Encryption]
     \label{def:ppeeg}
     The \gls{ppeeg} encryption scheme is $PPEEG(\mathbb{G})=(Gen(1^\eta), Enc, Dec)$. 

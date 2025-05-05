@@ -221,6 +221,7 @@ The computation of $r_{Assert\text{-}3\text{-}vot}(S_1^{in}, S_2^{in}, S_3^{in})
     \end{algorithmic}
 \end{Algorithmus}
 
+\newpage
 \subsection{Modularity}
 
 In many cases, we need the same functionality at multiple places in an algebraic function $r$ and its corresponding circuit $\mathfrak{C}$.
@@ -333,6 +334,7 @@ The modularity of circuits allows us to define more complicated circuits based o
 For the rest of this chapter however, we need to know the exact specification of a circuit down to the circuits for the basic field operations $+$ and $\cdot$ of $\mathbb{F}$.
 Therefore, we will use the definition of $r_{3\text{-}vot}$ from \cref{example:threeVot} and the corresponding circuit $\mathfrak{C}_{3\text{-}vot}$ from \cref{fig:circuit:exampleVotingDef}.
 
+\newpage
 \section{Rank-1 Constraint Systems}
 Fundamentally, \glspl{r1cs} are systems of equations of a specific format over a set of variables.
 
@@ -351,9 +353,9 @@ Fundamentally, \glspl{r1cs} are systems of equations of a specific format over a
 
 Note, that we can represent any algebraic function $r:\mathbb{F}^m\to \mathbb{F}^n$ and therefore also any algebraic circuit $\mathfrak{C}$ as a \gls{r1cs} $R1CS_r$.
 We require that $r$ and $\mathfrak{C}$ can be expressed using just the basic field operations $+$ and $\cdot $ of $\mathbb{F}$.
-%To derive the individual constraints in $R1CS_r$ from $\mathfrak{C}$, we first define, what we can compute from a set of signals without additional constraints and capture this concept as \glqq simple terms\grqq :
+%To derive the individual constraints in $R1CS_r$ from $\mathfrak{C}$, we first define, what we can compute from a set of signals without additional constraints and capture this concept as ``simple terms'':
 %For a set of signals $S$, the simple terms over $S$ are defined as $simple\_terms(S):=\{c\cdot x|x\in S \land c \text{ constant}\}\cup\left\{\sum\limits_{i\in \{1,\dots, l\}} c_i\cdot x_i| S'\subseteq S, c_i\in\mathbb{F} \text{ constant }\forall i\in\right\}$
-Therefore, under the definition that all constants, all inputs and all intermediate signals in $\mathfrak{C}$ are \glqq primitives\grqq, we can derive the individual constraints in  $R1CS_r$ from $\mathfrak{C}$ using the following rules inductively:
+Therefore, under the definition that all constants, all inputs and all intermediate signals in $\mathfrak{C}$ are ``primitives'', we can derive the individual constraints in  $R1CS_r$ from $\mathfrak{C}$ using the following rules inductively:
 \begin{itemize}
     \item Any computation $x\cdot y$, where $x$ and $y$ are sums of constant multiples of primitives and both $x$ and $y$ contain at least one input or intermediate signal, is expressed as an additional constraint $tmp=x\cdot y$ where $tmp$ is an intermediate signal.\footnote{
         \label{footnote:intermediateSignalsInCircuit}
@@ -504,6 +506,7 @@ We can check this by inserting the values for the variables $S_1,\dots, S_7$ int
 In general, a ballot $b=(b_0,b_1,b_2)$ is in the choice space $C$ if and only if $(b_0,b_1,b_2,0,0,0,0)$ satisfies $R1CS_{r_{3\text{-}vot}}$.
 Therefore, we can use $R1CS_{r_{3\text{-}vot}}$ to show membership of the choice space similarly to how we used $\mathfrak{C}_{3\text{-}vot}$.
 
+\newpage
 \section{Quadratic Arithmetic Programs}
 To use \glspl{r1cs} in \glspl{gpzkp}, we need to transform them into another different representation, namely \glspl{qap}.
 For every \gls{r1cs} $R1CS$, there is a corresponding \gls{qap} $QAP(R1CS)$.
@@ -591,7 +594,8 @@ Now we can follow the instructions outlined previously:
         &\scriptstyle \phantom{\text{For }}C_0(7)=0 &&\scriptstyle C_1(7)=0 && \scriptstyle C_2(7)=0 && \scriptstyle C_3(7)=0 &&\scriptstyle C_4(7)=0 &&\scriptstyle C_5(7)=0 &&\scriptstyle C_6(7)=0 &&\scriptstyle C_7(7)=1\\
     \end{align*}
     By Lagrange's interpolation we know that $A_4, A_5, A_6, A_7, B_0, B_4, B_5, B_6, B_7, C_0, C_1, C_2$ and $C_3$ are the zero polynomial since they are polynomials of degree $k-1=3$ and are $0$ on $4$ points.
-    Using the process described in Section 3.3.4 of \cite{least_authority_moonmath_2024} we can calculate the other polynomials.\\
+    Using the process described in Section 3.3.4 of \cite{least_authority_moonmath_2024} we can calculate the other polynomials.
+
     Let $P\in \{A,B,C\}$, $j\in \{0,\dots,7\}$. 
     Let $p$ be the lower case equivalent of $P$ (i.e., $P=A\Rightarrow p=a,\:P=B\Rightarrow p=b,\:P=C\Rightarrow p=c$).
     Then we can compute the polynomial $P_j$ with $S_{P_j}=\{(m_1,p_j^1), (m_2, p_j^2), (m_3, p_j^3), (m_4, p_j^4)\}$ as follows:
@@ -793,6 +797,7 @@ As for $R1CS_{r_{3\text{-}vot}}$, a ballot $b=(b_0,b_1,b_2)$ is in the choice sp
 Therefore, we can use $QAP(R1CS_{r_{3\text{-}vot}})$ to show membership of the choice space similarly to how we used $\mathfrak{C}_{3\text{-}vot}$.
 
 In general, the satisfiability definition of circuits implies the satisfiability definition of \glspl{r1cs} and \glspl{qap} in the sense that for every assignment that satisfies the circuit, there is an extended assignment, where values are assigned to the intermediate signals as well, that satisfies the \gls{r1cs} and the \gls{qap} as presented in \cref{theorem:satisfiabilityEquality}.
+\newpage
 \begin{theorem}[Satisfiability Definitions Relation]
     \label{theorem:satisfiabilityEquality}
     Let $(\mathbb{F}, +, \cdot )$ be a finite field.
@@ -821,6 +826,7 @@ As outlined in \cref{chap:votingschemes}, the instance is public, and the witnes
 
 We can formalize this concept as a Decomposition Relation.
 
+\newpage
 \begin{definition}[Decomposition Relation]
     Let $(\mathbb{F}, +, \cdot)$ be a finite field.
     Let $r:\mathbb{F}^m\to\mathbb{F}^n$ be an algebraic function.
@@ -897,6 +903,7 @@ We can also visualize a decomposition relation on a circuit directly as presente
     \label{fig:circuit:instanceWitnessRelation}
 \end{figure}
 
+\newpage
 Once again, we consider $r_{3\text{-}vot}$ as an example. 
 To show ballot validity with the circuit $\mathfrak{C}_{3\text{-}vot}$ for $r_{3\text{-}vot}$, we want to keep the ballot represented by the inputs $S_1^{in}, S_2^{in}$ and $S_3^{in}$ private.
 On the other hand, the output signals $S_1^{out}, S_2^{out}, S_3^{out}$ and $S_4^{out}$ need to be $0$ in case we have a valid ballot as we observed earlier.
@@ -934,6 +941,7 @@ Such constructive proofs of circuit execution are the basis for \glspl{g16snark}
 
 %However, it is currently not possible to show that the polynomial $P_S$ provided by a voter actually belongs to the assignment $S$.
 
+\newpage
 \section{Groth16 SNARKs}
 \label{section:proofSchemes:groth16}
 \glspl{snark} are a special form of the \glspl{zkp} we introduced in \cref{chap:votingschemes}.
@@ -948,7 +956,7 @@ Such constructive proofs of circuit execution are the basis for \glspl{g16snark}
     \begin{itemize}
         \item Succinctness: The size of the proof $\pi=Prove(CRS, I, W)$ and the time needed to compute $Verify(CRS, I, \pi)$ are both polynomially bound \footnote{
             \label{footnote:securityParameterSuccinctness}
-            Here, "polynomially bound"\ means polynomially bound with regard to the security parameter $\lambda$ \cite{groth_size_2016}.
+            Here, ``polynomially bound''\ means polynomially bound with regard to the security parameter $\lambda$ \cite{groth_size_2016}.
             A security parameter $\lambda$ is used to define the security level of cryptographic constructions.
         }\cite{groth_size_2016}.
         \item Argument: The soundness property defined in \cref{def:zpsForR} only has to hold if $Prove$ is polynomially bound\cref{footnote:securityParameterSuccinctness} \cite{least_authority_moonmath_2024}.
@@ -1043,6 +1051,8 @@ Proofs of Knowledge Soundness, Completeness and Succinctness as well as a proof 
     \EndProcedure
     \end{algorithmic}
 \end{Algorithmus}
+%\cleardoublepage
+\newpage
 \footnotetext{
     \label{footnote:qapPolynomialsAtTau}
     Let $g\in\{g_1, g_2\}$, let $P\in\bigcup\limits_{j=0}^{n_I+n_W}\{A_j, B_j\}$ with $P(x)=p_0x^0+p_1x^1+\dots+p_{n_P}x^{n_P}$. 

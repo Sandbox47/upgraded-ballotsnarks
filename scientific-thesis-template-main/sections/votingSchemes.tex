@@ -22,7 +22,7 @@ This first version of the voting scheme is illustrated in \cref{fig:ExVS1}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.5\textwidth]{graphics/votingSchemes/EXVotingScheme_1.pdf}
+  \includegraphics[scale=.7]{graphics/votingSchemes/EXVotingScheme_1.pdf}
   \caption{First naive implementation of the example voting scheme.}
   \label{fig:ExVS1}
 \end{figure}
@@ -44,7 +44,7 @@ The new version of our example voting scheme is illustrated in \cref{fig:ExVS2}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.5\textwidth]{graphics/votingSchemes/EXVotingScheme_2.pdf}
+  \includegraphics[scale=.7]{graphics/votingSchemes/EXVotingScheme_2.pdf}
   \caption{The example voting scheme with standardized ballot chosen from choice space $C$ and an automatic voting authority aggregating the ballots.}
   \label{fig:ExVS2}
 \end{figure}
@@ -72,7 +72,7 @@ This version of the example voting scheme is illustrated in \cref{fig:ExVS3}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_3.pdf}
+  \includegraphics[scale=.7]{graphics/votingSchemes/EXVotingScheme_3.pdf}
   \caption{The example voting scheme as in \cref{fig:ExVS2} with additional encryption of the ballots. The voting authority $VA$ uses the homomorphic encryption to aggregate ($agg$) the encrypted ballots before decrypting the final tally. From now on, we denote public information in blue and private information in orange.}
   \label{fig:ExVS3}
 \end{figure}
@@ -118,6 +118,7 @@ We can combat this problem using \glspl{zkp} as presented by Bernhard and Warins
 % $\pi$ proves that the party who executed $P$ knows a corresponding witness $W$ for the instance $I$, even if only the instance is published.
 % Anyone can verify the proof $\pi$ by running the verifying algorithm $V$ on $\pi$ and the instance $I$.
 
+\newpage
 Although we consider an honest voting authority, a malicious voter Eve can still break the voting scheme:
 \begin{enumerate}
   \item Eve can impersonate other voters such as $A$ and submit ballots preferable to her (e.g., $(0,0,1)$) to $PBB$ on their behalf.
@@ -143,6 +144,7 @@ These problems are also illustrated in \cref{fig:ExVS3Prob1}.
   \label{fig:ExVS3Prob1}
 \end{figure}
 
+\newpage
 \section{Integrity of Ballots and Election Result}
 To ensure that no malicious voter can submit ballots on behalf of other voters and that only $VA$ can publish the final election result, we employ digital signatures.
 Here, every voter $V$ and $VA$ have a public-private key pair $(pk_V, sk_V)$ and $(pk_{VA}, sk_{VA})$ that is different from the key pair used for encryption.
@@ -174,7 +176,7 @@ In our example, Eve could submit a vote $(0,0,100)$ to win the election as shown
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.8\textwidth]{graphics/votingSchemes/EXVotingScheme_3_problem2.pdf}
+  \includegraphics[scale=.7]{graphics/votingSchemes/EXVotingScheme_3_problem2.pdf}
   \caption{The example voting scheme as in \cref{fig:ExVS3}. 
   Eve maliciously sends a ballot that does not come from the choice space $C$ and contains $100$ votes for Eve. 
   The faulty ballot cannot be detected by this voting scheme.
@@ -221,21 +223,22 @@ This version of our example voting scheme is illustrated in \cref{fig:ExVS4}.
   \label{fig:ExVS4}
 \end{figure}
 
-With this, we have reached the voting scheme we will use throughout the rest of this thesis.
+With this, we have reached the voting scheme we will use throughout the rest of our work.
 
 % \todo{What is stopping voters from submitting multiple ballots to the \gls{pbb}?}
 
+\newpage
 \section{Defining Voting Schemes}
 
 We can now define what a voting scheme is formally. 
 Here, we use asymmetric encryption schemes as presented in \cite{katz_introduction_2021}.
 The voting scheme is based on the approach presented in \cite{cortier_fifty_2020}.
 However, to simplify things a little, we assume that the voting authority and the \gls{pbb} are both honest and that the \gls{pbb} is available.\footnote{\label{footnote:honestAvailablePBB}
-  An \glqq honest\grqq\ \gls{pbb} $PBB$ does not discard any information published and answers queries truthfully.
+  An ``honest''\ \gls{pbb} $PBB$ does not discard any information published and answers queries truthfully.
   It is possible to model voting systems with misbehaving bulletin boards. 
   One such approach is described in \cite{cortier_fifty_2020}.
   To simplify the construction we will only consider an honest \gls{pbb}.
-  \glqq Available\grqq\ means that all voters and the voting authority can publish entries to $PBB$ and query $PBB$ at any point. 
+  ``Available''\ means that all voters and the voting authority can publish entries to $PBB$ and query $PBB$ at any point. 
   Neither information to publish nor answers from $PBB$ can be blocked.
 }
 
@@ -245,7 +248,7 @@ However, to simplify things a little, we assume that the voting authority and th
     Ballots are always either vectors or matrices of field elements.
 
     Formally, let $(\mathbb{F}, +, \cdot)$ be a sufficiently large finite field.\footnote{\label{footnote:choiceSpaceSize}
-      Intuitively, \glqq Sufficiently large\grqq\ means that the aggregated tally of plain ballots does not exceed the characteristic $char_\mathbb{F}$ of the field $\mathbb{F}$.
+      Intuitively, ``Sufficiently large''\ means that the aggregated tally of plain ballots does not exceed the characteristic $char_\mathbb{F}$ of the field $\mathbb{F}$.
       More formally: 
       Consider an election with $n$ voters and a choice space $C$ over $\mathbb{F}$.
       % Let $g$ be a generator of $(\mathbb{F}\setminus\{0\},\cdot)$.
@@ -283,18 +286,19 @@ However, to simplify things a little, we assume that the voting authority and th
   \end{align*}
 \end{definition}
 
+\newpage
 \begin{definition}[Zero Knowledge Proof System for Relation $R$ \cite{groth_size_2016}]
   \label{def:zpsForR}
   Let $R$ be a binary polynomial time decidable relation \cite{least_authority_moonmath_2024} relating instances $I\in\mathcal{I}$ and witnesses $W\in\mathcal{W}$.
   A zero knowledge proof system $ZPS(R)$ for the relation $R$ consists of three algorithms: 
   \begin{itemize}
-    \item $Setup()$: This algorithm generates some auxiliary public information $CRS$ ("common reference string") that is needed to conduct and verify proofs for the relation $R$.
+    \item $Setup()$: This algorithm generates some auxiliary public information $CRS$ (``common reference string'') that is needed to conduct and verify proofs for the relation $R$.
     \item $Prove(CRS, I, W)$: This algorithm uses the $CRS$ to generate a proof $\pi$, stating that the public instance $I\in\mathcal{I}$ and the private witness $W\in\mathcal{W}$ are related, i.e., $R(I, W)=1$.
     Here, $\pi$ proves that the party executing $Prove(CRS, I, W)$ knows the private witness $W$ without revealing any information about $W$.
-    The party executing $Prove$ is also called \glqq Prover\grqq.
+    The party executing $Prove$ is also called ``Prover''.
     \item $Verify(CRS, I, \pi)$: This algorithm uses the $CRS$ to verify a proof $\pi$. This algorithm will return $valid$ or $invalid$. 
     If $Verify(CRS, I, \pi)$ returns $valid$, this means that the party who created $\pi$ knows a private witness $W$ corresponding to $I$ such that $R(I, W)=1$.
-    The party executing $Verify$ is also called \glqq Verifier\grqq.
+    The party executing $Verify$ is also called ``Verifier''.
   \end{itemize}
   Formally, 
   \begin{align*}
@@ -320,6 +324,7 @@ However, to simplify things a little, we assume that the voting authority and th
   \end{itemize}
 \end{definition}
 
+\newpage
 \begin{definition}[Voting Scheme]
   \label{def:votingScheme}
   A voting scheme with $n$ voters is a seven-tuple of the form 
@@ -381,6 +386,8 @@ However, to simplify things a little, we assume that the voting authority and th
     }
   \end{itemize}
 \end{definition}
+
+We can also represent this formal voting scheme visually as shown in \cref{fig:FormalVS}.
 
 \begin{Algorithmus}[h] %Use the environment only if you want to place the algorithm similar to graphics from TeX
   \caption{Setup of a voting scheme $VS=(C, \mathcal{S}, ZPS, PBB, Setup, \{V_0, \dots, V_{n-1}\}, VA)$}
@@ -445,8 +452,6 @@ However, to simplify things a little, we assume that the voting authority and th
   \EndProcedure
   \end{algorithmic}
 \end{Algorithmus}
-
-We can also represent this formal voting scheme visually as shown in \cref{fig:FormalVS}.
 
 \begin{figure}[!h]
   \centering

@@ -210,7 +210,7 @@ template vot(n) {
 \end{figure}
 
 \subsection{Instance and Witness}
-Strictly speaking, the templates \verb|threeVot| and \verb|vot| are not circuits yet but rather \glqq templates\grqq\ of circuits that need to be instantiated to create circuits.
+Strictly speaking, the templates \verb|threeVot| and \verb|vot| are not circuits yet but rather ``templates''\ of circuits that need to be instantiated to create circuits.
 In Circom, we can do that by specifying the \verb|main| component.
 For parametrized circuits such as \verb|vot|, we also need to assign values to all parameters since the circuit typically has a different size or layout depending on them.
 By assigning $3$ to \verb|n|, we can create an instantiation of \verb|vot| that is equivalent to \verb|threeVot|:
@@ -231,7 +231,7 @@ Then, we can implement this in Circom as follows:
     component main {public [S_in[0]]}= vot(3);
 \end{lstlisting}
 
-\subsection{Assignments and Circom \glqq Witness\grqq\ Generation}
+\subsection{Assignments and Circom ``Witness''\ Generation}
 To create a proof of correct circuit execution, we first need to convert the circuit to a corresponding \gls{r1cs} and assign values to all input, output and intermediate signals.
 Values for the input signals are provided in an \verb|input.json| file.
 For 
@@ -240,18 +240,19 @@ For
 \end{lstlisting}
 and an exemplary ballot $b=(S_1^{in}, S_2^{in}, S_3^{in})=(1,0,1)$, we need to create the \verb|input.json| file as follows:
 
+\newpage
 \begin{lstlisting}[language=json]
 {
     "S_in" : [1, 0, 1]
 }\end{lstlisting}
 
 Additionally, we need to calculate values for the intermediate and output signals such that all constraints of the circuit are fulfilled \cite{rodriguez_circom_2025}.
-For this purpose, Circom provides a so-called \glqq Witness\grqq\ Generation procedure which assigns appropriate values to these signals.\footnote{
+For this purpose, Circom provides a so-called ``Witness''\ Generation procedure which assigns appropriate values to these signals.\footnote{
     \label{footnote:circomWitness}
-    Note that the term \glqq Witness\grqq\ in the context of Circom \glqq Witness\grqq\ Generation has a very different meaning compared to the term witness describing the private parts of an assignment to a circuit.
+    Note that the term ``Witness''\ in the context of Circom ``Witness''\ Generation has a very different meaning compared to the term witness describing the private parts of an assignment to a circuit.
 }
 In the example \verb|component main = vot(3)|, the signals that still need to be assigned are the outputs \verb|S_out|.
-Here, the Circom \glqq Witness\grqq\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all constraints.\cref{footnote:fieldNegativeNumbers}
+Here, the Circom ``Witness''\ generation assigns \verb|S_out = [0,0,0,-2]| to fulfill all constraints.\cref{footnote:fieldNegativeNumbers}
 Since the sum of all votes is $1+1=2$, $S_{out}^4=-2\neq 0$, the ballot $(1,0,1)$ is not part of the choice space in our example voting scheme from \cref{chap:votingschemes}.
 
 \SaveVerb{circomCopmO1}|circom vot.circom --r1cs --wasm|
@@ -281,11 +282,11 @@ node generate_witness.js vot.wasm input.json witness.wtns   # Create instantiati
     \label{fig:shell:circomExample}
 \end{figure}
 
-In the previous example, Circom \glqq Witness\grqq\ generation is equivalent to circuit execution.
-However, in general, Circom \glqq Witness\grqq generation is more powerful since it is used to \textit{find} values such that the constraints are satisfied.
+In the previous example, Circom ``Witness''\ generation is equivalent to circuit execution.
+However, in general, Circom ``Witness''\ generation is more powerful since it is used to \textit{find} values such that the constraints are satisfied.
 We can make use of this for the utility circuit $\mathfrak{C}_{Division}$ (\cref{fig:circuit:division}) which computes $\frac{x}{y}$ for inputs $x$ and $y$.
 The corresponding Circom implementation is shown in \cref{fig:circom:division}.
-Here, Circom \glqq Witness\grqq\ generation is employed to find a value $out$ such that $out\cdot y=x$ which is equivalent to $out=\frac{x}{y}$.
+Here, Circom ``Witness''\ generation is employed to find a value $out$ such that $out\cdot y=x$ which is equivalent to $out=\frac{x}{y}$.
 Achieving the same result with pure circuit execution would be more complicated.
 
 \begin{figure}[h]
@@ -319,6 +320,7 @@ component main = division();
     \end{minipage}
 \end{figure}
 
+\newpage
 \section{snarkjs}
 \label{section:software:snarkjs}
 
