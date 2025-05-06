@@ -1,6 +1,9 @@
 # Quick Start
 
 Installation instructions and instructions to compute ballot validity proofs.
+Note that the installation instructions are for Ubuntu 24.04. 
+However, installing should be very similar for other Ubuntu versions and other Linux distributions.
+We do not support Windows and macOS.
 
 ## Installation
 

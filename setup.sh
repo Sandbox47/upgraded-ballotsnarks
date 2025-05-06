@@ -1,7 +1,7 @@
 #!/bin/bash
 
-set -e  # Exit on any error
-set -u  # Treat unset variables as error
+set -e 
+set -u
 
 echo "=== Starting installation ==="
 

@@ -1,5 +1,8 @@
 # Installation Guide
 Instructions to install the repository and dependencies needed to compute ballot validity proofs with our implementation.
+Note that the installation instructions are for Ubuntu 24.04. 
+However, installing should be very similar for other Ubuntu versions and other Linux distributions.
+We do not support Windows and macOS.
 
 ## Ballot Validity Repository
 
@@ -48,7 +51,7 @@ sudo npm install -g snarkjs
 ```
 
 2. The benchmarks in the Ballot Validity repository requires some predefined powers-of-tau file for zk proof generation.
-For small candidate counts, the file `powersOfTau28_hez_final_22.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file) is sufficient and included in this repository.
+For small candidate counts, the file `powersOfTau28_hez_final_21.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file) is sufficient and included in this repository.
 For our benchmarks, we used the file `powersOfTau_hez_final_25.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file). Since this file is very large (36 GB!), we recommend to download this, only if you want to run benchmarks for proving ballot validity for very large candidate counts.
 In that case, please save the file in the folder `src/scripts/ptau`.
 Our implementation will automatically use the largest file present in that folder.
