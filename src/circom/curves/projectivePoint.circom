@@ -179,6 +179,3 @@ template switchCaseProjective(n) {
     deserializer.in <== switchCase.out;
     out <== deserializer.out;
 }
-
-// component main = switchCaseProjective(4);
-// component main = selectEnabledProjective(4);

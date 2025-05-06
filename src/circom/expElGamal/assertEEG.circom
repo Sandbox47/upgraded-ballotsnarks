@@ -13,11 +13,6 @@ template assertEncMontgomeryProjective(bitsPlain, bitsRand, A, B) {
     input signal v; // Signal
     input signal r; // Randomness
 
-    // log("pk:");
-    // log("X:", pk.X);
-    // log("Y:", pk.Y);
-    // log("Z:", pk.Z);
-
     // Test
     input ProjectivePoint() gr;
     input ProjectivePoint() gv_pkr;
@@ -29,25 +24,6 @@ template assertEncMontgomeryProjective(bitsPlain, bitsRand, A, B) {
     expElGamal.pk <== pk;
     expElGamal.v <== v;
     expElGamal.r <== r;
-
-    // log("test_gr:");
-    // log("X:", gr.X);
-    // log("Y:", gr.Y);
-    // log("Z:", gr.Z);
-    // log("test_gv_pkr:");
-    // log("X:", gv_pkr.X);
-    // log("Y:", gv_pkr.Y);
-    // log("Z:", gv_pkr.Z);
-
-    // log("enc_gr:");
-    // log("X:", expElGamal.gr.X);
-    // log("Y:", expElGamal.gr.Y);
-    // log("Z:", expElGamal.gr.Z);
-    // log("enc_gv_pkr:");
-    // log("X:", expElGamal.gv_pkr.X);
-    // log("Y:", expElGamal.gv_pkr.Y);
-    // log("Z:", expElGamal.gv_pkr.Z);
-    // log();
 
     gr === expElGamal.gr;
     gv_pkr === expElGamal.gv_pkr;
@@ -122,26 +98,6 @@ template assertEncTwistedEdwards(bitsPlain, bitsRand, a, d) {
     expElGamal.powersOfpk <== powersOfpk;
     expElGamal.v <== v;
     expElGamal.r <== r;
-
-    /**
-    log("test_gr:");
-    log("x:", gr.x);
-    log("y:", gr.y);
-    log("test_gv_pkr:");
-    log("x:", gv_pkr.x);
-    log("y:", gv_pkr.y);
-
-    log("enc_gr:");
-    log("x:", expElGamal.gr.x);
-    log("y:", expElGamal.gr.y);
-    log("enc_gv_pkr:");
-    log("x:", expElGamal.gv_pkr.x);
-    log("y:", expElGamal.gv_pkr.y);
-    log();
-
-    gr === expElGamal.gr;
-    gv_pkr === expElGamal.gv_pkr;
-    */
 }
 
 template assertEncVectorTwistedEdwards(entries, bitsPlain, bitsRand, a, d) {
@@ -213,26 +169,6 @@ template assertEncTwistedEdwardsArbitraryBase(bitsPlain, bitsRand, base, a, d) {
     expElGamal.powersOfpk <== powersOfpk;
     expElGamal.v <== v;
     expElGamal.r <== r;
-
-    /**
-    log("test_gr:");
-    log("x:", gr.x);
-    log("y:", gr.y);
-    log("test_gv_pkr:");
-    log("x:", gv_pkr.x);
-    log("y:", gv_pkr.y);
-
-    log("enc_gr:");
-    log("x:", expElGamal.gr.x);
-    log("y:", expElGamal.gr.y);
-    log("enc_gv_pkr:");
-    log("x:", expElGamal.gv_pkr.x);
-    log("y:", expElGamal.gv_pkr.y);
-    log();
-
-    gr === expElGamal.gr;
-    gv_pkr === expElGamal.gv_pkr;
-    */
 }
 
 template assertEncVectorTwistedEdwardsArbitraryBase(entries, bitsPlain, bitsRand, base, a, d) {
@@ -283,8 +219,3 @@ template assertEncMatrixTwistedEdwardsArbitraryBase(rows, columns, bitsPlain, bi
         
     }
 }
-
-// component main = assertEncVector(100, 32, 255, 126932, 1);
-// component main = assertEncTwistedEdwardsArbitraryBase(5, 14, 110, 126934, 126930);
-// component main = assertEncTwistedEdwards(32, 255, 126934, 126930);
-// component main = assertEncMontgomeryProjective(32, 255, 126932, 1);

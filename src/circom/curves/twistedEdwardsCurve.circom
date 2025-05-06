@@ -63,7 +63,8 @@ template inftyTwistedEdwards() {
 // Elliptic curve operations
 
 /**
-* Computes p1+p2 according to the definition of the group law in "Twisted Edwards Curves" by Bernstein et al./ -> 7 constraints
+* Computes p1+p2 according to the definition of the group law in "Twisted Edwards Curves" by Bernstein et al./
+*
 * -> 7 constraints
 */
 template twistedEdwardsGroupLaw(a, d) {
@@ -167,12 +168,3 @@ template twistedEdwardsScalarMulArbitraryBase(base, n, a, d) {
 
     out <== intermediateResults[n];
 }
-
-
-
-// component main = ifThenElseTwistedEdwards();
-// component main = twistedEdwardsGroupLaw(8, 3);
-// component main = twistedEdwardsScalarMul(255, 8, 3);
-// component main = twistedEdwardsScalarMulArbitraryBase(8, 85, 126934, 126930);
-
-// component main = switchCaseTwistedEdwards(10);

@@ -46,25 +46,6 @@ template expElGamalMontgomeryProjective(bitsRand, bitsPlain, A, B) {
     add_gv_pkr.P <== gv;
     add_gv_pkr.Q <== pkr;
     gv_pkr <== add_gv_pkr.out;
-
-    // log("gv:");
-    // log("X: ", gv.X);
-    // log("Y: ", gv.Y);
-    // log("Z: ", gv.Z);
-    // log("pkr:");
-    // log("X: ", pkr.X);
-    // log("Y: ", pkr.Y);
-    // log("Z: ", pkr.Z);
-    // log("gv_pkr:");
-    // log("X: ", gv_pkr.X);
-    // log("Y: ", gv_pkr.Y);
-    // log("Z: ", gv_pkr.Z);
-
-    // Test:
-    // input ProjectivePoint() test_gr;
-    // input ProjectivePoint() test_gv_pkr;
-    // gr === test_gr;
-    // gv_pkr === test_gv_pkr;
 }
 
 /**
@@ -363,12 +344,3 @@ template expElGamalMatrixTwistedEdwardsArbitraryBase(base, bitsRand, bitsPlain, 
         gv_pkr[i] <== expElGamal[i].gv_pkr;
     }
 }
-
-
-// component main = expElGamalMontgomeryProjective(255, 32, 126932, 1);
-// component main = expElGamalVector(255, 32, 126932, 1, 100);
-// component main = expElGamalMatrix(255, 32, 126932, 1, 10, 10);
-
-// component main = expElGamalTwistedEdwards(255, 32, 126934, 126930);
-
-// component main = expElGamalTwistedEdwardsArbitraryBase(5, 110, 14, 126934, 126930);

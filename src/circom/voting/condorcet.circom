@@ -11,7 +11,6 @@ include "../expElGamal/assertEEG.circom";
 * Condorcet Election type defined in "zk-SNARKS for Ballot Validity: A Feasibility Study".
 */
 template assertCondorcetVotingWithoutRanking(n) {
-// template assertCondorcetVoting(bitsVotes, n) { // TESTING ONLY!!!
     input signal ranking[n]; // For compatibility, but is not used here
     input signal ballot[n][n];
 
@@ -125,38 +124,17 @@ template computeCondorcetBallot(n, maxValueBits) {
 * Parameters n, bitsVotes are defined the same as in computeCondorcetBallot.
 */
 template assertCondorcetVoting(bitsVotes, n) {
-// template assertCondorcetVotingWithRanking(bitsVotes, n) { // TESTING ONLY!!!
     input signal ranking[n];
     input signal ballot[n][n];
-
-    // var maxValue = 2**bitsVotes;
 
     component computeBallot = computeCondorcetBallot(n, bitsVotes);
     computeBallot.ranking <== ranking;
     signal computedBallot[n][n] <== computeBallot.out;
 
-    /*
-    log("Computed Ballot = (");
-    for(var i = 0; i < n; i++) {
-        log("\t(");
-        for(var j = 0; j < n; j++) {
-            log(computedBallot[i][j], ", ");
-        }
-        log("),");
-    }
-    log(")");
-    */
-
     for(var i = 0; i < n; i++) {
         for(var j = 0; j < n; j++) {
-            // log("(", i, ",", j, "):\nProvided: ", ballot[i][j], "\nComputed: ", computedBallot[i][j]);
             ballot[i][j] === computedBallot[i][j];
         }
     }
     
 }
-
-// component main = assertCondorcetVotingWithoutRanking(5);
-// component main = assertCondorcetVoting(32, 3);
-// component main = IsEqual();
-// component main = GreaterThan(32);

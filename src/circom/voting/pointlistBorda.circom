@@ -52,6 +52,3 @@ template assertPointlistBordaVoting(bitsVotes, nCand, nPoints, orderedPoints) {
         getOccurences[i].out === 1;
     }
 }
-
-// component main = assertPointlistBordaVoting(32, 5, 10, [10,9,8,7,6,5,4,3,2,1]);
-// component main = getOccurences(10);

@@ -82,8 +82,3 @@ template divisionSafe() {
 
     out <== res;
 }
-
-// component main = divisionSafe();
-// component main = IsEqual();
-
-// component main = test();

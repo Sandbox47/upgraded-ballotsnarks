@@ -1,4 +1,8 @@
-# Ballot Validity Repository
+# Installation Guide
+Instructions to install the repository and dependencies needed to compute ballot validity proofs with our implementation.
+
+## Ballot Validity Repository
+
 If git is not installed already, install it with 
 ```bash
 sudo apt install git-all
@@ -8,7 +12,7 @@ Then, clone the repository into the desired directory `$HOME` by running the fol
 git clone https://git.sec.uni-stuttgart.de/scm/repo/huber/roehr
 ```
 
-# Circom
+## Circom
 We will install Circom in the directory `$HOME` where we also cloned the Ballot Validity repository. Open a terminal in this directory.
 
 We are following the [installation guide](https://docs.circom.io/getting-started/installation/) for Circom.
@@ -37,7 +41,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 sudo apt install nlohmann-json3-dev libgmp-dev nasm
 ```
 
-# snarkjs
+## snarkjs
 1. To install snarkjs, simply run the following:
 ```bash
 sudo npm install -g snarkjs
@@ -49,7 +53,7 @@ For our benchmarks, we used the file `powersOfTau_hez_final_25.ptau` from the [s
 In that case, please save the file in the folder `src/scripts/ptau`.
 Our implementation will automatically use the largest file present in that folder.
 
-# SageMath
+## SageMath
 Some Linux distributions have current versions of SageMath available (E.g., ArchLinux). 
 However, for many Linux distributions, this is not the case. 
 Therefore, we have found the option presented [here](https://sagemanifolds.obspm.fr/install_ubuntu.html) to be the most convenient to install SageMath:
@@ -81,7 +85,7 @@ sudo ln -sf $(pwd)/sage /usr/local/bin
 
 5. To validate the installation, run `sage -n`. This should open a Jupyter page in your browser where you could open a new Jupyter notebook with a Sagemath 10.5 kernel.
 
-# PATH and PYTHONPATH
+## PATH and PYTHONPATH
 In order benchmarks, Circom witness generation, snarkjs proof generation and verification and several other scripts to work, we need to add some entries to `PATH` and `PYTHONPATH`:
 - Add to `PATH`: `$HOME/roehr/src/scripts` and `$HOME/roehr/src/scripts/snarkjs`
 - Add to `PYTHONPATH`: `$HOME/roehr/src/scripts`
@@ -108,7 +112,7 @@ clean_path() {
 clean_path
 ```
 
-# Optional: VsCode extensions
+## Optional: VsCode extensions
 
 If you are using Visual Studio Code for development we recommend the installation of the following extensions:
 - [Circom Pro](vscode:extension/tintinweb.vscode-circom-pro)

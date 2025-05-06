@@ -119,15 +119,6 @@ template addProjective(A, B) {
     component affineAdder = addAffine(A, B);
     component convertToProjectiveRes = affineToProjective();
 
-    // log("P:");
-    // log("X: ", P.X);
-    // log("Y: ", P.Y);
-    // log("Z: ", P.Z);
-    // log("Q:");
-    // log("X: ", Q.X);
-    // log("Y: ", Q.Y);
-    // log("Z: ", Q.Z);
-
     convertToAffineP.in <== P;
     convertToAffineQ.in <== Q;
 
@@ -141,9 +132,3 @@ template addProjective(A, B) {
     // input ProjectivePoint() test;
     // out === test;
 }
-
-// component main = addAffine(126932, 1);
-// component main = addProjective(126932, 1);
-
-// component main = chordRuleAffine(126932, 1);
-// component main = IsEqual();

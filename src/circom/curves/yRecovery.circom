@@ -77,30 +77,6 @@ template okeyaSakuraiYRecoveryProjective(A, B) {
 /**
 * Checks whether the preconditions for Okeya-Sakurai are fulfilled and computes y accordingly.
 */
-/*
-template yRecoveryAffine() {
-    input AffinePoint() P;
-    input AffinePoint() Q;
-    input AffinePoint() PPlusQ;
-
-    output AffinePoint() out; // Point with reconstructed y-coordinate
-
-    component okeyaSakurai = okeyaSakuraiYRecoveryAffine(A, B);
-    okeyaSakurai.P <== P;
-    okeyaSakurai.Q <== Q;
-    okeyaSakurai.PPlusQ <== PPlusQ;
-
-    AffinePoint() recovered <== okeyaSakurai.out;
-
-    component ifThenElse = ifThenElseAffine();
-
-    // ???
-}
-*/
-
-/**
-* Checks whether the preconditions for Okeya-Sakurai are fulfilled and computes y accordingly.
-*/
 template yRecoveryProjective(A, B) {
     input ProjectivePoint() P; // TODO: Does this need to be an affine Point?
     input ProjectivePoint() Q;
@@ -118,11 +94,6 @@ template yRecoveryProjective(A, B) {
     normP <== normalizeP.out;
     normQ <== normalizeQ.out;
 
-    // log("\nQ:");
-    // log("X: ", normQ.X);
-    // log("Y: ", normQ.Y);
-    // log("Z: ", normQ.Z);
-
     component okeyaSakurai = okeyaSakuraiYRecoveryProjective(A, B);
     okeyaSakurai.P <== P;
     okeyaSakurai.Q <== Q;
@@ -132,18 +103,9 @@ template yRecoveryProjective(A, B) {
     normalizeRecovered.in <== recoveredQ;
     ProjectivePoint() normRecoveredQ <== normalizeRecovered.out;
 
-    // log("\nRecovered point:");
-    // log("X: ", recoveredQ.X);
-    // log("Y: ", recoveredQ.Y);
-    // log("Z: ", recoveredQ.Z);
-
     component ifThenElse = ifThenElseProjective();
 
     // Infty tests
-    // component testInftyQ = isInftyProjective();
-    // testInftyQ.in <== normQ;
-    // signal isInftyQ <== testInftyQ.out;
-
     // Output -P if PPlusQ.z is 0, Q is not infty and P.X/P.Z = Q.X/Q.Z
     component testInftyPPlusQ = isInftyProjective();
     testInftyPPlusQ.in <== PPlusQ;
@@ -155,7 +117,6 @@ template yRecoveryProjective(A, B) {
     component and = AND();
     and.a <== testInftyPPlusQ.out;
     and.b <== testEquality.out;
-    //signal isQNegatedP <== (1-isInftyQ) * and.out;
     signal isQNegatedP <== and.out;
 
     ProjectivePoint() minusP; // Normalized to minusP.Z=1
@@ -170,6 +131,3 @@ template yRecoveryProjective(A, B) {
 
     out <== ifThenElse.out;
 }
-
-// component main = okeyaSakuraiYRecoveryProjective(126932, 1);
-// component main = yRecoveryProjective(126932, 1);

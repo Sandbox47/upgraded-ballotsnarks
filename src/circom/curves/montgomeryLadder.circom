@@ -8,9 +8,7 @@ include "conversionsPointRepresentations.circom";
 include "../../../libs/node_modules/circomlib/circuits/comparators.circom";
 // ========================================================================================================================
 // XADD, XMUL PSEUDOOPERATIONS:
-bus AffinePointX() {
-    signal x;
-}
+
 /**
 * According to "Montgomery Curves and the Montgomery ladder". (Theorem 4.3)
 * CAUTION: Does not check inputs for infty.
@@ -31,6 +29,7 @@ template xAddAffine() {
     out.y <== 0;
     out.notInfty <== 1;
 }
+
 /**
 * According to "Montgomery Curves and the Montgomery ladder". (Theorem 4.1)
 * CAUTION: Does not check input for infty.
@@ -48,10 +47,7 @@ template xDblAffine(A) {
     out.y <== 0;
     out.notInfty <== 1;
 }
-bus ProjectivePointXZ() {
-    signal X;
-    signal Z;
-}
+
 /**
 * According to "Montgomery curves and their arithmetic" (Equation (9)).
 * We are using the variable notation x_n for the (n+1)-th assignment of a value to the variable x in the paper.
@@ -69,36 +65,6 @@ template xAddProjective() {
     out.X <== PMinusQ.Z * tmpX;
     out.Y <== 0;
     out.Z <== PMinusQ.X * tmpZ;
-    //signal v0_0 <== P.X + P.Z;
-    //signal v1_0 <== Q.X - Q.Z;
-    //signal v1_1 <== v1_0 * v0_0;
-    //signal v0_1 <== P.X - P.Z;
-    //signal v2_0 <== Q.X + Q.Z;
-    //signal v2_1 <== v2_0 * v0_1;
-    //signal v3_0 <== v1_1 + v2_1;
-    //signal v3_1 <== v3_0 * v3_0;
-    //signal v4_0 <== v1_1 - v2_1;
-    //signal v4_1 <== v4_0 * v4_0;
-    //
-    //PPlusQ.X <== PMinusQ.Z * v3_1;
-    //PPlusQ.Z <== PMinusQ.X * v4_1;
-    //PPlusQ.Y <== 0;
-}
-template xAddProjectiveXZ() {
-    input signal PX;
-    input signal PZ;
-    input signal QX;
-    input signal QZ;
-    input signal PMinusQX;
-    input signal PMinusQZ;
-    output signal outX;
-    output signal outZ;
-    signal tmp1 <== (PX - PZ) * (QX + QZ);
-    signal tmp2 <== (PX + PZ) * (QX - QZ);
-    signal tmpX <== (tmp1 + tmp2) * (tmp1 + tmp2);
-    signal tmpZ <== (tmp1 - tmp2) * (tmp1 - tmp2);
-    outX <== PMinusQZ * tmpX;
-    outZ <== PMinusQX * tmpZ;
 }
 
 /**
@@ -117,19 +83,6 @@ template xDblProjective(A) {
     out.Y <== 0;
     out.Z <== tmpZ1 * tmpZ2;
 }
-template xDblProjectiveXZ(A) {
-    input signal PX;
-    input signal PZ;
-    output signal outX;
-    output signal outZ;
-    signal tmp1 <== (PX + PZ) * (PX + PZ);
-    signal tmp2 <== (PX - PZ) * (PX - PZ);
-    signal tmpZ1 <== tmp1 - tmp2; // 4*P_X*P_Z
-    signal tmpZ2 <== tmp2 + ((A + 2)/4) * tmpZ1;
-    
-    outX <== tmp1 * tmp2;
-    outZ <== tmpZ1 * tmpZ2;
-}
 template xDblProjectivePadding(A) {
     input ProjectivePoint() P;
     input signal isNotPadding;
@@ -140,14 +93,14 @@ template xDblProjectivePadding(A) {
     out.Y <== 0;
     out.Z <== xDbl.out.Z * isNotPadding;
 }
+
 // ========================================================================================================================
 // MONTGOMERY LADDER:
 /**
+* === !NOT USED! ===
 * Computes the xCoordinate of the scalar multiplication mP.
 * The bits are required to be in LSB order. Last bit is assumed to be 1.
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
-*
-* TODO: Optimize to only utilize x-coords.
 */
 template ladderAffine(n, A) {
     input signal mulBits[n];
@@ -193,6 +146,7 @@ template ladderAffine(n, A) {
     r0Final <== r0[0];
     r1Final <== r1[0];
 }
+
 /**
 * Computes the XCoordinate of the scalar multiplication mP.
 * The bits are required to be in LSB order.
@@ -219,15 +173,6 @@ template ladderProjective(n, A) {
     component ifThenElseR1[n];
     r0[n] <== infty;
     r1[n] <== P;
-    // log("Initial:");
-    // log("R0:");
-    // log("X: ", r0[n].X);
-    // log("Y: ", r0[n].Y);
-    // log("Z: ", r0[n].Z);
-    // log("R1:");
-    // log("X: ", r1[n].X);
-    // log("Y: ", r1[n].Y);
-    // log("Z: ", r1[n].Z);
     for(var i = n-1; i >= 0; i--) {
         adders[i] = xAddProjective();
         doublersR0[i] = xDblProjective(A);
@@ -256,28 +201,16 @@ template ladderProjective(n, A) {
         r1[i].X <== ifThenElseR1[i].out[0];
         r1[i].Y <== 0;
         r1[i].Z <== ifThenElseR1[i].out[1];
-        // if(i >= n-10) {
-        //     log("\nRound ", i, ":");
-        //     log("R0:");
-        //     log("X: ", r0[i].X);
-        //     log("Y: ", r0[i].Y);
-        //     log("Z: ", r0[i].Z);
-        //     log("R1:");
-        //     log("X: ", r1[i].X);
-        //     log("Y: ", r1[i].Y);
-        //     log("Z: ", r1[i].Z);   
-        // }
     }
     r0Final <== r0[0];
     r1Final <== r1[0];
-    // log("\nResult:");
-    // log("X: ", r0Final.X);
-    // log("Y: ", r0Final.Y);
-    // log("Z: ", r0Final.Z);
+
     // input ProjectivePoint() test;
     // test === r0Final;
 }
+
 /**
+* === !NOT USED! ===
 * Computes the XCoordinate of the scalar multiplication mP.
 * The bits are required to be in LSB order.
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
@@ -302,15 +235,6 @@ template ladderProjectivePaddedNaive(n, A) {
     r0[n-1] <== P;
     doublerInitial.P <== P;
     r1[n-1] <== doublerInitial.out;
-    log("Initial:");
-    log("R0:");
-    log("X: ", r0[n-1].X);
-    log("Y: ", r0[n-1].Y);
-    log("Z: ", r0[n-1].Z);
-    log("R1:");
-    log("X: ", r1[n-1].X);
-    log("Y: ", r1[n-1].Y);
-    log("Z: ", r1[n-1].Z);
     for(var i = n-2; i >= 0; i--) {
         adders[i] = xAddProjective();
         doublersR0[i] = xDblProjective(A);
@@ -354,10 +278,13 @@ template ladderProjectivePaddedNaive(n, A) {
     log("X: ", r0Final.X);
     log("Y: ", r0Final.Y);
     log("Z: ", r0Final.Z);
+
     // input ProjectivePoint() test;
     // test === r0Final;
 }
+
 /**
+* === !NOT USED! ===
 * Computes the XCoordinate of the scalar multiplication mP.
 * The bits are required to be in LSB order.
 * According to "Montgomery curves and their arithmetic", Algorithm 4.
@@ -432,18 +359,6 @@ template ladderProjectivePaddedConstraintReduced(n, A) {
         r1[i].X <== ifThenElsePaddingR1[i].out[0];
         r1[i].Y <== 0;
         r1[i].Z <== ifThenElsePaddingR1[i].out[1];
-        /*
-        log("\nRound ", i, ":");
-        log("Padding: ", 1-isNotPadding[i+1]);
-        log("R0:");
-        log("X: ", r0[i].X);
-        log("Y: ", r0[i].Y);
-        log("Z: ", r0[i].Z);
-        log("R1:");
-        log("X: ", r1[i].X);
-        log("Y: ", r1[i].Y);
-        log("Z: ", r1[i].Z);
-        */
     }
     r0Final <== r0[0];
     r1Final <== r1[0];
@@ -451,14 +366,7 @@ template ladderProjectivePaddedConstraintReduced(n, A) {
     log("X: ", r0Final.X);
     log("Y: ", r0Final.Y);
     log("Z: ", r0Final.Z);
+
     // input ProjectivePoint() test;
     // test === r0Final;
 }
-// component main = ladderProjective(255, 126932);
-// component main = ladderProjectivePaddedNaive(255, 126932);
-// component main = ladderProjectivePaddedConstraintReduced(255, 126932);
-
-// component main = xAddProjective();
-// component main = xDblProjective(126932);
-
-// component main = xAddProjective();

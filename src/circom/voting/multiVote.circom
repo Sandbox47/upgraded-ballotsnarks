@@ -13,10 +13,7 @@ include "../expElGamal/assertEEG.circom";
 template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
     input signal ballot[nVotes];
 
-    // var maxVotesCandBits = numBits(maxVotesCand);
-    // var maxChoicesBits = numBits(maxChoices);
     var totalBits = bitsVotes + numBits(nVotes); // Number of bits required for the sum of all entries at most
-    // log("Total Bits: ", totalBits);
 
     component assertLtEq[nVotes];
     component assertSumLtEq = assertLtEq(totalBits);
@@ -29,14 +26,7 @@ template assertMultiVoteVoting(bitsVotes, nVotes, maxVotesCand, maxChoices) {
         assertLtEq[i].test <== maxVotesCand;
         sum += ballot[i];
     }
-    // log("Sum: ", sum);
-    // log("Max choices:", maxChoices);
 
     assertSumLtEq.in <== sum;
     assertSumLtEq.test <== maxChoices;
 }
-
-// component main = assertMultiVoteVoting(32, 200, 5, 400);
-// component main = assertLtEq(3);
-// component main = LessEqThan(3);
-// component main = Num2Bits(2);

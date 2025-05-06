@@ -52,9 +52,4 @@ template padBits(n) {
 
         out[i] <== setPadding[i].out;
     }  
-
-    // for(var i = 0; i < n; i++) {
-    //     log("Not padded:", inBits[i]);
-    //     log("Padded    :", out[i]);
-    // }
 }

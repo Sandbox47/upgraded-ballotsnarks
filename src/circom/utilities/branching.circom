@@ -223,17 +223,3 @@ template test() {
 
     out <== in1 + in2;
 }
-
-// component main = selectEnabled(3);
-// component main = switchCaseMulti(3, 5);
-// component main = switchCase(3);
-// component main = mux(3);
-// component main = mux2();
-// component main = ifThenElseMulti(3);
-// component main = test();
-// component main = IsEqual();
-// component main = Num2Bits(250);
-
-// component main = LessEqThan(250);
-
-// component main = Bits2Num(8);

@@ -1,4 +1,8 @@
-# Installation
+# Quick Start
+
+Installation instructions and instructions to compute ballot validity proofs.
+
+## Installation
 
 To create proofs of ballot validity, we require Circom, snarkjs and SageMath.
 If you have some of this software installed already, you can skip the corresponding installation steps.
@@ -6,14 +10,14 @@ Furthermore, if you already have our ballot validity repository on your system, 
 Detailed installation instructions are provided in `assets/InstallationGuide.md`.
 
 For convenience, we also provide a `setup.sh` script that can be run after installing our ballot validity repository to install the same dependencies.
-Note that in order to run `setup.sh`, your system needs to have at least $4$ cores.
+Note that in order to run `setup.sh`, your system needs to have at least $4$ cores and that installation may take multiple hours since we install and build SageMath from source.
 
-# Benchmarks
+## Benchmarks
 
 To run benchmarks, navigate to the folder `src/benchmarks`.
 We provide the option to run individual benchmarks as well as multiple benchmarks grouped together in test suites.
 
-## Individual Test Cases
+### Individual Test Cases
 The command to run an individual benchmark is:
 ```bash
 python3 benchmark.py <snark> <circuit> <curve> <election> <bits> <election_key_1>=<election_value_1> ... <election_key_n>=<election_value_n>
@@ -22,7 +26,7 @@ python3 benchmark.py <snark> <circuit> <curve> <election> <bits> <election_key_1
 Here, the individual parameters are:
 - `<snark>`: Zero Knowledge Proof system (ZPS). At the moment, we support `groth16`, `PLONK` and `FFLONK`. 
 Please note that our circuits are not optimized for `PLONK` and `FFLONK` and performance is typically a lot worse for these ZPSs.
-- `<circuit>`: Circuit. We can assert that a chosen ballot is in the choice space with `voting` ($\mathfrak{C}_C^{Vot}$ in our thesis), that a ballot is correctly encrypted with `encryption` ($\mathfrak{C}_C^{Enc}$ in our thesis) and we can compute full ballot validity proofs using `combined` ($\mathfrak{C}_C^{Ballot\text{-}Validity}$).
+- `<circuit>`: Circuit. We can assert that a chosen ballot is in the choice space with `voting` ($\mathfrak{C}_C^{Vot}$ in our thesis), that a ballot is correctly encrypted with `encryption` ($\mathfrak{C}_C^{Enc}$ in our thesis) and we can compute full ballot validity proofs using `combined` ($\mathfrak{C}_C^{Ballot\text{-}Validity}$ in our thesis).
 - `<curve>`: Elliptic curve. We can use `twistedEdwards` for the Twsited Edwards curve $TE_{126934, 126930}(\mathbb{F})$ as defined in our thesis. Alternatively, we can use `montgomeryProjective` for the Montgomery curve $M_{126932,1}(\mathbb{F}P^2)$ as defined in our thesis.
 - `<election>`: Election type. Here, we support the election types that were covered in our thesis:
     - `singleVote` for choice spaces $C_{\text{Single}(cand)}$
@@ -44,14 +48,14 @@ Please note that our circuits are not optimized for `PLONK` and `FFLONK` and per
     - For `condorcet`: `nCand=cand` for the choice space $C_{\text{Condorcet}(cand)}$
     - For `majorityJudgment`: `nCand=cand nGrades=grades` for the choice space $C_{\text{Majority-Judgment}(cand, grades)}$
 
-So, in order to compute the complete ballot validity proof for Pointlist-Borda with $20$ candidates and $[5,3,2,1]$ as the pointlist, where the individual ballot entries are represented with $32$ bits, we use Exponential ElGamal (EEG) encryption based on Twisted Edwards curves and want to compute the proof with the Groth16 SNARK, we need to run the following command:
+Consider the following example: We want to compute the complete ballot validity proof for Pointlist-Borda with $20$ candidates and $[5,3,2,1]$ as the pointlist, where the individual ballot entries are represented with $32$ bits, we want to use Exponential ElGamal (EEG) encryption based on Twisted Edwards curves and want to compute the proof with the Groth16 SNARK. Then, we need to run the following command:
 ```bash
 python3 benchmark.py groth16 combined twistedEdwards pointlistBorda 32 nCand=20 nPoints=4 orderedPoints=[5,3,2,1]
 ```
 
 For every test case with the format specified above, that we run, we record the number of non-linear, linear and total constraint count of the tested circuit, $CRS$ size, $CRS$ generation time, proving time, and verification time. All of these values are saved in the folder `src/benchmarks/<snark>/<curve>/results/<circuit>/<election>.csv` and the number of bits used to represent the ballot entries as well as the election type specific parameters are used to identify the line in the CSV-file. Here, the CSV-file has the following columns:
 ```csv
-<bits>;<election_key_1>;...;<election_key_n>;<non-linear constraints>;<linear constraints>;<total constraints>;<CRS size>;<CRS gen. time>;<proving time>;<verification time>
+<bits>;<election_key_1>;...;<election_key_n>;<non-linear constraints>;<linear constraints>;<total constraints>;<CRS size>[MB];<CRS gen. time>[ms];<proving time>[ms];<verification time>[ms]
 ```
 
 So, for the Pointlist-Borda example described before, the result would be saved in the folder `src/benchmarks/groth16/twistedEdwards/results/combined/pointlistBorda.csv` and could be for example the following line:
@@ -61,7 +65,7 @@ So, for the Pointlist-Borda example described before, the result would be saved 
 
 The results we obtained using Groth16 and Circom in our thesis as well as the results obtained by Huber et al. using Groth16 and libsnark are saved in the folder `src/benchmarks/thesis_results`.
 
-## Test Suites
+### Test Suites
 To run multiple benchmarks together, we use test suites and a config file to create these. In the folder `src/benchmarks/testSuites`, we provide a `testConfig.json` file. This file is used to generate the test suites and has the following entries:
 - `"snark"`: The ZPS used for all test cases in the test suite. This equates to the parameter `<snark>` in the individual benchmarks.
 - `"ellipticCurve"`: The elliptic curve used for all test cases in the test suite. This equates to the parameter `<curve>` in the individual benchmarks.
