@@ -6,15 +6,38 @@ from pathlib import Path
 import json
 from JSON import JSONUtils
 import re
+import math
 
 # Increase Javascript heap memory
 os.environ["NODE_OPTIONS"] = "--max-old-space-size=16384"
 
 # Ptau file
-PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
+def get_largest_ptau_file(folder_path):
+    pattern = re.compile(r"^powersOfTau28_hez_final_(\d+)\.ptau$")
+    max_n = -1
+    max_file = None
+
+    for file_name in os.listdir(folder_path):
+        match = pattern.match(file_name)
+        if match:
+            n = int(match.group(1))
+            if n > max_n:
+                max_n = n
+                max_file = file_name
+
+    return max_file
+
+# PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
 # PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
+PTAU_FILE = get_largest_ptau_file("../scripts/ptau/")
+print(f"Using ptau file: {PTAU_FILE}")
+
 
 BITS_RAND=255
+BITS_PLAIN=32
+TE_ENC_BASE = 5
+DIGITS_PLAIN = math.ceil(BITS_PLAIN/math.log(TE_ENC_BASE, 2))
+DIGITS_RAND = math.ceil(BITS_RAND/math.log(TE_ENC_BASE, 2))
 
 # Montgomery curve parameters
 Mon_A=126932
@@ -63,7 +86,8 @@ def parse_arguments():
         else:
             print(f"Error: Invalid argument '{arg}', expected key=value format.")
             sys.exit(1)
-    return snark, mode, elliptic_curve, election_type, n_bits, named_params
+    n_digits =  str(math.ceil(int(n_bits)/math.log(TE_ENC_BASE, 2)))
+    return snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params
 
 def prepare_directories(snark, elliptic_curve, election_type):
     base_path = Path(snark) / elliptic_curve / election_type
@@ -73,7 +97,7 @@ def prepare_directories(snark, elliptic_curve, election_type):
 # ========================================================================================================================
 # 2. Create circom test file
 
-def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, named_params):
+def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n_digits, named_params):
     circom_config = None
     with open('circomConfig.json') as circom_config_file:
         circom_config = json.load(circom_config_file)
@@ -90,6 +114,8 @@ def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n
     pk_dim = curve_config["pk_dim"]
     curve_params_name = curve_config["curve_params_name"]
     curve_params_str = curve_config["curve_params_str"]
+    ballot_entry_dim_for_enc = curve_config["ballot_entry_dim_for_enc"]
+    r_entry_dim = curve_config["r_entry_dim"]
 
     election_type_dim = election_type_config["dim"]
     election_type_dim_array_str = "[" + ']['.join(election_type_dim) + "]"
@@ -108,7 +134,7 @@ include \"../../../../../voting/{election_type}.circom\";
     """
 
     template_method_signature = f"""
-template assert{capitalize_first_letter(election_type)}(n_bits, rand_bits, {curve_params_name}, {election_type_named_params_names})
+template assert{capitalize_first_letter(election_type)}(n_bits, n_digits, rand_digits, {curve_params_name}, {election_type_named_params_names})
     """
 
     template_input_output = f"""
@@ -122,7 +148,8 @@ template assert{capitalize_first_letter(election_type)}(n_bits, rand_bits, {curv
 
     // Private/Witness
     input signal ballot{election_type_dim_array_str};
-    input signal r{election_type_dim_array_str}; // Randomness
+    input signal ballot_for_enc{election_type_dim_array_str}{ballot_entry_dim_for_enc};
+    input signal r{election_type_dim_array_str}{r_entry_dim}; // Randomness
     """
 
     if election_type_has_ranking:
@@ -131,8 +158,8 @@ template assert{capitalize_first_letter(election_type)}(n_bits, rand_bits, {curv
         """
 
     template_assert_encryption = f"""
-    component assertEnc = assertEnc{election_type_ballot_format}{capitalize_first_letter(elliptic_curve)}({election_type_dim_str}, n_bits, rand_bits, {curve_params_name});
-    assertEnc.v <== ballot;
+    component assertEnc = assertEnc{election_type_ballot_format}{capitalize_first_letter(elliptic_curve)}({election_type_dim_str}, n_digits, rand_digits, {curve_params_name});
+    assertEnc.v <== ballot_for_enc;
     assertEnc.{g_name} <== {g_name};
     assertEnc.{pk_name} <== {pk_name};
     assertEnc.r <== r;
@@ -151,7 +178,7 @@ template assert{capitalize_first_letter(election_type)}(n_bits, rand_bits, {curv
     """
 
     file_main_component = f"""
-component main {{public [{g_name}, {pk_name}, enc_gr, enc_gv_pkr]}} = assert{capitalize_first_letter(election_type)}({n_bits}, {BITS_RAND}, {curve_params_str}, {election_type_named_params_values});
+component main {{public [{g_name}, {pk_name}, enc_gr, enc_gv_pkr]}} = assert{capitalize_first_letter(election_type)}({n_bits}, {n_digits}, {DIGITS_RAND}, {curve_params_str}, {election_type_named_params_values});
     """
 
     circom_file = file_header + "\n" + template_method_signature + "{\n" + template_input_output
@@ -304,9 +331,9 @@ def cleanup(base_path):
 
 def main():
     validate_args(sys.argv[1:])
-    snark, mode, elliptic_curve, election_type, n_bits, named_params = parse_arguments()
+    snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params = parse_arguments()
     base_path = prepare_directories(snark, elliptic_curve, election_type)
-    file_prefix = create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, named_params)
+    file_prefix = create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n_digits, named_params)
     create_sage_file(base_path, file_prefix, elliptic_curve, election_type, named_params)
     non_linear_constraints, linear_constraints = compile_circuit(base_path, file_prefix)
     constraints = non_linear_constraints + linear_constraints

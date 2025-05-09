@@ -22,8 +22,9 @@ class SingleVoteBallot(Ballot):
     @classmethod
     def generateRandomBallot(cls, nVotes: int, eegPubKey: EEGPubKey):
         votes = [0 for i in range(nVotes)]
-        posOneVote = random.randint(0, (nVotes * 6) // 5) # 0.2 Probability of abstention
+        # posOneVote = random.randint(0, (nVotes * 6) // 5) # 0.2 Probability of abstention
+        posOneVote = random.randint(0, nVotes) # No abstention
         if posOneVote < nVotes:
             votes[posOneVote] = 1
-        # print(str(votes))
+        print(str(votes))
         return SingleVoteBallot(votes, eegPubKey)

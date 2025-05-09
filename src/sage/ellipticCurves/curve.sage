@@ -1,6 +1,6 @@
 from sageImport import sage_import
 from typing import Type
-sage_import('../constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT', 'CURVE_CHOSEN_SUBGROUP_ORDER', 'MONTGOMERY_CURVE_A', 'MONTGOMERY_CURVE_B'])
+sage_import('../constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT', 'CURVE_CHOSEN_SUBGROUP_ORDER', 'MONTGOMERY_CURVE_A', 'MONTGOMERY_CURVE_B', 'TE_ENC_BASE', 'DIGITS_RAND', 'DIGITS_PLAIN'])
 
 class CurvePoint():
     def __init__(self, coordinates: list, curveParams: list, chosenSubgroupOrder=CURVE_CHOSEN_SUBGROUP_ORDER, name=None):
@@ -45,15 +45,25 @@ class CurvePoint():
         basePointSW = basePoint.castTo("ShortWeierstrassPoint")
         return selfSW.discreteLog(basePointSW)
 
-    def genMultiples(self, nBits):
+    def genMultiples(self, nDigits):
         """
-        Generates an array [1*self, 2*self, 4*self, ..., 2^{nBits-1}*self]
+        Generates an array 
+        [   
+           [e, 1*self, 2*1*self,\dots, (b-1)*1*self],
+           [e, b*self, 2*b*self,\dots, (b-1)*b*self],
+           [e, (b^2)*self, 2*(b^2)*self,\dots, (b-1)*(b^2)*self],
+           \dots,
+           [e, (b^{l-1})*self, 2*(b^{l-1})*self,\dots, (b-1)*(b^{n-1})*self]
+        ]
+        Where b is the base used.
         """
-        multipleSelf = self
         multiples = []
-        for i in range(0, nBits):
-            multiples.append(multipleSelf)
-            multipleSelf *= 2
+        for i in range(0, nDigits):
+            multipleSelf = self * (TE_ENC_BASE**i)
+            multiples_i = []
+            for j in range(0, TE_ENC_BASE):
+                multiples_i.append(multipleSelf*j)
+            multiples.append(multiples_i)
         return multiples
 
     @classmethod

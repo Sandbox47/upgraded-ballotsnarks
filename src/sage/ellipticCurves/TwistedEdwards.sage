@@ -2,7 +2,7 @@ from sageImport import sage_import
 from typing import Type
 import json
 from JSON import JSONUtils
-sage_import('../constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT', 'CURVE_CHOSEN_SUBGROUP_ORDER', 'MONTGOMERY_CURVE_A', 'MONTGOMERY_CURVE_B', 'TWISTED_EDWARDS_CURVE_a', 'TWISTED_EDWARDS_CURVE_d'])
+sage_import('../constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT', 'CURVE_CHOSEN_SUBGROUP_ORDER', 'MONTGOMERY_CURVE_A', 'MONTGOMERY_CURVE_B', 'TWISTED_EDWARDS_CURVE_a', 'TWISTED_EDWARDS_CURVE_d', 'TE_ENC_BASE', 'DIGITS_RAND', 'DIGITS_PLAIN'])
 sage_import('curve', fromlist=['CurvePoint'])
 sage_import('ShortWeierstrass', fromlist=['ShortWeierstrassPoint'])
 sage_import('Montgomery', fromlist=['MontgomeryAffinePoint', 'MontgomeryProjectivePoint'])

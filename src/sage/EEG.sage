@@ -1,7 +1,7 @@
 from sageImport import sage_import
 import json
 import random
-sage_import('constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT'])
+sage_import('constants', fromlist=['BASE_FIELD', 'PLAINTEXT_LIMIT', 'TE_ENC_BASE', 'DIGITS_RAND', 'DIGITS_PLAIN'])
 # sage_import('curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 # sage_import('curvePoint', fromlist=['CurvePoint'])
 sage_import('ellipticCurves/curve', fromlist=['CurvePoint'])

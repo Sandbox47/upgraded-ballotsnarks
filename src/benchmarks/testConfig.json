@@ -3,19 +3,13 @@
         "snark": "groth16",
         "ellipticCurve": "twistedEdwards",
         "ellipticCurves_TEST": [
-            "twistedEdwards",
-            "montgomeryProjective"
+            "twistedEdwards"
         ],
         "testCircuits": [
-            "encryption"
+            "combined"
         ],
         "bitsVotes": [
-            1,
-            16,
-            32,
-            64,
-            128,
-            250
+            32
         ],
         "nCand": [
             1, 
@@ -27,26 +21,12 @@
             50, 
             75, 
             100, 
-            125,
             150, 
-            175, 
             200, 
-            250, 
             300,
-            350,
             400,
-            450,
-            500,
-            550,
-            575,
             600,
-            650,
-            700,
-            750,
             800,
-            850,
-            900,
-            950,
             1000
         ],
         "nCand_TEST": [
@@ -82,7 +62,14 @@
             1000
         ],
         "electionTypes": [
-            "singleVote"
+            "singleVote", 
+            "pointlistBorda", 
+            "multiVoteWithRules", 
+            "multiVote", 
+            "majorityJudgement", 
+            "lineVote", 
+            "condorcet", 
+            "bordaTournamentStyle"
         ],
         "electionTypes_TEST": [
             "singleVote", 
