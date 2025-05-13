@@ -205,7 +205,7 @@ component main {{public [{g_name}, {pk_name}, enc_gr, enc_gv_pkr]}} = assert{cap
 # ========================================================================================================================
 # 3. Create sage test file
 
-def create_sage_file(base_path, file_prefix, elliptic_curve, election_type, named_params):
+def create_sage_file(base_path, file_prefix, elliptic_curve, election_type, n_bits, named_params):
     named_params_string = ", ".join(f"{k}={v}" for k, v in named_params.items())
 
     sage_path = base_path / "sageTestFiles"
@@ -221,7 +221,7 @@ sage_import('../../../../../sage/ellipticCurves/curve', fromlist=['CurvePoint'])
 sage_import('../../../../../sage/ellipticCurves/Montgomery', fromlist=['MontgomeryAffinePoint', 'MontgomeryProjectivePoint'])
 sage_import('../../../../../sage/ellipticCurves/TwistedEdwards', fromlist=['TwistedEdwardsPoint'])
 
-Ballot.test({capitalize_first_letter(election_type)}Ballot, {capitalize_first_letter(elliptic_curve)}Point, {named_params_string})
+Ballot.test({capitalize_first_letter(election_type)}Ballot, {capitalize_first_letter(elliptic_curve)}Point, {n_bits}, {named_params_string})
         """)
     print(f"Sage test file '{sage_file}' created successfully.")
 
@@ -334,7 +334,7 @@ def main():
     snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params = parse_arguments()
     base_path = prepare_directories(snark, elliptic_curve, election_type)
     file_prefix = create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n_digits, named_params)
-    create_sage_file(base_path, file_prefix, elliptic_curve, election_type, named_params)
+    create_sage_file(base_path, file_prefix, elliptic_curve, election_type, n_bits, named_params)
     non_linear_constraints, linear_constraints = compile_circuit(base_path, file_prefix)
     constraints = non_linear_constraints + linear_constraints
     t_prep, crs_size = prepare_proof(snark, base_path, file_prefix)

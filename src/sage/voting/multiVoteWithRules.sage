@@ -3,6 +3,7 @@ import random
 import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('multiVote', fromlist=['MultiVoteBallot'])
+sage_import('../constants', fromlist=['BITS_PLAIN'])
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 """
@@ -19,7 +20,7 @@ class MultiVoteWithRulesBallot(MultiVoteBallot):
             raise ValueError(f"Product of second and third vote must equal first vote but is: {self.ballot[1]} * {self.ballot[2]} = {self.ballot[1] * self.ballot[2]} != {self.ballot[0]}.")
 
     @classmethod
-    def generateRandomBallot(cls, nVotes: int, maxVotesCand: int, maxChoices: int, eegPubKey: EEGPubKey):
+    def generateRandomBallot(cls, nVotes: int, maxVotesCand: int, maxChoices: int, eegPubKey: EEGPubKey, bitsPlain=BITS_PLAIN):
         if nVotes < 3:
             raise ValueError("Need at least 3 entries in the ballot to enforce the additional constraint on the first three votes.")
         restVotes = maxChoices

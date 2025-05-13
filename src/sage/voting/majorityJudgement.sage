@@ -4,6 +4,7 @@ import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
 sage_import('singleVote', fromlist=['SingleVoteBallot'])
+sage_import('../constants', fromlist=['BITS_PLAIN'])
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class MajorityJudgementBallot(Ballot):
@@ -24,7 +25,7 @@ class MajorityJudgementBallot(Ballot):
                 raise ValueError(f"Each candidate must receive exactly one grade but got {sumVotes} grades.")
 
     @classmethod
-    def generateRandomBallot(cls, nCand: int, nGrades: int, eegPubKey: EEGPubKey):
+    def generateRandomBallot(cls, nCand: int, nGrades: int, eegPubKey: EEGPubKey, bitsPlain=BITS_PLAIN):
         votes = [[0 for j in range(nGrades)] for i in range(nCand)]
         for i in range(nCand):
             posOneVote = random.randint(0, nGrades - 1)

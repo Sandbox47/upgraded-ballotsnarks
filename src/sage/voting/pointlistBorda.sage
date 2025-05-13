@@ -3,6 +3,7 @@ import random
 import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
+sage_import('../constants', fromlist=['BITS_PLAIN'])
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class PointlistBordaBallot(Ballot):
@@ -23,7 +24,7 @@ class PointlistBordaBallot(Ballot):
             raise ValueError(f"0 points have been given to {count} candiadates but should be given to exactly {expectedZeros} candidates.")
 
     @classmethod
-    def generateRandomBallot(cls, nCand: int, nPoints: int, orderedPoints: list[int], eegPubKey: EEGPubKey):
+    def generateRandomBallot(cls, nCand: int, nPoints: int, orderedPoints: list[int], eegPubKey: EEGPubKey, bitsPlain=BITS_PLAIN):
         votes = [0 for i in range(nCand)]
         indices = set([i for i in range(nCand)])
         for points in orderedPoints:

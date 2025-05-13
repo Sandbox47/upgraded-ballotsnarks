@@ -6,7 +6,7 @@
             "twistedEdwards"
         ],
         "testCircuits": [
-            "combined"
+            "voting"
         ],
         "bitsVotes": [
             32
@@ -62,14 +62,7 @@
             1000
         ],
         "electionTypes": [
-            "singleVote", 
-            "pointlistBorda", 
-            "multiVoteWithRules", 
-            "multiVote", 
-            "majorityJudgement", 
-            "lineVote", 
-            "condorcet", 
-            "bordaTournamentStyle"
+            "pointlistBorda"
         ],
         "electionTypes_TEST": [
             "singleVote", 

@@ -2,6 +2,7 @@ from sageImport import sage_import
 import json
 from JSON import JSONUtils
 import random
+import math
 sage_import('../constants', fromlist=['BASE_FIELD', 'BASE_FIELD_P', 'CURVE_CHOSEN_SUBGROUP_ORDER', 'BITS_RAND', 'BITS_PLAIN', 'TE_ENC_BASE', 'DIGITS_RAND', 'DIGITS_PLAIN'])
 # sage_import('../projectivePoint', fromlist=['ProjectivePoint'])
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
@@ -13,7 +14,8 @@ sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlainte
 class Ballot():
     def __init__(self, votes, eegPubKey: EEGPubKey, bitsRand=BITS_RAND, bitsPlain=BITS_PLAIN):
         self.ballot = votes
-        self.ballot_indices = self.genBaseIndices(self.ballot, DIGITS_PLAIN)
+        digitsPlain = math.ceil(bitsPlain/math.log(TE_ENC_BASE, 2))
+        self.ballot_indices = self.genBaseIndices(self.ballot, digitsPlain)
         # [Ballot.toBaseIndices(vote, DIGITS_PLAIN) for vote in self.ballot]
         self.ranking = None
         # print(self.ballot)
@@ -139,7 +141,7 @@ class Ballot():
         return data
 
     @classmethod
-    def test(cls, ballotType, curvePointClass, eegKey=None, **kwargs):
+    def test(cls, ballotType, curvePointClass, bitsPlain, eegKey=None, **kwargs):
         """
         Sets up Montgomery curve and a corresponding EEGKey. 
         Then calls the generateRandomBallot Method of the specified ballotType and outputs the ballot in JSON format.
@@ -155,7 +157,7 @@ class Ballot():
         if hasattr(ballotType, 'generateRandomBallot'):
             method = getattr(ballotType, 'generateRandomBallot')
             if callable(method):
-                ballot = method(**kwargs, eegPubKey=eegKey.pubKey)
+                ballot = method(**kwargs, eegPubKey=eegKey.pubKey, bitsPlain=bitsPlain)
             else:
                 raise TypeError(f"'{method}' is not callable on {ballotType.__name__}.")
         else:

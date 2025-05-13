@@ -3,6 +3,7 @@ import random
 import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
+sage_import('../constants', fromlist=['BITS_PLAIN'])
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class LineVoteBallot(Ballot):
@@ -22,7 +23,7 @@ class LineVoteBallot(Ballot):
             raise ValueError(f"All 1 votes must be consecutive.")
 
     @classmethod
-    def generateRandomBallot(cls, nVotes: int, eegPubKey: EEGPubKey):
+    def generateRandomBallot(cls, nVotes: int, eegPubKey: EEGPubKey, bitsPlain=BITS_PLAIN):
         votes = [0 for i in range(nVotes)]
         posOneVotesStart = random.randint(0, nVotes - 1)
         posOneVotesEnd = random.randint(0, nVotes - 1)

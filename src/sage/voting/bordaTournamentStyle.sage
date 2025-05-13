@@ -3,6 +3,8 @@ import random
 import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
+sage_import('../constants', fromlist=['BITS_PLAIN'])
+
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class BordaTournamentStyleBallot(Ballot):
@@ -30,7 +32,7 @@ class BordaTournamentStyleBallot(Ballot):
         return votes
 
     @classmethod
-    def generateRandomBallot(cls, nVotes: int, a:int, b: int, eegPubKey: EEGPubKey):
+    def generateRandomBallot(cls, nVotes: int, a:int, b: int, eegPubKey: EEGPubKey, bitsPlain=BITS_PLAIN):
         ranking = Ballot.generateRandomRanking(nVotes)
         votes = BordaTournamentStyleBallot.computeVotesFromRanking(ranking, nVotes, a, b)
         return BordaTournamentStyleBallot(votes, nVotes, ranking, a, b, eegPubKey)

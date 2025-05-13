@@ -3,6 +3,7 @@ import random
 import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
+sage_import('../constants', fromlist=['BITS_PLAIN'])
 # sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class MultiVoteBallot(Ballot):
@@ -22,7 +23,7 @@ class MultiVoteBallot(Ballot):
             raise ValueError(f"Sum of all votes must be in [0, {self.maxChoices}] but is {sumVotes}.")
 
     @classmethod
-    def generateRandomBallot(cls, nVotes: int, maxVotesCand: int, maxChoices: int, eegPubKey: EEGPubKey):
+    def generateRandomBallot(cls, nVotes: int, maxVotesCand: int, maxChoices: int, eegPubKey: EEGPubKey, bitsPlain=BITS_PLAIN):
         restVotes = maxChoices
         votes = []
         for i in range(nVotes):
