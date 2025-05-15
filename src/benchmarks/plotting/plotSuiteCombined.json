@@ -8,7 +8,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -20,7 +20,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -32,7 +32,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -44,7 +44,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -56,7 +56,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -70,7 +70,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -93,7 +93,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -107,7 +107,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -120,7 +120,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -133,7 +133,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -161,7 +161,7 @@
         "dataSets": [
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -173,7 +173,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -185,7 +185,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -197,7 +197,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -209,7 +209,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints",
@@ -223,7 +223,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades",
@@ -246,7 +246,7 @@
         "dataSets": [
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints=nCand",
@@ -260,7 +260,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -273,7 +273,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -286,7 +286,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades=nCand",
@@ -314,7 +314,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -326,7 +326,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -338,7 +338,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -350,7 +350,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -362,7 +362,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -374,7 +374,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -395,7 +395,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -408,7 +408,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -421,7 +421,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -434,7 +434,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -461,7 +461,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -473,7 +473,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -485,7 +485,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -497,7 +497,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -509,7 +509,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -523,7 +523,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -538,7 +538,7 @@
 
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -550,7 +550,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -562,7 +562,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -574,7 +574,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -586,7 +586,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints",
@@ -600,7 +600,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades",
@@ -615,7 +615,7 @@
 
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -627,7 +627,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -639,7 +639,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -651,7 +651,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -663,7 +663,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -675,7 +675,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -696,7 +696,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -710,7 +710,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -723,7 +723,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -736,7 +736,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -751,7 +751,7 @@
 
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints=nCand",
@@ -765,7 +765,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -778,7 +778,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -791,7 +791,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades=nCand",
@@ -806,7 +806,7 @@
 
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -819,7 +819,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -832,7 +832,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -845,7 +845,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -907,7 +907,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -919,7 +919,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -931,7 +931,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -943,7 +943,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -955,7 +955,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -969,7 +969,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -983,7 +983,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -997,7 +997,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1010,7 +1010,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1023,7 +1023,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -1051,7 +1051,7 @@
         "dataSets": [
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1063,7 +1063,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1075,7 +1075,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1087,7 +1087,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1099,7 +1099,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints",
@@ -1113,7 +1113,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades",
@@ -1127,7 +1127,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints=nCand",
@@ -1141,7 +1141,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -1154,7 +1154,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -1167,7 +1167,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades=nCand",
@@ -1195,7 +1195,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1207,7 +1207,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1219,7 +1219,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1231,7 +1231,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1243,7 +1243,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1255,7 +1255,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1267,7 +1267,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1280,7 +1280,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1293,7 +1293,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -1306,7 +1306,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1333,7 +1333,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1345,7 +1345,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1357,7 +1357,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1369,7 +1369,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1381,7 +1381,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -1395,7 +1395,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -1410,7 +1410,7 @@
 
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1422,7 +1422,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1434,7 +1434,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1446,7 +1446,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1458,7 +1458,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints",
@@ -1472,7 +1472,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades",
@@ -1487,7 +1487,7 @@
 
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1499,7 +1499,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1511,7 +1511,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1523,7 +1523,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1535,7 +1535,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1547,7 +1547,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1559,7 +1559,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -1573,7 +1573,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1586,7 +1586,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1599,7 +1599,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -1614,7 +1614,7 @@
 
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints=nCand",
@@ -1628,7 +1628,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -1641,7 +1641,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -1654,7 +1654,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades=nCand",
@@ -1669,7 +1669,7 @@
 
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1682,7 +1682,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1695,7 +1695,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -1708,7 +1708,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1746,7 +1746,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1758,7 +1758,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/singleVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1770,7 +1770,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1798,7 +1798,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1810,7 +1810,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1822,7 +1822,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1834,7 +1834,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1846,7 +1846,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1858,7 +1858,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/lineVote.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "lines": [
@@ -1870,7 +1870,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_32_bit_values_eeg.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1882,7 +1882,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1894,7 +1894,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_line_vote_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1924,7 +1924,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -1938,7 +1938,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints",
@@ -1952,7 +1952,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_10_exponential_el_gamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1964,7 +1964,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -1978,7 +1978,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1991,7 +1991,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/pointlistBorda.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nPoints=nCand",
@@ -2005,7 +2005,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -2018,7 +2018,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -2031,7 +2031,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_borda_with_ties_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -2061,7 +2061,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -2074,7 +2074,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/condorcet.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/condorcet.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 2,
@@ -2087,7 +2087,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_condorcet_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -2117,7 +2117,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -2131,7 +2131,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades",
@@ -2145,7 +2145,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_6_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -2157,7 +2157,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -2171,7 +2171,7 @@
             },
             {
                 "mode": "CircomTwistedEdwards",
-                "fileName": "../groth16_results/twistedEdwards/results/combined/majorityJudgement.csv",
+                "fileName": "../thesis_results/twistedEdwards/results/combined/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "filterVariable": "nGrades=nCand",
@@ -2185,7 +2185,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades_exponential_elgamal.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,

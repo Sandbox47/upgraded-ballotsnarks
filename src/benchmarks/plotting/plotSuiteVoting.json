@@ -8,7 +8,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -20,7 +20,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -32,7 +32,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -44,7 +44,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -56,7 +56,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -70,7 +70,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -93,7 +93,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -107,7 +107,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -120,7 +120,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -133,7 +133,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 3,
@@ -146,7 +146,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -175,7 +175,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -187,7 +187,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -199,7 +199,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -211,7 +211,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_line-vote.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_line-vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -223,7 +223,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -235,7 +235,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -256,7 +256,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -269,7 +269,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_borda_with_ties.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_borda_with_ties.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -282,7 +282,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_condorcet.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_condorcet.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -295,7 +295,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -323,7 +323,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -335,7 +335,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -347,7 +347,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -359,7 +359,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_line-vote.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_line-vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -371,7 +371,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -383,7 +383,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -396,7 +396,7 @@
 
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -408,7 +408,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -420,7 +420,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -432,7 +432,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -444,7 +444,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -458,7 +458,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -481,7 +481,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -494,7 +494,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_borda_with_ties.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_borda_with_ties.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -507,7 +507,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_condorcet.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_condorcet.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -520,7 +520,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -534,7 +534,7 @@
 
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -548,7 +548,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -561,7 +561,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -574,7 +574,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 3,
@@ -587,7 +587,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -651,7 +651,7 @@
         "dataSets": [
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -663,7 +663,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -675,7 +675,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -687,7 +687,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -699,7 +699,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -713,7 +713,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -727,7 +727,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -741,7 +741,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -754,7 +754,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -767,7 +767,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 3,
@@ -780,7 +780,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",
@@ -809,7 +809,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -821,7 +821,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -833,7 +833,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -845,7 +845,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_line-vote.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_line-vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -857,7 +857,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -869,7 +869,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -881,7 +881,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -894,7 +894,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_borda_with_ties.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_borda_with_ties.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -907,7 +907,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_condorcet.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_condorcet.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -920,7 +920,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -948,7 +948,7 @@
         "dataSets": [
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results/libsnarkResults/scaled_full_single_vote.csv",
+                "fileName": "../thesis_results/libsnarkResults/scaled_full_single_vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -960,7 +960,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -972,7 +972,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_multi_vote_with_rules_32_bit_values.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -984,7 +984,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_line-vote.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_line-vote.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -996,7 +996,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_10.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1008,7 +1008,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_6_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "lines": [
@@ -1021,7 +1021,7 @@
 
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/singleVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/singleVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1033,7 +1033,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1045,7 +1045,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/multiVoteWithRules.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1057,7 +1057,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/lineVote.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/lineVote.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "lines": [
@@ -1069,7 +1069,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints",
@@ -1083,7 +1083,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades",
@@ -1097,7 +1097,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_pointlist_borda_npoints_=_nchoices.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1110,7 +1110,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_borda_with_ties.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_borda_with_ties.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1123,7 +1123,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_condorcet.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_condorcet.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 3,
@@ -1136,7 +1136,7 @@
             },
             {
                 "mode": "libsnark",
-                "fileName": "../groth16_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
+                "fileName": "../thesis_results//libsnarkResults/scaled_full_majority_judgment_num_cand=num_grades.csv",
                 "xNameData": "n_cand",
                 "linestyle": "solid",
                 "interpolationDegree": 2,
@@ -1150,7 +1150,7 @@
 
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/pointlistBorda.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/pointlistBorda.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nPoints=nCand",
@@ -1164,7 +1164,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/bordaTournamentStyle.csv",
                 "xNameData": "nVotes",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1177,7 +1177,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "interpolationDegree": 2,
@@ -1190,7 +1190,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/condorcetWithoutRanking.csv",
                 "xNameData": "nCand",
                 "linestyle": "dotted",
                 "interpolationDegree": 3,
@@ -1203,7 +1203,7 @@
             },
             {
                 "mode": "CircomMontgomery",
-                "fileName": "../groth16_results/montgomeryProjective/results/voting/majorityJudgement.csv",
+                "fileName": "../thesis_results/montgomeryProjective/results/voting/majorityJudgement.csv",
                 "xNameData": "nCand",
                 "linestyle": "dashed",
                 "filterVariable": "nGrades=nCand",

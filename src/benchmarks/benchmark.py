@@ -32,7 +32,6 @@ def get_largest_ptau_file(folder_path):
 PTAU_FILE = get_largest_ptau_file("../scripts/ptau/")
 print(f"Using ptau file: {PTAU_FILE}")
 
-
 BITS_RAND=255
 BITS_PLAIN=32
 TE_ENC_BASE = 5
@@ -130,7 +129,7 @@ def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n
 
     file_header = f"""
 pragma circom 2.2.1;
-include \"../../../../../voting/{election_type}.circom\";
+include \"../../../../../circom/voting/{election_type}.circom\";
     """
 
     template_method_signature = f"""
