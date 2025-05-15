@@ -4,7 +4,6 @@ import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
 sage_import('../constants', fromlist=['BITS_PLAIN'])
-# sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class MultiVoteBallot(Ballot):
     def __init__(self, votes, maxVotesCand: int, maxChoices: int, eegPubKey: EEGPubKey):

@@ -172,29 +172,6 @@ template assertEncTwistedEdwards(bitsPlain, bitsRand, base, a, d) { // TESTING O
     expElGamal.powersOfpk <== powersOfpk;
     expElGamal.v <== v;
     expElGamal.r <== r;
-<<<<<<< HEAD:src/expElGamal/assertEEG.circom
-
-    /*
-    log("test_gr:");
-    log("x:", gr.x);
-    log("y:", gr.y);
-    log("test_gv_pkr:");
-    log("x:", gv_pkr.x);
-    log("y:", gv_pkr.y);
-
-    log("enc_gr:");
-    log("x:", expElGamal.gr.x);
-    log("y:", expElGamal.gr.y);
-    log("enc_gv_pkr:");
-    log("x:", expElGamal.gv_pkr.x);
-    log("y:", expElGamal.gv_pkr.y);
-    log();
-    */
-
-    // gr === expElGamal.gr;
-    // gv_pkr === expElGamal.gv_pkr;
-=======
->>>>>>> cleanup:src/circom/expElGamal/assertEEG.circom
 }
 
 // template assertEncVectorTwistedEdwardsArbitraryBase(entries, bitsPlain, bitsRand, base, a, d) {
@@ -247,11 +224,3 @@ template assertEncMatrixTwistedEdwards(rows, columns, bitsPlain, bitsRand, base,
         
     }
 }
-<<<<<<< HEAD:src/expElGamal/assertEEG.circom
-
-// component main = assertEncVector(100, 32, 255, 126932, 1);
-// component main = assertEncTwistedEdwardsArbitraryBase(14, 110, 5, 126934, 126930);
-// component main = assertEncTwistedEdwards(32, 255, 126934, 126930);
-// component main = assertEncMontgomeryProjective(32, 255, 126932, 1);
-=======
->>>>>>> cleanup:src/circom/expElGamal/assertEEG.circom

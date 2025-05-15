@@ -370,14 +370,3 @@ template ladderProjectivePaddedConstraintReduced(n, A) {
     // input ProjectivePoint() test;
     // test === r0Final;
 }
-<<<<<<< HEAD:src/curves/montgomeryLadder.circom
-// component main = ladderProjective(255, 126932);
-// component main = ladderProjectivePaddedNaive(255, 126932);
-// component main = ladderProjectivePaddedConstraintReduced(255, 126932);
-
-// component main = xAddProjective();
-// component main = xDblProjective(126932);
-
-// component main = xAddProjective();
-=======
->>>>>>> cleanup:src/circom/curves/montgomeryLadder.circom

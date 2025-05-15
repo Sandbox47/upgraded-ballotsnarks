@@ -4,7 +4,7 @@ import json
 sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlaintext', 'EEGCiphertext', 'EEGEncryption', 'EEGDecryption', 'EEG'])
 sage_import('ballot', fromlist=['Ballot'])
 sage_import('../constants', fromlist=['BITS_PLAIN'])
-# sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
+sage_import('../ellipticCurves/TwistedEdwards', fromlist=['TwistedEdwardsPoint'])
 
 class CondorcetBallot(Ballot):
     def __init__(self, votes, nCand: int, ranking: list[int], eegPubKey: EEGPubKey):
@@ -43,6 +43,3 @@ class CondorcetBallot(Ballot):
         ranking = Ballot.generateRandomRanking(nCand)
         votes = CondorcetBallot.computeVotesFromRanking(ranking, nCand)
         return CondorcetBallot(votes, nCand, ranking, eegPubKey)
-
-# Test
-# Ballot.test(CondorcetBallot, nCand=20)

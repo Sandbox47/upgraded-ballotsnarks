@@ -5,7 +5,6 @@ sage_import('../EEG', fromlist=['EEGPrivKey', 'EEGPubKey', 'EEGKey', 'EEGPlainte
 sage_import('ballot', fromlist=['Ballot'])
 sage_import('singleVote', fromlist=['SingleVoteBallot'])
 sage_import('../constants', fromlist=['BITS_PLAIN'])
-# sage_import('../curve', fromlist=['MontgomeryCurve', 'MontgomeryCurvePoint'])
 
 class MajorityJudgementBallot(Ballot):
     def __init__(self, votes, nCand: int, nGrades: int, eegPubKey: EEGPubKey):
@@ -31,6 +30,3 @@ class MajorityJudgementBallot(Ballot):
             posOneVote = random.randint(0, nGrades - 1)
             votes[i][posOneVote] = 1
         return MajorityJudgementBallot(votes, nCand, nGrades, eegPubKey)
-
-# Test
-# Ballot.test(MajorityJudgementBallot, nCand=25, nGrades=25)

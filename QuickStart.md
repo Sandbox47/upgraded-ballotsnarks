@@ -29,27 +29,27 @@ python3 benchmark.py <snark> <circuit> <curve> <election> <bits> <election_key_1
 Here, the individual parameters are:
 - `<snark>`: Zero Knowledge Proof system (ZPS). At the moment, we support `groth16`, `PLONK` and `FFLONK`. 
 Please note that our circuits are not optimized for `PLONK` and `FFLONK` and performance is typically a lot worse for these ZPSs.
-- `<circuit>`: Circuit. We can assert that a chosen ballot is in the choice space with `voting` ($\mathfrak{C}_C^{Vot}$ in our thesis), that a ballot is correctly encrypted with `encryption` ($\mathfrak{C}_C^{Enc}$ in our thesis) and we can compute full ballot validity proofs using `combined` ($\mathfrak{C}_C^{Ballot\text{-}Validity}$ in our thesis).
-- `<curve>`: Elliptic curve. We can use `twistedEdwards` for the Twsited Edwards curve $TE_{126934, 126930}(\mathbb{F})$ as defined in our thesis. Alternatively, we can use `montgomeryProjective` for the Montgomery curve $M_{126932,1}(\mathbb{F}P^2)$ as defined in our thesis.
-- `<election>`: Election type. Here, we support the election types that were covered in our thesis:
-    - `singleVote` for choice spaces $C_{\text{Single}(cand)}$
-    - `multiVote` for choice spaces $C_{\text{Multi}(cand, max, t)}$
-    - `lineVote` for choice spaces $C_{\text{Line}(cand)}$
-    - `multiVoteWithRules` for choice spaces $C_{\text{MWR}(cand, max, t)}$
-    - `pointlistBorda` for choice spaces $C_{\text{Pointlist-Borda}(cand, l, \mathcal{L})}$
-    - `bordaTournamentStyle` for choice spaces $C_{\text{BTS}(cand, ap, bp)}$
-    - `condorcet` for choice spaces $C_{\text{Condorcet}(cand)}$
-    - `majorityJudgment` for choice spaces $C_{\text{Majority-Judgment}(cand, grades)}$
+- `<circuit>`: Circuit. We can assert that a chosen ballot is in the choice space with `voting`, that a ballot is correctly encrypted with `encryption` and we can compute full ballot validity proofs using `combined`.
+- `<curve>`: Elliptic curve. We can use `twistedEdwards` for the Twisted Edwards curve $\{(x,y)| 126934\cdot x^2 + y^2 = 1 + 126930\cdot x^2y^2\}. Alternatively, we can use `montgomeryProjective` for the Montgomery curve $\{(x,y)| y^2 = x^3 + 126932\cdot x^2 + x\}\cup\{\mathcal{O}\}$.
+- `<election>`: Election type. Here, we support the following election types:
+    - `singleVote`
+    - `multiVote`
+    - `lineVote`
+    - `multiVoteWithRules`
+    - `pointlistBorda`
+    - `bordaTournamentStyle`
+    - `condorcet`
+    - `majorityJudgment`
 - `<bits>`: Number of Bits to represent a ballot entry. This is provided as an integer value
 - `<election_key_i>=<election_value_i>`: Additional parameters specific to the election type. For the different election types, these are:
-    - For `singleVote`: `nVotes=cand` for the choice space $C_{\text{Single}(cand)}$.
-    - For `multiVote`: `nVotes=cand maxVotesCand=t maxChoices=max` for the choice space $C_{\text{Multi}(cand, max, t)}$
-    - For `lineVote`: `nVotes=cand` for the choice space $C_{\text{Line}(cand)}$
-    - For `multiVoteWithRules`: `nVotes=cand maxVotesCand=t maxChoices=max` for the choice space $C_{\text{MWR}(cand, max, t)}$
-    - For `pointlistBorda`: `nCand=cand nPoints=l orderedPoints=[p_0,...,p_(l-1)]` for the choice space $C_{\text{Pointlist-Borda}(cand, l, [p_0,\dots, p_{l-1}])}$
-    - For `bordaTournamentStyle`: `nVotes=cand a=ap b=bp` for the choice space $C_{\text{BTS}(cand, ap, bp)}$
-    - For `condorcet`: `nCand=cand` for the choice space $C_{\text{Condorcet}(cand)}$
-    - For `majorityJudgment`: `nCand=cand nGrades=grades` for the choice space $C_{\text{Majority-Judgment}(cand, grades)}$
+    - For `singleVote`: `nVotes=cand` (For $cand$ candidates).
+    - For `multiVote`: `nVotes=cand maxVotesCand=t maxChoices=max` (For $cand$ candidates, maximal number of votes $t$ per candidate, maximal number of votes $max$ in total)
+    - For `lineVote`: `nVotes=cand` (For $cand$ candidates)
+    - For `multiVoteWithRules`: `nVotes=cand maxVotesCand=t maxChoices=max` (For $cand$ candidates, maximal number of votes $t$ per candidate, maximal number of votes $max$ in total)
+    - For `pointlistBorda`: `nCand=cand nPoints=l orderedPoints=[p_0,...,p_(l-1)]` (For $cand$ candidates, and a list of points $[p_0,\dots, p_{l-1}]$ to be given to the different candidates)
+    - For `bordaTournamentStyle`: `nVotes=cand a=ap b=bp` (For $cand$ candidates and $ap$ points to be given to a candidate for every candidate ranked worse than them as well as $bp$ points to be given to a candidate for every candidate ranked the same as them)
+    - For `condorcet`: `nCand=cand` (For $cand$ candidates)
+    - For `majorityJudgment`: `nCand=cand nGrades=grades` (For $cand$ candidates to be graded with $grades$ different grades)
 
 Consider the following example: We want to compute the complete ballot validity proof for Pointlist-Borda with $20$ candidates and $[5,3,2,1]$ as the pointlist, where the individual ballot entries are represented with $32$ bits, we want to use Exponential ElGamal (EEG) encryption based on Twisted Edwards curves and want to compute the proof with the Groth16 SNARK. Then, we need to run the following command:
 ```bash
@@ -66,7 +66,7 @@ So, for the Pointlist-Borda example described before, the result would be saved 
 32;20;4;[5,3,2,1];108500;43845;152345;73.33515930175781;29132;7669;1047
 ```
 
-The results we obtained using Groth16 and Circom in our thesis as well as the results obtained by Huber et al. using Groth16 and libsnark are saved in the folder `src/benchmarks/thesis_results`.
+The results we obtained using Groth16 and Twisted Edwards curves in our paper are saved in the folder `src/benchmarks/short_paper_results`.
 
 ### Test Suites
 To run multiple benchmarks together, we use test suites and a config file to create these. In the folder `src/benchmarks/testSuites`, we provide a `testConfig.json` file. This file is used to generate the test suites and has the following entries:
@@ -75,15 +75,15 @@ To run multiple benchmarks together, we use test suites and a config file to cre
 - `"testCircuits"`: A list of circuits used in the test suite. This equates to the parameter `<circuit>` in the individual benchmarks.
 - `"bitsVotes"`: A list of bit counts used in the test suite. This equates to the parameter `<bits>` in the individual benchmarks.
 - `"nCand"`: A list of candidate counts used in the test suite. This equates to the election type specific parameter `nVotes` or `nCand` in the individual benchmarks depending on the election type.
-- `"electionTypes"`: A list of election tpyes used in the test suite. This equates to the parameter `<election>` in the individual benchmarks.
+- `"electionTypes"`: A list of election types used in the test suite. This equates to the parameter `<election>` in the individual benchmarks.
 
 Additionally, the config file contains some presets for other election type specific parameters such as `ap` and `bp` in BTS elections.
 
 We provide a prepared config file with snark `groth16` and elliptic curve `twistedEdwards`.
 
-The test suites containing all test cases specified in `testConfig.json` are then created seperatly for the circuits `voting`, `encryption` and `combined`. By running the command `python3 testSuite.py` in the folder `src/benchmarks/testSuites`, we create the test suites `testSuiteVoting.json`, `testSuiteEncryption.json` and `testSuiteCombined.json` in the same folder. We provide prepared test suites for the test cases specified in our prepared `testConfig.json` file.
+The test suites containing all test cases specified in `testConfig.json` are then created separately for the circuits `voting`, `encryption` and `combined`. By running the command `python3 testSuite.py` in the folder `src/benchmarks/testSuites`, we create the test suites `testSuiteVoting.json`, `testSuiteEncryption.json` and `testSuiteCombined.json` in the same folder. We provide prepared test suites for the test cases specified in our prepared `testConfig.json` file.
 
-In order to run all of the test cases specified in a test suite `testSuite<circuit>.json`, we run the command 
+In order to run all the test cases specified in a test suite `testSuite<circuit>.json`, we run the command 
 ```bash
 python3 benchmarkTestSuite.py testSuites/testSuite<circuit>.json
 ```
@@ -91,12 +91,3 @@ in the folder `src/benchmarks`. For instance, to run the test suite `testSuiteVo
 ```bash
 python3 benchmarkTestSuite.py testSuites/testSuiteVoting.json
 ```
-
-## Plotting
-
-To visualize our results, we provide a `plotBenchmarks.py` file in the folder `src/benchmarks/plotting`. Additionally, we provide a config file `plotConfig.json` which specifies which metrics we want to plot. Furthermore, we provide `plotSuiteVoting.json`, `plotSuiteEncryption.json` and `plotSuiteCombined.json` to plot our results seperatly for the tested circuits `voting`, `encryption` and `combined`. To plot the results from our thesis for a circuit `<circuit>`, we run the command
-```bash
-python3 plotBenchmarks.py testSuite<circuit>.json
-```
-in the folder `src/benchmarks/plotting`.
-To plot newly generated results, the corresponding occurences of `thesis_results` in the plot suites need to be changed to `groth16`, `PLONK` or `FFLONK` depending on the ZPS used to generate the new results.

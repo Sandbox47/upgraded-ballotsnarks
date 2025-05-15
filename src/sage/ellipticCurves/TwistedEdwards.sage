@@ -66,9 +66,3 @@ class TwistedEdwardsPoint(CurvePoint):
             return TwistedEdwardsPoint(other.x/other.y, (other.x-1)/(other.x+1), a, d, chosenSubgroupOrder=other.chosenSubgroupOrder, name=other.name)
         else: # Infinity
             return TwistedEdwardsPoint(0, 1, a, d, chosenSubgroupOrder=other.chosenSubgroupOrder, name=other.name)
-
-
-# p1 = TwistedEdwardsPoint(5, 5, 3, 8, "p1")
-# p2 = TwistedEdwardsPoint(8, 5, 3, 8, "p2")
-# res = p1 + p2
-# print(res)
