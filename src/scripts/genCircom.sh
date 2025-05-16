@@ -29,21 +29,14 @@ if [[ "$INPUT_FILE" == *.sage ]]; then
   # Generate the JSON input using the Sage file
   SAGE_OUTPUT="${INPUT_FILE%.sage}.json"
   
-  # Run the Sage script and extract only the JSON part using a tool like jq or sed
-  # sage "$INPUT_FILE"
+  # Run the Sage script and extract only the JSON output
   sage "$INPUT_FILE" | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
-  # sage "$INPUT_FILE" | tee /dev/tty | sed -n '/^{/,/^}$/p' > "$SAGE_OUTPUT"
-  # cat "$SAGE_OUTPUT"
   
   # Update INPUT_FILE to point to the generated JSON file
   INPUT_FILE="$SAGE_OUTPUT"
-  # echo "Input file: $INPUT_FILE"
 fi
 
-# echo "Current location: ${PWD}"
-# echo "Circom test file: ${CIRCOM_FILE}"
-
-# Run circom to generate r1cs, sym, and wasm files (or C++ if --c is used)
+# Run circom to generate r1cs, sym, and wasm files
 if [ "$USE_CPP_WITNESS" = true ]; then
   circom "$CIRCOM_FILE" --r1cs --sym --c --O2
 

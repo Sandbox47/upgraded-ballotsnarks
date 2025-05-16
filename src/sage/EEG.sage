@@ -100,8 +100,8 @@ class EEG():
         return [EEG.encrypt(plaintexts[i], pubKey, rands[i]) for i in range(len(plaintexts))]
 
     @classmethod
-    def decryptVector(cls):
-        raise NotImplementedError("Yeah, I'll do it eventually. ;-)")
+    def decryptVector(cls, ciphertexts, privKey: EEGPrivKey):
+        return [EEG.decrypt(ciphertext, privKey) for ciphertext in ciphertexts]
 
     @classmethod
     def encryptMatrix(cls, plaintexts, pubKey: EEGPubKey, rands=None):
@@ -109,5 +109,5 @@ class EEG():
         return [EEG.encryptVector(plaintexts[i], pubKey, rands[i]) for i in range(len(plaintexts))]
 
     @classmethod
-    def decryptMatrix(cls):
-        raise NotImplementedError("Yeah, I'll do it eventually. ;-)")
+    def decryptMatrix(cls, ciphertexts, privKey: EEGPrivKey):
+        return [EEG.decryptVector(ciphertextVector, privKey) for ciphertextVector in ciphertexts]

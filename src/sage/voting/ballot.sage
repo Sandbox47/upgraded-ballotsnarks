@@ -88,7 +88,6 @@ class Ballot():
             return ciphertext.genTimesRand, ciphertext.genTimesPlainPlusGenTimesbTimesRand
 
     def toJSON(self):
-        
         data = {
                 "ballot": JSONUtils.arrayToJSON(self.ballot),
 

@@ -4,14 +4,10 @@
         "ellipticCurve": "twistedEdwards",
         "testCircuits": [
             "voting",
-            "encryption",
             "combined"
         ],
         "bitsVotes": [
-            1,
-            16,
-            32,
-            64
+            32
         ],
         "nCand": [
             1, 
@@ -19,17 +15,7 @@
             3,
             5, 
             10, 
-            25, 
-            50, 
-            75, 
-            100, 
-            150, 
-            200, 
-            300,
-            400,
-            600,
-            800,
-            1000
+            25
         ],
         "electionTypes": [
             "singleVote",

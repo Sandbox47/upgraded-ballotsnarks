@@ -1,2 +1,2 @@
 Number of Bits;nCand;nPoints;orderedPoints;non-linear constraints;linear constraints;total constraints;CRS size [MB];t_prep [ms];t_prove [ms];t_ver [ms]
-32;20;4;[5,3,2,1];70120;0;70120;41.079349517822266;18523;3600;744
+32;20;4;[5,3,2,1];70120;0;70120;41.079349517822266;17760;3257;711

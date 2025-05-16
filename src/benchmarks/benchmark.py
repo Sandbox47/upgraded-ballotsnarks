@@ -27,8 +27,6 @@ def get_largest_ptau_file(folder_path):
 
     return max_file
 
-# PTAU_FILE = "powersOfTau_25.ptau" # There are some really weird bugs in the snarkjs constraint number computation so I'm just going to use the largest ptau file.
-# PTAU_FILE = "powersOfTau_22.ptau" # FOR TESTING ONLY!!!
 PTAU_FILE = get_largest_ptau_file("../scripts/ptau/")
 print(f"Using ptau file: {PTAU_FILE}")
 
@@ -85,7 +83,7 @@ def parse_arguments():
         else:
             print(f"Error: Invalid argument '{arg}', expected key=value format.")
             sys.exit(1)
-    n_digits =  str(math.ceil(int(n_bits)/math.log(TE_ENC_BASE, 2)))
+    n_digits =  str(math.ceil(int(n_bits)/math.log(TE_ENC_BASE, 2))) if elliptic_curve == "twistedEdwards" else n_bits
     return snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params
 
 def prepare_directories(snark, elliptic_curve, election_type):
@@ -126,6 +124,8 @@ def create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n
         election_type_ranking_dim = election_type_config["ranking_dim"]
     election_type_named_params_names = ','.join(named_params.keys())
     election_type_named_params_values = ','.join(named_params.values())
+
+    rand_digits = DIGITS_RAND if elliptic_curve == "twistedEdwards" else BITS_RAND
 
     file_header = f"""
 pragma circom 2.2.1;
@@ -177,7 +177,7 @@ template assert{capitalize_first_letter(election_type)}(n_bits, n_digits, rand_d
     """
 
     file_main_component = f"""
-component main {{public [{g_name}, {pk_name}, enc_gr, enc_gv_pkr]}} = assert{capitalize_first_letter(election_type)}({n_bits}, {n_digits}, {DIGITS_RAND}, {curve_params_str}, {election_type_named_params_values});
+component main {{public [{g_name}, {pk_name}, enc_gr, enc_gv_pkr]}} = assert{capitalize_first_letter(election_type)}({n_bits}, {n_digits}, {rand_digits}, {curve_params_str}, {election_type_named_params_values});
     """
 
     circom_file = file_header + "\n" + template_method_signature + "{\n" + template_input_output
@@ -229,9 +229,7 @@ Ballot.test({capitalize_first_letter(election_type)}Ballot, {capitalize_first_le
 
 def compile_circuit(base_path, file_prefix):
     circom_test_path = base_path / "circomTestFiles"
-    # print("Hi" + " " + str(circom_test_path))
     compile_output = execute_shell_command(f"cd {circom_test_path} && genCircom.sh {file_prefix}.circom ../sageTestFiles/{file_prefix}.sage")
-    # print("Hi")
 
     non_linear_constraints = next((line.split()[2] for line in compile_output.splitlines() if line.startswith("non-linear constraints:")), "0")
     linear_constraints = next((line.split()[2] for line in compile_output.splitlines() if line.startswith("linear constraints:")), "0")
@@ -289,7 +287,6 @@ def verify_proof(snark, base_path, file_prefix):
     snarkjs_path = base_path / "snarkjsTestFiles"
     start_time = time.time()
     execute_shell_command(f"cd {snarkjs_path} && snarkjs {snark} verify {file_prefix}_verification_key.json public.json proof.json")
-    # execute_shell_command(f"cd {snarkjs_path} && verifyProof.sh {file_prefix}_verification_key.json public.json proof.json")
     end_time = time.time()
     t_ver = int((end_time - start_time) * 1000)
     print(f"Verification completed in {t_ver} milliseconds.")
