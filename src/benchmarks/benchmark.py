@@ -7,6 +7,7 @@ import json
 from JSON import JSONUtils
 import re
 import math
+import argparse
 
 # Increase Javascript heap memory
 os.environ["NODE_OPTIONS"] = "--max-old-space-size=16384"
@@ -67,14 +68,21 @@ def capitalize_first_letter(string):
 # Check for the required arguments
 def validate_args(args):
     if len(args) < 4:
-        print("Usage: script.py <snark> <mode> <ellipticCurve> <electionType> <nBits> key1=value1 key2=value2 ...")
+        print("Usage: benchmark.py [<input>] <snark> <mode> <ellipticCurve> <electionType> <nBits> key1=value1 key2=value2 ...")
+        print("<input> is an optional argument")
         print("Allowed values for <snark>: groth16, plonk, fflonk")
         print("Allowed values for <mode>: voting, encryption, combined")
         sys.exit(1)
 
 # Assign input arguments to variables
 def parse_arguments():
-    snark, mode, elliptic_curve, election_type, n_bits, *kv_pairs = sys.argv[1:]
+    input_file = None
+    param_start = 1
+    if sys.argv[1].endswith(".json"):
+        input_file = sys.argv[1]
+        param_start += 1
+
+    snark, mode, elliptic_curve, election_type, n_bits, *kv_pairs = sys.argv[param_start:]
     named_params = {}
     for arg in kv_pairs:
         if "=" in arg:
@@ -84,7 +92,7 @@ def parse_arguments():
             print(f"Error: Invalid argument '{arg}', expected key=value format.")
             sys.exit(1)
     n_digits =  str(math.ceil(int(n_bits)/math.log(TE_ENC_BASE, 2))) if elliptic_curve == "twistedEdwards" else n_bits
-    return snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params
+    return input_file, snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params
 
 def prepare_directories(snark, elliptic_curve, election_type):
     base_path = Path(snark) / elliptic_curve / election_type
@@ -227,9 +235,14 @@ Ballot.test({capitalize_first_letter(election_type)}Ballot, {capitalize_first_le
 # ========================================================================================================================
 # 4. Compile circuit, generate witness and extract constraint count
 
-def compile_circuit(base_path, file_prefix):
+def compile_circuit(base_path, file_prefix, snark, input_file):
+    optimization = 2 if snark == "groth16" else 1
     circom_test_path = base_path / "circomTestFiles"
-    compile_output = execute_shell_command(f"cd {circom_test_path} && genCircom.sh {file_prefix}.circom ../sageTestFiles/{file_prefix}.sage")
+    compile_output = None
+    if input_file == None:
+        compile_output = execute_shell_command(f"cd {circom_test_path} && genCircom.sh {file_prefix}.circom ../sageTestFiles/{file_prefix}.sage {optimization}")
+    else:
+        compile_output = execute_shell_command(f"cd {circom_test_path} && genCircom.sh {file_prefix}.circom ../../../../{input_file} {optimization}")
 
     non_linear_constraints = next((line.split()[2] for line in compile_output.splitlines() if line.startswith("non-linear constraints:")), "0")
     linear_constraints = next((line.split()[2] for line in compile_output.splitlines() if line.startswith("linear constraints:")), "0")
@@ -251,7 +264,6 @@ def prepare_proof(snark, base_path, file_prefix):
 
     start_time = time.time()
     if (snark == "groth16"):
-        print("HI")
         execute_shell_command(f"cd {snarkjs_path} && prepareProof.sh ../circomTestFiles/{file_prefix}.r1cs ../../../../../scripts/ptau/{PTAU_FILE}")
     elif (snark == "plonk" or snark == "fflonk"):
         execute_shell_command(f"cd {snarkjs_path} && snarkjs {snark} setup ../circomTestFiles/{file_prefix}.r1cs ../../../../../scripts/ptau/{PTAU_FILE} {file_prefix}.zkey")
@@ -321,17 +333,17 @@ def cleanup(base_path):
         subprocess.run(f"rm -rf {base_path / folder}", shell=True)
     print("Cleanup complete.")
 
-
 # ========================================================================================================================
 # MAIN
 
 def main():
     validate_args(sys.argv[1:])
-    snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params = parse_arguments()
+    input_file, snark, mode, elliptic_curve, election_type, n_bits, n_digits, named_params = parse_arguments()
     base_path = prepare_directories(snark, elliptic_curve, election_type)
     file_prefix = create_circom_file(base_path, mode, election_type, elliptic_curve, n_bits, n_digits, named_params)
-    create_sage_file(base_path, file_prefix, elliptic_curve, election_type, n_bits, named_params)
-    non_linear_constraints, linear_constraints = compile_circuit(base_path, file_prefix)
+    if input_file == None:
+        create_sage_file(base_path, file_prefix, elliptic_curve, election_type, n_bits, named_params)
+    non_linear_constraints, linear_constraints = compile_circuit(base_path, file_prefix, snark, input_file)
     constraints = non_linear_constraints + linear_constraints
     t_prep, crs_size = prepare_proof(snark, base_path, file_prefix)
     t_prove = prove(snark, base_path, file_prefix)

@@ -4,19 +4,8 @@ Note that the installation instructions are for Ubuntu 24.04.
 However, installing should be very similar for other Ubuntu versions and other Linux distributions.
 We do not support Windows and macOS.
 
-## Ballot Validity Repository
-
-If git is not installed already, install it with 
-```bash
-sudo apt install git-all
-```
-Then, clone the repository into the desired directory `$HOME` by running the following command in this repository:
-```bash
-git clone https://git.sec.uni-stuttgart.de/scm/repo/huber/roehr
-```
-
 ## Circom
-We will install Circom in the directory `$HOME` where we also cloned the Ballot Validity repository. Open a terminal in this directory.
+We will install Circom in the same directory `$PWD` where our Ballot Validity repository is located. Open a terminal in this directory.
 
 We are following the [installation guide](https://docs.circom.io/getting-started/installation/) for Circom.
 
@@ -33,9 +22,9 @@ cd circom
 cargo build --release
 cargo install --path circom
 ```
-3. To be able to use Circom, we need to add `$HOME/.cargo/bin` to the `PATH`. To do this, run the following command (Replace `$HOME` according to your system):
+3. To be able to use Circom, we need to add `$PWD/.cargo/bin` to the `PATH`. To do this, run the following command (Replace `$PWD` according to your system):
 ```bash
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$PWD/.cargo/bin:$PATH"
 ```
 4. Restart your system. After that you should be able to see the Circom compile options by running `circom --help`.
 
@@ -51,15 +40,16 @@ sudo npm install -g snarkjs
 ```
 
 2. The benchmarks in the Ballot Validity repository requires some predefined powers-of-tau file for zk proof generation.
-For small candidate counts, the file `powersOfTau28_hez_final_21.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file) is sufficient and included in this repository.
+For small candidate counts, the file `powersOfTau28_hez_final_21.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file) is sufficient. In particular, this covers the cases for which we provide prepared input files.
 For our benchmarks, we used the file `powersOfTau_hez_final_25.ptau` from the [snarkjs github](https://github.com/iden3/snarkjs?tab=readme-ov-file). Since this file is very large (36 GB!), we recommend to download this, only if you want to run benchmarks for proving ballot validity for very large candidate counts.
-In that case, please save the file in the folder `src/scripts/ptau`.
+Please save the powers-of-tau file of your choice in the folder `src/scripts/ptau`.
 Our implementation will automatically use the largest file present in that folder.
 
 ## SageMath
 Some Linux distributions have current versions of SageMath available (E.g., ArchLinux). 
 However, for many Linux distributions, this is not the case. 
-Therefore, we have found the option presented [here](https://sagemanifolds.obspm.fr/install_ubuntu.html) to be the most convenient to install SageMath:
+
+To install SageMath, we have found the option presented [here](https://sagemanifolds.obspm.fr/install_ubuntu.html) to be the most convenient (This might still take multiple hours though):
 1. Install SageMath Dependencies:
 ```bash
 sudo apt install automake bc binutils bzip2 ca-certificates cliquer cmake curl ecl eclib-tools fflas-ffpack flintqs g++ gengetopt gfan gfortran git glpk-utils gmp-ecm lcalc libatomic-ops-dev libboost-dev libbraiding-dev libbz2-dev libcdd-dev libcdd-tools libcliquer-dev libcurl4-openssl-dev libec-dev libecm-dev libffi-dev libflint-dev libfreetype-dev libgc-dev libgd-dev libgf2x-dev libgiac-dev libgivaro-dev libglpk-dev libgmp-dev libgsl-dev libhomfly-dev libiml-dev liblfunction-dev liblrcalc-dev liblzma-dev libm4rie-dev libmpc-dev libmpfi-dev libmpfr-dev libncurses-dev libntl-dev libopenblas-dev libpari-dev libpcre3-dev libplanarity-dev libppl-dev libprimesieve-dev libpython3-dev libqhull-dev libreadline-dev librw-dev libsingular4-dev libsqlite3-dev libssl-dev libsuitesparse-dev libsymmetrica2-dev zlib1g-dev libzmq3-dev libzn-poly-dev m4 make nauty openssl palp pari-doc pari-elldata pari-galdata pari-galpol pari-gp2c pari-seadata patch perl pkg-config planarity ppl-dev python3-setuptools python3-venv r-base-dev r-cran-lattice singular sqlite3 sympow tachyon tar tox xcas xz-utils 
@@ -79,24 +69,24 @@ make configure
 ./configure
 MAKE="make -j8" make
 ```
-The `8` in the last command means that the installation utilizes $8$ threads during the installation. You can change this to at most twice the number of cores your system has to accelerate installation. (Although we tried this with $32$ on our system with 16 cores and it crashed. When we tried it again with $16$ it worked fine. So we would be careful with this.)
+The `8` in the last command means that the installation utilizes $8$ threads during the installation. You can change this to at most twice the number of cores your system has to accelerate installation. (Although we tried this with $32$ on a system with 16 cores and it crashed. When we tried it again with $16$ it worked fine. So we would be careful with this.)
 
 4. To be able to use SageMath from the terminal anywhere on your system, add a symbolic link:
 ```bash
 sudo ln -sf $(pwd)/sage /usr/local/bin
 ```
 
-5. To validate the installation, run `sage -n`. This should open a Jupyter page in your browser where you could open a new Jupyter notebook with a Sagemath 10.5 kernel.
+5. To validate the installation, run `sage -n`. This should open a Jupyter page in your browser where you could open a new Jupyter notebook with a SageMath 10.5 kernel.
 
 ## PATH and PYTHONPATH
 In order benchmarks, Circom witness generation, snarkjs proof generation and verification and several other scripts to work, we need to add some entries to `PATH` and `PYTHONPATH`:
-- Add to `PATH`: `$HOME/roehr/src/scripts` and `$HOME/roehr/src/scripts/snarkjs`
-- Add to `PYTHONPATH`: `$HOME/roehr/src/scripts`
+- Add to `PATH`: `$PWD/roehr/src/scripts` and `$PWD/roehr/src/scripts/snarkjs`
+- Add to `PYTHONPATH`: `$PWD/roehr/src/scripts`
 
 We can do this by running the following commands:
 ```bash
-export PATH="$HOME/roehr/src/scripts:$HOME/roehr/src/scripts/snarkjs:$PATH"
-export PYTHONPATH="$HOME/roehr/src/scripts:$PYTHONPATH"
+export PATH="$PWD/src/scripts:$PWD/src/scripts/snarkjs:$PATH"
+export PYTHONPATH="$PWD/src/scripts:$PYTHONPATH"
 ```
 
 You can verify that the appropriate entries are in `PATH` and `PYTHONPATH` by printing them:

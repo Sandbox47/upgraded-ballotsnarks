@@ -4,8 +4,8 @@
 start_time=$(date +%s)
 
 # Check if the required arguments are provided
-if [ "$#" -lt 2 ]; then
-  echo "Usage: $0 [--c] <path_to_someFile.circom> <path_to_inputFile.json_or_sageFile.sage>"
+if [ "$#" -lt 3 ]; then
+  echo "Usage: $0 [--c] <path_to_someFile.circom> <path_to_inputFile.json_or_sageFile.sage> <optimization_level>"
   exit 1
 fi
 
@@ -19,6 +19,7 @@ fi
 # Assign arguments to variables
 CIRCOM_FILE=$1
 INPUT_FILE=$2
+OPTIMIZATION=$3
 
 # Extract the base name of the CIRCOM file (without extension)
 BASE_NAME=$(basename "$CIRCOM_FILE" .circom)
@@ -38,7 +39,7 @@ fi
 
 # Run circom to generate r1cs, sym, and wasm files
 if [ "$USE_CPP_WITNESS" = true ]; then
-  circom "$CIRCOM_FILE" --r1cs --sym --c --O2
+  circom "$CIRCOM_FILE" --r1cs --sym --c "--O$OPTIMIZATION"
 
   # Navigate to the generated folder
   cd "${BASE_NAME}_cpp" || { echo "Error: Could not change directory to ${BASE_NAME}_cpp"; exit 1; }
@@ -50,7 +51,7 @@ if [ "$USE_CPP_WITNESS" = true ]; then
   make
   ./$BASE_NAME input.json witness.wtns
 else
-  circom "$CIRCOM_FILE" --r1cs --sym --wasm --O2
+  circom "$CIRCOM_FILE" --r1cs --sym --wasm "--O$OPTIMIZATION"
   
   # Navigate to the generated folder
   cd "${BASE_NAME}_js" || { echo "Error: Could not change directory to ${BASE_NAME}_js"; exit 1; }

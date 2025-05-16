@@ -9,11 +9,13 @@ We do not support Windows and macOS.
 
 To create proofs of ballot validity, we require Circom, snarkjs and SageMath.
 If you have some of this software installed already, you can skip the corresponding installation steps.
-Furthermore, if you already have our ballot validity repository on your system, you can skip the first installation step.
-Detailed installation instructions are provided in `assets/InstallationGuide.md`.
+Detailed installation instructions for these dependencies that should be performed after installing our ballot validity repository are provided in `assets/InstallationGuide.md`.
 
-For convenience, we also provide a `setup.sh` script that can be run after installing our ballot validity repository to install the same dependencies.
-Note that in order to run `setup.sh`, your system needs to have at least $4$ cores and that installation may take multiple hours since we install and build SageMath from source.
+NOTE: To run the benchmarks from the paper "Improving the Efficiency of zkSNARKs for Ballot Validity", SageMath is not strictly required. For these cases, we provide prepared input files and the test suite `src/benchmarks/preparedInputs/testPreparedInputs.json`. We can run all test cases in this test suite as described later on. If this is all you need, you can skip the time-consuming installation steps for SageMath.
+Nevertheless, for any other test case, we need to provide the precomputed powers of a public EEG key as input to the circuit. Additionally, we need to provide the individual ballot entries and randomnesses used for encryption in the array based representation. We use SageMath to compute these input files.
+
+For convenience, we also provide a `setup.sh` script to install Circom, snarkjs and SageMath.
+Note that in order to run `setup.sh`, your system needs to have at least $4$ cores and that the installation may take multiple hours since we install and build SageMath from source.
 
 ## Benchmarks
 
@@ -23,14 +25,15 @@ We provide the option to run individual benchmarks as well as multiple benchmark
 ### Individual Test Cases
 The command to run an individual benchmark is:
 ```bash
-python3 benchmark.py <snark> <circuit> <curve> <election> <bits> <election_key_1>=<election_value_1> ... <election_key_n>=<election_value_n>
+python3 benchmark.py [<input>] <snark> <circuit> <curve> <election> <bits> <election_key_1>=<election_value_1> ... <election_key_n>=<election_value_n>
 ```
 
 Here, the individual parameters are:
-- `<snark>`: Zero Knowledge Proof system (ZPS). At the moment, we support `groth16`, `PLONK` and `FFLONK`. 
-Please note that our circuits are not optimized for `PLONK` and `FFLONK` and performance is typically a lot worse for these ZPSs.
-- `<circuit>`: Circuit. We can assert that a chosen ballot is in the choice space with `voting`, that a ballot is correctly encrypted with `encryption` and we can compute full ballot validity proofs using `combined`.
-- `<curve>`: Elliptic curve. We can use `twistedEdwards` for the Twisted Edwards curve $\{(x,y)| 126934\cdot x^2 + y^2 = 1 + 126930\cdot x^2y^2\}. Alternatively, we can use `montgomeryProjective` for the Montgomery curve $\{(x,y)| y^2 = x^3 + 126932\cdot x^2 + x\}\cup\{\mathcal{O}\}$.
+- `<input>`: OPTIONAL input file for the circuit with json format. The file provided here must match the circuit specifications by the other parameters. With this option, it is possible to run benchmarks without having Sage istalled. We provide some prepared input files for the cases also covered in the paper in `src/benchmarks/preparedInputs`.
+- `<snark>`: Zero Knowledge Proof system (ZPS). At the moment, we support `groth16`, `plonk` and `fflonk`. 
+Please note that our circuits are not optimized for `plonk` and `fflonk` and performance is typically a lot worse for these ZPSs.
+- `<circuit>`: Circuit. We can assert that a chosen ballot is in the choice space with `voting`, that a ballot is correctly encrypted with `encryption`, and we can compute full ballot validity proofs using `combined`.
+- `<curve>`: Elliptic curve. We can use `twistedEdwards` for the Twisted Edwards curve $\{(x,y)| 126934\cdot x^2 + y^2 = 1 + 126930\cdot x^2y^2\}$. Alternatively, we can use `montgomeryProjective` for the Montgomery curve $\{(x,y)| y^2 = x^3 + 126932\cdot x^2 + x\}\cup\{\mathcal{O}\}$.
 - `<election>`: Election type. Here, we support the following election types:
     - `singleVote`
     - `multiVote`
@@ -40,6 +43,7 @@ Please note that our circuits are not optimized for `PLONK` and `FFLONK` and per
     - `bordaTournamentStyle`
     - `condorcet`
     - `majorityJudgment`
+Note that we always need to specify an election type even if we only test the encryption circuit. Then, the choice of election type does not make a difference as long as the number of ballot entries matches what you want to test. In such cases, we always chose `singleVote` (e.g., see the prepared test cases in `src/preparedInputs/testPreparedInputs` and the corresponding input files `src/preparedInputs/singleVote...`).
 - `<bits>`: Number of Bits to represent a ballot entry. This is provided as an integer value
 - `<election_key_i>=<election_value_i>`: Additional parameters specific to the election type. For the different election types, these are:
     - For `singleVote`: `nVotes=cand` (For $cand$ candidates).
@@ -81,13 +85,15 @@ Additionally, the config file contains some presets for other election type spec
 
 We provide a prepared config file with snark `groth16` and elliptic curve `twistedEdwards`.
 
-The test suites containing all test cases specified in `testConfig.json` are then created separately for the circuits `voting`, `encryption` and `combined`. By running the command `python3 testSuite.py` in the folder `src/benchmarks/testSuites`, we create the test suites `testSuiteVoting.json`, `testSuiteEncryption.json` and `testSuiteCombined.json` in the same folder. We provide prepared test suites for the test cases specified in our prepared `testConfig.json` file.
+The test suite `src/benchmaks/testSuites/testSuite.json` contains all test cases we performed successfully on an ESPRIMO Q957 (64-bit, i5-7500T CPU@ 2.70GHz, 16 GB RAM).
 
-In order to run all the test cases specified in a test suite `testSuite<circuit>.json`, we run the command 
+Furthermore, the test suite `src/benchmarks/preparedInputs/testPreparedInputs.json` contains all test cases for which we provided prepared inputs in the same directory.
+
+In order to run all the test cases specified in a test suite `<suite>.json`, we run the command 
 ```bash
-python3 benchmarkTestSuite.py testSuites/testSuite<circuit>.json
+python3 benchmarkTestSuite.py testSuites/<suite>.json
 ```
-in the folder `src/benchmarks`. For instance, to run the test suite `testSuiteVoting.json`, we use the command
+in the folder `src/benchmarks`. For instance, to run the test suite `testPreparedInputs.json`, we use the command
 ```bash
-python3 benchmarkTestSuite.py testSuites/testSuiteVoting.json
+python3 benchmarkTestSuite.py preparedInputs/testPreparedInputs.json
 ```
