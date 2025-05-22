@@ -80,8 +80,8 @@ sudo ln -sf $(pwd)/sage /usr/local/bin
 
 ## PATH and PYTHONPATH
 In order benchmarks, Circom witness generation, snarkjs proof generation and verification and several other scripts to work, we need to add some entries to `PATH` and `PYTHONPATH`:
-- Add to `PATH`: `$PWD/roehr/src/scripts` and `$PWD/roehr/src/scripts/snarkjs`
-- Add to `PYTHONPATH`: `$PWD/roehr/src/scripts`
+- Add to `PATH`: `$PWD/src/scripts` and `$PWD/src/scripts/snarkjs`
+- Add to `PYTHONPATH`: `$PWD/src/scripts`
 
 We can do this by running the following commands:
 ```bash
