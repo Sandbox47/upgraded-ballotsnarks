@@ -1,0 +1,40 @@
+# Latex
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.gz
+*.out
+*.bbl
+*.blg
+*.synctex(busy)
+*.loc
+*.soc
+
+# Drawio
+.DS_Store
+*.drawio.bkp
+*.drawio.dtmp
+
+# Circom
+*.sym
+*.r1cs
+*_js
+*_cpp
+
+# Sage
+*.sage.py
+*__pycache__
+
+# Snarkjs
+*.ptau
+*.zkey
+*proof.json
+*public.json
+*verification_key.json
+
+# Benchmarks
+*.txt
+sageTestFiles*
+snarkjsTestFiles*
+circomTestFiles*

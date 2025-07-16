@@ -1,0 +1,72 @@
+{
+    "ellipticCurves": {
+        "montgomeryProjective": {
+            "curve_point_name": "ProjectivePoint",
+            "g_name": "g",
+            "pk_name": "pk",
+            "g_dim": "",
+            "pk_dim": "",
+            "g_and_pk_name": "g, pk",
+            "curve_params_name": "Mon_A, Mon_B",
+            "curve_params_str": "126932, 1",
+            "ballot_entry_dim_for_enc": "",
+            "r_entry_dim": ""
+        },
+        "twistedEdwards": {
+            "curve_point_name": "TwistedEdwardsPoint",
+            "g_name": "powersOfg",
+            "pk_name": "powersOfpk",
+            "g_dim": "[rand_digits][base]",
+            "pk_dim": "[rand_digits][base]",
+            "g_and_pk_name": "powersOfg, powersOfpk",
+            "curve_params_name": "base, TE_a, TE_d",
+            "curve_params_str": "5, 126934, 126930",
+            "ballot_entry_dim_for_enc": "[n_digits][base]",
+            "r_entry_dim": "[rand_digits][base]"
+        }
+    },
+    "electionTypes": {
+        "singleVote": {
+            "dim": ["nVotes"],
+            "ballot_format": "Vector",
+            "has_ranking": false
+        },
+        "lineVote": {
+            "dim": ["nVotes"],
+            "ballot_format": "Vector",
+            "has_ranking": false
+        },
+        "majorityJudgement": {
+            "dim": ["nCand", "nGrades"],
+            "ballot_format": "Matrix",
+            "has_ranking": false
+        },
+        "bordaTournamentStyle": {
+            "dim": ["nVotes"],
+            "ballot_format": "Vector",
+            "has_ranking": true,
+            "ranking_dim": "[nVotes]"
+        },
+        "condorcet": {
+            "dim": ["nCand", "nCand"],
+            "ballot_format": "Matrix",
+            "has_ranking": true,
+            "ranking_dim": "[nCand]"
+        },
+        "multiVote": {
+            "dim": ["nVotes"],
+            "ballot_format": "Vector",
+            "has_ranking": false
+        },
+        "multiVoteWithRules": {
+            "dim": ["nVotes"],
+            "ballot_format": "Vector",
+            "has_ranking": false
+        },
+        "pointlistBorda": {
+            "dim": ["nCand"],
+            "ballot_format": "Vector",
+            "has_ranking": false
+        }
+    }
+}

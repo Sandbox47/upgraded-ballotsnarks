@@ -1,0 +1,53 @@
+{
+    "testSuite": {
+        "snark": "groth16",
+        "ellipticCurve": "twistedEdwards",
+        "testCircuits": [
+            "voting",
+            "combined"
+        ],
+        "bitsVotes": [
+            32
+        ],
+        "nCand": [
+            1, 
+            2,
+            3,
+            5, 
+            10, 
+            25
+        ],
+        "electionTypes": [
+            "singleVote",
+            "pointlistBorda", 
+            "multiVoteWithRules", 
+            "multiVote", 
+            "majorityJudgement", 
+            "lineVote", 
+            "condorcet", 
+            "bordaTournamentStyle"
+        ]
+    },
+    "electionTypeSpecificConfigs": {
+        "pointlistBorda": {
+            "defaultPointlistLength": 10,
+            "doPointlistLengthEqualsChoicesCase": true
+        },
+        "multiVote": {
+            "maxChoices": "calculated from nCand",
+            "maxVotesCand": 5
+        },
+        "multiVoteWithRules": {
+            "maxChoices": "calculated from nCand",
+            "maxVotesCand": 5
+        },
+        "majorityJudgement": {
+            "defaultNumberOfGrades": 6,
+            "doNumberOfGradesEqualsCandsCase": true
+        },
+        "bordaTournamentStyle": {
+            "a": 2,
+            "b": 1
+        }
+    }
+}
